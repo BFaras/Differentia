@@ -42,3 +42,49 @@
     width: 20%;
     min-width: min-content;
 }
+
+//css-ajouter
+
+.logo-name-container {
+    width: 594px;
+    height: 88px;
+    border-radius: 19px;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 5px;
+    position: relative;
+    top: 100px;
+}
+
+.logo-name-container > * {
+    width: 288px;
+    display: flex;
+}
+
+.logo-name-container > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+}
+.group-button-homepage {
+    position: relative;
+    top: 100px;
+    gap: 14px;
+}
+
+.button-homepage {
+    top: 349px;
+    left: 663px;
+    width: 594px;
+    height: 89px;
+    border-radius: 10px;
+    font-size: 25px;
+}
+
+.button-homepage:hover {
+    background-color: #b8b8b8;
+    cursor: pointer;
+}
