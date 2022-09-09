@@ -1,0 +1,35 @@
+body {
+    text-align: center;
+}
+h1 {
+    background-color: bisque;
+    color: rgb(0, 7, 7);
+    display: flex;
+    padding: 15px;
+    align-items: center;
+    justify-content: center;
+}
+span {
+    display: inline-block;
+    vertical-align: middle;
+    width: 150px;
+    height: 200px;
+    border-style: groove;
+    border-bottom: 0;
+    border-top: 0;
+}
+li {
+    line-height: 4;
+    margin-bottom: 5px;
+}
+div {
+    display: inline-block;
+    vertical-align: middle;
+    top: 100px;
+    left: 100px;
+    width: 200px;
+    height: 200px;
+    border: solid 10px rgb(82, 84, 226);
+    padding: 20px;
+    margin: 10px;
+}
