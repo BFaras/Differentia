@@ -2,31 +2,59 @@ import { Component, OnInit } from '@angular/core';
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { FormService } from '@app/services/form.service';
 
+//TO DO : Put the constant in the configuration folder
+const MAX_NB_OF_FORMS_PER_PAGE: number = 4;
+
 @Component({
     selector: 'app-list-game-form',
     templateUrl: './list-game-form.component.html',
     styleUrls: ['./list-game-form.component.scss'],
 })
 export class ListGameFormComponent implements OnInit {
-    gameFormList: GameFormDescription[];
     firstElementIndex: number = 0;
-    fourthElementIndex: number = 3;
+    lastElementIndex: number = 3;
+    currentPageGameFormList: GameFormDescription[];
 
-    constructor(private formService: FormService) {}
+    constructor(public formService: FormService) {}
 
     ngOnInit(): void {
-        this.gameFormList = this.formService.gameForms;
+        if (this.formService.gameForms.length < MAX_NB_OF_FORMS_PER_PAGE) {
+            this.lastElementIndex = this.formService.gameForms.length - 1;
+        }
+
+        this.addCurrentPageGameForms();
     }
 
-    nextFourGameForms() {
+    nextPageGameForms() {
         //const 4
-        this.firstElementIndex += 4;
-        this.fourthElementIndex += 4;
+        if (this.firstElementIndex + MAX_NB_OF_FORMS_PER_PAGE < this.formService.gameForms.length) {
+            this.firstElementIndex += MAX_NB_OF_FORMS_PER_PAGE;
+
+            if (this.lastElementIndex + MAX_NB_OF_FORMS_PER_PAGE < this.formService.gameForms.length) {
+                this.lastElementIndex = this.firstElementIndex + (MAX_NB_OF_FORMS_PER_PAGE - 1);
+            } else {
+                this.lastElementIndex = this.formService.gameForms.length - 1;
+            }
+
+            this.addCurrentPageGameForms();
+        }
     }
 
-    previousFourGameForms() {
+    previousPageGameForms() {
         //const 4
-        this.firstElementIndex -= 4;
-        this.fourthElementIndex -= 4;
+        if (this.firstElementIndex - MAX_NB_OF_FORMS_PER_PAGE >= 0) {
+            this.firstElementIndex -= MAX_NB_OF_FORMS_PER_PAGE;
+            this.lastElementIndex = this.firstElementIndex + (MAX_NB_OF_FORMS_PER_PAGE - 1);
+
+            this.addCurrentPageGameForms();
+        }
+    }
+
+    addCurrentPageGameForms() {
+        this.currentPageGameFormList = new Array(this.lastElementIndex - this.firstElementIndex + 1);
+
+        for (let index: number = 0; index < this.currentPageGameFormList.length; index++) {
+            this.currentPageGameFormList[index] = this.formService.gameForms[index + this.firstElementIndex];
+        }
     }
 }
