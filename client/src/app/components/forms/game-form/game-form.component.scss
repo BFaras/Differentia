@@ -1,10 +1,9 @@
-// body {
-//     text-align: center;
-// }
+body {
+    text-align: center;
+}
 h1 {
-    background-color: rgb(80, 156, 207);
+    background: linear-gradient(70deg, #eff5b6, #0dd137);
     border-radius: 15px;
-    color: rgb(0, 7, 7);
     font-weight: 550;
     display: flex;
     padding: 2%;
@@ -12,19 +11,6 @@ h1 {
     justify-content: center;
 }
 
-// span {
-//     display: inline-block;
-//     vertical-align: middle;
-//     width: 150px;
-//     height: 200px;
-//     border-style: groove;
-//     border-bottom: 0;
-//     border-top: 0;
-// }
-// li {
-//     line-height: 4;
-//     margin-bottom: 5px;
-// }
 // div {
 //     display: inline-block;
 //     vertical-align: middle;
@@ -45,14 +31,18 @@ h1 {
 }
 
 .imageGameForm {
-    border: solid rgb(4, 0, 255);
+    color: rgb(39, 24, 41);
+    background-color: rgb(235, 235, 235);
+    border: solid rgb(82, 81, 31);
     border-radius: 20px;
     height: 100%;
     width: 48%;
 }
 
 .dataGameForm {
-    border: solid rgb(9, 179, 221);
+    color: rgb(39, 24, 41);
+    background-color: rgb(235, 235, 235);
+    border: solid rgb(82, 60, 31);
     border-radius: 20px;
     height: 100%;
     width: 48%;
@@ -60,10 +50,9 @@ h1 {
     flex-direction: row;
 }
 
-//Il faut rajouter quelque chose pour faire en sorte que les usernames ne font pas overflow le text (qu'il ne change pas de format)
-ol {
+li {
     text-align: center;
-    list-style-position: inside;
+    line-height: 3;
 }
 
 .button-group {
@@ -82,4 +71,6 @@ ol {
 
 .button-group > button:nth-child(2) {
     cursor: pointer;
+    color: rgba(8, 83, 8, 0.993);
+    background-color: rgb(214, 214, 214);
 }

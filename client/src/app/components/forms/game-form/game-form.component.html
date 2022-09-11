@@ -1,19 +1,21 @@
-<h1>{{ gameForm.gameName }}</h1>
-<div class="infoGameForm">
-    <div class="imageGameForm">{{ gameForm.gameImage }}</div>
-    <div class="dataGameForm">
-        <ol class="recordTimeSolo">
-            <p>Solo</p>
-            <li *ngFor="let records of gameForm.recordTimesBoard.recordTimesSolo">{{ records.time }} by {{ records.playerName }}</li>
-        </ol>
-        <ol class="recordTimeVersus">
-            <p>Versus</p>
-            <li *ngFor="let records of gameForm.recordTimesBoard.recordTimesVersus">{{ records.time }} by {{ records.playerName }}</li>
-        </ol>
+<body>
+    <h1>{{ gameForm.gameName }}</h1>
+    <div class="infoGameForm">
+        <div class="imageGameForm">{{ gameForm.gameImage }}</div>
+        <div class="dataGameForm">
+            <ol class="recordTimeSolo">
+                <p>Solo</p>
+                <li *ngFor="let records of gameForm.recordTimesBoard.recordTimesSolo">{{ records.time }} by {{ records.playerName }}</li>
+            </ol>
+            <ol class="recordTimeVersus">
+                <p>Versus</p>
+                <li *ngFor="let records of gameForm.recordTimesBoard.recordTimesVersus">{{ records.time }} by {{ records.playerName }}</li>
+            </ol>
+        </div>
     </div>
-</div>
 
-<div class="button-group">
-    <button>Create</button>
-    <button>Play</button>
-</div>
+    <div class="button-group">
+        <button>Create</button>
+        <button>Play</button>
+    </div>
+</body>
