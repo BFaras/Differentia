@@ -18,13 +18,13 @@ export class ListGameFormComponent implements OnInit {
         this.gameFormList = this.formService.gameForms;
     }
 
-    nextFourGameForm() {
+    nextFourGameForms() {
         //const 4
         this.firstElementIndex += 4;
         this.fourthElementIndex += 4;
     }
 
-    formerFourGameForm() {
+    previousFourGameForms() {
         //const 4
         this.firstElementIndex -= 4;
         this.fourthElementIndex -= 4;

@@ -1,5 +1,5 @@
 <!-- ngFor condition il faut mieux l ecrire -->
-<div class="arrow left" (click)="formerFourGameForm()" [ngClass]="{ 'inactive-arrow': firstElementIndex == 0 }"></div>
+<div *ngIf="firstElementIndex != 0" class="arrow left" (click)="previousFourGameForms()"></div>
 <div class="containerFourGameForms">
     <ng-container *ngFor="let form of gameFormList; let indexOfElement = index">
         <app-game-form
@@ -9,5 +9,4 @@
         ></app-game-form>
     </ng-container>
 </div>
-<div class="arrow right" (click)="nextFourGameForm()" 
-[ngClass]="{ 'inactive-arrow': fourthElementIndex >= gameFormList.length - 1 }"></div>
+<div *ngIf="fourthElementIndex + 1 <= gameFormList.length - 1" class="arrow right" (click)="nextFourGameForms()"></div>

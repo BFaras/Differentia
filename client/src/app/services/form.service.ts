@@ -13,7 +13,7 @@ export class FormService {
             'image',
             new RecordTimesBoard(
                 [new RecordTime('02:00', 'Mark'), new RecordTime('02:00', 'Jean'), new RecordTime('02:00', 'Paul')],
-                [new RecordTime('02:00', 'Brook'), new RecordTime('02:00','Leon'), new RecordTime('02:00', 'Mike')],
+                [new RecordTime('02:00', 'Brook'), new RecordTime('02:00', 'Leon'), new RecordTime('02:00', 'Mike')],
             ),
         ),
         new GameFormDescription(
@@ -21,7 +21,7 @@ export class FormService {
             'image',
             new RecordTimesBoard(
                 [new RecordTime('02:00', 'Mark'), new RecordTime('02:00', 'Jean'), new RecordTime('02:00', 'Paul')],
-                [new RecordTime('02:00', 'Brook'), new RecordTime('02:00','Leon'), new RecordTime('02:00', 'Mike')],
+                [new RecordTime('02:00', 'Brook'), new RecordTime('02:00', 'Leon'), new RecordTime('02:00', 'Mike')],
             ),
         ),
         new GameFormDescription(
@@ -29,7 +29,7 @@ export class FormService {
             'image',
             new RecordTimesBoard(
                 [new RecordTime('02:00', 'Mark'), new RecordTime('02:00', 'Jean'), new RecordTime('02:00', 'Paul')],
-                [new RecordTime('02:00', 'Brook'), new RecordTime('02:00','Leon'), new RecordTime('02:00', 'Mike')],
+                [new RecordTime('02:00', 'Brook'), new RecordTime('02:00', 'Leon'), new RecordTime('02:00', 'Mike')],
             ),
         ),
         new GameFormDescription(
@@ -37,7 +37,7 @@ export class FormService {
             'image',
             new RecordTimesBoard(
                 [new RecordTime('02:00', 'Mark'), new RecordTime('02:00', 'Jean'), new RecordTime('02:00', 'Paul')],
-                [new RecordTime('02:00', 'Brook'), new RecordTime('02:00','Leon'), new RecordTime('02:00', 'Mike')],
+                [new RecordTime('02:00', 'Brook'), new RecordTime('02:00', 'Leon'), new RecordTime('02:00', 'Mike')],
             ),
         ),
         new GameFormDescription(
@@ -45,7 +45,7 @@ export class FormService {
             'image',
             new RecordTimesBoard(
                 [new RecordTime('02:00', 'Mark'), new RecordTime('02:00', 'Jean'), new RecordTime('02:00', 'Paul')],
-                [new RecordTime('02:00', 'Brook'), new RecordTime('02:00','Leon'), new RecordTime('02:00', 'Mike')],
+                [new RecordTime('02:00', 'Brook'), new RecordTime('02:00', 'Leon'), new RecordTime('02:00', 'Mike')],
             ),
         ),
         new GameFormDescription(
@@ -53,7 +53,7 @@ export class FormService {
             'image',
             new RecordTimesBoard(
                 [new RecordTime('02:00', 'Mark'), new RecordTime('02:00', 'Jean'), new RecordTime('02:00', 'Paul')],
-                [new RecordTime('02:00', 'Brook'), new RecordTime('02:00','Leon'), new RecordTime('02:00', 'Mike')],
+                [new RecordTime('02:00', 'Brook'), new RecordTime('02:00', 'Leon'), new RecordTime('02:00', 'Mike')],
             ),
         ),
         new GameFormDescription(
@@ -61,7 +61,7 @@ export class FormService {
             'image',
             new RecordTimesBoard(
                 [new RecordTime('02:00', 'Mark'), new RecordTime('02:00', 'Jean'), new RecordTime('02:00', 'Paul')],
-                [new RecordTime('02:00', 'Brook'), new RecordTime('02:00','Leon'), new RecordTime('02:00', 'Mike')],
+                [new RecordTime('02:00', 'Brook'), new RecordTime('02:00', 'Leon'), new RecordTime('02:00', 'Mike')],
             ),
         ),
         new GameFormDescription(
@@ -69,7 +69,15 @@ export class FormService {
             'image',
             new RecordTimesBoard(
                 [new RecordTime('02:00', 'Mark'), new RecordTime('02:00', 'Jean'), new RecordTime('02:00', 'Paul')],
-                [new RecordTime('02:00', 'Brook'), new RecordTime('02:00','Leon'), new RecordTime('02:00', 'Mike')],
+                [new RecordTime('02:00', 'Brook'), new RecordTime('02:00', 'Leon'), new RecordTime('02:00', 'Mike')],
+            ),
+        ),
+        new GameFormDescription(
+            'Chair game',
+            'image',
+            new RecordTimesBoard(
+                [new RecordTime('02:00', 'Mark'), new RecordTime('02:00', 'Jean'), new RecordTime('02:00', 'Paul')],
+                [new RecordTime('02:00', 'Brook'), new RecordTime('02:00', 'Leon'), new RecordTime('02:00', 'Mike')],
             ),
         ),
     ];

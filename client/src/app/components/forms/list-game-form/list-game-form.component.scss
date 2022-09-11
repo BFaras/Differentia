@@ -25,18 +25,6 @@
     height: 50px;
     z-index: 1;
 }
-//repetition de code il faut se d/barasser ngClass
-.inactive-arrow {
-    border: solid grey;
-    pointer-events: none;
-    cursor: default;
-    border-width: 0 2px 2px 0;
-    display: inline-block;
-    padding: 3px;
-    width: 50px;
-    height: 50px;
-    z-index: 1;
-}
 
 .left {
     position: absolute;
