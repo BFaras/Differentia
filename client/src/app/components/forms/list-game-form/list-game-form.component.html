@@ -1,5 +1,5 @@
 <div *ngIf="firstElementIndex != 0" class="arrow left" (click)="previousPageGameForms()"></div>
-<div class="containerFourGameForms">
+<div class="gameFormsContainer">
     <ng-container *ngFor="let form of currentPageGameFormList">
         <app-game-form class="gameForm" [gameForm]="form"></app-game-form>
     </ng-container>
