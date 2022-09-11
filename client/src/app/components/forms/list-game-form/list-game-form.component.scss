@@ -1,0 +1,59 @@
+.gameForm {
+    width: 100%;
+    height: 100%;
+    border: solid rgb(124, 124, 145) 1px;
+    border-radius: 20px;
+}
+
+// percentage marche pas , meme si parent a une height!!!
+.containerFourGameForms {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+    width: 80%;
+    height: 80%;
+    border: solid blue;
+}
+
+.arrow {
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    width: 50px;
+    height: 50px;
+    z-index: 1;
+}
+//repetition de code il faut se d/barasser ngClass
+.inactive-arrow {
+    border: solid grey;
+    pointer-events: none;
+    cursor: default;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    width: 50px;
+    height: 50px;
+    z-index: 1;
+}
+
+.left {
+    position: absolute;
+    left: 35px;
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+}
+
+.right {
+    position: absolute;
+    right: 35px;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+
+.arrow:hover {
+    transition: 0, 5s all ease-out;
+    cursor: pointer;
+    border-width: 0 4px 4px 0;
+}

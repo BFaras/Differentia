@@ -1,3 +1,13 @@
-<div>
-    <app-game-form *ngFor="let form of gameFormList" [gameForm]="form"></app-game-form>
+<!-- ngFor condition il faut mieux l ecrire -->
+<div class="arrow left" (click)="formerFourGameForm()" [ngClass]="{ 'inactive-arrow': firstElementIndex == 0 }"></div>
+<div class="containerFourGameForms">
+    <ng-container *ngFor="let form of gameFormList; let indexOfElement = index">
+        <app-game-form
+            *ngIf="indexOfElement >= firstElementIndex && indexOfElement <= fourthElementIndex"
+            class="gameForm"
+            [gameForm]="form"
+        ></app-game-form>
+    </ng-container>
 </div>
+<div class="arrow right" (click)="nextFourGameForm()" 
+[ngClass]="{ 'inactive-arrow': fourthElementIndex >= gameFormList.length - 1 }"></div>

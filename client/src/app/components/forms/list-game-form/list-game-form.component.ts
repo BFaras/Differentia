@@ -9,9 +9,24 @@ import { FormService } from '@app/services/form.service';
 })
 export class ListGameFormComponent implements OnInit {
     gameFormList: GameFormDescription[];
+    firstElementIndex: number = 0;
+    fourthElementIndex: number = 3;
+
     constructor(private formService: FormService) {}
 
     ngOnInit(): void {
         this.gameFormList = this.formService.gameForms;
+    }
+
+    nextFourGameForm() {
+        //const 4
+        this.firstElementIndex += 4;
+        this.fourthElementIndex += 4;
+    }
+
+    formerFourGameForm() {
+        //const 4
+        this.firstElementIndex -= 4;
+        this.fourthElementIndex -= 4;
     }
 }

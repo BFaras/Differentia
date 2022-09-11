@@ -11,5 +11,7 @@ export class GameFormComponent implements OnInit {
 
     constructor() {}
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+
+    }
 }
