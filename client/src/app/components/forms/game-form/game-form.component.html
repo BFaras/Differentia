@@ -4,11 +4,11 @@
         <div class="imageGameForm">{{ gameForm.gameImage }}</div>
         <div class="dataGameForm">
             <ol class="recordTimeSolo">
-                <p>Solo</p>
+                <h3>Solo</h3>
                 <li *ngFor="let records of gameForm.recordTimesBoard.recordTimesSolo">{{ records.time }} by {{ records.playerName }}</li>
             </ol>
             <ol class="recordTimeVersus">
-                <p>Versus</p>
+                <h3>Versus</h3>
                 <li *ngFor="let records of gameForm.recordTimesBoard.recordTimesVersus">{{ records.time }} by {{ records.playerName }}</li>
             </ol>
         </div>

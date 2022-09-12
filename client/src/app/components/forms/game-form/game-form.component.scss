@@ -1,10 +1,16 @@
 body {
     text-align: center;
+    color: #ebcdb9;
+    font-weight: 55;
+    background-color: #687e91;
+    border-radius: 15px;
 }
 h1 {
-    background: linear-gradient(70deg, #eff5b6, #0dd137);
+    background-color: #687e91;
     border-radius: 15px;
-    font-weight: 550;
+    font-weight: 750;
+    font-family: The Father;
+    font-size: 32px;
     display: flex;
     padding: 2%;
     align-items: center;
@@ -31,18 +37,14 @@ h1 {
 }
 
 .imageGameForm {
-    color: rgb(39, 24, 41);
-    background-color: rgb(235, 235, 235);
-    border: solid rgb(82, 81, 31);
+    color: rgb(255, 255, 255);
     border-radius: 20px;
     height: 100%;
     width: 48%;
 }
 
 .dataGameForm {
-    color: rgb(39, 24, 41);
-    background-color: rgb(235, 235, 235);
-    border: solid rgb(82, 60, 31);
+    color: rgb(255, 255, 255);
     border-radius: 20px;
     height: 100%;
     width: 48%;
@@ -63,6 +65,10 @@ li {
     gap: 2.5%;
     top: 5%;
     right: 1%;
+}
+
+button {
+    background-color: rgb(214, 214, 214);
 }
 
 .button-group > button:nth-child(1) {
