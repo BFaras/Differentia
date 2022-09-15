@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { FormService } from '@app/services/form.service';
-
-//TO DO : Put the constant in the configuration folder
-const MAX_NB_OF_FORMS_PER_PAGE: number = 4;
+import { Constants } from '@common/config';
 
 @Component({
     selector: 'app-list-game-form',
@@ -18,7 +16,7 @@ export class ListGameFormComponent implements OnInit {
     constructor(public formService: FormService) {}
 
     ngOnInit(): void {
-        if (this.formService.gameForms.length < MAX_NB_OF_FORMS_PER_PAGE) {
+        if (this.formService.gameForms.length < Constants.MAX_NB_OF_FORMS_PER_PAGE) {
             this.lastElementIndex = this.formService.gameForms.length - 1;
         }
 
@@ -27,11 +25,11 @@ export class ListGameFormComponent implements OnInit {
 
     nextPageGameForms() {
         //const 4
-        if (this.firstElementIndex + MAX_NB_OF_FORMS_PER_PAGE < this.formService.gameForms.length) {
-            this.firstElementIndex += MAX_NB_OF_FORMS_PER_PAGE;
+        if (this.firstElementIndex + Constants.MAX_NB_OF_FORMS_PER_PAGE < this.formService.gameForms.length) {
+            this.firstElementIndex += Constants.MAX_NB_OF_FORMS_PER_PAGE;
 
-            if (this.lastElementIndex + MAX_NB_OF_FORMS_PER_PAGE < this.formService.gameForms.length) {
-                this.lastElementIndex = this.firstElementIndex + (MAX_NB_OF_FORMS_PER_PAGE - 1);
+            if (this.lastElementIndex + Constants.MAX_NB_OF_FORMS_PER_PAGE < this.formService.gameForms.length) {
+                this.lastElementIndex = this.firstElementIndex + (Constants.MAX_NB_OF_FORMS_PER_PAGE - 1);
             } else {
                 this.lastElementIndex = this.formService.gameForms.length - 1;
             }
@@ -42,9 +40,9 @@ export class ListGameFormComponent implements OnInit {
 
     previousPageGameForms() {
         //const 4
-        if (this.firstElementIndex - MAX_NB_OF_FORMS_PER_PAGE >= 0) {
-            this.firstElementIndex -= MAX_NB_OF_FORMS_PER_PAGE;
-            this.lastElementIndex = this.firstElementIndex + (MAX_NB_OF_FORMS_PER_PAGE - 1);
+        if (this.firstElementIndex - Constants.MAX_NB_OF_FORMS_PER_PAGE >= 0) {
+            this.firstElementIndex -= Constants.MAX_NB_OF_FORMS_PER_PAGE;
+            this.lastElementIndex = this.firstElementIndex + (Constants.MAX_NB_OF_FORMS_PER_PAGE - 1);
 
             this.addCurrentPageGameForms();
         }
