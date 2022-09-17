@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { GameFormDescription } from '@app/classes/game-form-description';
 
 @Component({
@@ -6,12 +6,8 @@ import { GameFormDescription } from '@app/classes/game-form-description';
     templateUrl: './game-form.component.html',
     styleUrls: ['./game-form.component.scss'],
 })
-export class GameFormComponent implements OnInit {
+export class GameFormComponent {
     @Input() gameForm: GameFormDescription;
 
     constructor() {}
-
-    ngOnInit(): void {
-
-    }
 }
