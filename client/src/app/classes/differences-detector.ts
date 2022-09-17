@@ -14,8 +14,7 @@ const ALPHA_OPAQUE = 1;
 export class DifferencesDetector {
     private whiteImageData;
 
-    constructor(readonly imagesToCompare: ImagesToCompare, readonly canvasToCompare: CanvasToCompare, readonly radius: number) {
-        // Ajouter la verification de grandeur
+    constructor(readonly imagesToCompare: ImagesToCompare, readonly canvasToCompare: CanvasToCompare, readonly offset: number) {
         const whiteCanvas = new Canvas(this.imagesToCompare.originalImage.width, this.imagesToCompare.originalImage.height);
         const whiteImageContext = whiteCanvas.getContext('2d');
         whiteImageContext.fillStyle = 'white';
@@ -30,7 +29,14 @@ export class DifferencesDetector {
         return imageContext.getImageData(0, 0, canvas.width, canvas.height).data;
     }
 
-    getDifferencesTest(originalImage: Image, modifiedImage: Image) {
+    getDifferences(originalImage: Image, modifiedImage: Image) {
+        if (originalImage.width !== modifiedImage.width || originalImage.height !== modifiedImage.width) {
+            return; // Pas certain de quoi faire ici, est-ce qu'on lance une erreur, ou on retourne rien puisque cette
+            // verification est deja faite ailleurs aussi
+        }
+
+        let differentImage = false;
+
         const originalImageData = this.getImageData(originalImage, this.canvasToCompare.originalImageCanvas);
         const modifiedImageData = this.getImageData(modifiedImage, this.canvasToCompare.modifiedImageCanvas);
 
@@ -41,9 +47,14 @@ export class DifferencesDetector {
             const alphaDiff = originalImageData[i + ALPHA_POS] - modifiedImageData[i + ALPHA_POS];
 
             if (redDiff !== 0 || greenDiff !== 0 || blueDiff !== 0 || alphaDiff !== 0) {
+                differentImage = true;
                 this.generateDiffImage(i);
             }
         }
+
+        const nbDiffereces = differentImage ? this.getNbDifferences() : 0;
+
+        return { differentImage, nbDiffereces };
     }
 
     generateDiffImage(pixelPosition: number) {
@@ -52,4 +63,16 @@ export class DifferencesDetector {
         this.whiteImageData.data[pixelPosition + BLUE_POS] = BLACK;
         this.whiteImageData.data[pixelPosition + ALPHA_POS] = ALPHA_OPAQUE;
     }
+
+    generateOffset() {
+        // TD : Fonction qui dessine le offset autour du point
+    }
+
+    getNbDifferences() {
+        // TD : Fonction qui trouve le nombre de differences
+        return 0;
+    }
+
+    // Il manque les fonctions pour compter le nombre de differences (avec le offset) et une fontion qui
+    // va dessiner le offset autour de chaque differences
 }
