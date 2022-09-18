@@ -1,0 +1,21 @@
+<div class="container">
+    <div mat-dialog-title class="dialog-title">
+        <button mat-icon-button aria-label="close dialog" mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <mat-dialog-content class="dialog-content">
+        <h1>Validation</h1>
+        <div class="form-radius-container">
+            <div>Nombre de difference : __NombreDiff__</div>
+            <mat-form-field>
+                <label for="name">Nom du Jeu : </label>
+                <input matInput name="name" placeholder="nameOfGame" />
+            </mat-form-field>
+        </div>
+        <mat-dialog-actions>
+            <button mat-raised-button mat-dialog-close>Retour</button>
+            <button mat-raised-button mat-dialog-close>Créer</button>
+        </mat-dialog-actions>
+    </mat-dialog-content>
+</div>
