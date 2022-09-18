@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class EditImagesService {
-
-  constructor() { }
+    activatedEmitterUrlImage = new EventEmitter<string>();
+    activatedEmitterRemoveImage = new EventEmitter<boolean>();
 }

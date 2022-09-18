@@ -3,12 +3,16 @@
         <mat-grid-tile-header>
             <app-header-image> </app-header-image>
         </mat-grid-tile-header>
-        <mat-card></mat-card>
+        <mat-card>
+            <img *ngIf="imageObtenue" [src]="urlImage" />
+        </mat-card>
     </mat-grid-tile>
     <mat-grid-tile>
         <mat-grid-tile-header>
             <app-header-image> </app-header-image>
         </mat-grid-tile-header>
-        <mat-card></mat-card>
+        <mat-card>
+            <img *ngIf="imageObtenue" [src]="urlImage" />
+        </mat-card>
     </mat-grid-tile>
 </mat-grid-list>

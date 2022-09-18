@@ -9,6 +9,11 @@ mat-card {
     border: solid black;
 }
 
+mat-card > img {
+    width: 100%;
+    height: 100%;
+}
+
 app-header-image {
     width: 100%;
     height: 100%;

@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { EditImagesService } from '@app/services/edit-images.service';
 import { PopDialogDownloadImagesComponent } from '../pop-dialogs/pop-dialog-download-images/pop-dialog-download-images.component';
+
 @Component({
     selector: 'app-header-image',
     templateUrl: './header-image.component.html',
     styleUrls: ['./header-image.component.scss'],
 })
 export class HeaderImageComponent implements OnInit {
-    constructor(private dialog: MatDialog) {}
+    wantToDeleteImage: boolean = false;
+    constructor(private dialog: MatDialog, private editImagesService: EditImagesService) {}
 
     ngOnInit(): void {}
 
@@ -16,5 +19,11 @@ export class HeaderImageComponent implements OnInit {
             height: '400px',
             width: '600px',
         });
+    }
+
+    onDeleteImage() {
+        this.wantToDeleteImage = !this.wantToDeleteImage;
+        this.editImagesService.activatedEmitterRemoveImage.emit(this.wantToDeleteImage);
+        this.wantToDeleteImage = !this.wantToDeleteImage;
     }
 }

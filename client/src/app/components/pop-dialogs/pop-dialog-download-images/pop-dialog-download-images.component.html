@@ -8,7 +8,8 @@
         <h1>Televersement</h1>
         <p>Contrainte: images en format BMP 24-bit de taille 640x480</p>
         <mat-dialog-actions>
-            <button mat-raised-button mat-dialog-close>D</button>
+            <img [src]="urlOfImage" />
+            <input type="file" (change)="onClickUploadImage($event)" />
         </mat-dialog-actions>
     </mat-dialog-content>
 </div>
