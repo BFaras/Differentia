@@ -11,9 +11,12 @@ import { AppComponent } from '@app/pages/app/app.component';
 import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
-import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
 import { EditableImagesComponent } from './components/editable-images/editable-images.component';
 import { HeaderImageComponent } from './components/header-image/header-image.component';
+import { PopDialogDownloadImagesComponent } from './components/pop-dialogs/pop-dialog-download-images/pop-dialog-download-images.component';
+import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
+import { PopDialogValidateGameComponent } from './components/pop-dialogs/pop-dialog-validate-game/pop-dialog-validate-game.component';
+import { PopDialogCreateGameComponent } from './components/pop-dialogs/pop-dialog-create-game/pop-dialog-create-game.component';
 
 /**
  * Main module that is used in main.ts.
@@ -22,7 +25,20 @@ import { HeaderImageComponent } from './components/header-image/header-image.com
  * Otherwise Angular Cli will not know in which module to put new component
  */
 @NgModule({
-    declarations: [AppComponent, GamePageComponent, MainPageComponent, MaterialPageComponent, PlayAreaComponent, SidebarComponent, GameCreationPageComponent, EditableImagesComponent, HeaderImageComponent],
+    declarations: [
+        AppComponent,
+        GamePageComponent,
+        MainPageComponent,
+        MaterialPageComponent,
+        PlayAreaComponent,
+        SidebarComponent,
+        GameCreationPageComponent,
+        EditableImagesComponent,
+        HeaderImageComponent,
+        PopDialogDownloadImagesComponent,
+        PopDialogValidateGameComponent,
+        PopDialogCreateGameComponent,
+    ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
     providers: [],
     bootstrap: [AppComponent],
