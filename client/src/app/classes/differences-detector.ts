@@ -30,11 +30,6 @@ export class DifferencesDetector {
     }
 
     getDifferences(originalImage: Image, modifiedImage: Image) {
-        if (originalImage.width !== modifiedImage.width || originalImage.height !== modifiedImage.width) {
-            return; // Pas certain de quoi faire ici, est-ce qu'on lance une erreur, ou on retourne rien puisque cette
-            // verification est deja faite ailleurs aussi
-        }
-
         let differentImage = false;
 
         const originalImageData = this.getImageData(originalImage, this.canvasToCompare.originalImageCanvas);
