@@ -1,9 +1,23 @@
-app-list-game-form {
+body {
     background: linear-gradient(2300deg, #395153, rgb(208, 208, 231) 50%, #364b4d);
+}
+app-list-game-form {
     align-items: center;
-    border: solid grey;
     display: flex;
-    height: 100%;
     justify-content: center;
     width: 100%;
+    height: 80%;
+}
+.mat-flat-button.mat-primary,
+.mat-raised-button.mat-primary,
+.mat-fab.mat-primary,
+.mat-mini-fab.mat-primary {
+    width: 150px;
+    height: 60px;
+    justify-content: center;
+    text-align: center;
+    margin-left: 530px;
+    margin-top: 35px;
+    background-color: rgb(214 192 143 / 79%);
+    color: #181d34;
 }
