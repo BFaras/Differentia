@@ -10,12 +10,10 @@ const BLUE_POS = 2;
 const ALPHA_POS = 3;
 
 export class DifferencesDetector {
-    public noOffsetDifferenceImageGenerator : DifferencesImageGenerator;
-    public offsetDifferenceImageGenerator : DifferencesImageGenerator;
+    public differenceImageGenerator : DifferencesImageGenerator;
 
     constructor(readonly imagesToCompare: ImagesToCompare, readonly canvasToCompare: CanvasToCompare, readonly offset: number) {
-        this.noOffsetDifferenceImageGenerator = new DifferencesImageGenerator(0, imagesToCompare.originalImage.width, imagesToCompare.originalImage.height);
-        this.offsetDifferenceImageGenerator = new DifferencesImageGenerator(offset, imagesToCompare.originalImage.width, imagesToCompare.originalImage.height);
+        this.differenceImageGenerator = new DifferencesImageGenerator(offset, imagesToCompare.originalImage.width, imagesToCompare.originalImage.height);
         this.generateDifferencesInformation();
     }
 
@@ -39,8 +37,7 @@ export class DifferencesDetector {
 
             if (redDiff !== 0 || greenDiff !== 0 || blueDiff !== 0 || alphaDiff !== 0) {
                 differentImage = true;
-                this.noOffsetDifferenceImageGenerator.addDifferencePixelsToImage(i);
-                this.offsetDifferenceImageGenerator.addDifferencePixelsToImage(i);
+                this.differenceImageGenerator.addDifferencePixelsToImage(i);
             }
         }
 
