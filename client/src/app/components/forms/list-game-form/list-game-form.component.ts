@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { FormService } from '@app/services/form.service';
 import { Constants } from '@common/config';
@@ -12,6 +12,7 @@ export class ListGameFormComponent implements OnInit {
     firstElementIndex: number = 0;
     lastElementIndex: number = 3;
     currentPageGameFormList: GameFormDescription[];
+    @Input() page: string;
 
     constructor(public formService: FormService) {}
 

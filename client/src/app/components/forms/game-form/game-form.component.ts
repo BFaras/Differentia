@@ -1,7 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { GameFormDescription } from '@app/classes/game-form-description';
-import { AdminPageComponent } from '@app/pages/admin-page/admin-page.component';
-import { GameSelectionComponent } from '@app/pages/game-selection/game-selection.component';
 
 @Component({
     selector: 'app-game-form',
@@ -10,7 +8,8 @@ import { GameSelectionComponent } from '@app/pages/game-selection/game-selection
 })
 export class GameFormComponent {
     @Input() gameForm: GameFormDescription;
-    @Input() selectionButton: GameSelectionComponent;
-    @Input() adminButton: AdminPageComponent;
+    @Input() buttonPage: string;
+    adminGameFormsButton = ['Supprimer', 'Réinitialiser'];
+    selectionGameFormsButton = ['Créer', 'Jouer'];
     constructor() {}
 }
