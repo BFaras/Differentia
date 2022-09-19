@@ -49,10 +49,6 @@ export class DifferencesDetector {
         return { differentImage, nbDiffereces };
     }
 
-    generateOffset() {
-        // TD : Fonction qui dessine le offset autour du point
-    }
-
     getNbDifferences() {
         // TD : Fonction qui trouve le nombre de differences
         return 0;
