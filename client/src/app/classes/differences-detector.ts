@@ -1,5 +1,6 @@
 import { Canvas, Image } from 'canvas';
 import { CanvasToCompare } from './canvas-to-compare';
+import { DifferencesImageGenerator } from './differences-image-generator';
 import { ImagesToCompare } from './images-to-compare';
 
 const NB_BIT_PER_PIXEL = 4;
@@ -8,19 +9,14 @@ const GREEN_POS = 1;
 const BLUE_POS = 2;
 const ALPHA_POS = 3;
 
-const BLACK = 0;
-const ALPHA_OPAQUE = 1;
-
 export class DifferencesDetector {
-    private whiteImageData;
+    public noOffsetDifferenceImageGenerator : DifferencesImageGenerator;
+    public offsetDifferenceImageGenerator : DifferencesImageGenerator;
 
     constructor(readonly imagesToCompare: ImagesToCompare, readonly canvasToCompare: CanvasToCompare, readonly offset: number) {
-        const whiteCanvas = new Canvas(this.imagesToCompare.originalImage.width, this.imagesToCompare.originalImage.height);
-        const whiteImageContext = whiteCanvas.getContext('2d');
-        whiteImageContext.fillStyle = 'white';
-        whiteImageContext.fillRect(0, 0, whiteCanvas.width, whiteCanvas.height);
-
-        this.whiteImageData = whiteImageContext.getImageData(0, 0, whiteCanvas.width, whiteCanvas.height);
+        this.noOffsetDifferenceImageGenerator = new DifferencesImageGenerator(0, imagesToCompare.originalImage.width, imagesToCompare.originalImage.height);
+        this.offsetDifferenceImageGenerator = new DifferencesImageGenerator(offset, imagesToCompare.originalImage.width, imagesToCompare.originalImage.height);
+        this.generateDifferencesInformation();
     }
 
     getImageData(image: Image, canvas: Canvas) {
@@ -29,11 +25,11 @@ export class DifferencesDetector {
         return imageContext.getImageData(0, 0, canvas.width, canvas.height).data;
     }
 
-    getDifferences(originalImage: Image, modifiedImage: Image) {
+    generateDifferencesInformation() {
         let differentImage = false;
 
-        const originalImageData = this.getImageData(originalImage, this.canvasToCompare.originalImageCanvas);
-        const modifiedImageData = this.getImageData(modifiedImage, this.canvasToCompare.modifiedImageCanvas);
+        const originalImageData = this.getImageData(this.imagesToCompare.originalImage, this.canvasToCompare.originalImageCanvas);
+        const modifiedImageData = this.getImageData(this.imagesToCompare.modifiedImage, this.canvasToCompare.modifiedImageCanvas);
 
         for (let i = 0; i < originalImageData.length; i += NB_BIT_PER_PIXEL) {
             const redDiff = originalImageData[i + RED_POS] - modifiedImageData[i + RED_POS];
@@ -43,20 +39,14 @@ export class DifferencesDetector {
 
             if (redDiff !== 0 || greenDiff !== 0 || blueDiff !== 0 || alphaDiff !== 0) {
                 differentImage = true;
-                this.generateDiffImage(i);
+                this.noOffsetDifferenceImageGenerator.addDifferencePixelsToImage(i);
+                this.offsetDifferenceImageGenerator.addDifferencePixelsToImage(i);
             }
         }
 
         const nbDiffereces = differentImage ? this.getNbDifferences() : 0;
 
         return { differentImage, nbDiffereces };
-    }
-
-    generateDiffImage(pixelPosition: number) {
-        this.whiteImageData.data[pixelPosition + RED_POS] = BLACK;
-        this.whiteImageData.data[pixelPosition + GREEN_POS] = BLACK;
-        this.whiteImageData.data[pixelPosition + BLUE_POS] = BLACK;
-        this.whiteImageData.data[pixelPosition + ALPHA_POS] = ALPHA_OPAQUE;
     }
 
     generateOffset() {
