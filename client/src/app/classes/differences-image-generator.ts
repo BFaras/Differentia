@@ -16,11 +16,6 @@ export class DifferencesImageGenerator {
     private readonly imageHeight : number;
 
 
-    getWhiteImageData()
-    {
-        return this.whiteImageData;
-    }
-
     constructor(private offsetSent : number, private imageWidthSent : number, private imageHeightSent : number) {
         this.offset = offsetSent;
         this.imageWidth = imageWidthSent;
@@ -33,13 +28,16 @@ export class DifferencesImageGenerator {
         this.whiteImageData = whiteImageContext.getImageData(0, 0, whiteCanvas.width, whiteCanvas.height);
     }
 
+    getWhiteImageData() {
+        return this.whiteImageData;
+    }
+
     addDifferencePixelsToImage(pixelPosition: number) {
         this.generateBlackPixel(pixelPosition);
         this.generateOffsetPixels(pixelPosition);
     }
 
-    private generateOffsetPixels(centerPixelPosition: number)
-    {
+    private generateOffsetPixels(centerPixelPosition: number) {
         // TD : Fonction qui dessine le offset autour du point
         //On génère un cercle autour du pixel au centre
         //Formule : (x – h)2+ (y – k)2 = r2
