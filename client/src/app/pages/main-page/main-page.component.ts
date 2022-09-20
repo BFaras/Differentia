@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class MainPageComponent {
     readonly title: string = 'Jeu de Difference';
-    readonly buttonName: String[] = ['Classic mode', 'Limited Time mode', 'Admin'];
+    readonly buttonName: String[] = ['Mode classique', 'Temps limité', 'Administration'];
 
     constructor() {}
 }
