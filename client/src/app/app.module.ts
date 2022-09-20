@@ -12,13 +12,16 @@ import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
 import { EditableImagesComponent } from './components/editable-images/editable-images.component';
-import { HeaderImageComponent } from './components/header-image/header-image.component';
-import { PopDialogDownloadImagesComponent } from './components/pop-dialogs/pop-dialog-download-images/pop-dialog-download-images.component';
-import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
-import { PopDialogValidateGameComponent } from './components/pop-dialogs/pop-dialog-validate-game/pop-dialog-validate-game.component';
-import { PopDialogCreateGameComponent } from './components/pop-dialogs/pop-dialog-create-game/pop-dialog-create-game.component';
-import { OriginalImageComponent } from './components/editable-images/original-image/original-image.component';
 import { ModifiedImageComponent } from './components/editable-images/modified-image/modified-image.component';
+import { OriginalImageComponent } from './components/editable-images/original-image/original-image.component';
+import { GameFormComponent } from './components/forms/game-form/game-form.component';
+import { ListGameFormComponent } from './components/forms/list-game-form/list-game-form.component';
+import { HeaderImageComponent } from './components/header-image/header-image.component';
+import { PopDialogCreateGameComponent } from './components/pop-dialogs/pop-dialog-create-game/pop-dialog-create-game.component';
+import { PopDialogDownloadImagesComponent } from './components/pop-dialogs/pop-dialog-download-images/pop-dialog-download-images.component';
+import { PopDialogValidateGameComponent } from './components/pop-dialogs/pop-dialog-validate-game/pop-dialog-validate-game.component';
+import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
+import { GameSelectionComponent } from './pages/game-selection/game-selection.component';
 
 /**
  * Main module that is used in main.ts.
@@ -42,6 +45,9 @@ import { ModifiedImageComponent } from './components/editable-images/modified-im
         PopDialogCreateGameComponent,
         OriginalImageComponent,
         ModifiedImageComponent,
+        GameSelectionComponent,
+        GameFormComponent,
+        ListGameFormComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
     providers: [],
