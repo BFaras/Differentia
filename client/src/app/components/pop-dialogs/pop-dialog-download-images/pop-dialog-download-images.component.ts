@@ -8,6 +8,7 @@ import { EditImagesService } from '@app/services/edit-images.service';
     styleUrls: ['./pop-dialog-download-images.component.scss'],
 })
 export class PopDialogDownloadImagesComponent {
+    warningActivated: boolean = false;
     urlOfImage: string;
 
     constructor(private editImagesService: EditImagesService) {}
@@ -23,7 +24,10 @@ export class PopDialogDownloadImagesComponent {
                 this.editImagesService.imageToVerify.onload = () => {
                     if (this.editImagesService.verifyImageConstraint() && this.editImagesService.verifyImageFormat(fileToRead)) {
                         this.urlOfImage = reader.result as string;
+                        this.warningActivated = false;
                         this.editImagesService.activatedEmitterUrlImage.emit(this.urlOfImage);
+                    } else {
+                        this.warningActivated = true;
                     }
                 };
             };

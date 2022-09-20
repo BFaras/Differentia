@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PopDialogCreateGameComponent } from '../pop-dialog-create-game/pop-dialog-create-game.component';
 @Component({
@@ -6,10 +6,8 @@ import { PopDialogCreateGameComponent } from '../pop-dialog-create-game/pop-dial
     templateUrl: './pop-dialog-validate-game.component.html',
     styleUrls: ['./pop-dialog-validate-game.component.scss'],
 })
-export class PopDialogValidateGameComponent implements OnInit {
+export class PopDialogValidateGameComponent {
     constructor(private dialog: MatDialog) {}
-
-    ngOnInit(): void {}
 
     onCreateCreateGame() {
         this.dialog.open(PopDialogCreateGameComponent, {

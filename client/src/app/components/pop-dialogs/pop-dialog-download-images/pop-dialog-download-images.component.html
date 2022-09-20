@@ -6,9 +6,10 @@
     </div>
     <mat-dialog-content class="dialog-content">
         <h1>Televersement</h1>
-        <p>Contrainte: images en format BMP 24-bit de taille 640x480</p>
+        <p [ngClass] = "{
+            'warning': warningActivated === true}
+        ">Contrainte: images en format BMP 24-bit de taille 640x480</p>
         <mat-dialog-actions>
-            <img [src]="urlOfImage" />
             <input type="file" (change)="onClickUploadImage($event)" />
         </mat-dialog-actions>
     </mat-dialog-content>
