@@ -76,10 +76,18 @@ export class DifferencesDetector {
             for (let j = diffPixelLine; (j - diffPixelLine) ** 2 + (i - diffPixelColumn) ** 2 <= circieRadiusToVisit ** 2; j--) {
                 const currentVisitingPixelPosition = i * this.imagesToCompare.originalImage.height + j * this.imagesToCompare.originalImage.width;
                 this.markPixelAsVisited(currentVisitingPixelPosition, differentPixelsMap);
+
+                if (differentPixelsMap.has(currentVisitingPixelPosition) && !differentPixelsMap.get(currentVisitingPixelPosition)) {
+                    this.visitDifferentPixelsAround(currentVisitingPixelPosition, differentPixelsMap);
+                }
             }
             for (let j = diffPixelLine + 1; (j - diffPixelLine) ** 2 + (i - diffPixelColumn) ** 2 <= circieRadiusToVisit ** 2; j++) {
                 const currentVisitingPixelPosition = i * this.imagesToCompare.originalImage.height + j * this.imagesToCompare.originalImage.width;
                 this.markPixelAsVisited(currentVisitingPixelPosition, differentPixelsMap);
+
+                if (differentPixelsMap.has(currentVisitingPixelPosition) && !differentPixelsMap.get(currentVisitingPixelPosition)) {
+                    this.visitDifferentPixelsAround(currentVisitingPixelPosition, differentPixelsMap);
+                }
             }
         }
     }
