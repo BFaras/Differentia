@@ -1,0 +1,48 @@
+.gameForm {
+    border: solid rgb(201, 201, 201) 4px;
+    border-radius: 20px;
+    border-style: groove;
+    height: 100%;
+    width: 100%;
+}
+
+// percentage marche pas , meme si parent a une height!!!
+.gameFormsContainer {
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    height: 80%;
+    position: relative;
+    width: 80%;
+}
+
+.arrow {
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    height: 50px;
+    padding: 3px;
+    width: 50px;
+    z-index: 1;
+}
+
+.left {
+    left: 35px;
+    position: absolute;
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+}
+
+.right {
+    position: absolute;
+    right: 35px;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+
+.arrow:hover {
+    border-width: 0 6px 6px 0;
+    cursor: pointer;
+    transition: 0, 5s all ease-out;
+}
