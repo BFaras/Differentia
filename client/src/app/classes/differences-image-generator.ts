@@ -11,14 +11,20 @@ const ALPHA_OPAQUE = 1;
 
 export class DifferencesImageGenerator {
     private whiteImageData;
+    private differentPixelsPositionsWithOffset: Map<number, boolean>;
 
-    constructor(readonly offset: number, readonly imageWidth: number, readonly imageHeight: number) {
+    constructor(private readonly offset: number, private readonly imageWidth: number, private readonly imageHeight: number) {
         const whiteCanvas = new Canvas(this.imageWidth, this.imageHeight);
         const whiteImageContext = whiteCanvas.getContext('2d');
         whiteImageContext.fillStyle = 'white';
         whiteImageContext.fillRect(0, 0, whiteCanvas.width, whiteCanvas.height);
 
         this.whiteImageData = whiteImageContext.getImageData(0, 0, whiteCanvas.width, whiteCanvas.height);
+        this.differentPixelsPositionsWithOffset = new Map<number, boolean>();
+    }
+
+    getDifferentPixelsPositionWithOffset(): Map<number, boolean> {
+        return this.differentPixelsPositionsWithOffset;
     }
 
     getWhiteImageData() {
@@ -26,7 +32,7 @@ export class DifferencesImageGenerator {
     }
 
     addDifferencePixelsToImage(pixelPosition: number) {
-        this.generateBlackPixel(pixelPosition);
+        this.markDifference(pixelPosition);
         this.generateOffsetPixels(pixelPosition);
     }
 
@@ -42,12 +48,17 @@ export class DifferencesImageGenerator {
 
         for (let i = centerPixelColumn - this.offset; i < centerPixelColumn + this.offset; i++) {
             for (let j = centerPixelLine; (j - centerPixelLine) ** 2 + (i - centerPixelColumn) ** 2 <= this.offset ** 2; j--) {
-                this.generateBlackPixel(j);
+                this.markDifference(j);
             }
             for (let j = centerPixelLine + 1; (j - centerPixelLine) ** 2 + (i - centerPixelColumn) ** 2 <= this.offset ** 2; j++) {
-                this.generateBlackPixel(j);
+                this.markDifference(j);
             }
         }
+    }
+
+    private markDifference(pixelPosition: number) {
+        this.differentPixelsPositionsWithOffset.set(pixelPosition, false);
+        this.generateBlackPixel(pixelPosition);
     }
 
     private generateBlackPixel(pixelPosition: number) {
