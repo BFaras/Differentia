@@ -17,6 +17,8 @@ import { PopDialogDownloadImagesComponent } from './components/pop-dialogs/pop-d
 import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
 import { PopDialogValidateGameComponent } from './components/pop-dialogs/pop-dialog-validate-game/pop-dialog-validate-game.component';
 import { PopDialogCreateGameComponent } from './components/pop-dialogs/pop-dialog-create-game/pop-dialog-create-game.component';
+import { OriginalImageComponent } from './components/editable-images/original-image/original-image.component';
+import { ModifiedImageComponent } from './components/editable-images/modified-image/modified-image.component';
 
 /**
  * Main module that is used in main.ts.
@@ -38,6 +40,8 @@ import { PopDialogCreateGameComponent } from './components/pop-dialogs/pop-dialo
         PopDialogDownloadImagesComponent,
         PopDialogValidateGameComponent,
         PopDialogCreateGameComponent,
+        OriginalImageComponent,
+        ModifiedImageComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
     providers: [],
