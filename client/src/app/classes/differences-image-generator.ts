@@ -11,14 +11,8 @@ const ALPHA_OPAQUE = 1;
 
 export class DifferencesImageGenerator {
     private whiteImageData;
-    private offset: number;
-    private readonly imageWidth: number;
-    private readonly imageHeight: number;
 
-    constructor(private offsetSent: number, private imageWidthSent: number, private imageHeightSent: number) {
-        this.offset = offsetSent;
-        this.imageWidth = imageWidthSent;
-        this.imageHeight = imageHeightSent;
+    constructor(readonly offset: number, readonly imageWidth: number, readonly imageHeight: number) {
         const whiteCanvas = new Canvas(this.imageWidth, this.imageHeight);
         const whiteImageContext = whiteCanvas.getContext('2d');
         whiteImageContext.fillStyle = 'white';
@@ -46,11 +40,11 @@ export class DifferencesImageGenerator {
         const centerPixelLine = centerPixelNumber % this.imageHeight;
         const centerPixelColumn = centerPixelNumber % this.imageWidth;
 
-        for (let i = centerPixelColumn - this.offsetSent; i < centerPixelColumn + this.offsetSent; i++) {
-            for (let j = centerPixelLine; (j - centerPixelLine) ** 2 + (i - centerPixelColumn) ** 2 <= this.offsetSent ** 2; j--) {
+        for (let i = centerPixelColumn - this.offset; i < centerPixelColumn + this.offset; i++) {
+            for (let j = centerPixelLine; (j - centerPixelLine) ** 2 + (i - centerPixelColumn) ** 2 <= this.offset ** 2; j--) {
                 this.generateBlackPixel(j);
             }
-            for (let j = centerPixelLine + 1; (j - centerPixelLine) ** 2 + (i - centerPixelColumn) ** 2 <= this.offsetSent ** 2; j++) {
+            for (let j = centerPixelLine + 1; (j - centerPixelLine) ** 2 + (i - centerPixelColumn) ** 2 <= this.offset ** 2; j++) {
                 this.generateBlackPixel(j);
             }
         }
