@@ -11,12 +11,11 @@ const ALPHA_OPAQUE = 1;
 
 export class DifferencesImageGenerator {
     private whiteImageData;
-    private offset : number;
-    private readonly imageWidth : number;
-    private readonly imageHeight : number;
+    private offset: number;
+    private readonly imageWidth: number;
+    private readonly imageHeight: number;
 
-
-    constructor(private offsetSent : number, private imageWidthSent : number, private imageHeightSent : number) {
+    constructor(private offsetSent: number, private imageWidthSent: number, private imageHeightSent: number) {
         this.offset = offsetSent;
         this.imageWidth = imageWidthSent;
         this.imageHeight = imageHeightSent;
@@ -46,10 +45,18 @@ export class DifferencesImageGenerator {
         const centerPixelNumber = centerPixelPosition % NB_BIT_PER_PIXEL;
         const centerPixelLine = centerPixelNumber % this.imageHeight;
         const centerPixelColumn = centerPixelNumber % this.imageWidth;
+
+        for (let i = centerPixelColumn - this.offsetSent; i < centerPixelColumn + this.offsetSent; i++) {
+            for (let j = centerPixelLine; (j - centerPixelLine) ** 2 + (i - centerPixelColumn) ** 2 <= this.offsetSent ** 2; j--) {
+                // in the circle
+            }
+            for (let j = centerPixelLine + 1; (j - centerPixelLine) ** 2 + (i - centerPixelColumn) ** 2 <= this.offsetSent ** 2; j++) {
+                // in the circle
+            }
+        }
     }
 
-    private generateBlackPixel(pixelPosition: number)
-    {
+    private generateBlackPixel(pixelPosition: number) {
         this.whiteImageData.data[pixelPosition + RED_POS] = BLACK;
         this.whiteImageData.data[pixelPosition + GREEN_POS] = BLACK;
         this.whiteImageData.data[pixelPosition + BLUE_POS] = BLACK;
