@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EditImagesService } from '@app/services/edit-images.service';
 
 @Component({
@@ -11,7 +12,7 @@ export class PopDialogDownloadImagesComponent {
     warningActivated: boolean = false;
     urlOfImage: string;
 
-    constructor(private editImagesService: EditImagesService) {}
+    constructor(private editImagesService: EditImagesService, @Inject(MAT_DIALOG_DATA) private imageInfo: any) {}
 
     onClickUploadImage(event: any) {
         if (event.target.files) {
@@ -25,7 +26,11 @@ export class PopDialogDownloadImagesComponent {
                     if (this.editImagesService.verifyImageConstraint() && this.editImagesService.verifyImageFormat(fileToRead)) {
                         this.urlOfImage = reader.result as string;
                         this.warningActivated = false;
-                        this.editImagesService.activatedEmitterUrlImage.emit(this.urlOfImage);
+                        if (this.imageInfo.bothImage) {
+                            this.editImagesService.activatedEmitterUrlImageBoth.emit(this.urlOfImage);
+                        } else {
+                            this.editImagesService.activatedEmitterUrlImageSingle.emit({ index: this.imageInfo.indexOfImage, url: this.urlOfImage });
+                        }
                     } else {
                         this.warningActivated = true;
                     }

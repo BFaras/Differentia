@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { EditImagesService } from '@app/services/edit-images.service';
 import { PopDialogDownloadImagesComponent } from '../pop-dialogs/pop-dialog-download-images/pop-dialog-download-images.component';
@@ -9,6 +9,7 @@ import { PopDialogDownloadImagesComponent } from '../pop-dialogs/pop-dialog-down
     styleUrls: ['./header-image.component.scss'],
 })
 export class HeaderImageComponent implements OnInit {
+    @Input() indexOfImageToSend: number;
     wantToDeleteImage: boolean = false;
     constructor(private dialog: MatDialog, private editImagesService: EditImagesService) {}
 
@@ -18,12 +19,14 @@ export class HeaderImageComponent implements OnInit {
         this.dialog.open(PopDialogDownloadImagesComponent, {
             height: '400px',
             width: '600px',
+            data: {
+                indexOfImage: this.indexOfImageToSend,
+                bothImage: false,
+            },
         });
     }
 
     onDeleteImage() {
-        this.wantToDeleteImage = !this.wantToDeleteImage;
-        this.editImagesService.activatedEmitterRemoveImage.emit(this.wantToDeleteImage);
-        this.wantToDeleteImage = !this.wantToDeleteImage;
+        this.editImagesService.activatedEmitterRemoveImage.emit(this.indexOfImageToSend);
     }
 }

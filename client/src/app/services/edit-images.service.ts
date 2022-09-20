@@ -5,8 +5,9 @@ import { ImageSize } from '@app/classes/image-size';
     providedIn: 'root',
 })
 export class EditImagesService {
-    activatedEmitterUrlImage = new EventEmitter<string>();
-    activatedEmitterRemoveImage = new EventEmitter<boolean>();
+    activatedEmitterUrlImageBoth = new EventEmitter<string>();
+    activatedEmitterUrlImageSingle = new EventEmitter<{ index: number; url: string }>();
+    activatedEmitterRemoveImage = new EventEmitter<number>();
 
     imageToVerify = new Image();
     private imageSizeConstraint: ImageSize = new ImageSize(640, 480);

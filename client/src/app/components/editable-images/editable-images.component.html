@@ -1,18 +1,18 @@
 <mat-grid-list gutterSize="60px" cols="2">
     <mat-grid-tile>
         <mat-grid-tile-header>
-            <app-header-image> </app-header-image>
+            <app-header-image [indexOfImageToSend] = "0"> </app-header-image>
         </mat-grid-tile-header>
         <mat-card>
-            <img *ngIf="imageObtenue" [src]="urlImage" />
+            <img *ngIf="firstImageObtained && 0 === indexOfImageObtainedFirst " [src]="urlImageFirst" />
         </mat-card>
     </mat-grid-tile>
     <mat-grid-tile>
         <mat-grid-tile-header>
-            <app-header-image> </app-header-image>
+            <app-header-image [indexOfImageToSend] = "1"> </app-header-image>
         </mat-grid-tile-header>
         <mat-card>
-            <img *ngIf="imageObtenue" [src]="urlImage" />
+            <img *ngIf="secondImageObtained && 1 === indexOfImageObtainedSecond " [src]="urlImageSecond" />
         </mat-card>
     </mat-grid-tile>
 </mat-grid-list>
