@@ -14,14 +14,17 @@ export class PopDialogDownloadImagesComponent implements OnInit {
     ngOnInit(): void {}
 
     onClickUploadImage(event: any) {
-        if (event!.target.files) {
+        if (event.target.files) {
             const reader = new FileReader();
-            reader.readAsDataURL(event!.target.files[0]);
-
-            reader.onload = (event: any) => {
-                this.urlOfImage = event.target.result;
-                this.editImagesService.activatedEmitterUrlImage.emit(this.urlOfImage);
-            };
+            const fileToRead = event.target.files[0];
+            reader.readAsDataURL(fileToRead);
+            if (this.editImagesService.verifyImageFormat(fileToRead)) {
+                reader.onload = () => {
+                    this.editImagesService.renderImage(reader);
+                    this.urlOfImage = reader.result as string;
+                    this.editImagesService.activatedEmitterUrlImage.emit(this.urlOfImage);
+                };
+            }
         }
     }
 }
