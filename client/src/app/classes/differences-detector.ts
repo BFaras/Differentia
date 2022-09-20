@@ -10,7 +10,7 @@ const BLUE_POS = 2;
 const ALPHA_POS = 3;
 
 export class DifferencesDetector {
-    public differenceImageGenerator : DifferencesImageGenerator;
+    differenceImageGenerator: DifferencesImageGenerator;
 
     constructor(readonly imagesToCompare: ImagesToCompare, readonly canvasToCompare: CanvasToCompare, readonly offset: number) {
         this.differenceImageGenerator = new DifferencesImageGenerator(
@@ -52,9 +52,41 @@ export class DifferencesDetector {
 
     getNbDifferences() {
         // TD : Fonction qui trouve le nombre de differences
-        return 0;
+        const differentPixelsMap: Map<number, boolean> = this.differenceImageGenerator.getDifferentPixelsPositionWithOffset();
+        let nbOfDifferences = 0;
+
+        differentPixelsMap.forEach((hasBeenVisited, diffPixelPosition) => {
+            if (!hasBeenVisited) {
+                this.visitDifferentPixelsAround(diffPixelPosition, differentPixelsMap);
+                this.markPixelAsVisited(diffPixelPosition, differentPixelsMap);
+                nbOfDifferences++;
+            }
+        });
+
+        return nbOfDifferences;
     }
 
-    // Il manque les fonctions pour compter le nombre de differences (avec le offset) et une fontion qui
-    // va dessiner le offset autour de chaque differences
+    visitDifferentPixelsAround(diffPixelPosition: number, differentPixelsMap: Map<number, boolean>) {
+        const dixPixelNumber = diffPixelPosition % NB_BIT_PER_PIXEL;
+        const diffPixelLine = dixPixelNumber % this.imagesToCompare.originalImage.width;
+        const diffPixelColumn = dixPixelNumber % this.imagesToCompare.originalImage.height;
+        const circieRadiusToVisit = 1;
+
+        for (let i = diffPixelColumn - this.offset; i < diffPixelColumn + this.offset; i++) {
+            for (let j = diffPixelLine; (j - diffPixelLine) ** 2 + (i - diffPixelColumn) ** 2 <= circieRadiusToVisit ** 2; j--) {
+                const currentVisitingPixelNumber = i * this.imagesToCompare.originalImage.width + j * this.imagesToCompare.originalImage.height;
+                this.markPixelAsVisited(currentVisitingPixelNumber, differentPixelsMap);
+            }
+            for (let j = diffPixelLine + 1; (j - diffPixelLine) ** 2 + (i - diffPixelColumn) ** 2 <= circieRadiusToVisit ** 2; j++) {
+                const currentVisitingPixelNumber = i * this.imagesToCompare.originalImage.width + j * this.imagesToCompare.originalImage.height;
+                this.markPixelAsVisited(currentVisitingPixelNumber, differentPixelsMap);
+            }
+        }
+    }
+
+    markPixelAsVisited(pixelPosition: number, pixelsMap: Map<number, boolean>) {
+        if (pixelsMap.has(pixelPosition)) {
+            pixelsMap.set(pixelPosition, true);
+        }
+    }
 }
