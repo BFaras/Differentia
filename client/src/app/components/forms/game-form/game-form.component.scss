@@ -20,7 +20,7 @@ h1 {
 .infoGameForm {
     display: flex;
     flex-direction: row;
-    height: 62%;
+    height: 60%;
     justify-content: space-around;
 }
 
@@ -57,10 +57,14 @@ li {
 
 button {
     background-color: rgb(214, 214, 214);
+    width: 15%;
+    margin-bottom: 15px;
+    justify-content: center;
 }
 
 .button-group > button:nth-child(1) {
     pointer-events: none;
+    color: rgba(160, 62, 62, 0.993);
 }
 
 .button-group > button:nth-child(2) {

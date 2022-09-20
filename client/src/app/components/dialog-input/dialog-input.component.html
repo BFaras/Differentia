@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>Constantes de jeu</h1>
+<div mat-dialog-content class="inputs">
+    <ng-container *ngFor="let data of datas">
+        <mat-form-field hintLabel="{{ data.valueUnit }}" appearance="fill">
+            <mat-label>{{ data.inputName }}</mat-label>
+            <input matInput #input placeholder="{{ data.placeHolder }}" />
+            <mat-hint align="end">{{ input.value || data.defaultTime }}</mat-hint>
+        </mat-form-field>
+    </ng-container>
+</div>

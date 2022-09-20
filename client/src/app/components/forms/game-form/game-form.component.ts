@@ -8,6 +8,8 @@ import { GameFormDescription } from '@app/classes/game-form-description';
 })
 export class GameFormComponent {
     @Input() gameForm: GameFormDescription;
-
+    @Input() buttonPage: string;
+    adminGameFormsButton = ['Supprimer', 'Réinitialiser'];
+    selectionGameFormsButton = ['Créer', 'Jouer'];
     constructor() {}
 }
