@@ -13,7 +13,11 @@ export class DifferencesDetector {
     public differenceImageGenerator : DifferencesImageGenerator;
 
     constructor(readonly imagesToCompare: ImagesToCompare, readonly canvasToCompare: CanvasToCompare, readonly offset: number) {
-        this.differenceImageGenerator = new DifferencesImageGenerator(offset, imagesToCompare.originalImage.width, imagesToCompare.originalImage.height);
+        this.differenceImageGenerator = new DifferencesImageGenerator(
+            offset,
+            imagesToCompare.originalImage.width,
+            imagesToCompare.originalImage.height,
+        );
         this.generateDifferencesInformation();
     }
 
