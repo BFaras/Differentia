@@ -8,26 +8,22 @@ export class EditImagesService {
     activatedEmitterUrlImage = new EventEmitter<string>();
     activatedEmitterRemoveImage = new EventEmitter<boolean>();
 
+    imageToVerify = new Image();
     private imageSizeConstraint: ImageSize = new ImageSize(640, 480);
 
-    verifyImageWidthHeight(width: number, height: number) {
-        return height === this.imageSizeConstraint.height && width === this.imageSizeConstraint.width;
+    renderImage(reader: FileReader) {
+        this.imageToVerify.src = reader.result as string;
     }
 
     verifyImageFormat(file: File) {
         return file.type === 'image/bmp';
     }
 
-    renderImage(reader: FileReader) {
-        const image = new Image();
-        image.src = reader.result as string;
-        this.verifyImageSize(image);
+    verifyImageWidthHeight(width: number, height: number) {
+        return height === this.imageSizeConstraint.height && width === this.imageSizeConstraint.width;
     }
 
-    verifyImageSize(imageToVerify: HTMLImageElement) {
-        if (this.verifyImageWidthHeight(imageToVerify.width, imageToVerify.height)) {
-            alert(imageToVerify.width);
-            console.log(imageToVerify.width);
-        }
+    verifyImageConstraint() {
+        return this.verifyImageWidthHeight(this.imageToVerify.width, this.imageToVerify.height);
     }
 }
