@@ -48,10 +48,12 @@ export class DifferencesImageGenerator {
 
         for (let i = centerPixelColumn - this.offset; i < centerPixelColumn + this.offset; i++) {
             for (let j = centerPixelLine; (j - centerPixelLine) ** 2 + (i - centerPixelColumn) ** 2 <= this.offset ** 2; j--) {
-                this.markDifference(j);
+                const currentVisitingPixelPosition = i * this.imageHeight + j * this.imageWidth;
+                this.markDifference(currentVisitingPixelPosition);
             }
             for (let j = centerPixelLine + 1; (j - centerPixelLine) ** 2 + (i - centerPixelColumn) ** 2 <= this.offset ** 2; j++) {
-                this.markDifference(j);
+                const currentVisitingPixelPosition = i * this.imageHeight + j * this.imageWidth;
+                this.markDifference(currentVisitingPixelPosition);
             }
         }
     }
