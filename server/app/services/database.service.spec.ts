@@ -31,7 +31,7 @@ describe("Database service", () => {
     const mongoUri = mongoServer.getUri();
     await databaseService.start(mongoUri);
     expect(databaseService["client"]).to.not.be.undefined;
-    expect(databaseService["db"].databaseName).to.equal("database");
+    expect(databaseService["db"].databaseName).to.equal("Projet_2");
   });
 
   it("should not connect to the database when start is called with wrong URL", async () => {
@@ -48,29 +48,29 @@ describe("Database service", () => {
     const mongoUri = mongoServer.getUri();
     const client = new MongoClient(mongoUri);
     await client.connect();
-    databaseService["db"] = client.db("database");
+    databaseService["db"] = client.db("Projet_2");
     await databaseService.populateDB();
     let courses = await databaseService.database
-      .collection("courses")
+      .collection("Games")
       .find({})
       .toArray();
-    expect(courses.length).to.equal(5);
+    expect(courses.length).to.equal(6);
   });
 
   it("should not populate the database with start function if it is already populated", async () => {
     const mongoUri = mongoServer.getUri();
     await databaseService.start(mongoUri);
     let courses = await databaseService.database
-      .collection("courses")
+      .collection("Games")
       .find({})
       .toArray();
-    expect(courses.length).to.equal(5);
+    expect(courses.length).to.equal(6);
     await databaseService.closeConnection();
     await databaseService.start(mongoUri);
     courses = await databaseService.database
-      .collection("courses")
+      .collection("Games")
       .find({})
       .toArray();
-    expect(courses.length).to.equal(5);
+    expect(courses.length).to.equal(6);
   });
 });

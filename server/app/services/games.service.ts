@@ -42,7 +42,7 @@ export class GamesService {
   }
 
   async getGame(nameOfWantedGame: string): Promise<Game> {
-    // NB: This can return null if the course does not exist, you need to handle it
+    // NB: This can return null if the course does not exist, you need to handle it => HANDLED
     return this.collection
       .findOne({ name: nameOfWantedGame })
       .then((game: WithId<Game>) => {
@@ -76,6 +76,7 @@ export class GamesService {
       });
   }
 
+  
   async modifyGame(game: Game): Promise<void> {
     let filterQuery: Filter<Game> = { name: game.name };
     let updateQuery: UpdateFilter<Game> = {
@@ -88,13 +89,19 @@ export class GamesService {
     };
     // Can also use replaceOne if we want to replace the entire object
     return this.collection
-      .updateOne(filterQuery, updateQuery)
-      .then(() => { })
-      .catch(() => {
-        throw new Error('Failed to update game');
-      });
+    .updateOne(filterQuery, updateQuery)
+    .then(() => { })
+    .catch(() => {
+      throw new Error('Failed to update game');
+    });
   }
-
+  
+  async addNewTimeToGame(newTime: Time, nameOfWantedGame: string): Promise<void> {
+    let modifiedGame = await this.getGame(nameOfWantedGame);
+    modifiedGame.times.push(newTime);
+    this.modifyGame(modifiedGame);
+  }
+  
   async getGameTimes(nameOfWantedGame: string): Promise<Time[]> {
     let filterQuery: Filter<Game> = { name: nameOfWantedGame };
     // Only get the times and not any of the other fields
@@ -106,15 +113,6 @@ export class GamesService {
       })
       .catch(() => {
         throw new Error('Failed to get the game times');
-      });
-  }
-
-  async getGameName(nameOfWantedGame: string): Promise<string> {
-    let filterQuery: Filter<Game> = { name: nameOfWantedGame };
-    return this.collection
-      .findOne(filterQuery)
-      .then((game: WithId<Game>) => {
-        return game.name;
       });
   }
 

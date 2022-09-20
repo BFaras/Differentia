@@ -10,7 +10,6 @@ export class DatabaseService {
   private db: Db;
   private client: MongoClient;
 
-
   async start(url: string = process.env.DATABASE_URL!): Promise<void> {
     try {
       this.client = new MongoClient(url);
@@ -19,7 +18,6 @@ export class DatabaseService {
     } catch {
       throw new Error('Database connection error')
     }
-
     if (
       (await this.db.collection(process.env.DATABASE_COLLECTION!).countDocuments()) === 0
     ) {
