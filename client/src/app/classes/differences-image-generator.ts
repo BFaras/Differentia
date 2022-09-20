@@ -38,20 +38,20 @@ export class DifferencesImageGenerator {
 
     private generateOffsetPixels(centerPixelPosition: number) {
         // TD : Fonction qui dessine le offset autour du point
-        //On génère un cercle autour du pixel au centre
-        //Formule : (x – h)2+ (y – k)2 = r2
-        //h = centre du cercle en X (ligne) et k = centre du cercle en Y (colonne)
-        //r = rayon du cercle
+        // On génère un cercle autour du pixel au centre
+        // Formule : (x – h)2+ (y – k)2 = r2
+        // h = centre du cercle en X (ligne) et k = centre du cercle en Y (colonne)
+        // r = rayon du cercle
         const centerPixelNumber = centerPixelPosition % NB_BIT_PER_PIXEL;
         const centerPixelLine = centerPixelNumber % this.imageHeight;
         const centerPixelColumn = centerPixelNumber % this.imageWidth;
 
         for (let i = centerPixelColumn - this.offsetSent; i < centerPixelColumn + this.offsetSent; i++) {
             for (let j = centerPixelLine; (j - centerPixelLine) ** 2 + (i - centerPixelColumn) ** 2 <= this.offsetSent ** 2; j--) {
-                // in the circle
+                this.generateBlackPixel(j);
             }
             for (let j = centerPixelLine + 1; (j - centerPixelLine) ** 2 + (i - centerPixelColumn) ** 2 <= this.offsetSent ** 2; j++) {
-                // in the circle
+                this.generateBlackPixel(j);
             }
         }
     }
