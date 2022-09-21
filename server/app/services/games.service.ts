@@ -54,11 +54,16 @@ export class GamesService {
   }
 
   async addGame(game: Game): Promise<void> {
-    if (this.validateGame(game)) {
+    console.log("avant ntm");
+
+    if (await this.validateGame(game)) {
+      console.log("ntm");
       await this.collection.insertOne(game).catch((error: Error) => {
-        throw new HttpException('Failed to add game', INTERNAL_SERVER_ERROR_CODE);
+        console.log("J'ai throw");
+        throw new HttpException('Failed to insert game', INTERNAL_SERVER_ERROR_CODE);
       });
     } else {
+      console.log('apres ntm')
       throw new Error('Invalid game');
     }
   }
@@ -125,11 +130,12 @@ export class GamesService {
       });
   }
 
-  private validateGame(game: Game): boolean {
+  private async validateGame(game: Game): Promise<boolean> {
     return (
       this.validateNumberOfDifferences(game.numberOfDifferences) &&
       this.validateImages(game.images) && // est-ce qu'on devrait regarder si le jeu a tous ses attributs initialisés? ou c'est de l'abus
-      this.validateTimes(game.times)
+      this.validateTimes(game.times) &&
+      await this.validateName(game.name)
     );
   }
 
@@ -143,5 +149,12 @@ export class GamesService {
 
   private validateTimes(times: Time[]): boolean {
     return times.length === 0;
+  }
+
+  private async validateName(name: string): Promise<boolean> {
+    let filterQuery: Filter<Game> = { name: name };
+    const game = await this.collection
+      .findOne(filterQuery);
+    return game?.name !== name;
   }
 }

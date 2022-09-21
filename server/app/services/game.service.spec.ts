@@ -71,6 +71,8 @@ describe("Games service", () => {
     let oldTimes = await gamesService.getGameTimes(testGame.name);
     await gamesService.addNewTimeToGame(testTimeOne, testGame.name);
     let games = await gamesService.collection.find({}).toArray();
+    // console.log(games.find((x) => x.name === testGame.name)?.times[0]);
+    // console.log(testTimeOne);
     expect(oldTimes.length + 1).to.equals(
         games.find((x) => x.name === testGame.name)?.times.length
     );
@@ -86,7 +88,7 @@ describe("Games service", () => {
       times: testTimes,
       images: ["image3", "image4"],
     };
-
+    console.log(await gamesService['validateName'](secondGame.name));
     await gamesService.addGame(secondGame);
     let games = await gamesService.collection.find({}).toArray();
     expect(games.length).to.equal(2);
@@ -95,14 +97,15 @@ describe("Games service", () => {
     );
   });
 
-  it("should not insert a new game if it has an invalid number of difference, credits and images", async () => {
+  it("should not insert a new game if it has an invalid number of difference, credits, images or name", async () => {
     let secondGame: Game = {
-        name: "Test Game 2",
+        name: "Test Game",
         numberOfDifferences: 10,
         times: [testTimeOne],
         images: [],
     };
     try {
+      console.log(await gamesService['validateName'](secondGame.name));
       await gamesService.addGame(secondGame);
     } catch {
       let games = await gamesService.collection.find({}).toArray();
@@ -157,6 +160,26 @@ describe("Games service", () => {
     }
   });
 
+  it("should crash on insert if invalid game",  async () => {
+    // expect(
+    //   await gamesService.addGame({} as unknown as Game)
+    // ).to.eventually.be.rejectedWith(
+    //   Error
+    // );  
+    let throwAnError = false
+    await client.close();
+    gamesService['validateGame'] = async () => {return true}
+    try {
+      await gamesService.addGame({} as unknown as Game)
+    }catch {
+      throwAnError = true;
+    }
+    
+    expect(throwAnError).to.be.true
+  });
+
+ 
+
   // Error handling
   describe("Error handling", async () => {
     it("should throw an error if we try to get all games on a closed connection", async () => {
@@ -165,6 +188,24 @@ describe("Games service", () => {
         Error
       );
     });
+
+    // it("should throw an error if we try to add a specific game on a closed connection", async () => {
+    //   let throwAnError = false
+      
+    //   await client.close();
+    //   // expect(
+    //   //   gamesService.addGame(testGame)
+    //   // ).to.eventually.be.rejectedWith(Error);
+    //   gamesService['validateGame'] = async () => {return false}
+    //   try {
+    //     await gamesService.addGame(testGame)
+    //   }
+    //   catch {
+    //     throwAnError = true
+    //   }
+
+    //   expect(throwAnError).to.be.true
+    // });
 
     it("should throw an error if we try to get a specific game on a closed connection", async () => {
       await client.close();
@@ -175,9 +216,17 @@ describe("Games service", () => {
 
     it("should throw an error if we try to delete a specific game on a closed connection", async () => {
       await client.close();
-      expect(
+      // expect(
+      //   gamesService.deleteGame(testGame.name)
+      // ).to.eventually.be.rejectedWith(Error);
+
+      try {
+
         gamesService.deleteGame(testGame.name)
-      ).to.eventually.be.rejectedWith(Error);
+      }
+      catch {
+        expect(true)
+      }
     });
 
     it("should throw an error if we try to modify a specific name on a closed connection", async () => {
