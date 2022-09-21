@@ -16,6 +16,13 @@ describe('SocketClientService', () => {
     expect(service).toBeTruthy();
   });
 
+  // pourquoi ce test ne roule pas la ligne 18??????
+  it("should connect", () => {
+    const spy = spyOn(service, 'connect');
+    service.connect();
+    expect(spy).toHaveBeenCalled();
+  })
+
   it('should disconnect', () => {
     const spy = spyOn(service.socket, 'disconnect');
     service.disconnect();

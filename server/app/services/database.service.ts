@@ -1,7 +1,7 @@
 import { Db, MongoClient } from 'mongodb';
 import 'dotenv/config';
 import { Service } from 'typedi';
-import { Game } from '@app/classes/game';
+import { Game } from '@app/interfaces/game';
 
 // Il faut faire un npm install dotenv sinon sa fonctionne pas
 

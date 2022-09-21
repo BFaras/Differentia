@@ -1,4 +1,4 @@
-import { Game } from '@app/classes/game';
+import { Game } from '@app/interfaces/game';
 import { Time } from '../../../common/time'
 import { Collection, Filter, FindOptions, ModifyResult, UpdateFilter, WithId } from 'mongodb';
 import { HttpException } from '@app/classes/http.exception';

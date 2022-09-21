@@ -4,7 +4,7 @@ import { describe } from 'mocha';
 
 describe('HttpException', () => {
     it('should create a simple HTTPException', () => {
-        const createdMessage = 'Course created successfuly';
+        const createdMessage = 'HTTPException created successfully';
         const httpException: HttpException = new HttpException(createdMessage);
 
         expect(httpException.message).to.equals(createdMessage);

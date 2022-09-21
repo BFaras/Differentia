@@ -13,8 +13,11 @@ export class SocketClientService {
     return this.socket && this.socket.connected;
   }
 
+  // Ligne 18 n'est pas roulée ==> pourquoi??????
   connect() {
-    this.socket = io(environment.serverUrl, { transports: ['websocket'], upgrade: false });
+    this.socket = 
+    io(environment.serverUrl,
+       { transports: ['websocket'], upgrade: false });
   }
 
   disconnect() {
