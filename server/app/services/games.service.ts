@@ -3,22 +3,9 @@ import { Time } from '../../../common/time'
 import { Collection, Filter, FindOptions, ModifyResult, UpdateFilter, WithId } from 'mongodb';
 import { HttpException } from '@app/classes/http.exception';
 import { DatabaseService } from './database.service';
+import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
 import 'dotenv/config';
-
-// J'ai recherché les jeux par leurs noms, est-ce c'est correct que je le fasse à partir de cet attribut????
-// Est-ce que je devrais transformer toutes les throw new Error en throw new httpException?????
-
-// const OK_CODE: number = 200;
-// const CREATED_CODE: number = 201;
-// const NO_CONTENT_CODE: number = 204;
-// const NOT_MODIFIED_CODE: number = 304;
-// const BAD_REQUEST_CODE: number = 400;
-// const FORBIDDEN_CODE: number = 403;
-const NOT_FOUND_CODE: number = 404;
-// const GONE_CODE: number = 410;
-const INTERNAL_SERVER_ERROR_CODE: number = 500;
-// const NOT_IMPLEMENTED_CODE: number = 501;
 
 @Service()
 export class GamesService {
@@ -42,28 +29,22 @@ export class GamesService {
   }
 
   async getGame(nameOfWantedGame: string): Promise<Game> {
-    // NB: This can return null if the course does not exist, you need to handle it => HANDLED
     return this.collection
       .findOne({ name: nameOfWantedGame })
       .then((game: WithId<Game>) => {
         if(game) {
             return game;
         }
-        throw new HttpException('Game not found', NOT_FOUND_CODE);
+        throw new HttpException('Game not found', StatusCodes.NOT_FOUND);
       });
   }
 
   async addGame(game: Game): Promise<void> {
-    console.log("avant ntm");
-
     if (await this.validateGame(game)) {
-      console.log("ntm");
       await this.collection.insertOne(game).catch((error: Error) => {
-        console.log("J'ai throw");
-        throw new HttpException('Failed to insert game', INTERNAL_SERVER_ERROR_CODE);
+        throw new HttpException('Failed to insert game', StatusCodes.INTERNAL_SERVER_ERROR);
       });
     } else {
-      console.log('apres ntm')
       throw new Error('Invalid game');
     }
   }
@@ -73,11 +54,11 @@ export class GamesService {
       .findOneAndDelete({ name: nameOfWantedGame })
       .then((res: ModifyResult<Game>) => {
         if (!res.value) {
-          throw new HttpException('Could not find game', NOT_FOUND_CODE);
+          throw new HttpException('Could not find game', StatusCodes.NOT_FOUND);
         }
       })
       .catch(() => {
-        throw new HttpException('Failed to delete game', INTERNAL_SERVER_ERROR_CODE);
+        throw new HttpException('Failed to delete game', StatusCodes.INTERNAL_SERVER_ERROR);
       });
   }
 
@@ -92,7 +73,6 @@ export class GamesService {
         images: game.images, 
       },
     };
-    // Can also use replaceOne if we want to replace the entire object
     return this.collection
     .updateOne(filterQuery, updateQuery)
     .then(() => { })
@@ -109,7 +89,6 @@ export class GamesService {
   
   async getGameTimes(nameOfWantedGame: string): Promise<Time[]> {
     let filterQuery: Filter<Game> = { name: nameOfWantedGame };
-    // Only get the times and not any of the other fields
     let projection: FindOptions = { projection: { times: 1, _id: 0 } };
     return this.collection
       .findOne(filterQuery, projection)
@@ -133,7 +112,7 @@ export class GamesService {
   private async validateGame(game: Game): Promise<boolean> {
     return (
       this.validateNumberOfDifferences(game.numberOfDifferences) &&
-      this.validateImages(game.images) && // est-ce qu'on devrait regarder si le jeu a tous ses attributs initialisés? ou c'est de l'abus
+      this.validateImages(game.images) &&
       this.validateTimes(game.times) &&
       await this.validateName(game.name)
     );
