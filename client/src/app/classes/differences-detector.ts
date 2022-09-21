@@ -45,9 +45,9 @@ export class DifferencesDetector {
             }
         }
 
-        const nbDiffereces = differentImage ? this.getNbDifferences() : 0;
+        const nbDifferences = differentImage ? this.getNbDifferences() : 0;
 
-        return { differentImage, nbDiffereces };
+        return { differentImage, nbDifferences };
     }
 
     getNbDifferences() {
@@ -70,10 +70,10 @@ export class DifferencesDetector {
         const dixPixelNumber = diffPixelPosition % NB_BIT_PER_PIXEL;
         const diffPixelLine = dixPixelNumber % this.imagesToCompare.originalImage.height;
         const diffPixelColumn = dixPixelNumber % this.imagesToCompare.originalImage.width;
-        const circieRadiusToVisit = 1;
+        const circleRadiusToVisit = 1;
 
         for (let i = diffPixelColumn - this.offset; i < diffPixelColumn + this.offset; i++) {
-            for (let j = diffPixelLine; (j - diffPixelLine) ** 2 + (i - diffPixelColumn) ** 2 <= circieRadiusToVisit ** 2; j--) {
+            for (let j = diffPixelLine; (j - diffPixelLine) ** 2 + (i - diffPixelColumn) ** 2 <= circleRadiusToVisit ** 2; j--) {
                 const currentVisitingPixelPosition = i * this.imagesToCompare.originalImage.height + j * this.imagesToCompare.originalImage.width;
                 this.markPixelAsVisited(currentVisitingPixelPosition, differentPixelsMap);
 
@@ -81,7 +81,7 @@ export class DifferencesDetector {
                     this.visitDifferentPixelsAround(currentVisitingPixelPosition, differentPixelsMap);
                 }
             }
-            for (let j = diffPixelLine + 1; (j - diffPixelLine) ** 2 + (i - diffPixelColumn) ** 2 <= circieRadiusToVisit ** 2; j++) {
+            for (let j = diffPixelLine + 1; (j - diffPixelLine) ** 2 + (i - diffPixelColumn) ** 2 <= circleRadiusToVisit ** 2; j++) {
                 const currentVisitingPixelPosition = i * this.imagesToCompare.originalImage.height + j * this.imagesToCompare.originalImage.width;
                 this.markPixelAsVisited(currentVisitingPixelPosition, differentPixelsMap);
 
