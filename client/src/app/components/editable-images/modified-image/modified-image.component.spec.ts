@@ -55,13 +55,13 @@ describe('ModifiedImageComponent', () => {
     });
 
     it('should delete image if it s the right index', () => {
-        component.indexOfImageObtainedSecond = 1;
+        component.idFromParent = 1;
         component.deleteImage(1);
         expect(component.secondImageObtained).toBeFalsy();
     });
 
     it('should not delete image if it s wrong index', () => {
-        component.indexOfImageObtainedSecond = 2;
+        component.idFromParent = 2;
         component.deleteImage(1);
         expect(component.secondImageObtained).not.toBeDefined();
     });
@@ -72,7 +72,7 @@ describe('ModifiedImageComponent', () => {
         component.assignImageData(mockValue);
         expect(component.secondImageObtained).toBeTruthy();
         expect(component.urlImageSecond).toEqual(mockValue.url);
-        expect(component.indexOfImageObtainedSecond).toEqual(mockValue.index);
+        expect(component.idFromParent).toEqual(mockValue.index);
     });
 
     it('shoulda not assign imageData to variable if it s not the right index', () => {
@@ -80,15 +80,15 @@ describe('ModifiedImageComponent', () => {
         component.assignImageData(mockValue);
         expect(component.secondImageObtained).not.toBeDefined();
         expect(component.urlImageSecond).not.toBeDefined();
-        expect(component.indexOfImageObtainedSecond).not.toBeDefined();
+        expect(component.idFromParent).not.toBeDefined();
     });
 
     it('should assign Url to variable if it s the right index', () => {
         const mockValue = { index: 1, url: 'string' };
-        component.indexOfImageObtainedSecond = 1;
+        component.idFromParent = 1;
         component.assignMultipleImageData(mockValue.url);
         expect(component.secondImageObtained).toBeTruthy();
         expect(component.urlImageSecond).toEqual(mockValue.url);
-        expect(component.indexOfImageObtainedSecond).toEqual(mockValue.index);
+        expect(component.idFromParent).toEqual(mockValue.index);
     });
 });

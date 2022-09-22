@@ -9,7 +9,6 @@ export class ModifiedImageComponent implements OnInit {
     @Input() idFromParent: number;
     secondImageObtained: boolean;
     urlImageSecond: string;
-    indexOfImageObtainedSecond: number;
     constructor(private editImagesService: EditImagesService) {}
 
     ngOnInit(): void {
@@ -24,12 +23,11 @@ export class ModifiedImageComponent implements OnInit {
         if (dataOfImage.index === this.idFromParent) {
             this.secondImageObtained = true;
             this.urlImageSecond = dataOfImage.url;
-            this.indexOfImageObtainedSecond = dataOfImage.index;
         }
     }
 
     deleteImage(dataOfImage: number) {
-        if (dataOfImage === this.indexOfImageObtainedSecond) {
+        if (dataOfImage === this.idFromParent) {
             this.secondImageObtained = false;
         }
     }
@@ -37,7 +35,6 @@ export class ModifiedImageComponent implements OnInit {
     assignMultipleImageData(url: string) {
         this.secondImageObtained = true;
         this.urlImageSecond = url;
-        this.indexOfImageObtainedSecond = 1;
     }
     // le test undefined est pour sauter le test de subscription: Il faut le get avec http et changer la logic pour get directement ces donnees FUCK
     getDataSingleImage() {
