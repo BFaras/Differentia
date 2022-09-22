@@ -46,16 +46,16 @@ export class DifferencesDetector {
     }
 
     generateDifferencesInformation() {
-        const differentPixelsArray: number[] = [];
-        const canvasOriginalImage: Canvas = new Canvas(this.imagesToCompare.originalImage.imageWidth, this.imageHeight);
-        const canvasModifiedImage: Canvas = new Canvas(this.imagesToCompare.modifiedImage.imageWidth, this.imageHeight);
+        let differentPixelsArray: number[] = [];
+        const canvasOriginalImage: Canvas = new Canvas(this.imagesToCompare.originalImage.width, this.imagesToCompare.originalImage.height);
+        const canvasModifiedImage: Canvas = new Canvas(this.imagesToCompare.modifiedImage.width, this.imagesToCompare.modifiedImage.height);
 
         const originalImageData = this.getImageData(this.imagesToCompare.originalImage, canvasOriginalImage);
         const modifiedImageData = this.getImageData(this.imagesToCompare.modifiedImage, canvasModifiedImage);
 
         differentPixelsArray = this.compareImagesPixels(originalImageData, modifiedImageData);
         this.differenceImageGenerator.generateImageFromDifferencesData(differentPixelsArray);
-}
+    }
 
     countNbDifferences() {
         // TD : Fonction qui trouve le nombre de differences
