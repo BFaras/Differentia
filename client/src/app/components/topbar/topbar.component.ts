@@ -12,6 +12,7 @@ import { BehaviorSubject } from 'rxjs';
   templateUrl: './topbar.component.html',
   styleUrls: ['./topbar.component.scss']
 })
+
 export class TopbarComponent implements OnInit {
   
   time: BehaviorSubject<string> = new BehaviorSubject<string>('');

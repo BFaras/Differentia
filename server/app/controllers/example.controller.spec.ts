@@ -28,7 +28,7 @@ describe('ExampleController', () => {
 
     it('should return message from example service on valid get request to root', async () => {
         return supertest(expressApp)
-            .get('/api/example')
+            .get('/example')
             .expect(HTTP_STATUS_OK)
             .then((response) => {
                 expect(response.body).to.deep.equal(baseMessage);
@@ -39,7 +39,7 @@ describe('ExampleController', () => {
         const aboutMessage = { ...baseMessage, title: 'About' };
         exampleService.about.returns(aboutMessage);
         return supertest(expressApp)
-            .get('/api/example/about')
+            .get('/example/about')
             .expect(HTTP_STATUS_OK)
             .then((response) => {
                 expect(response.body).to.deep.equal(aboutMessage);
@@ -48,13 +48,13 @@ describe('ExampleController', () => {
 
     it('should store message in the array on valid post request to /send', async () => {
         const message: Message = { title: 'Hello', body: 'World' };
-        return supertest(expressApp).post('/api/example/send').send(message).set('Accept', 'application/json').expect(HTTP_STATUS_CREATED);
+        return supertest(expressApp).post('/example/send').send(message).set('Accept', 'application/json').expect(HTTP_STATUS_CREATED);
     });
 
     it('should return an array of messages on valid get request to /all', async () => {
         exampleService.getAllMessages.returns([baseMessage, baseMessage]);
         return supertest(expressApp)
-            .get('/api/example/all')
+            .get('/example/all')
             .expect(HTTP_STATUS_OK)
             .then((response) => {
                 expect(response.body).to.deep.equal([baseMessage, baseMessage]);

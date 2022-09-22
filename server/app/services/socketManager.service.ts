@@ -1,5 +1,5 @@
-import * as io from 'socket.io';
 import * as http from 'http';
+import * as io from 'socket.io';
 
 
 export class SocketManager {
@@ -48,12 +48,12 @@ export class SocketManager {
 
         });
 
-        setInterval(() => {
-            this.emitTime();
-        }, 1000);
+        // setInterval(() => {
+        //     this.emitTime();
+        // }, 1000);
     }
 
-    private emitTime() {
-        this.sio.sockets.emit('clock', new Date().toLocaleTimeString());
-    }
+    // private emitTime() {
+    //     this.sio.sockets.emit('clock', new Date().toLocaleTimeString());
+    // }
 }

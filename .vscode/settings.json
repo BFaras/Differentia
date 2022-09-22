@@ -11,6 +11,7 @@
     "eslint.probe": ["javascript", "typescript", "html", "vue", "markdown"],
     "eslint.validate": ["javascript", "typescript", "html", "vue", "markdown"],
     "postcssSorting.config": {
-        "properties-order": "alphabetical",
-      }
+        "properties-order": "alphabetical"
+    },
+    "cSpell.words": ["Topbar"]
 }
