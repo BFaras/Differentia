@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-restricted-imports */
 import { Component } from '@angular/core';
 
 @Component({

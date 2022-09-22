@@ -14,11 +14,11 @@ export class CommunicationService {
     constructor(private readonly http: HttpClient) {}
 
     basicGet(): Observable<Message> {
-        return this.http.get<Message>(`${this.baseUrl}/example`).pipe(catchError(this.handleError<Message>('basicGet')));
+        return this.http.get<Message>(`${this.baseUrl}/example`).pipe(catchError(this.handleError<Message>('getTime')));
     }
 
-    basicPost(message: Message): Observable<void> {
-        return this.http.post<void>(`${this.baseUrl}/example/send`, message).pipe(catchError(this.handleError<void>('basicPost')));
+    basicPost(time: Message): Observable<void> {
+        return this.http.post<void>(`${this.baseUrl}/example/send`, time).pipe(catchError(this.handleError<void>('postTime')));
     }
 
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {

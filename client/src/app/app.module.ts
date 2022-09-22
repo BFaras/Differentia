@@ -21,6 +21,7 @@ import { HeaderImageComponent } from './components/header-image/header-image.com
 import { PopDialogCreateGameComponent } from './components/pop-dialogs/pop-dialog-create-game/pop-dialog-create-game.component';
 import { PopDialogDownloadImagesComponent } from './components/pop-dialogs/pop-dialog-download-images/pop-dialog-download-images.component';
 import { PopDialogValidateGameComponent } from './components/pop-dialogs/pop-dialog-validate-game/pop-dialog-validate-game.component';
+import { TopbarComponent } from './components/topbar/topbar.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
 import { GameSelectionComponent } from './pages/game-selection/game-selection.component';
@@ -47,6 +48,7 @@ import { GameSelectionComponent } from './pages/game-selection/game-selection.co
         PopDialogCreateGameComponent,
         OriginalImageComponent,
         ModifiedImageComponent,
+        TopbarComponent,
         GameSelectionComponent,
         GameFormComponent,
         ListGameFormComponent,
