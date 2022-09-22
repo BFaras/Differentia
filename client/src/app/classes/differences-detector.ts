@@ -11,6 +11,7 @@ const ALPHA_POS = 3;
 
 export class DifferencesDetector {
     differenceImageGenerator: DifferencesImageGenerator;
+    nbDifferences: number;
 
     constructor(readonly imagesToCompare: ImagesToCompare, readonly canvasToCompare: CanvasToCompare, readonly offset: number) {
         this.differenceImageGenerator = new DifferencesImageGenerator(
@@ -19,6 +20,7 @@ export class DifferencesDetector {
             imagesToCompare.originalImage.height,
         );
         this.generateDifferencesInformation();
+        this.nbDifferences = this.countNbDifferences();
     }
 
     getImageData(image: Image, canvas: Canvas) {
@@ -62,17 +64,6 @@ export class DifferencesDetector {
 
         return differenceFound;
 }
-
-    sendNbDifferences() {
-        let differentImage = this.generateDifferencesInformation();
-        let nbOfDiff = 0;
-
-        if (differentImage) {
-            nbOfDiff = this.countNbDifferences();
-        }
-
-        return nbOfDiff;
-    }
 
     countNbDifferences() {
         // TD : Fonction qui trouve le nombre de differences
