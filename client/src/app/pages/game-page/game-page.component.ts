@@ -15,26 +15,13 @@ export class GamePageComponent {
     constructor(public socketService: SocketClientService, private timeService: TimeService) {}
 
     ngOnInit() {
-        // (this.socketService.isSocketAlive() === true)? this.socketService.connect():
-        this.connect();
-        // this.gamePage();
-        // console.log("ntm");
+        this.socketService.connect();
+        this.configureGamePageSocketFeatures();
     }
 
     ngOnDestroy() {
         this.socketService.send("kill the timer");
     }
-
-    connect() {
-        if (!this.socketService.isSocketAlive()) {
-          this.socketService.connect();
-        }
-        this.configureGamePageSocketFeatures();
-    }
-
-    // ngOnRefresh() {
-    //     this.socketService.connect();
-    // }
 
     configureGamePageSocketFeatures() {
         this.socketService.on("classic mode", (message: string) => {

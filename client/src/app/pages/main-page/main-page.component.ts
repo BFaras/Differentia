@@ -33,15 +33,9 @@ export class MainPageComponent {
     }
   
     ngOnInit(): void {
-      this.connect();
+      this.socketService.connect();
+      this.configureBaseSocketFeatures();
     }
-  
-    connect() {
-      if (!this.socketService.isSocketAlive()) {
-        this.socketService.connect();
-        this.configureBaseSocketFeatures();
-      }
-    }  
   
     configureBaseSocketFeatures() {
       this.socketService.on("connect", () => {
