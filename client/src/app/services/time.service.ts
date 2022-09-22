@@ -5,29 +5,42 @@
 import { Injectable } from '@angular/core';
 import { BASE_ONE } from '../../../../common/const';
 import { Time } from '../../../../common/time';
-import { Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class TimeService {
-  // readonly time: Subject<Time> = new Subject<Time>();
-  // minutes: number;
-  // seconds: number;
-  // constructor() {}
+    time: Time;
 
-  // showMinutes() {
-  //   if(Time.minutes < BASE_ONE) {
-  //     return '0' + this.time.minutes.toString();
-  //   }
-  //   return this.time.minutes.toString();
-  // }
+    showableMinutes: string = "";
+    showableSeconds: string = "";
 
-  // showSeconds() {
-  //   if(this.time.seconds < BASE_ONE) {
-  //     return '0' + this.time.seconds.toString();
-  //   }
-  //   return this.time.seconds.toString();
-  // }
+    constructor() {}
 
+    classicMode() {
+        this.time = {
+            minutes: 0,
+            seconds: 0,
+        };
+        this.showableMinutes = '00';
+        this.showableSeconds = '00';
+    }
+
+    changeTime(newTime: Time) {
+        this.time = newTime;
+        this.showTime();
+    }
+
+    showTime() {
+        this.showMinutes();
+        this.showSeconds();
+    }
+
+    showMinutes() {
+        this.showableMinutes = (this.time.minutes < BASE_ONE)? `0${this.time.minutes}`:this.time.minutes.toString();
+    }
+
+    showSeconds() {
+      this.showableSeconds = (this.time.seconds < BASE_ONE)? `0${this.time.seconds}`:this.time.seconds.toString();
+    }
 }

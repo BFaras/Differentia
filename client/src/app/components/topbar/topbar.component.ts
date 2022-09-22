@@ -5,7 +5,7 @@
 /* eslint-disable prettier/prettier */
 
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { TimeService } from '@app/services/time.service';
 
 @Component({
   selector: 'app-topbar',
@@ -14,10 +14,8 @@ import { BehaviorSubject } from 'rxjs';
 })
 
 export class TopbarComponent implements OnInit {
-  
-  time: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-shadow
-  constructor() {}
+
+  constructor(public timeService: TimeService) {}
 
   ngOnInit(): void {}
 
