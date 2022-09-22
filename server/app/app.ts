@@ -35,11 +35,11 @@ export class Application {
     }
 
     bindRoutes(): void {
-        this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(this.swaggerOptions)));
-        this.app.use('/api/example', this.exampleController.router);
-        this.app.use('/api/date', this.dateController.router);
+        this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(this.swaggerOptions)));
+        this.app.use('/example', this.exampleController.router);
+        this.app.use('/date', this.dateController.router);
         this.app.use('/', (req, res) => {
-            res.redirect('/api/docs');
+            res.redirect('/docs');
         });
         this.errorHandling();
     }
@@ -49,7 +49,7 @@ export class Application {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(cookieParser());
-        this.app.use(cors());
+        this.app.use(cors({origin: '*'}));
     }
 
     private errorHandling(): void {

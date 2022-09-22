@@ -34,6 +34,7 @@ export class Server {
         this.application.app.set('port', Server.appPort);
 
         this.server = http.createServer(this.application.app);
+        
         this.socketManager = new SocketManager(this.server);
         this.socketManager.handleSockets();
 

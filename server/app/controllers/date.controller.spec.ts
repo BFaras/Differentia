@@ -26,7 +26,7 @@ describe('DateController', () => {
         dateService.currentTime.resolves(expectedMessage);
 
         return supertest(expressApp)
-            .get('/api/date')
+            .get('/date')
             .expect(HTTP_STATUS_OK)
             .then((response) => {
                 chai.expect(response.body).to.deep.equal(expectedMessage);
@@ -37,7 +37,7 @@ describe('DateController', () => {
         dateService.currentTime.rejects(new Error('service error'));
 
         return supertest(expressApp)
-            .get('/api/date')
+            .get('/date')
             .expect(HTTP_STATUS_OK)
             .then((response) => {
                 chai.expect(response.body.title).to.equal('Error');

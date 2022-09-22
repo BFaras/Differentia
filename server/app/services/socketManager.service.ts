@@ -1,11 +1,14 @@
-import * as io from 'socket.io';
 import * as http from 'http';
+import * as io from 'socket.io';
+import { ChronometerService } from './chronometer.service';
 
 
 export class SocketManager {
 
     private sio: io.Server;
     private room: string = "serverRoom";
+    private timeInterval: NodeJS.Timer;
+    private chronometerService: ChronometerService = new ChronometerService();
     constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ["GET", "POST"] } });
     }
@@ -19,6 +22,7 @@ export class SocketManager {
             socket.on('message', (message: string) => {
                 console.log(message);
             });
+
             socket.on('validate', (word: string) => {
                 const isValid = word.length > 5;
                 socket.emit('wordValidated', isValid);
@@ -45,15 +49,28 @@ export class SocketManager {
                 console.log(`Raison de deconnexion : ${reason}`)
             });
 
+            socket.on("game page", (message) => {
+                console.log(message);
+                socket.emit("recu", "ferme la");
+                socket.emit("classic mode", "bet");
+                this.timeInterval = setInterval(() => {
+                    this.emitTime(socket);
+                }, 1000);
+            });
+
+            socket.on("kill the timer", () => {
+                clearInterval(this.timeInterval);
+                this.chronometerService.resetChrono();
+            });
 
         });
 
-        setInterval(() => {
-            this.emitTime();
-        }, 1000);
+        
     }
 
-    private emitTime() {
-        this.sio.sockets.emit('clock', new Date().toLocaleTimeString());
+    private emitTime(socket: io.Socket) {
+        this.chronometerService.increaseTime();
+        console.log(this.chronometerService.time);
+        socket.emit("time", this.chronometerService.time);
     }
 }
