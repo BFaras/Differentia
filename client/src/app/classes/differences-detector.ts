@@ -27,15 +27,8 @@ export class DifferencesDetector {
         return imageContext.getImageData(0, 0, canvas.width, canvas.height).data;
     }
 
-    compareImagesPixels(originalImageData: ImageData, modifiedImageData: ImageData) {
-
-    }
-
-    generateDifferencesInformation() {
-        let differentImage = false;
-
-        const originalImageData = this.getImageData(this.imagesToCompare.originalImage, this.canvasToCompare.originalImageCanvas);
-        const modifiedImageData = this.getImageData(this.imagesToCompare.modifiedImage, this.canvasToCompare.modifiedImageCanvas);
+    compareImagesPixels(originalImageData: Uint8ClampedArray, modifiedImageData: Uint8ClampedArray) {
+        let differentPixelPositions: number[] = [];
 
         for (let i = 0; i < originalImageData.length; i += NB_BIT_PER_PIXEL) {
             const redDiff = originalImageData[i + RED_POS] - modifiedImageData[i + RED_POS];
@@ -44,13 +37,31 @@ export class DifferencesDetector {
             const alphaDiff = originalImageData[i + ALPHA_POS] - modifiedImageData[i + ALPHA_POS];
 
             if (redDiff !== 0 || greenDiff !== 0 || blueDiff !== 0 || alphaDiff !== 0) {
-                differentImage = true;
-                this.differenceImageGenerator.addDifferencePixelsToImage(i);
+                differentPixelPositions.push(i);
             }
         }
 
-        return differentImage;
+        return differentPixelPositions;
     }
+
+    generateDifferencesInformation() {
+        let differenceFound = false;
+        let differentPixelsArray: number[] = [];
+
+        const originalImageData = this.getImageData(this.imagesToCompare.originalImage, this.canvasToCompare.originalImageCanvas);
+        const modifiedImageData = this.getImageData(this.imagesToCompare.modifiedImage, this.canvasToCompare.modifiedImageCanvas);
+
+        differentPixelsArray = this.compareImagesPixels(originalImageData, modifiedImageData);
+
+        if (differentPixelsArray.length != 0) {
+            for (let i = 0; i < differentPixelsArray.length; i++) {
+                this.differenceImageGenerator.addDifferencePixelsToImage(i);
+            }
+            differenceFound = true;
+    }
+
+        return differenceFound;
+}
 
     sendNbDifferences() {
         let differentImage = this.generateDifferencesInformation();
