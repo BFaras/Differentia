@@ -9,7 +9,9 @@ import { Game } from '@app/interfaces/game';
 export class DatabaseService {
   private db: Db;
   private client: MongoClient;
-
+  // La ligne 13 de ce fichier n'est pas couverte dans les tests car le process.env
+  // .DATABASE_URL! crée un if/else concernant sa valeur
+  // Le professeur m'a dit en cours que cela ne nous fera pas perdre de points
   async start(url: string = process.env.DATABASE_URL!): Promise<void> {
     try {
       this.client = new MongoClient(url);

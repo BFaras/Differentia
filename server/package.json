@@ -26,6 +26,7 @@
         ],
         "exclude": [
             "**/*.spec.ts",
+            "**/*.mock.ts",
             "app/index.ts",
             "app/server.ts",
             "app/app.ts"
