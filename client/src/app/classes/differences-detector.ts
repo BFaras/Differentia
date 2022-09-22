@@ -1,5 +1,4 @@
 import { Canvas, Image } from 'canvas';
-import { CanvasToCompare } from './canvas-to-compare';
 import { DifferencesImageGenerator } from './differences-image-generator';
 import { ImagesToCompare } from './images-to-compare';
 
@@ -13,7 +12,7 @@ export class DifferencesDetector {
     differenceImageGenerator: DifferencesImageGenerator;
     nbDifferences: number;
 
-    constructor(readonly imagesToCompare: ImagesToCompare, readonly canvasToCompare: CanvasToCompare, readonly offset: number) {
+    constructor(readonly imagesToCompare: ImagesToCompare, readonly offset: number) {
         this.differenceImageGenerator = new DifferencesImageGenerator(
             offset,
             imagesToCompare.originalImage.width,
@@ -47,10 +46,12 @@ export class DifferencesDetector {
     }
 
     generateDifferencesInformation() {
-        let differentPixelsArray: number[] = [];
+        const differentPixelsArray: number[] = [];
+        const canvasOriginalImage: Canvas = new Canvas(this.imagesToCompare.originalImage.imageWidth, this.imageHeight);
+        const canvasModifiedImage: Canvas = new Canvas(this.imagesToCompare.modifiedImage.imageWidth, this.imageHeight);
 
-        const originalImageData = this.getImageData(this.imagesToCompare.originalImage, this.canvasToCompare.originalImageCanvas);
-        const modifiedImageData = this.getImageData(this.imagesToCompare.modifiedImage, this.canvasToCompare.modifiedImageCanvas);
+        const originalImageData = this.getImageData(this.imagesToCompare.originalImage, canvasOriginalImage);
+        const modifiedImageData = this.getImageData(this.imagesToCompare.modifiedImage, canvasModifiedImage);
 
         differentPixelsArray = this.compareImagesPixels(originalImageData, modifiedImageData);
         this.differenceImageGenerator.generateImageFromDifferencesData(differentPixelsArray);
