@@ -1,5 +1,3 @@
-import * as Canvas from 'canvas';
-
 const NB_BIT_PER_PIXEL = 4;
 const RED_POS = 0;
 const GREEN_POS = 1;
@@ -14,10 +12,12 @@ export class DifferencesImageGenerator {
     private differentPixelsPositionsWithOffset: Map<number, boolean>;
 
     constructor(private readonly offset: number, private readonly imageWidth: number, private readonly imageHeight: number) {
-        const whiteCanvas = Canvas.createCanvas(this.imageWidth, this.imageHeight);
-        const whiteImageContext = whiteCanvas.getContext('2d');
-        whiteImageContext.fillStyle = 'white';
-        whiteImageContext.fillRect(0, 0, whiteCanvas.width, whiteCanvas.height);
+        const whiteCanvas = new HTMLCanvasElement();
+        whiteCanvas.width = this.imageWidth;
+        whiteCanvas.height = this.imageHeight;
+        const whiteImageContext = whiteCanvas.getContext('2d')!;
+        whiteImageContext!.fillStyle = 'white';
+        whiteImageContext!.fillRect(0, 0, whiteCanvas.width, whiteCanvas.height);
 
         this.whiteImageData = whiteImageContext.getImageData(0, 0, whiteCanvas.width, whiteCanvas.height);
         this.differentPixelsPositionsWithOffset = new Map<number, boolean>();
