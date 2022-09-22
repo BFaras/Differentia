@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { DifferencesDetector } from '@app/classes/differences-detector';
 import { Image } from 'canvas';
 
 @Component({
@@ -6,14 +7,18 @@ import { Image } from 'canvas';
   templateUrl: './test-page.component.html',
   styleUrls: ['./test-page.component.scss']
 })
-export class TestPageComponent implements OnInit {
-  const originalImage: Image ;
-  const diffImage: Image;
-  let finalDifferencesImage: Image;
+export class TestPageComponent {
+  readonly originalImage: Image = new Image();
+  readonly diffImage: Image = new Image();
+  let finalDifferencesImage: Image = new Image();
 
-  constructor() { }
+  constructor() {
+    let diffDetector : DifferencesDetector;
 
-  ngOnInit(): void {
-  }
+    originalImage.src = "../../../assets/ImageBlanche.bmp";
+    diffImage.src = "../../../assets/ImageDiff.bmp";
 
+    diffDetector = new DifferencesDetector({originalImage: originalImage, modifiedImage: diffImage}, 0);
+    finalDifferencesImage = diffDetector.differenceImageGenerator.getDifferencesImage();
+   }
 }

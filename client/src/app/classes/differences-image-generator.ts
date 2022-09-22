@@ -1,4 +1,4 @@
-import { Canvas } from 'canvas';
+import { Canvas, Image } from 'canvas';
 
 const NB_BIT_PER_PIXEL = 4;
 const RED_POS = 0;
@@ -29,6 +29,20 @@ export class DifferencesImageGenerator {
 
     getWhiteImageData() {
         return this.whiteImageData;
+    }
+
+    getDifferencesImage() : Image {
+        let differencesImage : Image = new Image();
+        let canvas: Canvas = document.createElement('canvas');
+        let ctx : CanvasRenderingContext2D = canvas.getContext('2d');
+        let newImageData = this.whiteImageData.data;
+        
+        canvas.width = newImageData.width;
+        canvas.height = newImageData.height;
+        ctx.putImageData(newImageData, 0, 0);
+        differencesImage.src = canvas.toDataURL();
+
+        return differencesImage;
     }
 
     generateImageFromDifferencesData(differentPixelsArray: number[]) {
