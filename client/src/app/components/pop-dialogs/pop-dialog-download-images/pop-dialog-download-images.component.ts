@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { EditImagesService } from '@app/services/edit-images.service';
 import { VerifyImageService } from '@app/services/verify-image.service';
 
 @Component({
@@ -14,7 +13,6 @@ export class PopDialogDownloadImagesComponent {
     urlOfImage: string;
 
     constructor(
-        private editImagesService: EditImagesService,
         @Inject(MAT_DIALOG_DATA) private imageInfo: any,
         private verifyImageService: VerifyImageService,
     ) {}
@@ -23,24 +21,24 @@ export class PopDialogDownloadImagesComponent {
         if (event.target.files) {
             const reader = new FileReader();
             const fileToRead = event.target.files[0];
+            console.log(fileToRead.readAsBinaryString);
             reader.readAsDataURL(fileToRead);
 
             reader.onload = () => {
-                this.verifyImageService.renderImage(reader);
+                this.verifyImageService.getImageToVerify(reader);
                 this.verifyImageService.imageToVerify.onload = () => {
                     if (this.verifyImageService.verifyImageConstraint() && this.verifyImageService.verifyImageFormat(fileToRead)) {
                         this.urlOfImage = reader.result as string;
                         this.warningActivated = false;
-                        if (this.imageInfo.bothImage) {
-                            this.editImagesService.activatedEmitterUrlImageBoth.emit(this.urlOfImage);
-                        } else {
-                            this.editImagesService.activatedEmitterUrlImageSingle.emit({ index: this.imageInfo.indexOfImage, url: this.urlOfImage });
-                        }
+                        this.verifyImageService.verifyIfSentMultipleOrSingle(this.urlOfImage,this.imageInfo)
                     } else {
                         this.warningActivated = true;
                     }
                 };
+
+
             };
         }
     }
+
 }
