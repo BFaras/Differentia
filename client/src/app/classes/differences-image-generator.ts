@@ -31,6 +31,14 @@ export class DifferencesImageGenerator {
         return this.whiteImageData;
     }
 
+    generateImageFromDifferencesData(differentPixelsArray: number[])
+    {
+        for (i = 0; i < differentPixelsArray.length; i++)
+        {
+            this.addDifferencePixelsToImage(i);
+        }
+    }
+
     addDifferencePixelsToImage(pixelPosition: number) {
         this.markDifference(pixelPosition);
         this.generateOffsetPixels(pixelPosition);
