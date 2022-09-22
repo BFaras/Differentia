@@ -27,6 +27,10 @@ export class DifferencesDetector {
         return imageContext.getImageData(0, 0, canvas.width, canvas.height).data;
     }
 
+    compareImagesPixels(originalImageData: ImageData, modifiedImageData: ImageData) {
+
+    }
+
     generateDifferencesInformation() {
         let differentImage = false;
 
@@ -45,12 +49,21 @@ export class DifferencesDetector {
             }
         }
 
-        const nbDifferences = differentImage ? this.getNbDifferences() : 0;
-
-        return { differentImage, nbDifferences };
+        return differentImage;
     }
 
-    getNbDifferences() {
+    sendNbDifferences() {
+        let differentImage = this.generateDifferencesInformation();
+        let nbOfDiff = 0;
+
+        if (differentImage) {
+            nbOfDiff = this.countNbDifferences();
+        }
+
+        return nbOfDiff;
+    }
+
+    countNbDifferences() {
         // TD : Fonction qui trouve le nombre de differences
         const differentPixelsMap: Map<number, boolean> = this.differenceImageGenerator.getDifferentPixelsPositionWithOffset();
         let nbOfDifferences = 0;
