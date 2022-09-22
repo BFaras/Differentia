@@ -14,6 +14,7 @@ import { MaterialPageComponent } from '@app/pages/material-page/material-page.co
 import { GameFormComponent } from './components/forms/game-form/game-form.component';
 import { ListGameFormComponent } from './components/forms/list-game-form/list-game-form.component';
 import { GameSelectionComponent } from './pages/game-selection/game-selection.component';
+import { TestPageComponent } from './pages/test-page/test-page.component';
 
 /**
  * Main module that is used in main.ts.
@@ -32,6 +33,7 @@ import { GameSelectionComponent } from './pages/game-selection/game-selection.co
         GameSelectionComponent,
         GameFormComponent,
         ListGameFormComponent,
+        TestPageComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
     providers: [],
