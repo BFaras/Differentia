@@ -16,14 +16,20 @@ export class GamePageComponent {
 
     ngOnInit() {
         // (this.socketService.isSocketAlive() === true)? this.socketService.connect():
-        this.configureGamePageSocketFeatures();
-        this.gamePage();
+        this.connect();
+        // this.gamePage();
         // console.log("ntm");
     }
 
     ngOnDestroy() {
         this.socketService.send("kill the timer");
-        // console.log("fdp");
+    }
+
+    connect() {
+        if (!this.socketService.isSocketAlive()) {
+          this.socketService.connect();
+        }
+        this.configureGamePageSocketFeatures();
     }
 
     // ngOnRefresh() {
@@ -40,9 +46,5 @@ export class GamePageComponent {
         this.socketService.on("recu", (message: string) => {
             console.log(message);
         });
-    }
-
-    gamePage() {
-        this.socketService.send("game page", "salut");
     }
 }
