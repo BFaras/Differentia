@@ -1,6 +1,5 @@
-import { Canvas, Image } from 'canvas';
 import { DifferencesImageGenerator } from './differences-image-generator';
-import { ImagesToCompare } from './images-to-compare';
+import { ImageDataToCompare } from './image-data-to-compare';
 
 const NB_BIT_PER_PIXEL = 4;
 const RED_POS = 0;
@@ -12,20 +11,10 @@ export class DifferencesDetector {
     differenceImageGenerator: DifferencesImageGenerator;
     nbDifferences: number;
 
-    constructor(readonly imagesToCompare: ImagesToCompare, readonly offset: number) {
-        this.differenceImageGenerator = new DifferencesImageGenerator(
-            offset,
-            imagesToCompare.originalImage.width,
-            imagesToCompare.originalImage.height,
-        );
+    constructor(readonly imageDatasToCompare: ImageDataToCompare, readonly offset: number) {
+        this.differenceImageGenerator = new DifferencesImageGenerator(offset, imageDatasToCompare.imageWidth, imageDatasToCompare.imageHeight);
         this.generateDifferencesInformation();
         this.nbDifferences = this.countNbDifferences();
-    }
-
-    getImageData(image: Image, canvas: Canvas) {
-        const imageContext = canvas.getContext('2d');
-        imageContext.drawImage(image, 0, 0);
-        return imageContext.getImageData(0, 0, canvas.width, canvas.height).data;
     }
 
     compareImagesPixels(originalImageData: Uint8ClampedArray, modifiedImageData: Uint8ClampedArray) {
@@ -47,13 +36,8 @@ export class DifferencesDetector {
 
     generateDifferencesInformation() {
         let differentPixelsArray: number[] = [];
-        const canvasOriginalImage: Canvas = new Canvas(this.imagesToCompare.originalImage.width, this.imagesToCompare.originalImage.height);
-        const canvasModifiedImage: Canvas = new Canvas(this.imagesToCompare.modifiedImage.width, this.imagesToCompare.modifiedImage.height);
 
-        const originalImageData = this.getImageData(this.imagesToCompare.originalImage, canvasOriginalImage);
-        const modifiedImageData = this.getImageData(this.imagesToCompare.modifiedImage, canvasModifiedImage);
-
-        differentPixelsArray = this.compareImagesPixels(originalImageData, modifiedImageData);
+        differentPixelsArray = this.compareImagesPixels(this.imageDatasToCompare.originalImageData, this.imageDatasToCompare.modifiedImageData);
         this.differenceImageGenerator.generateImageFromDifferencesData(differentPixelsArray);
     }
 
@@ -75,13 +59,13 @@ export class DifferencesDetector {
 
     visitDifferentPixelsAround(diffPixelPosition: number, differentPixelsMap: Map<number, boolean>) {
         const dixPixelNumber = diffPixelPosition % NB_BIT_PER_PIXEL;
-        const diffPixelLine = dixPixelNumber % this.imagesToCompare.originalImage.height;
-        const diffPixelColumn = dixPixelNumber % this.imagesToCompare.originalImage.width;
+        const diffPixelLine = dixPixelNumber % this.imageDatasToCompare.imageHeight;
+        const diffPixelColumn = dixPixelNumber % this.imageDatasToCompare.imageWidth;
         const circleRadiusToVisit = 1;
 
         for (let i = diffPixelColumn - this.offset; i < diffPixelColumn + this.offset; i++) {
             for (let j = diffPixelLine; (j - diffPixelLine) ** 2 + (i - diffPixelColumn) ** 2 <= circleRadiusToVisit ** 2; j--) {
-                const currentVisitingPixelPosition = i * this.imagesToCompare.originalImage.height + j * this.imagesToCompare.originalImage.width;
+                const currentVisitingPixelPosition = i * this.imageDatasToCompare.imageHeight + j * this.imageDatasToCompare.imageWidth;
                 this.markPixelAsVisited(currentVisitingPixelPosition, differentPixelsMap);
 
                 if (differentPixelsMap.has(currentVisitingPixelPosition) && !differentPixelsMap.get(currentVisitingPixelPosition)) {
@@ -89,7 +73,7 @@ export class DifferencesDetector {
                 }
             }
             for (let j = diffPixelLine + 1; (j - diffPixelLine) ** 2 + (i - diffPixelColumn) ** 2 <= circleRadiusToVisit ** 2; j++) {
-                const currentVisitingPixelPosition = i * this.imagesToCompare.originalImage.height + j * this.imagesToCompare.originalImage.width;
+                const currentVisitingPixelPosition = i * this.imageDatasToCompare.imageHeight + j * this.imageDatasToCompare.imageWidth;
                 this.markPixelAsVisited(currentVisitingPixelPosition, differentPixelsMap);
 
                 if (differentPixelsMap.has(currentVisitingPixelPosition) && !differentPixelsMap.get(currentVisitingPixelPosition)) {

@@ -1,4 +1,4 @@
-import { Canvas, Image } from 'canvas';
+import * as Canvas from 'canvas';
 
 const NB_BIT_PER_PIXEL = 4;
 const RED_POS = 0;
@@ -14,7 +14,7 @@ export class DifferencesImageGenerator {
     private differentPixelsPositionsWithOffset: Map<number, boolean>;
 
     constructor(private readonly offset: number, private readonly imageWidth: number, private readonly imageHeight: number) {
-        const whiteCanvas = new Canvas(this.imageWidth, this.imageHeight);
+        const whiteCanvas = Canvas.createCanvas(this.imageWidth, this.imageHeight);
         const whiteImageContext = whiteCanvas.getContext('2d');
         whiteImageContext.fillStyle = 'white';
         whiteImageContext.fillRect(0, 0, whiteCanvas.width, whiteCanvas.height);
@@ -27,22 +27,8 @@ export class DifferencesImageGenerator {
         return this.differentPixelsPositionsWithOffset;
     }
 
-    getWhiteImageData() {
+    getDifferencesImageData(): ImageData {
         return this.whiteImageData;
-    }
-
-    getDifferencesImage() : Image {
-        let differencesImage : Image = new Image();
-        let canvas: Canvas = document.createElement('canvas');
-        let ctx : CanvasRenderingContext2D = canvas.getContext('2d');
-        let newImageData = this.whiteImageData.data;
-        
-        canvas.width = newImageData.width;
-        canvas.height = newImageData.height;
-        ctx.putImageData(newImageData, 0, 0);
-        differencesImage.src = canvas.toDataURL();
-
-        return differencesImage;
     }
 
     generateImageFromDifferencesData(differentPixelsArray: number[]) {
