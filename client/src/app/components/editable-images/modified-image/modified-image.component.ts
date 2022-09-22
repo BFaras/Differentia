@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { EditImagesService } from '@app/services/edit-images.service';
 @Component({
     selector: 'app-modified-image',
@@ -6,30 +6,55 @@ import { EditImagesService } from '@app/services/edit-images.service';
     styleUrls: ['./modified-image.component.scss'],
 })
 export class ModifiedImageComponent implements OnInit {
+    @Input() idFromParent: number;
     secondImageObtained: boolean;
     urlImageSecond: string;
     indexOfImageObtainedSecond: number;
     constructor(private editImagesService: EditImagesService) {}
 
     ngOnInit(): void {
-        this.editImagesService.activatedEmitterUrlImageSingle.subscribe((dataOfImage) => {
-            if (dataOfImage.index === 1) {
-                this.secondImageObtained = true;
-                this.urlImageSecond = dataOfImage.url;
-                this.indexOfImageObtainedSecond = dataOfImage.index;
-            }
-        });
+        this.getDataSingleImage();
 
-        this.editImagesService.activatedEmitterUrlImageBoth.subscribe((url) => {
+        this.getDataMultipleImage();
+
+        this.getDeletedImageId();
+    }
+
+    assignImageData(dataOfImage: { index: number; url: string }) {
+        if (dataOfImage.index === this.idFromParent) {
             this.secondImageObtained = true;
-            this.urlImageSecond = url;
-            this.indexOfImageObtainedSecond = 1;
-        });
+            this.urlImageSecond = dataOfImage.url;
+            this.indexOfImageObtainedSecond = dataOfImage.index;
+        }
+    }
 
-        this.editImagesService.activatedEmitterRemoveImage.subscribe((wantToDeleteImg) => {
-            if (wantToDeleteImg === this.indexOfImageObtainedSecond) {
-                this.secondImageObtained = false;
-            }
+    deleteImage(dataOfImage: number) {
+        if (dataOfImage === this.indexOfImageObtainedSecond) {
+            this.secondImageObtained = false;
+        }
+    }
+
+    assignMultipleImageData(url: string) {
+        this.secondImageObtained = true;
+        this.urlImageSecond = url;
+        this.indexOfImageObtainedSecond = 1;
+    }
+    // le test undefined est pour sauter le test de subscription: Il faut le get avec http et changer la logic pour get directement ces donnees FUCK
+    getDataSingleImage() {
+        this.editImagesService.getDataImageSingle().subscribe((dataOfImage) => {
+            this.assignImageData(dataOfImage);
+        });
+    }
+
+    getDataMultipleImage() {
+        this.editImagesService.getDataImageMultiple().subscribe((url) => {
+            this.assignMultipleImageData(url);
+        });
+    }
+
+    getDeletedImageId() {
+        this.editImagesService.getIdImageToRemove().subscribe((dataOfImage) => {
+            this.deleteImage(dataOfImage);
         });
     }
 }

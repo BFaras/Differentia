@@ -2,6 +2,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EditImagesService } from '@app/services/edit-images.service';
+import { VerifyImageService } from '@app/services/verify-image.service';
 
 @Component({
     selector: 'app-pop-dialog-download-images',
@@ -12,7 +13,11 @@ export class PopDialogDownloadImagesComponent {
     warningActivated: boolean = false;
     urlOfImage: string;
 
-    constructor(private editImagesService: EditImagesService, @Inject(MAT_DIALOG_DATA) private imageInfo: any) {}
+    constructor(
+        private editImagesService: EditImagesService,
+        @Inject(MAT_DIALOG_DATA) private imageInfo: any,
+        private verifyImageService: VerifyImageService,
+    ) {}
 
     onClickUploadImage(event: any) {
         if (event.target.files) {
@@ -21,9 +26,9 @@ export class PopDialogDownloadImagesComponent {
             reader.readAsDataURL(fileToRead);
 
             reader.onload = () => {
-                this.editImagesService.renderImage(reader);
-                this.editImagesService.imageToVerify.onload = () => {
-                    if (this.editImagesService.verifyImageConstraint() && this.editImagesService.verifyImageFormat(fileToRead)) {
+                this.verifyImageService.renderImage(reader);
+                this.verifyImageService.imageToVerify.onload = () => {
+                    if (this.verifyImageService.verifyImageConstraint() && this.verifyImageService.verifyImageFormat(fileToRead)) {
                         this.urlOfImage = reader.result as string;
                         this.warningActivated = false;
                         if (this.imageInfo.bothImage) {

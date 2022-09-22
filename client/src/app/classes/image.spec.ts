@@ -1,7 +1,7 @@
-import { ImageSize } from './image-size';
+// import { ImageSize } from './image-size';
 
-describe('ImageSize', () => {
-    it('should create an instance', () => {
-        expect(new ImageSize()).toBeTruthy();
-    });
-});
+// describe('ImageSize', () => {
+//     it('should create an instance', () => {
+//         expect(new ImageSize()).toBeTruthy();
+//     });
+// });

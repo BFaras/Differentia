@@ -26,6 +26,6 @@ export class HeaderImageComponent implements OnInit {
     }
 
     onDeleteImage() {
-        this.editImagesService.activatedEmitterRemoveImage.emit(this.indexOfImageToSend);
+        this.editImagesService.sendIdImageToRemove(this.indexOfImageToSend);
     }
 }

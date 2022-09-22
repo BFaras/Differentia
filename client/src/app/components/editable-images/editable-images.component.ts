@@ -6,5 +6,6 @@ import { Component, OnInit } from '@angular/core';
     styleUrls: ['./editable-images.component.scss'],
 })
 export class EditableImagesComponent implements OnInit {
+    imagesIndex: number[] = [0, 1];
     ngOnInit(): void {}
 }
