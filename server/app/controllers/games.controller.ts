@@ -48,20 +48,8 @@ export class GamesController {
          *         schema:
          *           $ref: '#/definitions/Message'
          */
-        this.router.get(`/`, (req: Request, res: Response) => {
-            // Send the request to the service and send the response
-                console.log(this.gamesService.getAllGames());
-                res.json(this.gamesService.getAllGames());
-                // .then((time: Message) => {
-                //     res.json(time);
-                // })
-                // .catch((reason: unknown) => {
-                //     const errorMessage: Message = {
-                //         title: 'Error',
-                //         body: reason as string,
-                //     };
-                //     res.json(errorMessage);
-                // });
+        this.router.get(`/`, async (req: Request, res: Response) => {
+                res.json(await this.gamesService.getAllGames());
         });
     }
 }

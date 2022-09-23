@@ -50,7 +50,7 @@ export class GamePageComponent {
         this.communicationService
           .getGames()
           .subscribe((array) => {
-            console.log(array);
+            console.log("on a recu: " + array);
             let gameWanted = array.find((x) => x.name === nameGame)
             // gameWanted ne sera jamais undefined car le nom utilisé dans le .find est d'un jeu qui 
             // existe forcément (il est dans la page de sélection )

@@ -61,6 +61,7 @@
         "mongodb": "^4.10.0",
         "mongodb-memory-server": "^8.9.2",
         "mongoose": "^6.6.1",
+        "node-fetch": "^3.2.10",
         "prettier": "2.7.1",
         "reflect-metadata": "0.1.13",
         "serve-favicon": "2.5.0",

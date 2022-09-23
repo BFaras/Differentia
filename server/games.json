@@ -1,38 +1,56 @@
 {
     "games": [
         {
-            "name": "Jeu 1",
-            "numberOfDifferences": "4",
+            "name": "Car game",
+            "numberOfDifferences": 4,
             "times": [],
             "images": []
         },
         {
-            "name": "Jeu 2",
-            "numberOfDifferences": "5",
+            "name": "Bike game",
+            "numberOfDifferences": 5,
             "times": [],
             "images": []
         },
         {
-            "name": "Jeu 3",
-            "numberOfDifferences": "6",
+            "name": "House game",
+            "numberOfDifferences": 6,
+            "times": [],
+            "images": []
+        },
+        {   
+            "name": "Plane game",
+            "numberOfDifferences": 7,
             "times": [],
             "images": []
         },
         {
-            "name": "Jeu 4",
-            "numberOfDifferences": "7",
+            "name": "TV game",
+            "numberOfDifferences": 8,
             "times": [],
             "images": []
         },
         {
-            "name": "Jeu 5",
-            "numberOfDifferences": "8",
+            "name": "Table game",
+            "numberOfDifferences": 9,
             "times": [],
             "images": []
         },
         {
-            "name": "Jeu 6",
-            "numberOfDifferences": "9",
+            "name": "Chair game",
+            "numberOfDifferences": 9,
+            "times": [],
+            "images": []
+        },
+        {
+            "name": "Clown game",
+            "numberOfDifferences": 9,
+            "times": [],
+            "images": []
+        },
+        {
+            "name": "Dog game",
+            "numberOfDifferences": 9,
             "times": [],
             "images": []
         }

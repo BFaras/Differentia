@@ -20,7 +20,7 @@ export class Games {
                 times: [],
                 images: []
             },
-            {
+            {   
                 name: "Plane game",
                 numberOfDifferences: 7,
                 times: [],
@@ -57,5 +57,4 @@ export class Games {
                 images: []
             }
         ];
-    
 }
