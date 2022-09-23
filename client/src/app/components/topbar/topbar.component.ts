@@ -1,10 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-useless-constructor */
-/* eslint-disable no-restricted-imports */
 /* eslint-disable prettier/prettier */
 
 import { Component, OnInit } from '@angular/core';
+import { CommunicationService } from '@app/services/communication.service';
 import { TimeService } from '@app/services/time.service';
 
 @Component({
@@ -15,9 +12,13 @@ import { TimeService } from '@app/services/time.service';
 
 export class TopbarComponent implements OnInit {
 
-  constructor(public timeService: TimeService) {}
+  nbDifferences: number;
 
-  ngOnInit(): void {}
+  constructor(public timeService: TimeService, public readonly communicationService: CommunicationService) {}
+
+  ngOnInit(): void {
+    this.receiveNumberOfDifferences("Jeu 1");
+  }
 
   ngOnDestroy(): void {}
 
@@ -29,16 +30,15 @@ export class TopbarComponent implements OnInit {
   //     this.communicationService.postTime(newScoreMessage).subscribe();
   // }
 
-  // receiveTime(): void {
-  //   this.communicationService
-  //     .getTime()
-  //     .pipe(
-  //       map((message: Message) => {
-  //         return `${message.body.split(':')[0]}:${message.body.split(':')[1]}`;
-  //       }),
-  //      )
-  //     .subscribe(this.time);
-  // }
+  receiveNumberOfDifferences(nameGame: string): void {
+    this.communicationService
+      .getGames()
+      .subscribe((array) => {
+        console.log(array);
+        let gameWanted = array.find((x) => x.name === nameGame)
+        this.nbDifferences = gameWanted? gameWanted.numberOfDifferences: -1;
+      });
+  }
 
   // receiveNumberOfDifferences(): void {
   //   this.communicationService

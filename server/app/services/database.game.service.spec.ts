@@ -3,8 +3,8 @@ import { expect } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import { describe } from "mocha";
 import { MongoClient } from "mongodb";
-import { GamesService } from "./games.service";
-import { Game } from "../interfaces/game";
+import { GamesService } from "./database.games.service";
+import { Game } from "../../../common/game";
 import { Time } from "../../../common/time"
 import { DatabaseServiceMock } from "./database.service.mock";
 import { HttpException } from "@app/classes/http.exception";
