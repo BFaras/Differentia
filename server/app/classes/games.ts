@@ -3,37 +3,55 @@ import { Game } from '@common/game'
 export class Games {
     games:Array<Game> = [
             {
-                name: "Jeu 1",
+                name: "Car game",
                 numberOfDifferences: 4,
                 times: [],
                 images: []
             },
             {
-                name: "Jeu 2",
+                name: "Bike game",
                 numberOfDifferences: 5,
                 times: [],
                 images: []
             },
             {
-                name: "Jeu 3",
+                name: "House game",
                 numberOfDifferences: 6,
                 times: [],
                 images: []
             },
             {
-                name: "Jeu 4",
+                name: "Plane game",
                 numberOfDifferences: 7,
                 times: [],
                 images: []
             },
             {
-                name: "Jeu 5",
+                name: "TV game",
                 numberOfDifferences: 8,
                 times: [],
                 images: []
             },
             {
-                name: "Jeu 6",
+                name: "Table game",
+                numberOfDifferences: 9,
+                times: [],
+                images: []
+            },
+            {
+                name: "Chair game",
+                numberOfDifferences: 9,
+                times: [],
+                images: []
+            },
+            {
+                name: "Clown game",
+                numberOfDifferences: 9,
+                times: [],
+                images: []
+            },
+            {
+                name: "Dog game",
                 numberOfDifferences: 9,
                 times: [],
                 images: []

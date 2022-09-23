@@ -53,6 +53,7 @@ export class SocketManager {
                 console.log(message);
                 socket.emit("recu", "ferme la");
                 socket.emit("classic mode", "bet");
+                socket.emit("The game is", message)
                 this.timeInterval = setInterval(() => {
                     this.emitTime(socket);
                 }, 1000);

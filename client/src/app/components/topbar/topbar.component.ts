@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommunicationService } from '@app/services/communication.service';
 import { TimeService } from '@app/services/time.service';
 
@@ -12,13 +12,11 @@ import { TimeService } from '@app/services/time.service';
 
 export class TopbarComponent implements OnInit {
 
-  nbDifferences: number;
+  @Input() numberOfDifferences: number;
 
   constructor(public timeService: TimeService, public readonly communicationService: CommunicationService) {}
 
-  ngOnInit(): void {
-    this.receiveNumberOfDifferences("Jeu 1");
-  }
+  ngOnInit(): void {}
 
   ngOnDestroy(): void {}
 
@@ -30,15 +28,16 @@ export class TopbarComponent implements OnInit {
   //     this.communicationService.postTime(newScoreMessage).subscribe();
   // }
 
-  receiveNumberOfDifferences(nameGame: string): void {
-    this.communicationService
-      .getGames()
-      .subscribe((array) => {
-        console.log(array);
-        let gameWanted = array.find((x) => x.name === nameGame)
-        this.nbDifferences = gameWanted? gameWanted.numberOfDifferences: -1;
-      });
-  }
+  // receiveNumberOfDifferences(nameGame: string): void {
+  //   this.communicationService
+  //     .getGames()
+  //     .subscribe((array) => {
+  //       console.log(array);
+  //       let gameWanted = array.find((x) => x.name === nameGame)
+  //       // gameWanted ne sera jamais undefined car le nom utilisé dans le .find est d'un jeu qui existe forcément (il est dans la page de sélection )
+  //       this.nbDifferences = gameWanted? gameWanted.numberOfDifferences: -1;
+  //     });
+  // }
 
   // receiveNumberOfDifferences(): void {
   //   this.communicationService

@@ -3,6 +3,7 @@
 import { Time } from '../../../../../common/time';
 import { Component } from '@angular/core';
 import { SocketClientService } from '@app/services/socket-client.service';
+import { CommunicationService } from '@app/services/communication.service';
 import { TimeService } from '@app/services/time.service';
 
 @Component({
@@ -12,7 +13,13 @@ import { TimeService } from '@app/services/time.service';
 })
 export class GamePageComponent {
 
-    constructor(public socketService: SocketClientService, private timeService: TimeService) {}
+    nbDifferences: number;
+    gameName: string;
+
+    constructor(public socketService: SocketClientService, 
+        private timeService: TimeService,
+        private communicationService: CommunicationService
+    ) {}
 
     ngOnInit() {
         this.socketService.connect();
@@ -26,12 +33,28 @@ export class GamePageComponent {
     configureGamePageSocketFeatures() {
         this.socketService.on("classic mode", (message: string) => {
             this.timeService.classicMode();
-        })
+        });
         this.socketService.on("time", (time: Time) => {
             this.timeService.changeTime(time);
         });
         this.socketService.on("recu", (message: string) => {
             console.log(message);
         });
+        this.socketService.on("The game is", (message: string) => {
+            this.receiveNumberOfDifferences(message);
+            this.gameName = message;
+        })
     }
+
+    receiveNumberOfDifferences(nameGame: string): void {
+        this.communicationService
+          .getGames()
+          .subscribe((array) => {
+            console.log(array);
+            let gameWanted = array.find((x) => x.name === nameGame)
+            // gameWanted ne sera jamais undefined car le nom utilisé dans le .find est d'un jeu qui 
+            // existe forcément (il est dans la page de sélection )
+            this.nbDifferences = gameWanted? gameWanted.numberOfDifferences: -1;
+          });
+      }
 }

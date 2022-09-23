@@ -47,11 +47,6 @@ export class MainPageComponent {
       });
     }
 
-    gamePage() {
-      console.log("cliqué");
-      this.socketService.send("game page", "wllh ntm");
-    }
-  
     //   // Afficher le message envoyé à chaque émission de l'événement "clock" du serveur
     //   this.socketService.on("clock", (time: Date) => {
     //     this.serverClock = time;
