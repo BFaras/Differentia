@@ -2,7 +2,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { VerifyImageService } from '@app/services/verify-image.service';
-
 @Component({
     selector: 'app-pop-dialog-download-images',
     templateUrl: './pop-dialog-download-images.component.html',
@@ -10,35 +9,27 @@ import { VerifyImageService } from '@app/services/verify-image.service';
 })
 export class PopDialogDownloadImagesComponent {
     warningActivated: boolean = false;
-    urlOfImage: string;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) private imageInfo: any,
         private verifyImageService: VerifyImageService,
     ) {}
 
-    onClickUploadImage(event: any) {
-        if (event.target.files) {
-            const reader = new FileReader();
-            const fileToRead = event.target.files[0];
-            console.log(fileToRead.readAsBinaryString);
-            reader.readAsDataURL(fileToRead);
-
-            reader.onload = () => {
-                this.verifyImageService.getImageToVerify(reader);
-                this.verifyImageService.imageToVerify.onload = () => {
-                    if (this.verifyImageService.verifyImageConstraint() && this.verifyImageService.verifyImageFormat(fileToRead)) {
-                        this.urlOfImage = reader.result as string;
-                        this.warningActivated = false;
-                        this.verifyImageService.verifyIfSentMultipleOrSingle(this.urlOfImage,this.imageInfo)
-                    } else {
-                        this.warningActivated = true;
-                    }
-                };
-
-
-            };
+    onClickUploadImage(event:any) {
+        let target = event.target as HTMLInputElement
+        let file = target.files![0]
+        let reader = new FileReader();
+        reader.readAsArrayBuffer(file)
+        reader.onload = (e)=>{
+        this.verifyImageService.processBuffer(e);
+            this.verifyImageService.getImage().onload = () =>{
+                this.verifyImageService.sendImageRespetContraints(this.imageInfo,file)
+                this.warningActivated = this.verifyImageService.getWarningActivated();
+            }
+        
+            
         }
+
     }
 
 }
