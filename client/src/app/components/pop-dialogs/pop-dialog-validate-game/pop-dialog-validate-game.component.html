@@ -8,10 +8,10 @@
         <h1>Validation</h1>
         <p>rayon d’élargissement</p>
         <mat-radio-group labelPosition="before">
-            <mat-radio-button value="0">0 :</mat-radio-button>
-            <mat-radio-button value="3" checked="checked">3 :</mat-radio-button>
-            <mat-radio-button value="9">9 :</mat-radio-button>
-            <mat-radio-button value="15">15 : </mat-radio-button>
+            <mat-radio-button value="0" (change) = "onRadiusChanged($event)">0 :</mat-radio-button>
+            <mat-radio-button value="3"  (change) = "onRadiusChanged($event)" checked>3 :</mat-radio-button>
+            <mat-radio-button value="9" (change) = "onRadiusChanged($event)">9 :</mat-radio-button>
+            <mat-radio-button value="15" (change) = "onRadiusChanged($event)">15 : </mat-radio-button>
         </mat-radio-group>
         <mat-dialog-actions>
             <button mat-raised-button mat-dialog-close (click)="onCreateCreateGame()">Valider</button>
