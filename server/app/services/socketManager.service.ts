@@ -7,6 +7,7 @@ export class SocketManager {
 
     private sio: io.Server;
     private room: string = "serverRoom";
+    public socket: io.Socket;
     private timeInterval: NodeJS.Timer;
     private chronometerService: ChronometerService = new ChronometerService();
     constructor(server: http.Server) {
@@ -16,6 +17,7 @@ export class SocketManager {
     public handleSockets(): void {
         this.sio.on('connection', (socket) => {
             console.log(`Connexion par l'utilisateur avec id : ${socket.id}`)
+            this.socket = socket;
             // message initial
             socket.emit("hello", "Hello World!");
 
@@ -71,7 +73,7 @@ export class SocketManager {
 
     private emitTime(socket: io.Socket) {
         this.chronometerService.increaseTime();
-        console.log(this.chronometerService.time);
+        console.log(this.chronometerService.time); // Là que pour debug
         socket.emit("time", this.chronometerService.time);
     }
 }

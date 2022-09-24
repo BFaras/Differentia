@@ -44,6 +44,9 @@ export class GamePageComponent {
             this.receiveNumberOfDifferences(message);
             this.gameName = message;
         })
+        this.socketService.on("Name repeated", () => {
+            console.log("le nom est répété imbécile");
+        })
     }
 
     receiveNumberOfDifferences(nameGame: string): void {

@@ -7,15 +7,19 @@
     <mat-dialog-content class="dialog-content">
         <h1>Validation</h1>
         <div class="form-radius-container">
-            <div>Nombre de difference : __NombreDiff__</div>
+            <!-- <div>Nombre de difference : __NombreDiff__</div> -->
+            <mat-form-field>
+                <label for="nbDiff">Nombre de differences : </label>
+                <input matInput name="nbDiff"/>
+            </mat-form-field>
             <mat-form-field>
                 <label for="name">Nom du Jeu : </label>
-                <input matInput name="name" placeholder="nameOfGame" />
+                <input matInput name="name"/>
             </mat-form-field>
         </div>
         <mat-dialog-actions>
             <button mat-raised-button mat-dialog-close>Retour</button>
-            <button mat-raised-button mat-dialog-close>Créer</button>
+            <button mat-raised-button mat-dialog-close (click)="addGame(gameToAdd)">Créer</button>
         </mat-dialog-actions>
     </mat-dialog-content>
 </div>

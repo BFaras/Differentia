@@ -30,4 +30,8 @@ export class CommunicationService {
     getGames(): Observable<Array<Game>> {
         return this.http.get<Array<Game>>(`${this.baseUrl}/games`).pipe(catchError(this.handleError<Array<Game>>('getGames')));
     }
+
+    addGame(game: Game): Observable<Number> {
+        return this.http.post<Number>(`${this.baseUrl}/games/newGame`, game).pipe(catchError(this.handleError<Number>('validateGame')));
+    }
 }
