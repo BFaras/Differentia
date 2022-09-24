@@ -40,7 +40,7 @@ export class TestPageComponent implements OnInit {
             imageWidth: this.originalImage.width,
         };
 
-        diffDetector = new DifferencesDetector(datas, 0);
+        diffDetector = new DifferencesDetector(datas, 20);
 
         const canvasResult = this.adaptCanvasSizeToImage(mainCanvas, this.originalImage);
         const canvasResultContext: CanvasRenderingContext2D = canvasResult.getContext('2d')!;
@@ -51,7 +51,7 @@ export class TestPageComponent implements OnInit {
         imageGenerator.generateImageFromPixelsDataArray(differentPixelsPositionArray);
         resultImageData = imageGenerator.getGeneratedImageData();
 
-        console.log(resultImageData);
+        console.log(diffDetector.getNbDifferences());
 
         canvasResultContext.putImageData(resultImageData, 0, 0);
 

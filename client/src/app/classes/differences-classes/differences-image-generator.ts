@@ -28,7 +28,7 @@ export class DifferencesImageGenerator {
 
     generateImageFromPixelsDataArray(differentPixelsArray: number[]) {
         for (let i = 0; i < differentPixelsArray.length; i++) {
-            this.generateBlackPixel(i * NB_BIT_PER_PIXEL);
+            this.generateBlackPixel(differentPixelsArray[i] * NB_BIT_PER_PIXEL);
         }
     }
 
