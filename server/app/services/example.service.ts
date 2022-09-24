@@ -38,6 +38,7 @@ export class ExampleService {
         // eslint-disable-next-line no-console
         console.log(message);
         this.clientMessages.push(message);
+        // FAIRE SA MAIS AVEC UNE REQUÊTE HTTP VERS LA DATABASE POUR PUSH LE TEMPS DU JOUEUR
     }
 
     getAllMessages(): Message[] {

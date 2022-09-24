@@ -1,7 +1,27 @@
-.container {
-    height: auto;
-    min-height: 98vh;
+//Est-ce que sa devrait être des ID ou des class? vu qu'on ne les réutilise pas par la suite
+.sidebar-container {
+    height: 100%;
     border: 1px solid black;
     padding: 0 5px 0 5px;
-    margin-right: 5px;
+}
+
+ul {
+    list-style-type : none;
+    padding: 0;
+}
+
+ul > li {
+    display: block;
+    margin: auto;
+    width: 100%;
+    text-align: center;
+}
+
+.information {
+    display: block;
+    width: 80%;
+    margin: auto; //je défini margin ici et ensuite le bottom et top est ce que c'est correct?
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border: solid black;
 }
