@@ -7,6 +7,13 @@
     <span class="image-container">
         <span class="image">
             <!--Image de droite-->
+            <canvas id="canvas" #gridCanvas (click)="mouseHitDetect($event)" [attr.width]="width" [attr.height]="height"></canvas>
+            <div id="mouse-position-display">
+                <p>Cliquez sur l'image pour détecter les différences</p>
+                <p *ngIf="mousePosition.x !== 0">X : {{ mousePosition.x }}</p>
+                <p *ngIf="mousePosition.y !== 0">Y : {{ mousePosition.y }}</p>
+                <hr />
+            </div>
         </span>
     </span>
 </div>
