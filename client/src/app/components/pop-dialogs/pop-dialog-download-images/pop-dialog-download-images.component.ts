@@ -12,7 +12,7 @@ export class PopDialogDownloadImagesComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA) private imageInfo: any,
-        private verifyImageService: VerifyImageService,
+        public verifyImageService: VerifyImageService,
     ) {}
 
     onClickUploadImage(event:any) {

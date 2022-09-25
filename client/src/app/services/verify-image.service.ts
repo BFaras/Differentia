@@ -6,10 +6,10 @@ import { EditImagesService } from './edit-images.service';
     providedIn: 'root',
 })
 export class VerifyImageService {
-    private imageToVerify = new Image();
-    private imageSizeConstraint: ImageSize = new ImageSize(640, 480);
-    private bitDepth:number
-    private warningActivated:boolean;
+    imageToVerify = new Image();
+    imageSizeConstraint: ImageSize = new ImageSize(640, 480);
+    bitDepth:number
+    warningActivated:boolean;
     constructor(private editImagesService: EditImagesService,private sanitizer: DomSanitizer){}
 
     transformByteToImage(buffer : any) {
@@ -18,14 +18,14 @@ export class VerifyImageService {
         this.imageToVerify.src = URL.createObjectURL(blob);
     }
 
-    processBuffer(e:ProgressEvent<FileReader>){
+    processBuffer(e:any){
         let buffer = e.target!.result as ArrayBuffer
         this.getBmp(buffer);
         this.transformByteToImage(buffer);
     }
 
     sendImageRespetContraints(dialog:any,file:File){
-        if (this.verifyImageConstraint() && this.verifyImageFormat(file) && this.bitDepth == 24) {
+        if (this.verifyImageConstraint() && this.verifyImageFormat(file) && this.getBitDepth() == 24) {
             let imageToSend = this.sanitizer.bypassSecurityTrustResourceUrl(this.imageToVerify.src as string)
             this.verifyIfSentMultipleOrSingle(imageToSend as string,dialog)
 
@@ -35,6 +35,10 @@ export class VerifyImageService {
         }
     }
 
+    getBitDepth(){
+        return this.bitDepth
+    }
+
     getWarningActivated(){
         return this.warningActivated;
     }
@@ -42,7 +46,7 @@ export class VerifyImageService {
         return this.imageToVerify;
     }
     verifyImageFormat(file: File) {
-        console.log(file)
+
         return file.type === 'image/bmp';
     }
 
@@ -52,8 +56,6 @@ export class VerifyImageService {
     }
 
     verifyImageWidthHeight(width: number, height: number) {
-        console.log(width)
-        console.log(height)
         return height === this.imageSizeConstraint.height && width === this.imageSizeConstraint.width;
     }
 

@@ -1,6 +1,19 @@
-import { TestBed } from '@angular/core/testing';
 
+import { TestBed } from '@angular/core/testing';
 import { VerifyImageService } from './verify-image.service';
+const mockEventFile = {
+  target: {
+    files: [
+      new Blob([""], { type: 'text/html' }),
+    ],
+  },
+}
+
+class MatDialogMock {
+  open() {
+      return;
+  }
+}
 
 describe('VerifyImageService', () => {
   let service: VerifyImageService;
@@ -13,4 +26,126 @@ describe('VerifyImageService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+  it('should test process Buffer',()=>{
+    const spyGettingBmp = spyOn<any>(service,'getBmp').and.returnValue({})
+    const spyTransformation = spyOn<any>(service,'transformByteToImage').and.returnValue({})
+
+    service.processBuffer(mockEventFile);
+
+    expect(spyGettingBmp).toHaveBeenCalled()
+    expect(spyTransformation).toHaveBeenCalled()
+  })
+
+  it('it should call transformByteToImage',()=>{
+    let bufferMock = "buffer"
+    let srcMock = 'string'
+    service.transformByteToImage(bufferMock);
+    expect(typeof service.getImage().src).toEqual(srcMock );
+
+  })
+
+  it('it should call all functions in sendImageRespetContraints and the warning should be false',()=>{
+    const spyConstraint = spyOn<any>(service,'verifyImageConstraint').and.returnValue(true)
+    const spyTransformation = spyOn<any>(service,'verifyImageFormat').and.returnValue(true)
+    const spySentMultipleOrSingle = spyOn<any>(service,'verifyIfSentMultipleOrSingle').and.returnValue(true)
+    const spygetBitDepth = spyOn<any>(service,'getBitDepth').and.returnValue(24)
+    let mockDialog :MatDialogMock = {
+      open() {
+        return;
+  }}; 
+    const imageToSend = new File([""], "filename", { type: 'text/html' });
+    service.sendImageRespetContraints(mockDialog,imageToSend)
+    expect(spyConstraint).toHaveBeenCalled()
+    expect(spyTransformation).toHaveBeenCalled()
+    expect(spySentMultipleOrSingle).toHaveBeenCalled()
+    expect(spygetBitDepth).toHaveBeenCalled()
+    expect(service.getWarningActivated()).toBeFalsy()
+
+  })
+
+  it('it should call all functions in sendImageRespetContraints and the warning should be true',()=>{
+    spyOn<any>(service,'verifyImageConstraint').and.returnValue(true)
+    spyOn<any>(service,'verifyImageFormat').and.returnValue(false)
+    spyOn<any>(service,'verifyIfSentMultipleOrSingle').and.returnValue(true)
+    spyOn<any>(service,'getBitDepth').and.returnValue(24)
+    let mockDialog :MatDialogMock = {
+      open() {
+        return;
+  }}; 
+    const imageToSend = new File([""], "filename", { type: 'text/html' });
+    service.sendImageRespetContraints(mockDialog,imageToSend)
+    expect(service.getWarningActivated()).toBeTruthy()
+
+  })
+
+  it('should gave same value getBitDeptj to bitDepth of service',()=>{
+    service.bitDepth = 10;
+    let answerExpect = 10;
+    expect(service.getBitDepth()).toEqual(answerExpect)
+
+  })
+
+  it('should give true when right type when doing this function verifyImageFormat',()=>{
+    const imageToSend = new File([""], "filename", { type: 'image/bmp' });
+    service.verifyImageFormat(imageToSend);
+    expect(service.verifyImageFormat(imageToSend)).toBeTruthy
+
+  })
+
+  it('should verifyImageWidthHeight give true when we have right height and width ',()=>{
+    const fakeWidth = 640;
+    const fakeHeight = 480;
+    service.imageToVerify.width = 640;
+    service.imageToVerify.height = 480;
+
+    expect(service.verifyImageWidthHeight(fakeWidth,fakeHeight)).toBeTruthy
+
+  })
+
+  it('should verifyImageWidthHeight give true when we have right height and width ',()=>{
+    const fakeWidth = 640;
+    const fakeHeight = 200;
+    service.imageToVerify.width = 640;
+    service.imageToVerify.height = 480;
+
+    expect(service.verifyImageWidthHeight(fakeWidth,fakeHeight)).toBeFalsy()
+
+  })
+
+  it('should verifyImageConstraint be called and return true',()=>{
+    const spy = spyOn<any>(service,'verifyImageWidthHeight').and.returnValue(true)
+    service.verifyImageConstraint()
+
+    expect(spy).toBeTruthy()
+
+  })
+
+  it('should verifyIfSentMultipleOrSingle both ',()=>{
+    const fakeUrlInfo = "string";
+    const fakeDialog = {
+      bothImage: true,
+    }
+
+
+    service.verifyIfSentMultipleOrSingle(fakeUrlInfo,fakeDialog)
+    expect(service.verifyIfSentMultipleOrSingle(fakeUrlInfo,fakeDialog)).toBe()
+
+  })
+
+  it('should verifyIfSentMultipleOrSingle single ',()=>{
+    const fakeUrlInfo = "string";
+    const fakeDialog = {
+      bothImage: false,
+    }
+
+
+    service.verifyIfSentMultipleOrSingle(fakeUrlInfo,fakeDialog)
+    expect(service.verifyIfSentMultipleOrSingle(fakeUrlInfo,fakeDialog)).toBe()
+
+  })
+
+
+
+  
 });
