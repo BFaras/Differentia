@@ -13,49 +13,22 @@ export class TestPageComponent implements OnInit {
     readonly modifiedImage: HTMLImageElement = new Image();
     readonly finalDifferencesImage: HTMLImageElement = new Image();
 
-    //@ViewChild('mainCanvas', { static: false })
-    //private mainCanvas: ElementRef<HTMLCanvasElement>;
-
     constructor(private renderer: Renderer2) {}
 
     async ngOnInit(): Promise<void> {
         const mainCanvas = this.renderer.createElement('canvas');
-        let diffDetector: DifferencesDetector;
+        let differenceDetector: DifferencesDetector;
 
         this.originalImage.src = '../../../assets/ImageBlanche.bmp';
         await this.waitForOriginalImageToLoad();
         this.modifiedImage.src = '../../../assets/ImageDiff.bmp';
         await this.waitForModifiedImageToLoad();
 
-        // Eventuellement une fonction, si ca fonctionne
-        const canvasOriginal = this.adaptCanvasSizeToImage(mainCanvas, this.originalImage);
-        const canvasOriginalData = this.getImageData(this.originalImage, canvasOriginal);
-        const canvasModified = this.adaptCanvasSizeToImage(mainCanvas, this.modifiedImage);
-        const canvasModifiedData = this.getImageData(this.modifiedImage, canvasModified);
+        const imagesDatas: ImageDataToCompare = this.generateImagesDataToCompare(mainCanvas);
 
-        const datas: ImageDataToCompare = {
-            originalImageData: canvasOriginalData,
-            modifiedImageData: canvasModifiedData,
-            imageHeight: this.originalImage.height,
-            imageWidth: this.originalImage.width,
-        };
+        differenceDetector = new DifferencesDetector(imagesDatas, 9);
 
-        diffDetector = new DifferencesDetector(datas, 20);
-
-        const canvasResult = this.adaptCanvasSizeToImage(mainCanvas, this.originalImage);
-        const canvasResultContext: CanvasRenderingContext2D = canvasResult.getContext('2d')!;
-        const differentPixelsPositionArray = diffDetector.getDifferentPixelsArray();
-        const imageGenerator = new DifferencesImageGenerator(mainCanvas);
-        let resultImageData: ImageData;
-
-        imageGenerator.generateImageFromPixelsDataArray(differentPixelsPositionArray);
-        resultImageData = imageGenerator.getGeneratedImageData();
-
-        console.log(diffDetector.getNbDifferences());
-
-        canvasResultContext.putImageData(resultImageData, 0, 0);
-
-        this.finalDifferencesImage.src = canvasResult.toDataURL();
+        this.generateDifferencesImage(mainCanvas, differenceDetector, this.finalDifferencesImage);
     }
 
     getImageData(image: HTMLImageElement, canvas: HTMLCanvasElement): Uint8ClampedArray {
@@ -69,6 +42,37 @@ export class TestPageComponent implements OnInit {
         canvas.height = image.height;
 
         return canvas;
+    }
+
+    generateImagesDataToCompare(mainCanvas: HTMLCanvasElement): ImageDataToCompare {
+        const canvasOriginal = this.adaptCanvasSizeToImage(mainCanvas, this.originalImage);
+        const canvasOriginalData = this.getImageData(this.originalImage, canvasOriginal);
+        const canvasModified = this.adaptCanvasSizeToImage(mainCanvas, this.modifiedImage);
+        const canvasModifiedData = this.getImageData(this.modifiedImage, canvasModified);
+
+        const datas: ImageDataToCompare = {
+            originalImageData: canvasOriginalData,
+            modifiedImageData: canvasModifiedData,
+            imageHeight: this.originalImage.height,
+            imageWidth: this.originalImage.width,
+        };
+
+        return datas;
+    }
+
+    generateDifferencesImage(mainCanvas: HTMLCanvasElement, differenceDetector: DifferencesDetector, differencesImageToPutDataIn: HTMLImageElement) {
+        const canvasResult = this.adaptCanvasSizeToImage(mainCanvas, this.originalImage);
+        const canvasResultContext: CanvasRenderingContext2D = canvasResult.getContext('2d')!;
+        const differentPixelsPositionArray = differenceDetector.getDifferentPixelsArrayWithOffset();
+        const imageGenerator = new DifferencesImageGenerator(mainCanvas);
+        let resultImageData: ImageData;
+
+        imageGenerator.generateImageFromPixelsDataArray(differentPixelsPositionArray);
+        resultImageData = imageGenerator.getGeneratedImageData();
+
+        canvasResultContext.putImageData(resultImageData, 0, 0);
+
+        differencesImageToPutDataIn.src = canvasResult.toDataURL();
     }
 
     async waitForOriginalImageToLoad() {
