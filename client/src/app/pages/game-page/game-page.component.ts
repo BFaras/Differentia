@@ -45,7 +45,7 @@ export class GamePageComponent {
             this.gameName = message;
         })
         this.socketService.on("Name repeated", () => {
-            console.log("le nom est répété imbécile");
+            console.log("le nom est répété ");
         })
     }
 
@@ -59,5 +59,5 @@ export class GamePageComponent {
             // existe forcément (il est dans la page de sélection )
             this.nbDifferences = gameWanted? gameWanted.numberOfDifferences: -1;
           });
-      }
+    }
 }

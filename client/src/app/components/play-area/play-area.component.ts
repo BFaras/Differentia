@@ -9,7 +9,6 @@ import { DEFAULT_HEIGHT_CANVAS, DEFAULT_WIDTH_CANVAs } from '@common/const';
     templateUrl: './play-area.component.html',
     styleUrls: ['./play-area.component.scss'],
 })
-
 export class PlayAreaComponent {
     @ViewChild('gridCanvas', { static: false }) private canvas!: ElementRef<HTMLCanvasElement>;
 
