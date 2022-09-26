@@ -1,5 +1,4 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
-
 import { ImageDataToCompare } from '@app/classes/differences-classes/image-data-to-compare';
 import { DifferenceDetectorService } from '@app/services/difference-detector-feature/difference-detector.service';
 import { DifferenceImageGeneratorService } from '@app/services/difference-detector-feature/difference-image-generator.service';
