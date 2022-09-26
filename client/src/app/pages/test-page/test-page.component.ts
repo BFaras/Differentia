@@ -33,6 +33,7 @@ export class TestPageComponent implements OnInit {
         this.differenceDetector.countDifferences();
 
         this.generateDifferencesImage(mainCanvas, this.finalDifferencesImage);
+        
     }
 
     getImageData(image: HTMLImageElement, canvas: HTMLCanvasElement): Uint8ClampedArray {
