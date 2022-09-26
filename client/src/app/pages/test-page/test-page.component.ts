@@ -1,7 +1,8 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
-import { DifferencesDetector } from '@app/classes/differences-classes/differences-detector';
-import { DifferencesImageGenerator } from '@app/classes/differences-classes/differences-image-generator';
+
 import { ImageDataToCompare } from '@app/classes/differences-classes/image-data-to-compare';
+import { DifferenceDetectorService } from '@app/services/difference-detector-feature/difference-detector.service';
+import { DifferenceImageGeneratorService } from '@app/services/difference-detector-feature/difference-image-generator.service';
 
 @Component({
     selector: 'app-test-page',
@@ -12,12 +13,10 @@ export class TestPageComponent implements OnInit {
     readonly originalImage: HTMLImageElement = new Image();
     readonly modifiedImage: HTMLImageElement = new Image();
     readonly finalDifferencesImage: HTMLImageElement = new Image();
-
-    constructor(private renderer: Renderer2) {}
+    constructor(private renderer: Renderer2,private differenceDetector: DifferenceDetectorService) {}
 
     async ngOnInit(): Promise<void> {
         const mainCanvas = this.renderer.createElement('canvas');
-        let differenceDetector: DifferencesDetector;
 
         this.originalImage.src = '../../../assets/ImageBlanche.bmp';
         await this.waitForOriginalImageToLoad();
@@ -26,9 +25,14 @@ export class TestPageComponent implements OnInit {
 
         const imagesDatas: ImageDataToCompare = this.generateImagesDataToCompare(mainCanvas);
 
-        differenceDetector = new DifferencesDetector(imagesDatas, 9);
+        console.log(imagesDatas);
+        
+        this.differenceDetector.setImageDataToCompare(imagesDatas);
+        this.differenceDetector.setOffSet(9);
+        this.differenceDetector.generateDifferencesInformation();
+        this.differenceDetector.countDifferences();
 
-        this.generateDifferencesImage(mainCanvas, differenceDetector, this.finalDifferencesImage);
+        this.generateDifferencesImage(mainCanvas, this.finalDifferencesImage);
     }
 
     getImageData(image: HTMLImageElement, canvas: HTMLCanvasElement): Uint8ClampedArray {
@@ -60,11 +64,11 @@ export class TestPageComponent implements OnInit {
         return datas;
     }
 
-    generateDifferencesImage(mainCanvas: HTMLCanvasElement, differenceDetector: DifferencesDetector, differencesImageToPutDataIn: HTMLImageElement) {
+    generateDifferencesImage(mainCanvas: HTMLCanvasElement, differencesImageToPutDataIn: HTMLImageElement) {
         const canvasResult = this.adaptCanvasSizeToImage(mainCanvas, this.originalImage);
         const canvasResultContext: CanvasRenderingContext2D = canvasResult.getContext('2d')!;
-        const differentPixelsPositionArray = differenceDetector.getDifferentPixelsArrayWithOffset();
-        const imageGenerator = new DifferencesImageGenerator(mainCanvas);
+        const differentPixelsPositionArray = this.differenceDetector.getDifferentPixelsArrayWithOffset();
+        const imageGenerator = new DifferenceImageGeneratorService(mainCanvas);
         let resultImageData: ImageData;
 
         imageGenerator.generateImageFromPixelsDataArray(differentPixelsPositionArray);
