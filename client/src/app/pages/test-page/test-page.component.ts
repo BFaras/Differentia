@@ -28,7 +28,7 @@ export class TestPageComponent implements OnInit {
         console.log(imagesDatas);
         
         this.differenceDetector.setImageDataToCompare(imagesDatas);
-        this.differenceDetector.setOffSet(9);
+        this.differenceDetector.setOffSet(15);
         this.differenceDetector.generateDifferencesInformation();
         this.differenceDetector.countDifferences();
 
@@ -75,7 +75,6 @@ export class TestPageComponent implements OnInit {
         resultImageData = imageGenerator.getGeneratedImageData();
 
         canvasResultContext.putImageData(resultImageData, 0, 0);
-
         differencesImageToPutDataIn.src = canvasResult.toDataURL();
     }
 
