@@ -6,7 +6,7 @@ import { ChronometerService } from './chronometer.service';
 export class SocketManager {
 
     private sio: io.Server;
-    private room: string = "serverRoom";
+    // private room: string = "serverRoom";
     public socket: io.Socket;
     private timeInterval: NodeJS.Timer;
     private chronometerService: ChronometerService = new ChronometerService();
@@ -25,25 +25,25 @@ export class SocketManager {
                 console.log(message);
             });
 
-            socket.on('validate', (word: string) => {
-                const isValid = word.length > 5;
-                socket.emit('wordValidated', isValid);
-            })
+            // socket.on('validate', (word: string) => {
+            //     const isValid = word.length > 5;
+            //     socket.emit('wordValidated', isValid);
+            // })
 
-            socket.on('broadcastAll', (message: string) => {
-                this.sio.sockets.emit("massMessage", `${socket.id} : ${message}`)
-            })
+            // socket.on('broadcastAll', (message: string) => {
+            //     this.sio.sockets.emit("massMessage", `${socket.id} : ${message}`)
+            // })
 
-            socket.on('joinRoom', () => {
-                socket.join(this.room);
-            });
+            // socket.on('joinRoom', () => {
+            //     socket.join(this.room);
+            // });
 
-            socket.on('roomMessage', (message: string) => {
-                // Seulement un membre de la salle peut envoyer un message aux autres
-                if (socket.rooms.has(this.room)) {
-                    this.sio.to(this.room).emit("roomMessage", `${socket.id} : ${message}`);
-                }
-            });
+            // socket.on('roomMessage', (message: string) => {
+            //     // Seulement un membre de la salle peut envoyer un message aux autres
+            //     if (socket.rooms.has(this.room)) {
+            //         this.sio.to(this.room).emit("roomMessage", `${socket.id} : ${message}`);
+            //     }
+            // });
 
 
             socket.on("disconnect", (reason) => {
@@ -51,9 +51,8 @@ export class SocketManager {
                 console.log(`Raison de deconnexion : ${reason}`)
             });
 
-            socket.on("game page", (message) => {
+            socket.on("game page", (message: string) => {
                 console.log(message);
-                socket.emit("recu", "ferme la");
                 socket.emit("classic mode", "bet");
                 socket.emit("The game is", message)
                 this.timeInterval = setInterval(() => {
@@ -67,8 +66,6 @@ export class SocketManager {
             });
 
         });
-
-        
     }
 
     private emitTime(socket: io.Socket) {

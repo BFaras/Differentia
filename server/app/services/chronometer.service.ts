@@ -7,7 +7,7 @@
 
 import { Time } from '../../../common/time';
 import { Service } from 'typedi';
-import { ONE_SECOND, HALF_A_SECOND, MAX_TIME, BASE_ONE } from '../../../common/const';
+import { MAX_TIME, BASE_ONE, RESET_VALUE } from '../../../common/const';
 
 @Service()
 export class ChronometerService {
@@ -41,13 +41,13 @@ export class ChronometerService {
       }
     }
 
-    setMinutes(minutesUpdated:number) {
-      this.time.minutes = minutesUpdated;
-    }
-    // EST CE QUE DE LA DUPLICATION DE CODE PCQ ON FAIT LA MM FONCTION POUR MINUTES ET SECONDES
-    setSeconds(secondsUpdated:number) {
-      this.time.seconds = secondsUpdated;
-    }
+    // setMinutes(minutesUpdated:number) {
+    //   this.time.minutes = minutesUpdated;
+    // }
+    // // EST CE QUE DE LA DUPLICATION DE CODE PCQ ON FAIT LA MM FONCTION POUR MINUTES ET SECONDES
+    // setSeconds(secondsUpdated:number) {
+    //   this.time.seconds = secondsUpdated;
+    // }
 
     showMinutes() {
       if(this.time.minutes < BASE_ONE) {
@@ -63,32 +63,32 @@ export class ChronometerService {
       return this.time.seconds.toString();
     }
 
-    checktime() {
-      if(this.time.seconds === MAX_TIME && this.time.minutes === MAX_TIME) {
-        this.stopChronometer();  
-        // this.gameOver();
-      }
-    }
+    // checktime() {
+    //   if(this.time.seconds === MAX_TIME && this.time.minutes === MAX_TIME) {
+    //     this.stopChronometer();  
+    //     // this.gameOver();
+    //   }
+    // }
 
     // gameOver() {
     //   this.dialogService.openDialog();
     // }
 
-    startChronometer() {
-      this.resetChrono();
-      this.intervalForTimer = setInterval(() =>
-        this.increaseTime(), ONE_SECOND); 
-      this.intervalToCheckTime = setInterval(() =>
-        this.checktime(), HALF_A_SECOND);// Est ce que 1000 est un magic number
-    }
+    // startChronometer() {
+    //   this.resetChrono();
+    //   this.intervalForTimer = setInterval(() =>
+    //     this.increaseTime(), ONE_SECOND); 
+    //   this.intervalToCheckTime = setInterval(() =>
+    //     this.checktime(), HALF_A_SECOND);// Est ce que 1000 est un magic number
+    // }
 
-    stopChronometer() {
-      clearInterval(this.intervalForTimer);
-      clearInterval(this.intervalToCheckTime);
-    }
+    // stopChronometer() {
+    //   clearInterval(this.intervalForTimer);
+    //   clearInterval(this.intervalToCheckTime);
+    // }
        
-    resetChrono() {
-      this.time.minutes = 0;
-      this.time.seconds = 0;
+    public resetChrono() {
+      this.time.minutes = RESET_VALUE;
+      this.time.seconds = RESET_VALUE;
     }
 }

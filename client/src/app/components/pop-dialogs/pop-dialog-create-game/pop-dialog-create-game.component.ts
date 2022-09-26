@@ -12,7 +12,7 @@ import { StatusCodes } from 'http-status-codes';
 export class PopDialogCreateGameComponent implements OnInit {
     
     nameOfGame: string;
-    nbOfDifferences: number;
+    nbOfDifferences: number = 8;
     gameToAdd: Game = {
         name: "Car game", // remplacer car game par this.nameOfGame
         numberOfDifferences: 6, // remplacer 6 par this.nbOfDifferences
@@ -32,8 +32,8 @@ export class PopDialogCreateGameComponent implements OnInit {
         if(this.validateNumberOfDifferences()) {
             this.communicationService
                 .addGame(gameToAdd)
-                .subscribe((responseStatusCode: Number) => {
-                    this.statusCodeTreatment(responseStatusCode);
+                .subscribe((httpStatus: Number) => {
+                    this.statusCodeTreatment(httpStatus);
                 });
         }
         else console.log("change ton popUp pour dire que le nombre de différences n'est pas entre 3 et 9");
