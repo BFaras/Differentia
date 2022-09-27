@@ -1,7 +1,7 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
-import { DifferencesDetector } from '@app/classes/differences-classes/differences-detector';
-import { DifferencesImageGenerator } from '@app/classes/differences-classes/differences-image-generator';
-import { ImageDataToCompare } from '@app/classes/differences-classes/image-data-to-compare';
+import { DifferencesDetector } from '@common/differences-classes/differences-detector';
+import { DifferencesImageGenerator } from '@common/differences-classes/differences-image-generator';
+import { ImageDataToCompare } from '@common/differences-classes/image-data-to-compare';
 
 @Component({
     selector: 'app-test-page',

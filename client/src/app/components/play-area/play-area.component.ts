@@ -32,8 +32,19 @@ export class PlayAreaComponent {
 
     // TODO : déplacer ceci dans un service de gestion de la souris!
     mouseHitDetect(event: MouseEvent) {
+        const differenceIsValid = true;
         if (event.button === MouseButton.Left) {
             this.mousePosition = { x: event.offsetX, y: event.offsetY };
+            this.playSound(differenceIsValid);
         }
+        
+    }
+    
+    playSound(differenceIsValid:boolean){
+        let audio = new Audio();
+        if (differenceIsValid) audio.src ="../../assets/sounds/validSound.mp3";
+        if (!differenceIsValid) audio.src ="../../assets/sounds/invalidSound.mp3";
+        audio.load();
+        audio.play();
     }
 }
