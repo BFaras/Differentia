@@ -1,8 +1,8 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { MouseButton } from '@app/interfaces/mouseButton';
-import { Vec2 } from '@app/interfaces/vec2';
+import { Position } from '@common/position';
 import { DrawService } from '@app/services/draw.service';
 import { DEFAULT_HEIGHT_CANVAS, DEFAULT_WIDTH_CANVAs } from '@common/const';
+import { CommunicationService } from '@app/services/communication.service';
 
 @Component({
     selector: 'app-play-area',
@@ -11,11 +11,10 @@ import { DEFAULT_HEIGHT_CANVAS, DEFAULT_WIDTH_CANVAs } from '@common/const';
 })
 export class PlayAreaComponent {
     @ViewChild('gridCanvas', { static: false }) private canvas!: ElementRef<HTMLCanvasElement>;
-
-    mousePosition: Vec2 = { x: 0, y: 0 };
+    mousePosition: Position = { x: 0, y: 0 };
 
     private canvasSize = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
-    constructor(private readonly drawService: DrawService) {}
+    constructor(private readonly drawService: DrawService, private communicationService: CommunicationService) {}
 
     get width(): number {
         return this.canvasSize.x;
@@ -31,12 +30,15 @@ export class PlayAreaComponent {
     }
 
     // TODO : déplacer ceci dans un service de gestion de la souris!
-    mouseHitDetect(event: MouseEvent) {
-        const differenceIsValid = true;
-        if (event.button === MouseButton.Left) {
-            this.mousePosition = { x: event.offsetX, y: event.offsetY };
-            this.playSound(differenceIsValid);
-        }
+    detectDifference(event: MouseEvent) {
+        this.communicationService
+        .mouseClick(event)
+        .subscribe((position)=> {
+            console.log('Enter in subscription !')
+            this.mousePosition.x = position.x;
+            this.mousePosition.y = position.y;
+        });
+        this.playSound(true);
         
     }
     

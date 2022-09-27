@@ -1,14 +1,12 @@
-import { Injectable } from '@angular/core';
-import { MouseButton } from '@app/interfaces/mouseButton';
-import { Vec2 } from '@common/vec2';
+import { MouseButton } from '@common/mouseButton';
+import { Position } from '@common/position';
 import { ImageDataToCompare } from '@common/differences-classes/image-data-to-compare'
+import { Service } from 'typedi';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class MouseHandlerService {
 
-  mousePosition: Vec2;
+  mousePosition: Position;
   differencesHashmap: Map <number, number>;
   differencesNumberFound: Array <number>;
 
@@ -18,10 +16,12 @@ export class MouseHandlerService {
     this.differencesNumberFound = [];
   }
 
-  mouseHitDetect(event: MouseEvent) {
+  mouseHitDetect(event: MouseEvent): Position{
     if (event.button === MouseButton.Left) {
-        this.mousePosition = { x: event.offsetX, y: event.offsetY };
+      this.mousePosition = { x: event.offsetX, y: event.offsetY };
     }
+    console.log('service check');
+    return this.mousePosition;
   }
 
   // Sauvegarder la hashmap de diff dans le games.json
@@ -39,7 +39,7 @@ export class MouseHandlerService {
     const pixelNumber = this.convertMousePositionToPixelNumber();
     let differencesNumber: number;
 
-    if (this.differencesHashmap.has(pixelNumber) {
+    if (this.differencesHashmap.has(pixelNumber)) {
       differencesNumber = this.differencesHashmap.get(pixelNumber)!;
 
       if (this.differencesNumberFound.includes(differencesNumber)) {
