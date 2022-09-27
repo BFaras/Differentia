@@ -37,12 +37,12 @@ export class GamePageComponent {
         this.socketService.on("time", (time: Time) => {
             this.timeService.changeTime(time);
         });
-        this.socketService.on("recu", (message: string) => {
-            console.log(message);
-        });
         this.socketService.on("The game is", (message: string) => {
             this.receiveNumberOfDifferences(message);
             this.gameName = message;
+        })
+        this.socketService.on("Name repeated", () => {
+            console.log("le nom est répété imbécile");
         })
     }
 

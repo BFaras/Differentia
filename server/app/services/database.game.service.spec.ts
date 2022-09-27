@@ -111,8 +111,7 @@ describe("Games service", () => {
 
   it("should not validate a game's name if it has the same name as another game in the database", async () => {
     expect(
-      (await gamesService['validateName']("Test Game")).valueOf()
-      ).to.be.false;
+      (await gamesService['validateName']("Test Game")).valueOf()).to.be.false;
   })
 
   it("should modify an existing game data if a valid name is sent", async () => {
@@ -173,7 +172,7 @@ describe("Games service", () => {
 
     it("should throw an error if we try to add a game on a closed connection",  async () => {
       await client.close();
-      gamesService['validateGame'] = async () => {return true}
+      gamesService['validateGame'] = async () => {return true} // modifier ce stub pour qqlch qui a lair plus sinon
       expect(
         gamesService.addGame(testGame)
       ).to.eventually.be.rejectedWith(Error);
