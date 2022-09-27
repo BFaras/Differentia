@@ -25,6 +25,8 @@ import { TopbarComponent } from './components/topbar/topbar.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
 import { GameSelectionComponent } from './pages/game-selection/game-selection.component';
+import { TestPageComponent } from './pages/test-page/test-page.component';
+
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -52,6 +54,7 @@ import { GameSelectionComponent } from './pages/game-selection/game-selection.co
         ListGameFormComponent,
         AdminPageComponent,
         DialogInputComponent,
+        TestPageComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
     providers: [ { provide: MAT_DIALOG_DATA , useValue: {bothImage : false} },],
