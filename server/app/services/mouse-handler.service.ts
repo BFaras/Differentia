@@ -40,7 +40,8 @@ export class MouseHandlerService {
     let differencesNumber: number;
 
     if (this.differencesHashmap.has(pixelNumber) {
-      differencesNumber = this.differencesHashmap.get(pixelNumber)?;
+      differencesNumber = this.differencesHashmap.get(pixelNumber)!;
+
       if (this.differencesNumberFound.includes(differencesNumber)) {
         // La différence a déjà été trouvée précédemment
         return;
