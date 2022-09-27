@@ -3,4 +3,5 @@ export interface ImageDataToCompare {
     modifiedImageData: Uint8ClampedArray;
     imageWidth: number;
     imageHeight: number;
+    offSet: number;
 }

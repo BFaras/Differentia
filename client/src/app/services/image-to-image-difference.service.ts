@@ -1,82 +1,103 @@
 import { Injectable } from '@angular/core';
-import { ImageDataToCompare } from '@app/classes/differences-classes/image-data-to-compare';
-import { DifferenceDetectorService } from './difference-detector-feature/difference-detector.service';
-import { DifferenceImageGeneratorService } from './difference-detector-feature/difference-image-generator.service';
+import { SocketClientService } from '@app/services/socket-client.service';
+import { ImageDataToCompare } from '@common/image-data-to-compare';
+import { ImageGeneratorService } from './difference-detector-feature/image-generator.service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class ImageToImageDifferenceService {
+    private originalImage: HTMLImageElement = new Image();
+    private modifiedImage: HTMLImageElement = new Image();
+    private differencesImageToPutDataIn: HTMLImageElement;
+    private mainCanvas: HTMLCanvasElement;
 
-  readonly originalImage: HTMLImageElement = new Image();
-  readonly modifiedImage: HTMLImageElement = new Image();
-  readonly finalDifferencesImage: HTMLImageElement = new Image();
+    constructor(private socketService: SocketClientService) {}
 
-  constructor(public differenceDetector: DifferenceDetectorService) { }
-  
-  getModifiedImage(){
-    return this.modifiedImage
-  }
-
-  getOriginialImage(){
-    return this.originalImage
-  }
-getImageData(image: HTMLImageElement, canvas: HTMLCanvasElement): Uint8ClampedArray {
-        const imageContext = canvas.getContext('2d');
-        imageContext!.drawImage(image, 0, 0);
-        return imageContext!.getImageData(0, 0, image.width, image.height).data;
+    configureGamePageSocketFeatures() {
+        this.socketService.on('game creation difference array', (differentPixelsPositionArray: number[]) => {
+            console.log(differentPixelsPositionArray);
+            this.putDifferencesDataInImage(differentPixelsPositionArray);
+        });
     }
 
-    adaptCanvasSizeToImage(canvas: HTMLCanvasElement, image: HTMLImageElement): HTMLCanvasElement {
-        canvas.width = image.width;
-        canvas.height = image.height;
+    sendDifferentImagesInformationToServer(
+        mainCanvas: HTMLCanvasElement,
+        originalImage: HTMLImageElement,
+        modifiedImage: HTMLImageElement,
+        differencesImageToPutDataIn: HTMLImageElement,
+        offSet: number,
+    ) {
+        let imagesData: ImageDataToCompare;
 
-        return canvas;
+        this.originalImage = originalImage;
+        this.modifiedImage = modifiedImage;
+        this.differencesImageToPutDataIn = differencesImageToPutDataIn;
+        this.mainCanvas = mainCanvas;
+
+        imagesData = this.generateImagesDataToCompare(offSet);
+        this.getInformationToGenerateDifferencesImage(imagesData);
     }
 
-    generateImagesDataToCompare(mainCanvas: HTMLCanvasElement): ImageDataToCompare {
-        const canvasOriginal = this.adaptCanvasSizeToImage(mainCanvas, this.originalImage);
-        const canvasOriginalData = this.getImageData(this.originalImage, canvasOriginal);
-        const canvasModified = this.adaptCanvasSizeToImage(mainCanvas, this.modifiedImage);
-        const canvasModifiedData = this.getImageData(this.modifiedImage, canvasModified);
-
-        const datas: ImageDataToCompare = {
-            originalImageData: canvasOriginalData,
-            modifiedImageData: canvasModifiedData,
-            imageHeight: this.originalImage.height,
-            imageWidth: this.originalImage.width,
-        };
-
-        return datas;
-    }
-
-    generateDifferencesImage(mainCanvas: HTMLCanvasElement, differencesImageToPutDataIn: HTMLImageElement) {
-        const canvasResult = this.adaptCanvasSizeToImage(mainCanvas, this.originalImage);
+    putDifferencesDataInImage(differentPixelsPositionArray: number[]) {
+        const canvasResult = this.adaptCanvasSizeToImage(this.mainCanvas, this.originalImage);
         const canvasResultContext: CanvasRenderingContext2D = canvasResult.getContext('2d')!;
-        const differentPixelsPositionArray = this.differenceDetector.getDifferentPixelsArrayWithOffset();
-        const imageGenerator = new DifferenceImageGeneratorService(mainCanvas);
+        const imageGenerator = new ImageGeneratorService(this.mainCanvas);
         let resultImageData: ImageData;
 
         imageGenerator.generateImageFromPixelsDataArray(differentPixelsPositionArray);
         resultImageData = imageGenerator.getGeneratedImageData();
 
         canvasResultContext.putImageData(resultImageData, 0, 0);
-        console.log(1)
-        differencesImageToPutDataIn.src = canvasResult.toDataURL();
+        this.differencesImageToPutDataIn.src = canvasResult.toDataURL();
     }
 
-    async waitForOriginalImageToLoad() {
-        return new Promise((resolve, reject) => {
-            this.originalImage.onload = () => resolve(this.originalImage);
-            this.originalImage.onerror = reject;
-        });
+    private getImageData(image: HTMLImageElement, canvas: HTMLCanvasElement): Uint8ClampedArray {
+        const imageContext = canvas.getContext('2d');
+        imageContext!.drawImage(image, 0, 0);
+        return imageContext!.getImageData(0, 0, image.width, image.height).data;
     }
 
-    async waitForModifiedImageToLoad() {
+    private adaptCanvasSizeToImage(canvas: HTMLCanvasElement, image: HTMLImageElement): HTMLCanvasElement {
+        canvas.width = image.width;
+        canvas.height = image.height;
+
+        return canvas;
+    }
+
+    private generateImagesDataToCompare(offSet: number): ImageDataToCompare {
+        const canvasOriginal = this.adaptCanvasSizeToImage(this.mainCanvas, this.originalImage);
+        const canvasOriginalData = this.getImageData(this.originalImage, canvasOriginal);
+        const canvasModified = this.adaptCanvasSizeToImage(this.mainCanvas, this.modifiedImage);
+        const canvasModifiedData = this.getImageData(this.modifiedImage, canvasModified);
+
+        const imagesdata: ImageDataToCompare = {
+            originalImageData: canvasOriginalData,
+            modifiedImageData: canvasModifiedData,
+            imageHeight: this.originalImage.height,
+            imageWidth: this.originalImage.width,
+            offSet: offSet,
+        };
+
+        return imagesdata;
+    }
+
+    private getInformationToGenerateDifferencesImage(imagesData: ImageDataToCompare) {
+        this.setUpSocket();
+        this.socketService.send('detect images difference', imagesData);
+    }
+
+    private setUpSocket() {
+        if (!this.socketService.isSocketAlive()) {
+            this.socketService.connect();
+            this.configureGamePageSocketFeatures();
+        }
+    }
+
+    async waitForImageToLoad(imageToLoad: HTMLImageElement) {
         return new Promise((resolve, reject) => {
-            this.modifiedImage.onload = () => resolve(this.modifiedImage);
-            this.modifiedImage.onerror = reject;
+            imageToLoad.onload = () => resolve(imageToLoad);
+            imageToLoad.onerror = reject;
         });
     }
-  
 }
