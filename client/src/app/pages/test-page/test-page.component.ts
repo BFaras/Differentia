@@ -20,7 +20,7 @@ export class TestPageComponent implements OnInit {
 
         this.originalImage.src = '../../../assets/ImageBlanche.bmp';
         await this.waitForOriginalImageToLoad();
-        this.modifiedImage.src = '../../../assets/ImageDiff.bmp';
+        this.modifiedImage.src = '../../../assets/image_7_diff.bmp';
         await this.waitForModifiedImageToLoad();
 
         const imagesDatas: ImageDataToCompare = this.generateImagesDataToCompare(mainCanvas);
