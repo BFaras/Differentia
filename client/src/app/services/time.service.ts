@@ -11,7 +11,6 @@ import { Time } from '../../../../common/time';
 })
 export class TimeService {
     time: Time;
-
     showableMinutes: string = "";
     showableSeconds: string = "";
 
@@ -41,6 +40,6 @@ export class TimeService {
     }
 
     showSeconds() {
-      this.showableSeconds = (this.time.seconds < BASE_ONE)? `0${this.time.seconds}`:this.time.seconds.toString();
+        this.showableSeconds = (this.time.seconds < BASE_ONE)? `0${this.time.seconds}`:this.time.seconds.toString();
     }
 }

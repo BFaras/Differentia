@@ -49,19 +49,19 @@ export class ChronometerService {
     //   this.time.seconds = secondsUpdated;
     // }
 
-    showMinutes() {
-      if(this.time.minutes < BASE_ONE) {
-        return '0' + this.time.minutes.toString();
-      }
-      return this.time.minutes.toString();
-    }
+    // showMinutes() {
+    //   if(this.time.minutes < BASE_ONE) {
+    //     return '0' + this.time.minutes.toString();
+    //   }
+    //   return this.time.minutes.toString();
+    // }
 
-    showSeconds() {
-      if(this.time.seconds < BASE_ONE) {
-        return '0' + this.time.seconds.toString();
-      }
-      return this.time.seconds.toString();
-    }
+    // showSeconds() {
+    //   if(this.time.seconds < BASE_ONE) {
+    //     return '0' + this.time.seconds.toString();
+    //   }
+    //   return this.time.seconds.toString();
+    // }
 
     // checktime() {
     //   if(this.time.seconds === MAX_TIME && this.time.minutes === MAX_TIME) {
