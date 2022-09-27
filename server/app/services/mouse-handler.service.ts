@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MouseButton } from '@app/interfaces/mouseButton';
-import { Vec2 } from '@app/interfaces/vec2';
-import {DifferencesDetector} from '@common/differences-classes/differences-detector'
+import { Vec2 } from '@common/vec2';
+import { ImageDataToCompare } from '@common/differences-classes/image-data-to-compare'
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ export class MouseHandlerService {
   mousePosition: Vec2;
   differencesHashmap: Map <number, number>;
 
-  constructor() {
+  constructor(readonly imageDataToCompare: ImageDataToCompare) {
     this.mousePosition = { x: 0, y: 0 };
     this.differencesHashmap = new Map<number, number>();
   }
@@ -24,15 +24,14 @@ export class MouseHandlerService {
 
   // Sauvegarder la hashmap de diff dans le games.json
   // Par contre la méthode devrait être ici ou dans diff-detector ??
-  saveHashMapInJson(){
+  saveHashMapInJson(){}
 
+  loadHashMapFromJson() {}
+
+  convertMousePositionToPixelNumber(): number {
+    return ((this.mousePosition.x + 1)*this.imageDataToCompare.imageWidth
+     + this.mousePosition.y - this.imageDataToCompare.imageWidth)
   }
 
-  loadHashMapFromJson() {
-
-  }
-
-  con
-  
-  
+  validateDifferencesOnClick()
 }
