@@ -9,7 +9,6 @@ export class VerifyImageService {
     imageToVerify = new Image();
     imageSizeConstraint: ImageSize = new ImageSize(640, 480);
     bitDepth:number
-    warningActivated:boolean;
     constructor(private editImagesService: EditImagesService,private sanitizer: DomSanitizer){}
 
     transformByteToImage(buffer : any) {
@@ -24,14 +23,14 @@ export class VerifyImageService {
         this.transformByteToImage(buffer);
     }
 
-    sendImageRespetContraints(dialog:any,file:File){
+    verifyRespectAllContraints(dialog:any,file:File){
         if (this.verifyImageConstraint() && this.verifyImageFormat(file) && this.getBitDepth() == 24) {
             let imageToSend = this.sanitizer.bypassSecurityTrustResourceUrl(this.imageToVerify.src as string)
             this.verifyIfSentMultipleOrSingle(imageToSend as string,dialog)
 
-            this.warningActivated = false;
+            return false;
         } else {
-            this.warningActivated = true
+            return true;
         }
     }
 
@@ -39,9 +38,6 @@ export class VerifyImageService {
         return this.bitDepth
     }
 
-    getWarningActivated(){
-        return this.warningActivated;
-    }
     getImage(){
         return this.imageToVerify;
     }

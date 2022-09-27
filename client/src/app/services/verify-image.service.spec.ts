@@ -55,12 +55,12 @@ describe('VerifyImageService', () => {
         return;
   }}; 
     const imageToSend = new File([""], "filename", { type: 'text/html' });
-    service.sendImageRespetContraints(mockDialog,imageToSend)
+    const isWarningActivated = service.verifyRespectAllContraints(mockDialog,imageToSend)
     expect(spyConstraint).toHaveBeenCalled()
     expect(spyTransformation).toHaveBeenCalled()
     expect(spySentMultipleOrSingle).toHaveBeenCalled()
     expect(spygetBitDepth).toHaveBeenCalled()
-    expect(service.getWarningActivated()).toBeFalsy()
+    expect(isWarningActivated).toBeFalsy()
 
   })
 
@@ -74,8 +74,7 @@ describe('VerifyImageService', () => {
         return;
   }}; 
     const imageToSend = new File([""], "filename", { type: 'text/html' });
-    service.sendImageRespetContraints(mockDialog,imageToSend)
-    expect(service.getWarningActivated()).toBeTruthy()
+    expect(service.verifyRespectAllContraints(mockDialog,imageToSend)).toBeTruthy()
 
   })
 

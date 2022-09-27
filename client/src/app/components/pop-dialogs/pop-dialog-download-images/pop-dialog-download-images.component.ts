@@ -20,12 +20,11 @@ export class PopDialogDownloadImagesComponent {
         let file = target.files![0]
         let reader = new FileReader();
         reader.readAsArrayBuffer(file)
-        reader.onload = (e)=>{
+        reader.onload = async (e)=>{
         this.verifyImageService.processBuffer(e);
-            this.verifyImageService.getImage().onload = () =>{
-                this.verifyImageService.sendImageRespetContraints(this.imageInfo,file)
-                this.warningActivated = this.verifyImageService.getWarningActivated();
-            }
+        await this.verifyImageService.getImage().decode()
+        this.warningActivated =  this.verifyImageService.verifyRespectAllContraints(this.imageInfo,file)
+        
         
             
         }

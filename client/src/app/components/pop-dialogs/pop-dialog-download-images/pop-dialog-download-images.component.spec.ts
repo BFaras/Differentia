@@ -23,8 +23,8 @@ describe('PopDialogDownloadImagesComponent', () => {
     beforeEach(async () => {
         imageToMock.src = "string";
         verifyImageServiceSpy = jasmine.createSpyObj('VerifyImageService', 
-        ['processBuffer', 'getImage', 'sendImageRespetContraints','getWarningActivated']);
-        verifyImageServiceSpy.sendImageRespetContraints.and.returnValue();
+        ['processBuffer', 'getImage', 'verifyRespectAllContraints','getWarningActivated']);
+        verifyImageServiceSpy.verifyRespectAllContraints.and.returnValue(true);
         verifyImageServiceSpy.processBuffer.and.returnValue();
         verifyImageServiceSpy.getImage.and.returnValue(imageToMock);
         await TestBed.configureTestingModule({
@@ -45,16 +45,19 @@ describe('PopDialogDownloadImagesComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    // it('should give warning',()=>{
-    //     verifyImageServiceSpy.getWarningActivated.and.returnValue(true);
-    //     component.onClickUploadImage(mockEventFile)
-    //     console.log(imageToMock.onload)
-    //     expect(component.warningActivated).toBeTruthy();  
+    it('should give warning',()=>{
+        setTimeout(function() {
 
-    // })
+        verifyImageServiceSpy.verifyRespectAllContraints.and.returnValue(true);
+        component.onClickUploadImage(mockEventFile)
+        expect(component.warningActivated).toBeTruthy();  
+      
+          }, 300);
+
+    })
 
     it('should not give warning', ()=>{
-        verifyImageServiceSpy.getWarningActivated.and.returnValue(false);
+        verifyImageServiceSpy.verifyRespectAllContraints.and.returnValue(false);
         component.onClickUploadImage(mockEventFile)
         expect(component.warningActivated).toBeFalsy()
     })
