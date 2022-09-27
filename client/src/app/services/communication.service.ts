@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Message } from '@common/message';
 import { Game } from '@common/game'
@@ -33,7 +33,7 @@ export class CommunicationService {
         return this.http.get<Array<Game>>(`${this.baseUrl}/games`).pipe(catchError(this.handleError<Array<Game>>('getGames')));
     }
 
-    addGame(game: Game): Observable<Number>{
-        return this.http.post<Number>(`${this.baseUrl}/games/newGame`, game).pipe(catchError(this.handleError<Number>('addGame')));    
+    addGame(game: Game): Observable<HttpResponse<any>>{
+        return this.http.post(`${this.baseUrl}/games/newGame`, game, {observe: 'response', responseType: 'text'} ).pipe(catchError(this.handleError<HttpResponse<any>>('addGame')));    
     }
 }

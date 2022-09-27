@@ -5,6 +5,7 @@ import { Component } from '@angular/core';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { CommunicationService } from '@app/services/communication.service';
 import { TimeService } from '@app/services/time.service';
+import { Game } from '@common/game';
 
 @Component({
     selector: 'app-game-page',
@@ -13,6 +14,8 @@ import { TimeService } from '@app/services/time.service';
 })
 export class GamePageComponent {
 
+    // minutes: string;
+    // seconds: string;
     nbDifferences: number;
     gameName: string;
 
@@ -31,7 +34,7 @@ export class GamePageComponent {
     }
 
     configureGamePageSocketFeatures() {
-        this.socketService.on("classic mode", (message: string) => {
+        this.socketService.on("classic mode", () => {
             this.timeService.classicMode();
         });
         this.socketService.on("time", (time: Time) => {
@@ -40,17 +43,13 @@ export class GamePageComponent {
         this.socketService.on("The game is", (message: string) => {
             this.receiveNumberOfDifferences(message);
             this.gameName = message;
-        })
-        this.socketService.on("Name repeated", () => {
-            console.log("le nom est répété imbécile");
-        })
+        });
     }
 
     receiveNumberOfDifferences(nameGame: string): void {
         this.communicationService
           .getGames()
-          .subscribe((array) => {
-            console.log("on a recu: " + array);
+          .subscribe((array: Game[]) => {
             let gameWanted = array.find((x) => x.name === nameGame)
             // gameWanted ne sera jamais undefined car le nom utilisé dans le .find est d'un jeu qui 
             // existe forcément (il est dans la page de sélection )

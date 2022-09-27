@@ -7,7 +7,7 @@
 
 import { Time } from '../../../common/time';
 import { Service } from 'typedi';
-import { MAX_TIME, BASE_ONE, RESET_VALUE } from '../../../common/const';
+import { MAX_TIME, RESET_VALUE } from '../../../common/const';
 
 @Service()
 export class ChronometerService {

@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { CommunicationService } from '@app/services/communication.service';
@@ -131,7 +132,9 @@ describe('CommunicationService', () => {
     it('should return a CREATED http Status code when sending a POST request with a valid game (HttpClient called once)', () => {
         // subscribe to the mocked call
         service.addGame(validGameToAdd).subscribe({
-            next: () => {},
+            next: (res: any) => {
+                expect(res.status).toEqual(StatusCodes.CREATED);
+            },
             error: fail,
         });
         const req = httpMock.expectOne(`${baseUrl}/games/newGame`);
@@ -141,11 +144,12 @@ describe('CommunicationService', () => {
     });
 
     // Je devrais vérifier si sa donne un certain code HTTP mais la réponse est le jeu qui est en paramètre ==> changer logique?
-    it('should return a BAD REQUEST http Status code when sending a POST request with an unvalid game (HttpClient called once)', () => {
+    it('should return an undefined response when sending a POST request with an unvalid game (HttpClient called once)', () => {
         // subscribe to the mocked call
         service.addGame(unvalidGameToAdd).subscribe({
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            next: () => {},
+            next: (res: any) => {
+                expect(res).toBeFalsy();
+            },
             error: fail,
         });
         const req = httpMock.expectOne(`${baseUrl}/games/newGame`);

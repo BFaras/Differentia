@@ -14,7 +14,7 @@ export class PopDialogCreateGameComponent implements OnInit {
     nameOfGame: string;
     nbOfDifferences: number = 8;
     gameToAdd: Game = {
-        name: "Car game", // remplacer car game par this.nameOfGame
+        name: "new game", // remplacer car game par this.nameOfGame
         numberOfDifferences: 6, // remplacer 6 par this.nbOfDifferences
         times: [],
         images: [] // index 0 => image orignale, index 1 => image modifiée
@@ -32,8 +32,13 @@ export class PopDialogCreateGameComponent implements OnInit {
         if(this.validateNumberOfDifferences()) {
             this.communicationService
                 .addGame(gameToAdd)
-                .subscribe((httpStatus: Number) => {
-                    this.statusCodeTreatment(httpStatus);
+                .subscribe((res) => {
+                    if(res) {
+                        this.statusCodeTreatment(res.status);
+                    }
+                    else {
+                        this.statusCodeTreatment(StatusCodes.BAD_REQUEST);
+                    }
                 });
         }
         else console.log("change ton popUp pour dire que le nombre de différences n'est pas entre 3 et 9");
