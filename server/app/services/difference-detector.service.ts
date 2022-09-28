@@ -7,9 +7,11 @@ export class DifferenceDetectorService {
     private nbOfDifferences: number;
     private differentPixelsNumbersArrayWithOffset: number[];
     private pixelsDifferencesNbMap: Map<number, number>;
+    private offset: number;
 
-    constructor(private imageDatasToCompare: ImageDataToCompare, private offset: number) {
+    constructor(private imageDatasToCompare: ImageDataToCompare) {
         this.differentPixelsNumbersArrayWithOffset = [];
+        this.offset = imageDatasToCompare.offSet;
         this.pixelsDifferencesNbMap = new Map<number, number>();
         this.nbOfDifferences = 0;
 
