@@ -16,12 +16,11 @@ export class ImageToImageDifferenceService {
 
     configureGamePageSocketFeatures() {
         this.socketService.on('game creation difference array', (differentPixelsPositionArray: number[]) => {
-            console.log(differentPixelsPositionArray);
             this.putDifferencesDataInImage(differentPixelsPositionArray);
         });
     }
 
-    sendDifferentImagesInformationToServer(
+    sendDifferentImagesInformationToServerForGameCreation(
         mainCanvas: HTMLCanvasElement,
         originalImage: HTMLImageElement,
         modifiedImage: HTMLImageElement,
@@ -30,13 +29,24 @@ export class ImageToImageDifferenceService {
     ) {
         let imagesData: ImageDataToCompare;
 
-        this.originalImage = originalImage;
-        this.modifiedImage = modifiedImage;
-        this.differencesImageToPutDataIn = differencesImageToPutDataIn;
-        this.mainCanvas = mainCanvas;
+        this.setupDataInService(mainCanvas, originalImage, modifiedImage, differencesImageToPutDataIn);
 
         imagesData = this.generateImagesDataToCompare(offSet);
         this.getInformationToGenerateDifferencesImage(imagesData);
+    }
+
+    sendDifferentImagesInformationToServerForGameSolo(
+        mainCanvas: HTMLCanvasElement,
+        originalImage: HTMLImageElement,
+        modifiedImage: HTMLImageElement,
+        differencesImageToPutDataIn: HTMLImageElement,
+        offSet: number,
+    ) {
+        //let imagesData: ImageDataToCompare;
+
+        this.setupDataInService(mainCanvas, originalImage, modifiedImage, differencesImageToPutDataIn);
+
+        //imagesData = this.generateImagesDataToCompare(offSet);
     }
 
     putDifferencesDataInImage(differentPixelsPositionArray: number[]) {
@@ -50,6 +60,18 @@ export class ImageToImageDifferenceService {
 
         canvasResultContext.putImageData(resultImageData, 0, 0);
         this.differencesImageToPutDataIn.src = canvasResult.toDataURL();
+    }
+
+    setupDataInService(
+        mainCanvas: HTMLCanvasElement,
+        originalImage: HTMLImageElement,
+        modifiedImage: HTMLImageElement,
+        differencesImageToPutDataIn: HTMLImageElement,
+    ) {
+        this.originalImage = originalImage;
+        this.modifiedImage = modifiedImage;
+        this.differencesImageToPutDataIn = differencesImageToPutDataIn;
+        this.mainCanvas = mainCanvas;
     }
 
     private getImageData(image: HTMLImageElement, canvas: HTMLCanvasElement): Uint8ClampedArray {

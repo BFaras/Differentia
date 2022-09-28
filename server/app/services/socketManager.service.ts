@@ -14,7 +14,7 @@ export class SocketManager {
     private chronometerService: ChronometerService = new ChronometerService();
     private mouseHandlerService: MouseHandlerService;
     constructor(server: http.Server) {
-        this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
+        this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] }, maxHttpBufferSize: 1e7 });
     }
 
     public handleSockets(): void {
@@ -67,13 +67,8 @@ export class SocketManager {
                 this.chronometerService.resetChrono();
             });
 
-            socket.on("Verify position", (position) => {
-                console.log(position);
-                this.clickResponse(socket,position);
-            });
-        
-            socket.on('detect images difference', (imagesData: ImageDataToCompare, offset: number) => {
-                const differenceDetector = new DifferenceDetectorService(imagesData, offset);
+            socket.on('detect images difference', (imagesData: ImageDataToCompare) => {
+                const differenceDetector = new DifferenceDetectorService(imagesData);
                 socket.emit('game creation difference array', differenceDetector.getDifferentPixelsArrayWithOffset());
                 socket.emit('game creation nb of differences', differenceDetector.getNbDifferences());
             });
