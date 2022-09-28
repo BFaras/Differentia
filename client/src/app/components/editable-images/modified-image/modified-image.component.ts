@@ -36,7 +36,7 @@ export class ModifiedImageComponent implements OnInit {
         this.secondImageObtained = true;
         this.urlImageSecond = url;
     }
-    // le test undefined est pour sauter le test de subscription: Il faut le get avec http et changer la logic pour get directement ces donnees FUCK
+
     getDataSingleImage() {
         this.editImagesService.getDataImageSingle().subscribe((dataOfImage) => {
             this.assignImageData(dataOfImage);

@@ -1,7 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PlayAreaComponent } from '@app/components/play-area/play-area.component';
@@ -57,7 +56,7 @@ import { TestPageComponent } from './pages/test-page/test-page.component';
         TestPageComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
-    providers: [ { provide: MAT_DIALOG_DATA , useValue: {bothImage : false} },],
+    providers: [ ],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

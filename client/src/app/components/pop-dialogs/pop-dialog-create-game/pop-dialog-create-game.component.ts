@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommunicationService } from '@app/services/communication.service';
 import { Game } from '@common/game';
@@ -9,19 +9,22 @@ import { Game } from '@common/game';
 })
 export class PopDialogCreateGameComponent implements OnInit {
     image :any
+    @ViewChild('name') nameInput: ElementRef;
     nameOfGame: string;
     numberOfDifference: number
     gameToAdd: Game = {
         name: "Car game", // remplacer car game par this.nameOfGame
         numberOfDifferences: 6, // remplacer 6 par this.nbOfDifferences
         times: [],
-        images: ['image1','image2'] // index 0 => image orignale, index 1 => image modifiée
+        images: ['image1','image2','imageDifference'] // index 0 => image orignale, index 1 => image modifiée
     }
-    constructor(private communicationService: CommunicationService,@Inject(MAT_DIALOG_DATA) private imageInfo: any) {}
+    constructor(private communicationService: CommunicationService,@Inject(MAT_DIALOG_DATA) private imagesReceived: any) {}
+    
 
     ngOnInit(): void {
-        this.numberOfDifference = this.imageInfo.numberOfDifferenceReceived
-        this.image= this.imageInfo.imageDifference.imageOfDifferenceReceived
+        this.numberOfDifference = this.imagesReceived.numberOfDifferenceReceived
+        this.image= this.imagesReceived.imageOfDifferenceReceived
+
     }
 
     test() {
@@ -30,6 +33,11 @@ export class PopDialogCreateGameComponent implements OnInit {
     }
 
     addGame(gameToAdd: Game) {
+        this.gameToAdd = { name: this.nameInput.nativeElement.value,
+            numberOfDifferences: this.imagesReceived.numberOfDifferenceReceived , 
+            times:[], images : [this.imagesReceived.imagesWithIndexReceived.originalImage
+                ,this.imagesReceived.imagesWithIndexReceived.modifiedImage] }
+                
         if(this.validateNumberOfDifferences()) {
             this.communicationService
                 .addGame(gameToAdd)
