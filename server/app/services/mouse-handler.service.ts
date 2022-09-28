@@ -1,4 +1,3 @@
-import { MouseButton } from '@common/mouseButton';
 import { Position } from '@common/position';
 import { ImageDataToCompare } from '@common/differences-classes/image-data-to-compare'
 import { Service } from 'typedi';
@@ -16,12 +15,9 @@ export class MouseHandlerService {
     this.differencesNumberFound = [];
   }
 
-  mouseHitDetect(event: MouseEvent): Position{
-    if (event.button === MouseButton.Left) {
-      this.mousePosition = { x: event.offsetX, y: event.offsetY };
-    }
+  isValidClick(mousePosition:Position): boolean{
     console.log('service check');
-    return this.mousePosition;
+    return true;
   }
 
   // Sauvegarder la hashmap de diff dans le games.json

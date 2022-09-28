@@ -1,6 +1,8 @@
+import { Position } from '@common/position';
 import * as http from 'http';
 import * as io from 'socket.io';
 import { ChronometerService } from './chronometer.service';
+import { MouseHandlerService } from './mouse-handler.service';
 
 
 export class SocketManager {
@@ -10,6 +12,7 @@ export class SocketManager {
     public socket: io.Socket;
     private timeInterval: NodeJS.Timer;
     private chronometerService: ChronometerService = new ChronometerService();
+    private mouseHandlerService: MouseHandlerService;
     constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ["GET", "POST"] } });
     }
@@ -66,8 +69,12 @@ export class SocketManager {
                 this.chronometerService.resetChrono();
             });
 
-        });
+            socket.on("Verify position", (position) => {
+                console.log(position);
+                this.clickResponse(socket,position);
+            });
 
+        });
         
     }
 
@@ -75,5 +82,10 @@ export class SocketManager {
         this.chronometerService.increaseTime();
         console.log(this.chronometerService.time); // Là que pour debug
         socket.emit("time", this.chronometerService.time);
+    }
+
+    private clickResponse(socket: io.Socket, mousePosition:Position) {
+        const clickAnswer = this.mouseHandlerService.isValidClick(mousePosition);
+        socket.emit("Valid click", clickAnswer);
     }
 }

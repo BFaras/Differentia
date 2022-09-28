@@ -5,7 +5,6 @@ import { Game } from '@common/game'
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { Position } from '@common/position';
 
 @Injectable({
     providedIn: 'root',
@@ -36,8 +35,4 @@ export class CommunicationService {
         return this.http.post<Number>(`${this.baseUrl}/games/newGame`, game).pipe(catchError(this.handleError<Number>('validateGame')));
     }
 
-    mouseClick(event:MouseEvent): Observable<Position> {
-        console.log('communication check');
-        return this.http.post<Position>(`${this.baseUrl}/mouse`, event).pipe(catchError(this.handleError<Position>('mouseClick')));
-    }
 }
