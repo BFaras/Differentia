@@ -7,15 +7,14 @@ export class DifferenceDetectorService {
     private nbOfDifferences: number;
     private differentPixelsNumbersArrayWithOffset: number[];
     private pixelsDifferencesNbMap: Map<number, number>;
-    private imageDatasToCompare: ImageDataToCompare;
-    private offset: number;
 
-    constructor(imageDatasToCompare: ImageDataToCompare, offset: number) {
+    constructor(private imageDatasToCompare: ImageDataToCompare, private offset: number) {
         this.differentPixelsNumbersArrayWithOffset = [];
         this.pixelsDifferencesNbMap = new Map<number, number>();
         this.nbOfDifferences = 0;
 
         this.generateDifferencesInformation();
+        this.countDifferences();
     }
 
     getNbDifferences(): number {
@@ -30,7 +29,7 @@ export class DifferenceDetectorService {
         return this.pixelsDifferencesNbMap;
     }
 
-    generateDifferencesInformation() {
+    private generateDifferencesInformation() {
         let differentPixelsNumbersArray: number[];
 
         this.compareImagesPixels();
@@ -63,7 +62,6 @@ export class DifferenceDetectorService {
     }
 
     private addPixelDifferenceOffset(centerPixelPosition: number) {
-        // TD : Fonction qui dessine le offset autour du point
         // On génère un cercle autour du pixel au centre
         // Formule : (x – h)2+ (y – k)2 = r2
         // h = centre du cercle en X (ligne) et k = centre du cercle en Y (colonne)
@@ -78,8 +76,8 @@ export class DifferenceDetectorService {
         }
     }
 
-    addOffsetPixelToPixelsDownToColumnToVisit(currentColumn: number, centerPixelLine: number, centerPixelColumn: number) {
-        for (let line = centerPixelLine; (line - centerPixelLine) ** 2 + (currentColumn - centerPixelColumn) ** 2 <= this.offset ** 2 + 1; line++) {
+    private addOffsetPixelToPixelsDownToColumnToVisit(currentColumn: number, centerPixelLine: number, centerPixelColumn: number) {
+        for (let line = centerPixelLine; this.isPixelInCircle(line, currentColumn, centerPixelLine, centerPixelColumn, this.offset); line++) {
             const currentVisitingPixelPosition =
                 (line + 1) * this.imageDatasToCompare.imageWidth + currentColumn - this.imageDatasToCompare.imageWidth;
 
@@ -90,8 +88,8 @@ export class DifferenceDetectorService {
         }
     }
 
-    addOffsetPixelToPixelsUpToColumnToVisit(currentColumn: number, centerPixelLine: number, centerPixelColumn: number) {
-        for (let line = centerPixelLine; (line - centerPixelLine) ** 2 + (currentColumn - centerPixelColumn) ** 2 <= this.offset ** 2 + 1; line--) {
+    private addOffsetPixelToPixelsUpToColumnToVisit(currentColumn: number, centerPixelLine: number, centerPixelColumn: number) {
+        for (let line = centerPixelLine; this.isPixelInCircle(line, currentColumn, centerPixelLine, centerPixelColumn, this.offset); line--) {
             const currentVisitingPixelPosition =
                 (line + 1) * this.imageDatasToCompare.imageWidth + currentColumn - this.imageDatasToCompare.imageWidth;
 
@@ -102,7 +100,7 @@ export class DifferenceDetectorService {
         }
     }
 
-    countDifferences() {
+    private countDifferences() {
         this.pixelsDifferencesNbMap.forEach((differenceNb, diffPixelNumber) => {
             if (differenceNb == 0) {
                 this.nbOfDifferences++;
@@ -116,7 +114,6 @@ export class DifferenceDetectorService {
         const FIRST_POS_INDEX = 0;
 
         while (pixelsToVisit.length != 0) {
-            //console.log(this.nbOfDifferences, pixelsToVisit);
             this.markPixelDifferenceNb(pixelsToVisit[FIRST_POS_INDEX]);
             this.determinePixelsAround(pixelsToVisit[FIRST_POS_INDEX], pixelsToVisit);
 
@@ -126,7 +123,7 @@ export class DifferenceDetectorService {
         }
     }
 
-    determinePixelsAround(diffPixelNumber: number, pixelsToVisit: number[]) {
+    private determinePixelsAround(diffPixelNumber: number, pixelsToVisit: number[]) {
         if (this.pixelsDifferencesNbMap.has(diffPixelNumber) && this.pixelsDifferencesNbMap.get(diffPixelNumber) != 0) {
             const centerPixelLine = Math.floor(diffPixelNumber / this.imageDatasToCompare.imageWidth);
             const centerPixelColumn = diffPixelNumber % this.imageDatasToCompare.imageWidth;
@@ -140,11 +137,7 @@ export class DifferenceDetectorService {
     }
 
     private addPixelsUpToCurrentColumnToVisit(currentColumn: number, centerPixelLine: number, centerPixelColumn: number, pixelsToVisit: number[]) {
-        for (
-            let line = centerPixelLine;
-            (line - centerPixelLine) ** 2 + (currentColumn - centerPixelColumn) ** 2 <= RADIUS_AROUND_PIXEL ** 2 + 1;
-            line++
-        ) {
+        for (let line = centerPixelLine; this.isPixelInCircle(line, currentColumn, centerPixelLine, centerPixelColumn, RADIUS_AROUND_PIXEL); line++) {
             const currentVisitingPixelPosition =
                 (line + 1) * this.imageDatasToCompare.imageWidth + currentColumn - this.imageDatasToCompare.imageWidth;
 
@@ -156,11 +149,7 @@ export class DifferenceDetectorService {
     }
 
     private addPixelsDownToCurrentColumnToVisit(currentColumn: number, centerPixelLine: number, centerPixelColumn: number, pixelsToVisit: number[]) {
-        for (
-            let line = centerPixelLine;
-            (line - centerPixelLine) ** 2 + (currentColumn - centerPixelColumn) ** 2 <= RADIUS_AROUND_PIXEL ** 2 + 1;
-            line--
-        ) {
+        for (let line = centerPixelLine; this.isPixelInCircle(line, currentColumn, centerPixelLine, centerPixelColumn, RADIUS_AROUND_PIXEL); line--) {
             const currentVisitingPixelPosition =
                 (line + 1) * this.imageDatasToCompare.imageWidth + currentColumn - this.imageDatasToCompare.imageWidth;
 
@@ -169,6 +158,10 @@ export class DifferenceDetectorService {
                 pixelsToVisit.push(currentVisitingPixelPosition);
             }
         }
+    }
+
+    private isPixelInCircle(currentLine: number, currentColumn: number, centerPixelLine: number, centerPixelColumn: number, offset: number) {
+        return (currentLine - centerPixelLine) ** 2 + (currentColumn - centerPixelColumn) ** 2 <= offset ** 2 + 1;
     }
 
     private isPixelVisited(pixelPosition: number): boolean {

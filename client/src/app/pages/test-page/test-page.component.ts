@@ -21,12 +21,12 @@ export class TestPageComponent implements OnInit {
         this.modifiedImage.src = '../../../assets/image_7_diff.bmp';
         await this.imageToImageDifferenceService.waitForImageToLoad(this.modifiedImage);
 
-        this.imageToImageDifferenceService.sendDifferentImagesInformationToServer(
+        this.imageToImageDifferenceService.sendDifferentImagesInformationToServerForGameCreation(
             mainCanvas,
             this.originalImage,
             this.modifiedImage,
             this.finalDifferencesImage,
-            3,
+            0,
         );
     }
 }

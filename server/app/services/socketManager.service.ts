@@ -11,7 +11,7 @@ export class SocketManager {
     private timeInterval: NodeJS.Timer;
     private chronometerService: ChronometerService = new ChronometerService();
     constructor(server: http.Server) {
-        this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
+        this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] }, maxHttpBufferSize: 1e7 });
     }
 
     public handleSockets(): void {
@@ -64,8 +64,8 @@ export class SocketManager {
                 this.chronometerService.resetChrono();
             });
 
-            socket.on('detect images difference', (imagesData: ImageDataToCompare, offset: number) => {
-                const differenceDetector = new DifferenceDetectorService(imagesData, offset);
+            socket.on('detect images difference', (imagesData: ImageDataToCompare) => {
+                const differenceDetector = new DifferenceDetectorService(imagesData, imagesData.offSet);
                 socket.emit('game creation difference array', differenceDetector.getDifferentPixelsArrayWithOffset());
                 socket.emit('game creation nb of differences', differenceDetector.getNbDifferences());
             });
