@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { ImageGeneratorService } from './difference-detector-feature/image-generator.service';
+import { CommunicationService } from './communication.service';
 
 @Injectable({
     providedIn: 'root',
@@ -12,12 +13,16 @@ export class ImageToImageDifferenceService {
     private differencesImageToPutDataIn: HTMLImageElement;
     private mainCanvas: HTMLCanvasElement;
 
-    constructor(private socketService: SocketClientService) {}
+    constructor(private socketService: SocketClientService, private communicationService: CommunicationService) {}
 
     configureGamePageSocketFeatures() {
         this.socketService.on('game creation difference array', (differentPixelsPositionArray: number[]) => {
             this.putDifferencesDataInImage(differentPixelsPositionArray);
         });
+    }
+
+    sendImagesDataToServer(imagesData:ImageDataToCompare) {
+        
     }
 
     sendDifferentImagesInformationToServerForGameCreation(
