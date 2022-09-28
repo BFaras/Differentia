@@ -15,9 +15,10 @@ export class GameCreationPageComponent implements OnInit {
         originalImage : new Image(),
         modifiedImage : new Image(),
         originalIndex : null,
-        modifiedindex :  null
+        modifiedIndex :  null
 
     };
+    isValidationDisabled:boolean = true;
 
     constructor(private dialog: MatDialog, private route:Router,private editImageService:EditImagesService) {
     }
@@ -29,7 +30,7 @@ export class GameCreationPageComponent implements OnInit {
             this.imageToSend.originalImage.src = url
             this.imageToSend.originalIndex = 0;
             this.imageToSend.modifiedImage.src = url
-            this.imageToSend.modifiedindex = 1;
+            this.imageToSend.modifiedIndex = 1;
 
         })
 
@@ -42,11 +43,34 @@ export class GameCreationPageComponent implements OnInit {
             else if(dataOfImage.index == 1){
                 
                 this.imageToSend.modifiedImage.src = dataOfImage.url
-                this.imageToSend.modifiedindex = dataOfImage.index
-                console.log(1)
-                console.log(dataOfImage)
+                this.imageToSend.modifiedIndex = dataOfImage.index
             }
         })
+
+        this.editImageService.getIdImageToRemove().subscribe((indexImage)=>{
+            if (this.imageToSend.modifiedIndex == indexImage){
+                this.imageToSend.modifiedIndex = null
+                console.log('removed')
+            }
+            else if (this.imageToSend.originalIndex == indexImage){
+                this.imageToSend.originalIndex = null
+                console.log('removed')
+            }
+                
+
+        })
+    }
+
+    verifyTwoImagesUploaded(){
+        if (this.imageToSend.modifiedIndex == null || this.imageToSend.originalIndex == null){
+            console.log('true')
+            return true;
+        }
+        else{
+            console.log('false')
+            console.log(this.imageToSend.modifiedIndex)
+            return false
+        }
     }
 
     goToAdmin(){

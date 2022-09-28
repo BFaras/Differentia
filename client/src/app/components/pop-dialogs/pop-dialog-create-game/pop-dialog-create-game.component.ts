@@ -36,7 +36,8 @@ export class PopDialogCreateGameComponent implements OnInit {
         this.gameToAdd = { name: this.nameInput.nativeElement.value,
             numberOfDifferences: this.imagesReceived.numberOfDifferenceReceived , 
             times:[], images : [this.imagesReceived.imagesWithIndexReceived.originalImage
-                ,this.imagesReceived.imagesWithIndexReceived.modifiedImage] }
+                ,this.imagesReceived.imagesWithIndexReceived.modifiedImage,
+                this.imagesReceived.imageOfDifferenceReceived] }
                 
         if(this.validateNumberOfDifferences()) {
             this.communicationService
@@ -45,12 +46,12 @@ export class PopDialogCreateGameComponent implements OnInit {
                     this.statusCodeTreatment(httpStatus);
                 });
         }
-        else console.log("change ton popUp pour dire que le nombre de différences n'est pas entre 3 et 9");
+        else alert("Attention!! le nombre de difference n'est pas entre 3 et 9");
     }
 
     statusCodeTreatment(responseStatusCode: Number) {
-        if(true) console.log("change pop up pour dire que c'est bon");
-        else console.log("change pop up pour dire que le nom est répétitif");
+        if(true) alert("le jeu n'a pas été créer");
+        else alert("Le jeu a été créer ");
     }
 
     validateNumberOfDifferences() {

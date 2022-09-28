@@ -56,7 +56,7 @@ import { TestPageComponent } from './pages/test-page/test-page.component';
         TestPageComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
-    providers: [ ],
+    providers: [],
     bootstrap: [AppComponent],
 })
 export class AppModule {}
