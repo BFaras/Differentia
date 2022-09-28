@@ -65,7 +65,7 @@ export class SocketManager {
             });
 
             socket.on('detect images difference', (imagesData: ImageDataToCompare) => {
-                const differenceDetector = new DifferenceDetectorService(imagesData, imagesData.offSet);
+                const differenceDetector = new DifferenceDetectorService(imagesData);
                 socket.emit('game creation difference array', differenceDetector.getDifferentPixelsArrayWithOffset());
                 socket.emit('game creation nb of differences', differenceDetector.getNbDifferences());
             });
