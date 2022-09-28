@@ -2,21 +2,18 @@ import { Service } from 'typedi';
 import * as fs from 'fs';
 import { join } from 'path'
 import { Game } from '@common/game';
+import { Time } from '@common/time';
 // import { SocketManager } from './socketManager.service';
 
 @Service()
 export class GamesService {
     games: Game[];
     gameAdded: boolean;
+
+    // Les constructeurs comme sa est ce que c'est mieux de juste les enlever???
     constructor() {}
     
     async getAllGames(): Promise<Game[]> {
-        await this.addGame({
-            name: "Car game",
-            numberOfDifferences: 8,
-            times: [],
-            images: []  
-        });
         await this.asyncReadFile();
         return this.games;
     }
@@ -24,7 +21,6 @@ export class GamesService {
     async addGame(gameToAdd: Game): Promise<Boolean> {
         await this.asyncReadFile();
         if(!this.validateName(gameToAdd.name)) {
-            console.log("rejet car meme nom");
             this.gameAdded = false;
         }
         else {
@@ -39,31 +35,37 @@ export class GamesService {
         return this.games.find((x) => x.name === name)? false : true;
     }
 
-    async deleteGame(nameOfGameToDelete: string) {
+    async addTimeToGame(newTime: Time, nameOfGame: string): Promise<void> {
         await this.asyncReadFile();
-        const newGames = this.games.filter((x: Game) => {
-            return x.name !== nameOfGameToDelete
-        })
-        this.games = newGames;
-        await this.asyncWriteFile();
+        this.games.find((game: Game) => {
+            if(game.name === nameOfGame) game.times.push(newTime);
+        });
+        this.asyncWriteFile();
     }
+
+    // Est ce que delete est nécessaire pour le sprint 1???
+
+    // async deleteGame(nameOfGameToDelete: string) {
+    //     await this.asyncReadFile();
+    //     const newGames = this.games.filter((x: Game) => {
+    //         return x.name !== nameOfGameToDelete
+    //     })
+    //     this.games = newGames;
+    //     await this.asyncWriteFile();
+    // }
 
     async asyncWriteFile() {
         try  {
-            fs.promises.writeFile(
+            await fs.promises.writeFile(
                 join('games.json'),
                 JSON.stringify({games : this.games}),
                 {
                     flag: 'w',
                 }
             );
-            const result = await fs.promises.readFile(
-                join('games.json'),
-                'utf-8',
-            );
-            console.log(result);
         } catch(err) {
             console.log('Something went wrong trying to write into the json file' + err);
+            throw new Error(err);
         }
     }
 
@@ -76,7 +78,8 @@ export class GamesService {
           this.games = JSON.parse(result).games;
         } catch (err) {
           console.log('Something went wrong trying to read the json file:' + err);
+          throw new Error(err);
         }
-      }
+    }
     
 }

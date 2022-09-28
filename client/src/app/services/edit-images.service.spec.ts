@@ -10,7 +10,24 @@ describe('EditImagesService', () => {
     service = TestBed.inject(EditImagesService);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('should emit a number through activatedEmitterRemoveImage ', () => {
+    let fakeNumber:number = 10;
+    expect(service.sendIdImageToRemove(fakeNumber)).toEqual(service.activatedEmitterRemoveImage.emit(fakeNumber))
+  });
+
+  it('should return activitedEmitter when calling getIdImageToRemove ', () => {
+
+    expect(service.getIdImageToRemove()).toEqual(service.activatedEmitterRemoveImage)
+  });
+
+  it('should return activatedEmitterUrlImageSingle when calling getIdImageToRemove ', () => {
+
+    expect(service.getDataImageSingle()).toEqual(service.activatedEmitterUrlImageSingle)
+  });
+
+  it('should return activitedEmitter when calling sendIdImageToRemove ', () => {
+
+    expect(service.getDataImageMultiple()).toEqual(service.activatedEmitterUrlImageBoth)
+
   });
 });

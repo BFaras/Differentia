@@ -24,6 +24,7 @@ export class CommunicationService {
     }
 
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {
+        console.log("ntm");
         return () => of(result as T);
     }
 
@@ -31,8 +32,9 @@ export class CommunicationService {
         return this.http.get<Array<Game>>(`${this.baseUrl}/games`).pipe(catchError(this.handleError<Array<Game>>('getGames')));
     }
 
-    addGame(game: Game): Observable<Number> {
-        return this.http.post<Number>(`${this.baseUrl}/games/newGame`, game).pipe(catchError(this.handleError<Number>('validateGame')));
+    addGame(game: Game): Observable<Number>{
+        return this.http.post<Number>(`${this.baseUrl}/games/newGame`, game)
+        .pipe(catchError(this.handleError<Number>('addGame')));    
     }
 
 }

@@ -10,7 +10,7 @@ import { PopDialogDownloadImagesComponent } from '../pop-dialogs/pop-dialog-down
 })
 export class HeaderImageComponent implements OnInit {
     @Input() indexOfImageToSend: number;
-    constructor(private dialog: MatDialog, private editImagesService: EditImagesService) {}
+    constructor(public dialog: MatDialog, public editImagesService: EditImagesService) {}
 
     ngOnInit(): void {}
 
@@ -26,6 +26,6 @@ export class HeaderImageComponent implements OnInit {
     }
 
     onDeleteImage() {
-        this.editImagesService.activatedEmitterRemoveImage.emit(this.indexOfImageToSend);
+        this.editImagesService.sendIdImageToRemove(this.indexOfImageToSend);
     }
 }

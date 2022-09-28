@@ -1,18 +1,10 @@
 <mat-grid-list gutterSize="60px" cols="2">
-    <mat-grid-tile>
+    <mat-grid-tile *ngFor="let index of imagesIndex" >
         <mat-grid-tile-header>
-            <app-header-image [indexOfImageToSend] = "0"> </app-header-image>
+            <app-header-image [indexOfImageToSend] = index > </app-header-image>
         </mat-grid-tile-header>
         <mat-card>
-            <app-original-image></app-original-image>
-        </mat-card>
-    </mat-grid-tile>
-    <mat-grid-tile>
-        <mat-grid-tile-header>
-            <app-header-image [indexOfImageToSend] = "1"> </app-header-image>
-        </mat-grid-tile-header>
-        <mat-card>
-            <app-modified-image></app-modified-image>
+            <app-modified-image [idFromParent] = index></app-modified-image>
         </mat-card>
     </mat-grid-tile>
 </mat-grid-list>

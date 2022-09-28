@@ -8,6 +8,7 @@ export class GamesController {
     router: Router;
 
     constructor(private gamesService: GamesService) {
+        gamesService = new GamesService();
         this.configureRouter();
     }
 

@@ -1,6 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PlayAreaComponent } from '@app/components/play-area/play-area.component';
@@ -14,7 +15,6 @@ import { MaterialPageComponent } from '@app/pages/material-page/material-page.co
 import { DialogInputComponent } from './components/dialog-input/dialog-input.component';
 import { EditableImagesComponent } from './components/editable-images/editable-images.component';
 import { ModifiedImageComponent } from './components/editable-images/modified-image/modified-image.component';
-import { OriginalImageComponent } from './components/editable-images/original-image/original-image.component';
 import { GameFormComponent } from './components/forms/game-form/game-form.component';
 import { ListGameFormComponent } from './components/forms/list-game-form/list-game-form.component';
 import { HeaderImageComponent } from './components/header-image/header-image.component';
@@ -47,7 +47,6 @@ import { TestPageComponent } from './pages/test-page/test-page.component';
         PopDialogDownloadImagesComponent,
         PopDialogValidateGameComponent,
         PopDialogCreateGameComponent,
-        OriginalImageComponent,
         ModifiedImageComponent,
         TopbarComponent,
         GameSelectionComponent,
@@ -58,7 +57,7 @@ import { TestPageComponent } from './pages/test-page/test-page.component';
         TestPageComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
-    providers: [],
+    providers: [ { provide: MAT_DIALOG_DATA , useValue: {bothImage : false} },],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

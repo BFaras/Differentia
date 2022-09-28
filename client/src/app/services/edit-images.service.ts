@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { ImageSize } from '@app/classes/image-size';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
     providedIn: 'root',
@@ -9,22 +9,21 @@ export class EditImagesService {
     activatedEmitterUrlImageSingle = new EventEmitter<{ index: number; url: string }>();
     activatedEmitterRemoveImage = new EventEmitter<number>();
 
-    imageToVerify = new Image();
-    private imageSizeConstraint: ImageSize = new ImageSize(640, 480);
-
-    renderImage(reader: FileReader) {
-        this.imageToVerify.src = reader.result as string;
+    sendIdImageToRemove(id: number) {
+        this.activatedEmitterRemoveImage.emit(id);
     }
 
-    verifyImageFormat(file: File) {
-        return file.type === 'image/bmp';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getIdImageToRemove(): Observable<any> {
+        return this.activatedEmitterRemoveImage;
     }
 
-    verifyImageWidthHeight(width: number, height: number) {
-        return height === this.imageSizeConstraint.height && width === this.imageSizeConstraint.width;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getDataImageSingle(): Observable<{ index: number; url: string }> {
+        return this.activatedEmitterUrlImageSingle;
     }
 
-    verifyImageConstraint() {
-        return this.verifyImageWidthHeight(this.imageToVerify.width, this.imageToVerify.height);
+    getDataImageMultiple(): Observable<string> {
+        return this.activatedEmitterUrlImageBoth;
     }
 }
