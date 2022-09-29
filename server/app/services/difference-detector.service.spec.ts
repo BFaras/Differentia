@@ -32,7 +32,7 @@ describe('DifferenceDetectorService', () => {
 
     beforeEach(async () => {
         try {
-            const result = await fs.promises.readFile(join('testImages.json'), 'utf-8');
+            const result = await fs.promises.readFile(join('testDifferentImages.json'), 'utf-8');
             images = JSON.parse(result).images;
         } catch (err: any) {
             console.log('Something went wrong trying to read the json file:' + err);

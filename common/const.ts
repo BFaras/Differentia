@@ -6,7 +6,6 @@ export const MAX_TIME = 59;
 export const BASE_ONE = 10;
 export const RESET_VALUE = 0;
 
-
 // pop-up-validate number unavailable
 
 export const ZERO_RADIUS = 0;
@@ -21,3 +20,5 @@ export const BLACK = 0;
 export const ALPHA_OPAQUE = 255;
 export const DEFAULT_DIFFERENCE_POSITION = 0;
 export const RADIUS_AROUND_PIXEL = 1;
+export const UP = -1;
+export const DOWN = 1;

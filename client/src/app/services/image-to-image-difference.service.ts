@@ -12,11 +12,17 @@ export class ImageToImageDifferenceService {
     private differencesImageToPutDataIn: HTMLImageElement;
     private mainCanvas: HTMLCanvasElement;
 
-    constructor(private socketService: SocketClientService) {}
+    constructor(public socketService: SocketClientService) {
+        this.setUpSocket();
+    }
 
     configureGamePageSocketFeatures() {
         this.socketService.on('game creation difference array', (differentPixelsPositionArray: number[]) => {
             this.putDifferencesDataInImage(differentPixelsPositionArray);
+        });
+
+        this.socketService.on('game creation nb of differences', (nbDifferences: number[]) => {
+            console.log(nbDifferences);
         });
     }
 
@@ -119,7 +125,7 @@ export class ImageToImageDifferenceService {
     async waitForImageToLoad(imageToLoad: HTMLImageElement) {
         return new Promise((resolve, reject) => {
             imageToLoad.onload = () => resolve(imageToLoad);
-            imageToLoad.onerror = reject;
+            imageToLoad.onerror = (error) => reject(console.log(error));
         });
     }
 }
