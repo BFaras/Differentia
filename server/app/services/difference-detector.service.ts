@@ -45,11 +45,8 @@ export class DifferenceDetectorService {
     }
 
     private compareImagesPixels() {
-
         for (let i = 0; i < this.imageDatasToCompare.originalImageData.length; i += NB_BIT_PER_PIXEL) {
-
             if (this.isPixelDifferent(i)) {
-                
                 const pixelPosition = i / NB_BIT_PER_PIXEL;
 
                 this.differentPixelsNumbersArrayWithOffset.push(pixelPosition);
@@ -58,14 +55,17 @@ export class DifferenceDetectorService {
         }
     }
 
-    private getColorDifference(colorPos : number) {
-        return Math.abs(this.imageDatasToCompare.originalImageData[colorPos] - 
-            this.imageDatasToCompare.modifiedImageData[colorPos]);
+    private getColorDifference(colorPos: number) {
+        return Math.abs(this.imageDatasToCompare.originalImageData[colorPos] - this.imageDatasToCompare.modifiedImageData[colorPos]);
     }
 
-    private isPixelDifferent(pixelPos : number) {
-        return (this.getColorDifference(pixelPos + RED_POS) + this.getColorDifference(pixelPos + GREEN_POS)
-            + this.getColorDifference(pixelPos + BLUE_POS) + this.getColorDifference(pixelPos + ALPHA_POS);
+    private isPixelDifferent(pixelPos: number) {
+        return (
+            this.getColorDifference(pixelPos + RED_POS) +
+            this.getColorDifference(pixelPos + GREEN_POS) +
+            this.getColorDifference(pixelPos + BLUE_POS) +
+            this.getColorDifference(pixelPos + ALPHA_POS)
+        );
     }
 
     private addPixelDifferenceOffset(centerPixelPosition: number) {
@@ -78,17 +78,26 @@ export class DifferenceDetectorService {
         let offsetCloumnBeginning = this.clampValue(centerPixelColumn - this.offset, 0, this.imageDatasToCompare.imageWidth);
 
         for (let column = offsetCloumnBeginning; column <= centerPixelColumn + this.offset; column++) {
-            this.addOffsetPixelToColumnToVisit(column, centerPixelLine, centerPixelColumn)
+            this.addOffsetPixelToColumnToVisit(column, centerPixelLine, centerPixelColumn);
         }
     }
 
-    private addOffsetPixelToColumnToVisit(column : number, centerPixelLine : number, centerPixelColumn : number) {
+    private addOffsetPixelToColumnToVisit(column: number, centerPixelLine: number, centerPixelColumn: number) {
         this.addOffsetPixelToPixelsArroundToColumnToVisit(column, centerPixelLine, centerPixelColumn, DOWN);
         this.addOffsetPixelToPixelsArroundToColumnToVisit(column, centerPixelLine, centerPixelColumn, UP);
     }
-    
-    private addOffsetPixelToPixelsArroundToColumnToVisit(currentColumn: number, centerPixelLine: number, centerPixelColumn: number, upOrDown : number) {
-        for (let line = centerPixelLine; this.isPixelInCircle(line, currentColumn, centerPixelLine, centerPixelColumn, this.offset); line += upOrDown) {
+
+    private addOffsetPixelToPixelsArroundToColumnToVisit(
+        currentColumn: number,
+        centerPixelLine: number,
+        centerPixelColumn: number,
+        upOrDown: number,
+    ) {
+        for (
+            let line = centerPixelLine;
+            this.isPixelInCircle(line, currentColumn, centerPixelLine, centerPixelColumn, this.offset);
+            line += upOrDown
+        ) {
             const currentVisitingPixelPosition =
                 (line + 1) * this.imageDatasToCompare.imageWidth + currentColumn - this.imageDatasToCompare.imageWidth;
 
@@ -133,13 +142,23 @@ export class DifferenceDetectorService {
         }
     }
 
-    private addPixelsToCurrentColumnToVisit(column : number, centerPixelLine : number, centerPixelColumn : number, pixelsToVisit : number[]) {
+    private addPixelsToCurrentColumnToVisit(column: number, centerPixelLine: number, centerPixelColumn: number, pixelsToVisit: number[]) {
         this.addPixelsArroundCurrentColumnToVisit(column, centerPixelLine, centerPixelColumn, pixelsToVisit, UP);
         this.addPixelsArroundCurrentColumnToVisit(column, centerPixelLine, centerPixelColumn, pixelsToVisit, DOWN);
     }
 
-    private addPixelsArroundCurrentColumnToVisit(currentColumn: number, centerPixelLine: number, centerPixelColumn: number, pixelsToVisit: number[], upOrDown : number) {
-        for (let line = centerPixelLine; this.isPixelInCircle(line, currentColumn, centerPixelLine, centerPixelColumn, RADIUS_AROUND_PIXEL); line += upOrDown) {
+    private addPixelsArroundCurrentColumnToVisit(
+        currentColumn: number,
+        centerPixelLine: number,
+        centerPixelColumn: number,
+        pixelsToVisit: number[],
+        upOrDown: number,
+    ) {
+        for (
+            let line = centerPixelLine;
+            this.isPixelInCircle(line, currentColumn, centerPixelLine, centerPixelColumn, RADIUS_AROUND_PIXEL);
+            line += upOrDown
+        ) {
             const currentVisitingPixelPosition =
                 (line + 1) * this.imageDatasToCompare.imageWidth + currentColumn - this.imageDatasToCompare.imageWidth;
 
