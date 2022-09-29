@@ -7,32 +7,16 @@ import { ImageToImageDifferenceService } from './image-to-image-difference.servi
 import { SocketClientService } from './socket-client.service';
 
 describe('ImageToImageDifferenceService', () => {
-<<<<<<< HEAD
     let imageToImageDiffService: ImageToImageDifferenceService;
     let mainCanvas: HTMLCanvasElement;
     let originalImage: HTMLImageElement = new Image(640, 480);
     let modifiedImage: HTMLImageElement = new Image(640, 480);
     let differencesImageToPutDataIn: HTMLImageElement;
-=======
-    let service: ImageToImageDifferenceService;
-    let renderer: Renderer2;
-    //let mainCanvas: HTMLCanvasElement;
-    let originalImage: HTMLImageElement = new Image();
-    let modifiedImage: HTMLImageElement = new Image();
-    //let differencesImageToPutDataIn: HTMLImageElement;
->>>>>>> 5b4892cf6a7acd96e9aca7cbcfd2be9a3a97e8f2
 
     beforeEach(async() => {
         TestBed.configureTestingModule({});
-<<<<<<< HEAD
         imageToImageDiffService = TestBed.inject(ImageToImageDifferenceService);
         mainCanvas = CanvasTestHelper.createCanvas(1,1);
-=======
-        //mainCanvas = renderer.createElement('canvas');
-        service = TestBed.inject(ImageToImageDifferenceService);
-        originalImage.src = '../../assets/ImageBlanche.bmp';
-        modifiedImage.src = '../../assets/image_7_diff.bmp';
->>>>>>> 5b4892cf6a7acd96e9aca7cbcfd2be9a3a97e8f2
     });
 
     // Pas trop certain de l'utilite
