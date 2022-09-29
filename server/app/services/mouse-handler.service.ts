@@ -6,12 +6,10 @@ import { DifferenceDetectorService } from './difference-detector.service';
 @Service()
 export class MouseHandlerService {
 
-  mousePosition: Position;
   differencesHashmap: Map <number, number>;
   differencesNumberFound: Array <number>;
 
   constructor(readonly imagesDataToCompare: ImageDataToCompare) {
-    this.mousePosition = { x: 0, y: 0 };
     this.differencesHashmap = new Map<number, number>();
     this.differencesNumberFound = [];
 
@@ -29,13 +27,13 @@ export class MouseHandlerService {
 
   }
 
-  convertMousePositionToPixelNumber(): number {
-    return ((this.mousePosition.x + 1)*this.imagesDataToCompare.imageWidth
-     + this.mousePosition.y - this.imagesDataToCompare.imageWidth)
+  convertMousePositionToPixelNumber(mousePosition: Position): number {
+    return ((mousePosition.x + 1)*this.imagesDataToCompare.imageWidth
+     + mousePosition.y - this.imagesDataToCompare.imageWidth)
   }
 
-  validateDifferencesOnClick() {
-    const pixelNumber = this.convertMousePositionToPixelNumber();
+  validateDifferencesOnClick(mousePosition: Position) {
+    const pixelNumber = this.convertMousePositionToPixelNumber(mousePosition);
     let differencesNumber: number;
 
     if (this.differencesHashmap.has(pixelNumber)) {
@@ -48,6 +46,7 @@ export class MouseHandlerService {
       else {
         // Nouvelle Différence trouvée
         this.differencesNumberFound.push(differencesNumber);
+
       }
     }
     else {
