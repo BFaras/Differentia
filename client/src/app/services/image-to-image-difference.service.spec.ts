@@ -6,10 +6,10 @@ import { ImageToImageDifferenceService } from './image-to-image-difference.servi
 describe('ImageToImageDifferenceService', () => {
     let service: ImageToImageDifferenceService;
     let renderer: Renderer2;
-    let mainCanvas: HTMLCanvasElement;
+    //let mainCanvas: HTMLCanvasElement;
     let originalImage: HTMLImageElement = new Image();
     let modifiedImage: HTMLImageElement = new Image();
-    let differencesImageToPutDataIn: HTMLImageElement;
+    //let differencesImageToPutDataIn: HTMLImageElement;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({ declarations: [ImageToImageDifferenceService] }).compileComponents();
@@ -17,7 +17,7 @@ describe('ImageToImageDifferenceService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
-        mainCanvas = renderer.createElement('canvas');
+        //mainCanvas = renderer.createElement('canvas');
         service = TestBed.inject(ImageToImageDifferenceService);
         originalImage.src = '../../assets/ImageBlanche.bmp';
         modifiedImage.src = '../../assets/image_7_diff.bmp';
