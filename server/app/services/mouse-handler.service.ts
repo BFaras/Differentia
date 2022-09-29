@@ -16,8 +16,9 @@ export class MouseHandlerService {
   }
 
   isValidClick(mousePosition:Position): boolean{
-    console.log('service check');
-    return true;
+    console.log(mousePosition);
+    //Il faut que la fonction de Validation renvoie un boolean si possible
+    return false;
   }
 
   // Sauvegarder la hashmap de diff dans le games.json

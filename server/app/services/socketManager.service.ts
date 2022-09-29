@@ -5,6 +5,7 @@ import { ChronometerService } from './chronometer.service';
 import { MouseHandlerService } from './mouse-handler.service';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { DifferenceDetectorService } from './difference-detector.service';
+import Container from 'typedi';
 
 export class SocketManager {
     private sio: io.Server;
@@ -12,7 +13,8 @@ export class SocketManager {
     public socket: io.Socket;
     private timeInterval: NodeJS.Timer;
     private chronometerService: ChronometerService = new ChronometerService();
-    private mouseHandlerService: MouseHandlerService;
+    private mouseHandlerService = Container.get(MouseHandlerService)
+
     constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] }, maxHttpBufferSize: 1e7 });
     }
@@ -71,6 +73,10 @@ export class SocketManager {
                 const differenceDetector = new DifferenceDetectorService(imagesData);
                 socket.emit('game creation difference array', differenceDetector.getDifferentPixelsArrayWithOffset());
                 socket.emit('game creation nb of differences', differenceDetector.getNbDifferences());
+            });
+
+            socket.on('Verify position', (position) => {
+                this.clickResponse(socket,position);
             });
         });
     }
