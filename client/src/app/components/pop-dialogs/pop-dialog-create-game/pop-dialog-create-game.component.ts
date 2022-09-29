@@ -8,6 +8,7 @@ import { Game } from '@common/game';
     styleUrls: ['./pop-dialog-create-game.component.scss'],
 })
 export class PopDialogCreateGameComponent implements OnInit {
+    isImageDifferenceAndNumberReady:boolean;
     image :any
     @ViewChild('name') nameInput: ElementRef;
     nameOfGame: string;
@@ -16,7 +17,7 @@ export class PopDialogCreateGameComponent implements OnInit {
         name: "Car game", // remplacer car game par this.nameOfGame
         numberOfDifferences: 6, // remplacer 6 par this.nbOfDifferences
         times: [],
-        images: ['image1','image2','imageDifference'] // index 0 => image orignale, index 1 => image modifiée
+        images: ['image1','image2','imageDifference'], // index 0 => image orignale, index 1 => image modifiée
     }
     constructor(private communicationService: CommunicationService,@Inject(MAT_DIALOG_DATA) private imagesReceived: any) {}
     
@@ -31,7 +32,6 @@ export class PopDialogCreateGameComponent implements OnInit {
         console.log(this.numberOfDifference);
         console.log(this.nameOfGame);
     }
-
     addGame(gameToAdd: Game) {
         this.gameToAdd = { name: this.nameInput.nativeElement.value,
             numberOfDifferences: this.imagesReceived.numberOfDifferenceReceived , 

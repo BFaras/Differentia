@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { imageToSendToServer } from '@common/imageToSendToServer';
+// import { imageToSendToServer } from '@common/imageToSendToServer';
 import { PopDialogCreateGameComponent } from '../pop-dialog-create-game/pop-dialog-create-game.component';
 @Component({
     selector: 'app-pop-dialog-validate-game',
@@ -8,12 +8,13 @@ import { PopDialogCreateGameComponent } from '../pop-dialog-create-game/pop-dial
     styleUrls: ['./pop-dialog-validate-game.component.scss'],
 })
 export class PopDialogValidateGameComponent  {
+    areImageDifferenceAndNumberDifferenceReady:boolean;
     isChecked = false
     isDisabled:boolean ;
     valueChosen:number = 3;
     numberDifference:number;
     imageDifference:any;
-    constructor(private dialog: MatDialog,@Inject(MAT_DIALOG_DATA) private imagesWithIndexReceived: imageToSendToServer ) {}
+    constructor(private dialog: MatDialog,@Inject(MAT_DIALOG_DATA) public imagesWithIndexReceived: any ) {}
     
     onCreateCreateGame() {
         this.setImageAndNumberDiffeence()
@@ -21,6 +22,7 @@ export class PopDialogValidateGameComponent  {
             height: '400px',
             width: '600px',
             data:{
+                //l image with indexRECEIVERD c est SENSE ETRE gameDataToSendToSERVER MAIS MODIFIER POUR VOIR LE PROBLEME AVEC PUTAIN DE LINK
                 numberOfDifferenceReceived:this.numberDifference,
                 imageOfDifferenceReceived: this.imageDifference,
                 imagesWithIndexReceived : this.imagesWithIndexReceived
@@ -28,14 +30,15 @@ export class PopDialogValidateGameComponent  {
         });
     }
 
-    sendBothImages(){
-        //http-request to send
-        this.imagesWithIndexReceived.modifiedImage;
+    startsGeneratingImageDifferenceAndNumberDifference(){
+        if(this.valueChosen != null){
+            this.areImageDifferenceAndNumberDifferenceReady = true;
+        } else 
+        {
+        this.areImageDifferenceAndNumberDifferenceReady = false;
+        }
     }
 
-    receiveImageDifferenceAndNumberDifference(){
-        //http-request to receive images
-    }
 
     setImageAndNumberDiffeence(){
         this.numberDifference = 6;

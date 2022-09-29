@@ -11,6 +11,8 @@ import { EditImagesService } from '../../services/edit-images.service';
     styleUrls: ['./game-creation-page.component.scss'],
 })
 export class GameCreationPageComponent implements OnInit {
+    firstUrl:any;
+    secondUrl:any;
     imageToSend: imageToSendToServer = {
         originalImage : new Image(),
         modifiedImage : new Image(),
@@ -28,8 +30,10 @@ export class GameCreationPageComponent implements OnInit {
         this.editImageService.getDataImageMultiple().subscribe((url)=>{
             
             this.imageToSend.originalImage.src = url
+            this.firstUrl = url;
             this.imageToSend.originalIndex = 0;
             this.imageToSend.modifiedImage.src = url
+            this.secondUrl = url;
             this.imageToSend.modifiedIndex = 1;
 
         })
@@ -39,22 +43,25 @@ export class GameCreationPageComponent implements OnInit {
                 
                 this.imageToSend.originalImage.src = dataOfImage.url
                 this.imageToSend.originalIndex = dataOfImage.index
+                this.firstUrl = dataOfImage.url;
             }
             else if(dataOfImage.index == 1){
                 
                 this.imageToSend.modifiedImage.src = dataOfImage.url
                 this.imageToSend.modifiedIndex = dataOfImage.index
+                this.secondUrl = dataOfImage.url;
             }
         })
 
         this.editImageService.getIdImageToRemove().subscribe((indexImage)=>{
+
             if (this.imageToSend.modifiedIndex == indexImage){
                 this.imageToSend.modifiedIndex = null
-                console.log('removed')
+
             }
             else if (this.imageToSend.originalIndex == indexImage){
                 this.imageToSend.originalIndex = null
-                console.log('removed')
+
             }
                 
 
@@ -62,13 +69,10 @@ export class GameCreationPageComponent implements OnInit {
     }
 
     verifyTwoImagesUploaded(){
-        if (this.imageToSend.modifiedIndex == null || this.imageToSend.originalIndex == null){
-            console.log('true')
+        if (this.imageToSend.modifiedIndex ==  null || this.imageToSend.originalIndex == null){
             return true;
         }
         else{
-            console.log('false')
-            console.log(this.imageToSend.modifiedIndex)
             return false
         }
     }
@@ -92,8 +96,11 @@ export class GameCreationPageComponent implements OnInit {
             height: '400px',
             width: '600px',
             data: {
-                imagesWithIndex: this.imageToSend,
-            },
+                imagesToSend: this.imageToSend,
+                FistImageSrc : this.firstUrl,
+                SecondImageSrc : this.secondUrl}
         });
+
+
     }
 }

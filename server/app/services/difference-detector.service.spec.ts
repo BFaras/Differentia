@@ -1,0 +1,85 @@
+import { expect } from 'chai';
+import * as fs from 'fs';
+import { join } from 'path';
+import * as sinon from 'sinon';
+
+import { ImageDataToCompare } from '@common/image-data-to-compare';
+import { DifferenceDetectorService } from './difference-detector.service';
+
+//Test positions in images test file
+const SEVEN_DIFFS_WITH_OR_WITHOUT_OFFSET_TEST = 0;
+
+const ORIGINAL_IMAGE_POSITION = 0;
+const MODIFIED_IMAGE_POSITION = 1;
+
+const JSON_DATA = 'data';
+
+//Intra test information constants
+const IMAGE_WIDTH = 640;
+const IMAGE_HEIGHT = 480;
+const DEFAULT_OFFSET = 3;
+
+describe('DifferenceDetectorService', () => {
+    const DEFAULT_IMAGES_DATA: ImageDataToCompare = {
+        originalImageData: new Uint8ClampedArray(),
+        modifiedImageData: new Uint8ClampedArray(),
+        imageWidth: IMAGE_WIDTH,
+        imageHeight: IMAGE_HEIGHT,
+        offSet: DEFAULT_OFFSET,
+    };
+    let images: Uint8ClampedArray[][] = [];
+
+    beforeEach(async () => {
+        try {
+            const result = await fs.promises.readFile(join('testImages.json'), 'utf-8');
+            images = JSON.parse(result).images;
+        } catch (err: any) {
+            console.log('Something went wrong trying to read the json file:' + err);
+            throw new Error(err);
+        }
+    });
+
+    it('should call generateDifferencesInformation on construction', () => {
+        const diffDetector = new DifferenceDetectorService(DEFAULT_IMAGES_DATA);
+        const spy = sinon.spy(diffDetector, <any>'generateDifferencesInformation');
+        expect(spy.calledOnce);
+    });
+
+    it('should call countDifferences on construction', () => {
+        const diffDetector = new DifferenceDetectorService(DEFAULT_IMAGES_DATA);
+        const spy = sinon.spy(diffDetector, <any>'countDifferences');
+        expect(spy.calledOnce);
+    });
+
+    it('should have 7 differences with 0 offset', () => {
+        const NB_OF_DIFFERENCES_IN_TEST = 7;
+        const TEST_OFFSET = 0;
+
+        const imageDatas: ImageDataToCompare = {
+            originalImageData: images[SEVEN_DIFFS_WITH_OR_WITHOUT_OFFSET_TEST][ORIGINAL_IMAGE_POSITION][JSON_DATA],
+            modifiedImageData: images[SEVEN_DIFFS_WITH_OR_WITHOUT_OFFSET_TEST][MODIFIED_IMAGE_POSITION][JSON_DATA],
+            imageWidth: IMAGE_WIDTH,
+            imageHeight: IMAGE_HEIGHT,
+            offSet: TEST_OFFSET,
+        };
+        const diffDetector = new DifferenceDetectorService(imageDatas);
+
+        expect(diffDetector.getNbDifferences()).to.be.equal(NB_OF_DIFFERENCES_IN_TEST);
+    });
+
+    it('should have 7 differences with 9 offset', () => {
+        const NB_OF_DIFFERENCES_IN_TEST = 7;
+        const TEST_OFFSET = 9;
+
+        const imageDatas: ImageDataToCompare = {
+            originalImageData: images[SEVEN_DIFFS_WITH_OR_WITHOUT_OFFSET_TEST][ORIGINAL_IMAGE_POSITION][JSON_DATA],
+            modifiedImageData: images[SEVEN_DIFFS_WITH_OR_WITHOUT_OFFSET_TEST][MODIFIED_IMAGE_POSITION][JSON_DATA],
+            imageWidth: IMAGE_WIDTH,
+            imageHeight: IMAGE_HEIGHT,
+            offSet: TEST_OFFSET,
+        };
+        const diffDetector = new DifferenceDetectorService(imageDatas);
+
+        expect(diffDetector.getNbDifferences()).to.be.equal(NB_OF_DIFFERENCES_IN_TEST);
+    });
+});
