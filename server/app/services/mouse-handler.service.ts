@@ -15,7 +15,7 @@ export class MouseHandlerService {
   constructor(readonly imagesDataToCompare: ImageDataToCompare) {
     this.differencesHashmap = new Map<number, number>();
     this.differencesNumberFound = [];
-    
+
     this.configureRouter();
     this.generateDifferencesHashmap();
 
@@ -31,8 +31,8 @@ export class MouseHandlerService {
 
   isValidClick(mousePosition:Position): boolean{
     console.log(mousePosition);
-    //Il faut que la fonction de Validation renvoie un boolean si possible
-    return false;
+
+    return this.validateDifferencesOnClick(mousePosition);
   }
 
   generateDifferencesHashmap() {
@@ -45,26 +45,27 @@ export class MouseHandlerService {
      + mousePosition.y - this.imagesDataToCompare.imageWidth)
   }
 
-  validateDifferencesOnClick(mousePosition: Position) {
+  validateDifferencesOnClick(mousePosition: Position): boolean {
     const pixelNumber = this.convertMousePositionToPixelNumber(mousePosition);
     let differencesNumber: number;
+    let pixelIsDifferent: boolean = true;
 
     if (this.differencesHashmap.has(pixelNumber)) {
       differencesNumber = this.differencesHashmap.get(pixelNumber)!;
 
       if (this.differencesNumberFound.includes(differencesNumber)) {
         // La différence a déjà été trouvée précédemment
-        return;
+        return (!pixelIsDifferent);
       }
       else {
         // Nouvelle Différence trouvée
         this.differencesNumberFound.push(differencesNumber);
-
+        return pixelIsDifferent;
       }
     }
     else {
       // Afficher Erreur et suspendre/ignorer les clics pendant 1s
-      return;
+      return (!pixelIsDifferent);
     }
   }
 }
