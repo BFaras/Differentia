@@ -1,23 +1,33 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Renderer2, OnInit } from '@angular/core';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { ImageGeneratorService } from './difference-detector-feature/image-generator.service';
+import { CommunicationService } from './communication.service';
 
 @Injectable({
     providedIn: 'root',
 })
-export class ImageToImageDifferenceService {
+export class ImageToImageDifferenceService implements OnInit {
     private originalImage: HTMLImageElement = new Image();
     private modifiedImage: HTMLImageElement = new Image();
     private differencesImageToPutDataIn: HTMLImageElement;
     private mainCanvas: HTMLCanvasElement;
 
-    constructor(private socketService: SocketClientService) {}
+    constructor(private socketService: SocketClientService, private communicationService: CommunicationService,
+                private renderer: Renderer2) {}
+
+    ngOnInit(): void {
+        this.mainCanvas = this.renderer.createElement('canvas');
+    }
 
     configureGamePageSocketFeatures() {
         this.socketService.on('game creation difference array', (differentPixelsPositionArray: number[]) => {
             this.putDifferencesDataInImage(differentPixelsPositionArray);
         });
+    }
+
+    sendImagesDataToServer(imagesData:ImageDataToCompare) {
+        this.communicationService.addImagesToCompareData(imagesData)
     }
 
     sendDifferentImagesInformationToServerForGameCreation(
@@ -42,11 +52,12 @@ export class ImageToImageDifferenceService {
         differencesImageToPutDataIn: HTMLImageElement,
         offSet: number,
     ) {
-        //let imagesData: ImageDataToCompare;
+        let imagesData: ImageDataToCompare;
 
         this.setupDataInService(mainCanvas, originalImage, modifiedImage, differencesImageToPutDataIn);
 
-        //imagesData = this.generateImagesDataToCompare(offSet);
+        imagesData = this.generateImagesDataToCompare(offSet);
+        this.sendImagesDataToServer(imagesData);
     }
 
     putDifferencesDataInImage(differentPixelsPositionArray: number[]) {

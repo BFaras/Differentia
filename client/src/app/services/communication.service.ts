@@ -5,6 +5,7 @@ import { Game } from '@common/game'
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { ImageDataToCompare } from '@common/image-data-to-compare';
 
 @Injectable({
     providedIn: 'root',
@@ -36,5 +37,11 @@ export class CommunicationService {
         return this.http.post<Number>(`${this.baseUrl}/games/newGame`, game)
         .pipe(catchError(this.handleError<Number>('addGame')));    
     }
+
+    addImagesToCompareData(imagesData: ImageDataToCompare) {
+        return this.http.post<ImageDataToCompare>(`${this.baseUrl}/imagesdata`,imagesData)
+        .pipe(catchError(this.handleError<ImageDataToCompare>('addImagesToCompareData')));
+    }
+
 
 }

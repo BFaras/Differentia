@@ -1,6 +1,7 @@
 import { Position } from '@common/position';
 import { ImageDataToCompare } from '@common/differences-classes/image-data-to-compare'
 import { Service } from 'typedi';
+import { DifferenceDetectorService } from './difference-detector.service';
 
 @Service()
 export class MouseHandlerService {
@@ -9,10 +10,12 @@ export class MouseHandlerService {
   differencesHashmap: Map <number, number>;
   differencesNumberFound: Array <number>;
 
-  constructor(readonly imageDataToCompare: ImageDataToCompare) {
+  constructor(readonly imagesDataToCompare: ImageDataToCompare) {
     this.mousePosition = { x: 0, y: 0 };
     this.differencesHashmap = new Map<number, number>();
     this.differencesNumberFound = [];
+
+    this.generateDifferencesHashmap(imagesDataToCompare);
   }
 
   isValidClick(mousePosition:Position): boolean{
@@ -21,15 +24,14 @@ export class MouseHandlerService {
     return false;
   }
 
-  // Sauvegarder la hashmap de diff dans le games.json
-  // Par contre la méthode devrait être ici ou dans diff-detector ??
-  saveHashMapInJson(){}
+  generateDifferencesHashmap(imagesData: ImageDataToCompare) {
+    this.differencesHashmap = new DifferenceDetectorService(imagesData).getPixelsDifferencesNbMap();
 
-  loadHashMapFromJson() {}
+  }
 
   convertMousePositionToPixelNumber(): number {
-    return ((this.mousePosition.x + 1)*this.imageDataToCompare.imageWidth
-     + this.mousePosition.y - this.imageDataToCompare.imageWidth)
+    return ((this.mousePosition.x + 1)*this.imagesDataToCompare.imageWidth
+     + this.mousePosition.y - this.imagesDataToCompare.imageWidth)
   }
 
   validateDifferencesOnClick() {
