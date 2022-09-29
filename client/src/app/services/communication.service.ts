@@ -39,13 +39,7 @@ export class CommunicationService {
     }
 
     addImagesToCompareData(imagesData: ImageDataToCompare) {
-        const httpOptions = {
-            headers: new HttpHeaders({
-              'Content-Type':  'application/json',
-            })
-          };
-        const data = JSON.stringify(imagesData);
-        return this.http.post<ImageDataToCompare>(`${this.baseUrl}/imagesdata`, data, httpOptions)
+        return this.http.post<ImageDataToCompare>(`${this.baseUrl}/imagesdata`, imagesData)
         .pipe(catchError(this.handleError<ImageDataToCompare>('addImagesToCompareData')));
     }
 
