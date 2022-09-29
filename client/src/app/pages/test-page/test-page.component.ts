@@ -1,9 +1,8 @@
 import { Component, Input, OnInit, Renderer2 } from '@angular/core';
 
+import { GameToServerService } from '@app/services/game-to-server.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 // import { imageToSendToServer } from '@common/imageToSendToServer';
-import { ɵunwrapSafeValue as unwrapSafeValue } from '@angular/core';
-import { SafeValue } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-test-page',
@@ -14,24 +13,22 @@ export class TestPageComponent implements OnInit {
     @Input() imagesWithIndexReceived:any ;
     @Input() firstUrl:any
     @Input() secondUrl:any
+    numberOfDifference:number;
     readonly originalImage: HTMLImageElement = new Image();
     readonly modifiedImage: HTMLImageElement = new Image();
     readonly finalDifferencesImage: HTMLImageElement = new Image();
     
-    constructor(private renderer: Renderer2, private imageToImageDifferenceService: ImageToImageDifferenceService ) {}
+    constructor(private renderer: Renderer2, private imageToImageDifferenceService: ImageToImageDifferenceService, private gameToServerService:GameToServerService) {}
 
     async ngOnInit(): Promise<void> {
+
         const mainCanvas = this.renderer.createElement('canvas');
 
-        const myValueOriginal = unwrapSafeValue(this.firstUrl as SafeValue);
-        const myValueModified = unwrapSafeValue(this.secondUrl as SafeValue);
-
-        this.originalImage.src = myValueOriginal;
+        this.originalImage.src = this.firstUrl;
         await this.imageToImageDifferenceService.waitForImageToLoad(this.originalImage);
-        console.log(this.originalImage.src)
 
         
-        this.modifiedImage.src = myValueModified;
+        this.modifiedImage.src = this.secondUrl;
         await this.imageToImageDifferenceService.waitForImageToLoad(this.modifiedImage);
     
 
@@ -42,5 +39,23 @@ export class TestPageComponent implements OnInit {
             this.finalDifferencesImage,
             0,
         );
+        
+
+        
     }
+
+    loaded(){
+
+        if ( this.finalDifferencesImage.src != ""){
+            this.numberOfDifference = 4;
+            this.gameToServerService.setNumberDifference(4)
+            this.gameToServerService.setUrlImageOfDifference(this.finalDifferencesImage.src)
+
+            return true
+        }
+        else{
+            return false
+        }
+    }
+
 }

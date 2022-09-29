@@ -11,14 +11,23 @@ export class ImageToImageDifferenceService {
     private modifiedImage: HTMLImageElement = new Image();
     private differencesImageToPutDataIn: HTMLImageElement;
     private mainCanvas: HTMLCanvasElement;
-
     constructor(private socketService: SocketClientService) {}
 
     configureGamePageSocketFeatures() {
         this.socketService.on('game creation difference array', (differentPixelsPositionArray: number[]) => {
             this.putDifferencesDataInImage(differentPixelsPositionArray);
+
+        });
+
+        this.socketService.on('game creation nb of differences', (nbDifferences: number[]) => {
+            console.log(nbDifferences)
+            
         });
     }
+
+    
+
+
 
     sendDifferentImagesInformationToServerForGameCreation(
         mainCanvas: HTMLCanvasElement,

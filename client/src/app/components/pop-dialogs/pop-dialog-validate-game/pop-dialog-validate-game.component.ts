@@ -22,7 +22,6 @@ export class PopDialogValidateGameComponent  {
             height: '400px',
             width: '600px',
             data:{
-                //l image with indexRECEIVERD c est SENSE ETRE gameDataToSendToSERVER MAIS MODIFIER POUR VOIR LE PROBLEME AVEC PUTAIN DE LINK
                 numberOfDifferenceReceived:this.numberDifference,
                 imageOfDifferenceReceived: this.imageDifference,
                 imagesWithIndexReceived : this.imagesWithIndexReceived

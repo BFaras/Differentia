@@ -1,6 +1,7 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommunicationService } from '@app/services/communication.service';
+import { GameToServerService } from '@app/services/game-to-server.service';
 import { Game } from '@common/game';
 @Component({
     selector: 'app-pop-dialog-create-game',
@@ -9,7 +10,7 @@ import { Game } from '@common/game';
 })
 export class PopDialogCreateGameComponent implements OnInit {
     isImageDifferenceAndNumberReady:boolean;
-    image :any
+    imageOfDifferenceSrc :any
     @ViewChild('name') nameInput: ElementRef;
     nameOfGame: string;
     numberOfDifference: number
@@ -19,12 +20,13 @@ export class PopDialogCreateGameComponent implements OnInit {
         times: [],
         images: ['image1','image2','imageDifference'], // index 0 => image orignale, index 1 => image modifiée
     }
-    constructor(private communicationService: CommunicationService,@Inject(MAT_DIALOG_DATA) private imagesReceived: any) {}
+    constructor(private communicationService: CommunicationService,@Inject(MAT_DIALOG_DATA) private imagesReceived: any,private gameToServerService :GameToServerService ) {}
     
 
     ngOnInit(): void {
-        this.numberOfDifference = this.imagesReceived.numberOfDifferenceReceived
-        this.image= this.imagesReceived.imageOfDifferenceReceived
+        this.numberOfDifference = this.gameToServerService.getNumberDifference()
+        this.imageOfDifferenceSrc= this.gameToServerService.getUrlImageOfDifferences()
+        console.log(this.imageOfDifferenceSrc)
 
     }
 
@@ -35,9 +37,9 @@ export class PopDialogCreateGameComponent implements OnInit {
     addGame(gameToAdd: Game) {
         this.gameToAdd = { name: this.nameInput.nativeElement.value,
             numberOfDifferences: this.imagesReceived.numberOfDifferenceReceived , 
-            times:[], images : [this.imagesReceived.imagesWithIndexReceived.originalImage
-                ,this.imagesReceived.imagesWithIndexReceived.modifiedImage,
-                this.imagesReceived.imageOfDifferenceReceived] }
+            times:[], images : [this.imagesReceived.imagesWithIndexReceived.fistImageSrc
+                ,this.imagesReceived.imagesWithIndexReceived.secondImageSrc,
+                this.imageOfDifferenceSrc] }
                 
         if(this.validateNumberOfDifferences()) {
             this.communicationService
