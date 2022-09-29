@@ -1,5 +1,5 @@
 import { Position } from '@common/position';
-import { ImageDataToCompare } from '@common/differences-classes/image-data-to-compare'
+import { ImageDataToCompare } from '@common/image-data-to-compare'
 import { Service } from 'typedi';
 import { DifferenceDetectorService } from './difference-detector.service';
 
