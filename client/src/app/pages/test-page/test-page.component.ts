@@ -50,7 +50,6 @@ export class TestPageComponent implements OnInit {
     }
 
     loaded(){
-        console.log(this.numberOfDifference)
         if ( this.finalDifferencesImage.src != "" && this.numberOfDifference != undefined){
             this.gameToServerService.setNumberDifference(this.numberOfDifference)
             this.gameToServerService.setUrlImageOfDifference(this.finalDifferencesImage.src)
