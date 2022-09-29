@@ -26,7 +26,6 @@ export class PopDialogCreateGameComponent implements OnInit {
     ngOnInit(): void {
         this.numberOfDifference = this.gameToServerService.getNumberDifference()
         this.imageOfDifferenceSrc= this.gameToServerService.getUrlImageOfDifferences()
-        console.log(this.imageOfDifferenceSrc)
 
     }
 

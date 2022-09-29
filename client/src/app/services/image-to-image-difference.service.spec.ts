@@ -1,11 +1,9 @@
-import { Renderer2 } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ImageToImageDifferenceService } from './image-to-image-difference.service';
 
 describe('ImageToImageDifferenceService', () => {
     let service: ImageToImageDifferenceService;
-    let renderer: Renderer2;
     //let mainCanvas: HTMLCanvasElement;
     let originalImage: HTMLImageElement = new Image();
     let modifiedImage: HTMLImageElement = new Image();

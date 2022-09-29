@@ -14,10 +14,9 @@ export class PopDialogValidateGameComponent  {
     valueChosen:number = 3;
     numberDifference:number;
     imageDifference:any;
-    constructor(private dialog: MatDialog,@Inject(MAT_DIALOG_DATA) public imagesWithIndexReceived: any ) {}
+    constructor(private dialog: MatDialog,@Inject(MAT_DIALOG_DATA) public imagesWithIndexReceived: any) {}
     
     onCreateCreateGame() {
-        this.setImageAndNumberDiffeence()
         this.dialog.open(PopDialogCreateGameComponent, {
             height: '400px',
             width: '600px',
@@ -36,12 +35,6 @@ export class PopDialogValidateGameComponent  {
         {
         this.areImageDifferenceAndNumberDifferenceReady = false;
         }
-    }
-
-
-    setImageAndNumberDiffeence(){
-        this.numberDifference = 6;
-        this.imageDifference = "imageDifference";
     }
 
 

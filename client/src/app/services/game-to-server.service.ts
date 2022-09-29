@@ -9,6 +9,7 @@ export class GameToServerService {
 
   constructor() { }
 
+
   setUrlImageOfDifference(url:any){
     this.urlImageOfDifference = url 
   }
