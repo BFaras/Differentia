@@ -119,7 +119,7 @@ export class ImageToImageDifferenceService {
     async waitForImageToLoad(imageToLoad: HTMLImageElement) {
         return new Promise((resolve, reject) => {
             imageToLoad.onload = () => resolve(imageToLoad);
-            imageToLoad.onerror = reject;
+            imageToLoad.onerror = (error) => reject(console.log(error));
         });
     }
 }
