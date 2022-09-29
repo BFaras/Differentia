@@ -22,7 +22,7 @@ export class ImageToImageDifferenceService {
     }
 
     sendImagesDataToServer(imagesData:ImageDataToCompare) {
-        this.communicationService.addImagesToCompareData(imagesData)
+        this.communicationService.addImagesToCompareData(imagesData).subscribe();
     }
 
     sendDifferentImagesInformationToServerForGameCreation(

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Message } from '@common/message';
 import { Game } from '@common/game'
@@ -39,7 +39,13 @@ export class CommunicationService {
     }
 
     addImagesToCompareData(imagesData: ImageDataToCompare) {
-        return this.http.post<ImageDataToCompare>(`${this.baseUrl}/imagesdata`,imagesData)
+        const httpOptions = {
+            headers: new HttpHeaders({
+              'Content-Type':  'application/json',
+            })
+          };
+        const data = JSON.stringify(imagesData);
+        return this.http.post<ImageDataToCompare>(`${this.baseUrl}/imagesdata`, data, httpOptions)
         .pipe(catchError(this.handleError<ImageDataToCompare>('addImagesToCompareData')));
     }
 
