@@ -33,10 +33,6 @@ export class TestPageComponent implements OnInit {
         this.modifiedImage.src = this.secondUrl;
         await this.imageToImageDifferenceService.waitForImageToLoad(this.modifiedImage);
 
-        this.imageToImageDifferenceService.socketService.on('game creation nb of differences', (nbOfDiffs: number) => {
-            this.numberOfDifference = nbOfDiffs;
-            console.log('numberOfDifferences obtained in socket');
-        });
 
         this.imageToImageDifferenceService.sendDifferentImagesInformationToServerForGameCreation(
             mainCanvas,
@@ -48,9 +44,15 @@ export class TestPageComponent implements OnInit {
     }
 
     loaded() {
-        if (this.finalDifferencesImage.src != '' && this.numberOfDifference != undefined) {
-            this.gameToServerService.setNumberDifference(this.numberOfDifference);
-            this.gameToServerService.setUrlImageOfDifference(this.finalDifferencesImage.src);
+        if (this.finalDifferencesImage.src != '' ) {
+            this.imageToImageDifferenceService.socketService.on('game creation nb of differences', (nbOfDiffs: number) => {
+                this.numberOfDifference = nbOfDiffs;
+                console.log('numberOfDifferences obtained in socket');
+            });
+                if (this.numberOfDifference != undefined){
+                this.gameToServerService.setNumberDifference(this.numberOfDifference);
+                this.gameToServerService.setUrlImageOfDifference(this.finalDifferencesImage.src);
+                }
 
             return true;
         } else {
