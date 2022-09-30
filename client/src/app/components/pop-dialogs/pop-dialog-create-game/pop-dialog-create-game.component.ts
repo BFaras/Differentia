@@ -29,10 +29,6 @@ export class PopDialogCreateGameComponent implements OnInit {
 
     }
 
-    test() {
-        console.log(this.numberOfDifference);
-        console.log(this.nameOfGame);
-    }
     addGame(gameToAdd: Game) {
         this.gameToAdd = { name: this.nameInput.nativeElement.value,
             numberOfDifferences: this.imagesReceived.numberOfDifferenceReceived , 

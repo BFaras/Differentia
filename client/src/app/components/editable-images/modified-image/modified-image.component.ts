@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { AssignImageDataService } from '@app/services/assign-image-data.service';
 import { EditImagesService } from '@app/services/edit-images.service';
 @Component({
     selector: 'app-modified-image',
@@ -7,9 +8,9 @@ import { EditImagesService } from '@app/services/edit-images.service';
 })
 export class ModifiedImageComponent implements OnInit {
     @Input() idFromParent: number;
-    secondImageObtained: boolean;
-    urlImageSecond: string;
-    constructor(private editImagesService: EditImagesService) {}
+    isImageObtained: boolean;
+    urlImage: string;
+    constructor(private editImagesService: EditImagesService,private assignImageDataService:AssignImageDataService) {}
 
     ngOnInit(): void {
         this.getDataSingleImage();
@@ -19,39 +20,33 @@ export class ModifiedImageComponent implements OnInit {
         this.getDeletedImageId();
     }
 
-    assignImageData(dataOfImage: { index: number; url: string }) {
-        if (dataOfImage.index === this.idFromParent) {
-            this.secondImageObtained = true;
-            this.urlImageSecond = dataOfImage.url;
-        }
-    }
-
-    deleteImage(dataOfImage: number) {
-        if (dataOfImage === this.idFromParent) {
-            this.secondImageObtained = false;
-        }
-    }
-
-    assignMultipleImageData(url: string) {
-        this.secondImageObtained = true;
-        this.urlImageSecond = url;
+    updateIsImageObtainedAndUrl(){
+        this.isImageObtained = this.assignImageDataService.getIsImageObtained()
+        this.urlImage = this.assignImageDataService.getUrlImage()
     }
 
     getDataSingleImage() {
         this.editImagesService.getDataImageSingle().subscribe((dataOfImage) => {
-            this.assignImageData(dataOfImage);
+            if (dataOfImage.index === this.idFromParent){
+            this.assignImageDataService.assignImageData(dataOfImage);
+            this.updateIsImageObtainedAndUrl();
+        }
         });
     }
 
     getDataMultipleImage() {
         this.editImagesService.getDataImageMultiple().subscribe((url) => {
-            this.assignMultipleImageData(url);
+            this.assignImageDataService.assignMultipleImageData(url)
+            this.updateIsImageObtainedAndUrl();
         });
     }
 
     getDeletedImageId() {
         this.editImagesService.getIdImageToRemove().subscribe((dataOfImage) => {
-            this.deleteImage(dataOfImage);
+            if (dataOfImage === this.idFromParent) {
+            this.assignImageDataService.deleteImage()
+            this.updateIsImageObtainedAndUrl();
+        }
         });
     }
 }

@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ɵunwrapSafeValue as unwrapSafeValue } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { SafeValue } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { PopDialogDownloadImagesComponent } from '@app/components/pop-dialogs/pop-dialog-download-images/pop-dialog-download-images.component';
 import { PopDialogValidateGameComponent } from '@app/components/pop-dialogs/pop-dialog-validate-game/pop-dialog-validate-game.component';
 import { EditImagesService } from '../../services/edit-images.service';
-import { ɵunwrapSafeValue as unwrapSafeValue } from '@angular/core';
-import { SafeValue } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-game-creation-page',
@@ -37,7 +36,6 @@ export class GameCreationPageComponent implements OnInit {
 
         this.editImageService.getDataImageSingle().subscribe((dataOfImage)=>{
             if(dataOfImage.index == 0 ){
-                
                 this.originalIndex = dataOfImage.index
                 const unwrapedSafeUrl = unwrapSafeValue(dataOfImage.url as SafeValue);
                 this.firstUrl = unwrapedSafeUrl;
