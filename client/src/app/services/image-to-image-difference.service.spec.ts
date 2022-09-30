@@ -1,11 +1,7 @@
-<<<<<<< HEAD
-import { TestBed, waitForAsync } from '@angular/core/testing';
-=======
 import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { Socket } from 'socket.io-client';
->>>>>>> b8190406d26d82216f9af8bccf7bff5c72f492c1
 
 import { ImageToImageDifferenceService } from './image-to-image-difference.service';
 import { SocketClientService } from './socket-client.service';
