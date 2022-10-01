@@ -21,10 +21,6 @@ export class ImageToImageDifferenceService {
         });
     }
 
-    sendImagesDataToServer(imagesData:ImageDataToCompare) {
-        this.communicationService.addImagesToCompareData(imagesData).subscribe();
-    }
-
     sendDifferentImagesInformationToServerForGameCreation(
         mainCanvas: HTMLCanvasElement,
         originalImage: HTMLImageElement,
@@ -52,7 +48,7 @@ export class ImageToImageDifferenceService {
         this.setupDataInService(mainCanvas, originalImage, modifiedImage, differencesImageToPutDataIn);
 
         imagesData = this.generateImagesDataToCompare(offSet);
-        this.sendImagesDataToServer(imagesData);
+        this.communicationService.addImagesToCompareData(imagesData).subscribe();
     }
 
     putDifferencesDataInImage(differentPixelsPositionArray: number[]) {
