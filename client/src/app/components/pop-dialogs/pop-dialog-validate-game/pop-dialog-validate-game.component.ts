@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-// import { imageToSendToServer } from '@common/imageToSendToServer';
 import { PopDialogCreateGameComponent } from '../pop-dialog-create-game/pop-dialog-create-game.component';
 @Component({
     selector: 'app-pop-dialog-validate-game',
@@ -24,7 +23,7 @@ export class PopDialogValidateGameComponent  {
     }
 
     startsGeneratingImageDifferenceAndNumberDifference(){
-        if(this.valueChosen != null){
+        if(this.valueChosen != null ){
             this.areImageDifferenceAndNumberDifferenceReady = true;
         } else 
         {

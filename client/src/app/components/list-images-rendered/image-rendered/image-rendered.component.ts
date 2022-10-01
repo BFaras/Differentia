@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { SafeValue } from '@angular/platform-browser';
 import { AssignImageDataService } from '@app/services/assign-image-data.service';
 import { ListImagesRenderedService } from '@app/services/list-images-rendered.service';
 @Component({
@@ -9,7 +10,7 @@ import { ListImagesRenderedService } from '@app/services/list-images-rendered.se
 export class ImageRenderedComponent implements OnInit {
     @Input() idFromParent: number;
     isImageObtained: boolean;
-    urlImage: string;
+    urlImage: SafeValue;
     constructor(private editImagesService: ListImagesRenderedService,private assignImageDataService:AssignImageDataService) {}
 
     ngOnInit(): void {

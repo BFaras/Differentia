@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-
+import { SafeValue } from '@angular/platform-browser';
 @Injectable({
   providedIn: 'root'
 })
 export class AssignImageDataService {
   isImageObtained: boolean;
-  urlImage: string;
+  urlImage: SafeValue;
   constructor() { }
 
   getIsImageObtained(){
@@ -16,21 +16,18 @@ export class AssignImageDataService {
     return this.urlImage
   }
 
-assignImageData(dataOfImage: { index: number; url: string }) {
-        this.isImageObtained = true;
-        this.urlImage = dataOfImage.url 
-    
+  assignImageData(dataOfImage: { index: number; url: SafeValue }) {
+    this.isImageObtained = true;
+    this.urlImage = dataOfImage.url 
+  }
 
-}
-
-deleteImage() {
+  deleteImage() {
     this.isImageObtained = false;
     this.urlImage = ""
+  }
 
-}
-
-assignMultipleImageData(url: string) {
+  assignMultipleImageData(url: SafeValue) {
     this.isImageObtained = true;
     this.urlImage = url;
-}
+  }
 }

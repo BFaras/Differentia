@@ -14,7 +14,7 @@ export class GameToServerService {
   gameToAdd: Game
 
   constructor(private communicationService: CommunicationService) { }
-
+  //HTTP-CODE TO MODIFY AFTER MEETING SEB
   statusCodeTreatment(responseStatusCode: Number) {
     if(true) alert(MESSAGE_JEU_NON_CREER);
     else alert(MESSAGE_JEU_CREER);
