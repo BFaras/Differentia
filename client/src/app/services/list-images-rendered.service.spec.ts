@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { EditImagesService } from './edit-images.service';
+import { ListImagesRenderedService } from './list-images-rendered.service';
 
-describe('EditImagesService', () => {
-  let service: EditImagesService;
+describe('ListImagesRenderedService', () => {
+  let service: ListImagesRenderedService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(EditImagesService);
+    service = TestBed.inject(ListImagesRenderedService);
   });
 
   it('should emit a number through activatedEmitterRemoveImage ', () => {

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/internal/Observable';
 @Injectable({
     providedIn: 'root',
 })
-export class EditImagesService {
+export class ListImagesRenderedService {
     activatedEmitterUrlImageBoth = new EventEmitter<string>();
     activatedEmitterUrlImageSingle = new EventEmitter<{ index: number; url: string }>();
     activatedEmitterRemoveImage = new EventEmitter<number>();

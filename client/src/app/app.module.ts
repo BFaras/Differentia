@@ -12,8 +12,8 @@ import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
 import { DialogInputComponent } from './components/dialog-input/dialog-input.component';
-import { EditableImagesComponent } from './components/editable-images/editable-images.component';
-import { ModifiedImageComponent } from './components/editable-images/modified-image/modified-image.component';
+import { ListImagesRenderedComponent } from './components/list-images-rendered/list-images-rendered.component';
+import { ImageRenderedComponent } from './components/list-images-rendered/image-rendered/image-rendered.component';
 import { GameFormComponent } from './components/forms/game-form/game-form.component';
 import { ListGameFormComponent } from './components/forms/list-game-form/list-game-form.component';
 import { HeaderImageComponent } from './components/header-image/header-image.component';
@@ -25,6 +25,7 @@ import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
 import { GameSelectionComponent } from './pages/game-selection/game-selection.component';
 import { TestPageComponent } from './pages/test-page/test-page.component';
+import { ImageDifferenceComponent } from './components/image-difference/image-difference.component';
 
 /**
  * Main module that is used in main.ts.
@@ -41,12 +42,12 @@ import { TestPageComponent } from './pages/test-page/test-page.component';
         PlayAreaComponent,
         SidebarComponent,
         GameCreationPageComponent,
-        EditableImagesComponent,
+        ListImagesRenderedComponent,
         HeaderImageComponent,
         PopDialogDownloadImagesComponent,
         PopDialogValidateGameComponent,
         PopDialogCreateGameComponent,
-        ModifiedImageComponent,
+        ImageRenderedComponent,
         TopbarComponent,
         GameSelectionComponent,
         GameFormComponent,
@@ -54,6 +55,7 @@ import { TestPageComponent } from './pages/test-page/test-page.component';
         AdminPageComponent,
         DialogInputComponent,
         TestPageComponent,
+        ImageDifferenceComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
     providers: [],

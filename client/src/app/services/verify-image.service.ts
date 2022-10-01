@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ImageSize } from '@app/classes/image-size';
-import { EditImagesService } from './edit-images.service';
+import { ListImagesRenderedService } from './list-images-rendered.service';
 @Injectable({
     providedIn: 'root',
 })
@@ -9,7 +9,7 @@ export class VerifyImageService {
     imageToVerify = new Image();
     imageSizeConstraint: ImageSize = new ImageSize(640, 480);
     bitDepth:number
-    constructor(private editImagesService: EditImagesService,private sanitizer: DomSanitizer){}
+    constructor(private editImagesService: ListImagesRenderedService,private sanitizer: DomSanitizer){}
 
     transformByteToImage(buffer : any) {
         let bytes = new Uint8Array(buffer)

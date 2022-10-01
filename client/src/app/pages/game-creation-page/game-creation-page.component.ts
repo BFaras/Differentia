@@ -1,70 +1,56 @@
-import { Component, OnInit, ɵunwrapSafeValue as unwrapSafeValue } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { SafeValue } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { PopDialogDownloadImagesComponent } from '@app/components/pop-dialogs/pop-dialog-download-images/pop-dialog-download-images.component';
 import { PopDialogValidateGameComponent } from '@app/components/pop-dialogs/pop-dialog-validate-game/pop-dialog-validate-game.component';
-import { EditImagesService } from '../../services/edit-images.service';
-
+import { GameToServerService } from '@app/services/game-to-server.service';
+import { ListImagesRenderedService } from '@app/services/list-images-rendered.service';
 @Component({
     selector: 'app-game-creation-page',
     templateUrl: './game-creation-page.component.html',
     styleUrls: ['./game-creation-page.component.scss'],
 })
 export class GameCreationPageComponent implements OnInit {
-    firstUrl:any;
-    secondUrl:any;
-    isValidationDisabled:boolean = true;
-    modifiedIndex : number | null
-    originalIndex : null| number
 
-    constructor(private dialog: MatDialog, private route:Router,private editImageService:EditImagesService) {
+    constructor(private dialog: MatDialog,
+         private route:Router,private editImageService:ListImagesRenderedService,
+         private gameToServerService: GameToServerService ) {
     }
 
     ngOnInit(): void {
 
-        this.editImageService.getDataImageMultiple().subscribe((url)=>{
-            
-            const UnwrapedSafeUrl = unwrapSafeValue(url as SafeValue);
-            this.firstUrl = UnwrapedSafeUrl;
-            this.originalIndex = 0;
+        this.gameToServerService.setOriginalUrlUploaded(undefined,undefined)
+        this.gameToServerService.setModifiedUrlUploaded(undefined,undefined)
 
-            this.secondUrl = UnwrapedSafeUrl;
-            this.modifiedIndex = 1;
+        this.editImageService.getDataImageMultiple().subscribe((url)=>{
+            this.gameToServerService.setOriginalUrlUploaded(0,url)
+            this.gameToServerService.setModifiedUrlUploaded(1,url)
 
         })
 
         this.editImageService.getDataImageSingle().subscribe((dataOfImage)=>{
             if(dataOfImage.index == 0 ){
-                this.originalIndex = dataOfImage.index
-                const unwrapedSafeUrl = unwrapSafeValue(dataOfImage.url as SafeValue);
-                this.firstUrl = unwrapedSafeUrl;
+                this.gameToServerService.setOriginalUrlUploaded(dataOfImage.index,dataOfImage.url)
             }
             else if(dataOfImage.index == 1){
-                
-                this.modifiedIndex = dataOfImage.index
-                const unwrapedSafeUrl = unwrapSafeValue(dataOfImage.url as SafeValue);
-                this.secondUrl = unwrapedSafeUrl;
+                this.gameToServerService.setModifiedUrlUploaded(dataOfImage.index,dataOfImage.url)
             }
         })
 
         this.editImageService.getIdImageToRemove().subscribe((indexImage)=>{
 
-            if (this.modifiedIndex == indexImage){
-                this.modifiedIndex = null
+            if (this.gameToServerService.getModifiedImageUploaded().index == indexImage){
+                this.gameToServerService.setModifiedUrlUploaded(undefined,undefined)
 
             }
-            else if (this.originalIndex == indexImage){
-                this.originalIndex = null
-
-            }
-                
-
+            else if (this.gameToServerService.getOriginalImageUploaded().index == indexImage){
+                this.gameToServerService.setOriginalUrlUploaded(undefined,undefined)
+            }   
         })
     }
 
     verifyTwoImagesUploaded(){
-        if (this.modifiedIndex ==  null || this.originalIndex == null){
+        if (this.gameToServerService.getOriginalImageUploaded().index === undefined || this.gameToServerService.getModifiedImageUploaded().index === undefined){
             return true;
         }
         else{
@@ -90,13 +76,6 @@ export class GameCreationPageComponent implements OnInit {
         this.dialog.open(PopDialogValidateGameComponent, {
             height: '400px',
             width: '600px',
-            data: {
-                firstImageIndex: this.originalIndex,
-                fistImageSrc : this.firstUrl,
-                secondImageSrc : this.secondUrl,
-                secondImageIndex : this.modifiedIndex
-            
-            }
         });
 
 
