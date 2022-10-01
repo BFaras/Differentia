@@ -8,6 +8,7 @@ export class DifferenceDetectorService {
     private differentPixelsNumbersArrayWithOffset: number[];
     private pixelsDifferencesNbMap: Map<number, number>;
     private offset: number;
+    imagesDataToCompare: ImageDataToCompare
 
     constructor(private imageDatasToCompare: ImageDataToCompare) {
         this.differentPixelsNumbersArrayWithOffset = [];
