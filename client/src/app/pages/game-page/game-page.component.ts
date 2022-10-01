@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-restricted-imports */
-import { Time } from '../../../../../common/time';
+import { Time } from '@common/time';
 import { Component } from '@angular/core';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { CommunicationService } from '@app/services/communication.service';

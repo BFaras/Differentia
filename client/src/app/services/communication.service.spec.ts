@@ -128,12 +128,11 @@ describe('CommunicationService', () => {
         req.flush(allGames);
     });
 
-    // Je devrais vérifier si sa donne un certain code HTTP mais la réponse est le jeu qui est en paramètre ==> changer logique?
-    it('should return a CREATED http Status code when sending a POST request with a valid game (HttpClient called once)', () => {
+    it('should return a OK http Status code when sending a POST request with a valid game (HttpClient called once)', () => {
         // subscribe to the mocked call
         service.addGame(validGameToAdd).subscribe({
             next: (res: any) => {
-                expect(res.status).toEqual(StatusCodes.CREATED);
+                expect(res.status).toEqual(StatusCodes.OK);
             },
             error: fail,
         });

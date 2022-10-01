@@ -46,3 +46,22 @@
     cursor: pointer;
     transition: 0, 5s all ease-out;
 }
+
+.mat-mini-fab{
+    position: absolute;
+    margin: 0px 1730px 950px 0px;
+    width: 70px;
+    height: 70px;
+}
+
+.mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent{
+    background-color: #c3cbcf
+}
+
+.mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent {
+    color: #16486a;
+}
+
+#adminButton{
+    margin: 0px 1730px 780px 0px;
+}
