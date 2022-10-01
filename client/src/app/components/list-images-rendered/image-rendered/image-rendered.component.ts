@@ -1,16 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AssignImageDataService } from '@app/services/assign-image-data.service';
-import { EditImagesService } from '@app/services/edit-images.service';
+import { ListImagesRenderedService } from '@app/services/list-images-rendered.service';
 @Component({
-    selector: 'app-modified-image',
-    templateUrl: './modified-image.component.html',
-    styleUrls: ['./modified-image.component.scss'],
+    selector: 'app-image-rendered',
+    templateUrl: './image-rendered.component.html',
+    styleUrls: ['./image-rendered.component.scss'],
 })
-export class ModifiedImageComponent implements OnInit {
+export class ImageRenderedComponent implements OnInit {
     @Input() idFromParent: number;
     isImageObtained: boolean;
     urlImage: string;
-    constructor(private editImagesService: EditImagesService,private assignImageDataService:AssignImageDataService) {}
+    constructor(private editImagesService: ListImagesRenderedService,private assignImageDataService:AssignImageDataService) {}
 
     ngOnInit(): void {
         this.getDataSingleImage();

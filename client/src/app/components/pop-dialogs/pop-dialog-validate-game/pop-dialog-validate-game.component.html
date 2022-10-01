@@ -13,7 +13,7 @@
             <mat-radio-button value="9" (change) = "onRadiusChanged($event)">9 :</mat-radio-button>
             <mat-radio-button  value="15" (change) = "onRadiusChanged($event)">15 : </mat-radio-button>
         </mat-radio-group>
-        <app-test-page  *ngIf = areImageDifferenceAndNumberDifferenceReady [secondUrl] = "imagesWithIndexReceived.fistImageSrc" [firstUrl] ="imagesWithIndexReceived.secondImageSrc" [imagesWithIndexReceived] = "imagesWithIndexReceived"  class ="image-difference"></app-test-page>
+        <app-image-difference [offset] = "valueChosen" *ngIf = areImageDifferenceAndNumberDifferenceReady  class ="image-difference"></app-image-difference>
         <mat-dialog-actions>
             <button mat-raised-button mat-dialog-close (click)="onCreateCreateGame()">Continuer</button>
             <button mat-raised-button  (click)="startsGeneratingImageDifferenceAndNumberDifference()">Générer Image Diff</button>

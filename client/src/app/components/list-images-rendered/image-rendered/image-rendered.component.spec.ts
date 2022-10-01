@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { EditImagesService } from '@app/services/edit-images.service';
+import { ListImagesRenderedService } from '@app/services/list-images-rendered.service';
 import { Subject } from 'rxjs';
-import { ModifiedImageComponent } from './modified-image.component';
+import { ImageRenderedComponent } from './image-rendered.component';
 import SpyObj = jasmine.SpyObj;
 
-describe('ModifiedImageComponent', () => {
-    let component: ModifiedImageComponent;
-    let fixture: ComponentFixture<ModifiedImageComponent>;
-    let communicationServiceSpy: SpyObj<EditImagesService>;
+describe('ImageRenderedComponent', () => {
+    let component: ImageRenderedComponent;
+    let fixture: ComponentFixture<ImageRenderedComponent>;
+    let communicationServiceSpy: SpyObj<ListImagesRenderedService>;
     let mockEmitterGetIDToRemove: Subject<unknown>;
     let mockEmitterGetSingleImage: Subject<{ index: number; url: string }>;
     let mockEmitterGetMultipleImage: Subject<string>;
@@ -21,13 +21,13 @@ describe('ModifiedImageComponent', () => {
         communicationServiceSpy.getDataImageSingle.and.returnValue(mockEmitterGetSingleImage);
         communicationServiceSpy.getDataImageMultiple.and.returnValue(mockEmitterGetMultipleImage);
         await TestBed.configureTestingModule({
-            declarations: [ModifiedImageComponent],
-            providers: [{ provide: EditImagesService, useValue: communicationServiceSpy }],
+            declarations: [ImageRenderedComponent],
+            providers: [{ provide: ListImagesRenderedService, useValue: communicationServiceSpy }],
         }).compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(ModifiedImageComponent);
+        fixture = TestBed.createComponent(ImageRenderedComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
