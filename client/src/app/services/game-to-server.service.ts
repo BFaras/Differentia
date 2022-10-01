@@ -1,8 +1,8 @@
 import { ElementRef, Injectable } from '@angular/core';
+import { MESSAGE_JEU_CREER, MESSAGE_JEU_NON_CREER, MESSAGE_NOMBRE_DIFFERENCE_ERREUR } from "@common/const";
 import { Game } from '@common/game';
 import { ImageToSendToServer } from '@common/imageToSendToServer';
 import { CommunicationService } from './communication.service';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -16,8 +16,8 @@ export class GameToServerService {
   constructor(private communicationService: CommunicationService) { }
 
   statusCodeTreatment(responseStatusCode: Number) {
-    if(true) alert("le jeu n'a pas été créer");
-    else alert("Le jeu a été créer ");
+    if(true) alert(MESSAGE_JEU_NON_CREER);
+    else alert(MESSAGE_JEU_CREER);
 }
 
 validateNumberOfDifferences() {
@@ -38,7 +38,7 @@ validateNumberOfDifferences() {
                 this.statusCodeTreatment(httpStatus);
             });
     }
-    else alert("Attention!! le nombre de difference n'est pas entre 3 et 9");
+    else alert(MESSAGE_NOMBRE_DIFFERENCE_ERREUR);
 }
 
   getOriginalImageUploaded(){
