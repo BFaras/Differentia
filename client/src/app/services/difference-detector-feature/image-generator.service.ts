@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ALPHA_OPAQUE, ALPHA_POS, BLACK, BLUE_POS, GREEN_POS, NB_BIT_PER_PIXEL, RED_POS } from '@common/const';
+import { ALPHA_OPAQUE, ALPHA_POS, BLACK_RGB, BLUE_POS, GREEN_POS, NB_BIT_PER_PIXEL, RED_POS } from '@common/const';
 
 @Injectable({
     providedIn: 'root',
@@ -26,9 +26,9 @@ export class ImageGeneratorService {
     }
 
     private generateBlackPixel(pixelPositionInDataArray: number) {
-        this.generatedImageData.data[pixelPositionInDataArray + RED_POS] = BLACK;
-        this.generatedImageData.data[pixelPositionInDataArray + GREEN_POS] = BLACK;
-        this.generatedImageData.data[pixelPositionInDataArray + BLUE_POS] = BLACK;
+        this.generatedImageData.data[pixelPositionInDataArray + RED_POS] = BLACK_RGB;
+        this.generatedImageData.data[pixelPositionInDataArray + GREEN_POS] = BLACK_RGB;
+        this.generatedImageData.data[pixelPositionInDataArray + BLUE_POS] = BLACK_RGB;
         this.generatedImageData.data[pixelPositionInDataArray + ALPHA_POS] = ALPHA_OPAQUE;
     }
 }
