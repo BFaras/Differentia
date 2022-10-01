@@ -22,11 +22,6 @@ describe('ImageToImageDifferenceService', () => {
         differencesImageToPutDataIn = new Image(IMAGE_WIDTH, IMAGE_HEIGHT);
     });
 
-    // Pas trop certain de l'utilite
-    it('should be created', () => {
-        expect(imageToImageDiffService).toBeTruthy();
-    });
-
     it('should send information to server through socket', () => {
         const socketService = TestBed.inject(SocketClientService);
         const event = 'detect images difference';
