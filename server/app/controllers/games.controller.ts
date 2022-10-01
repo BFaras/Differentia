@@ -2,12 +2,13 @@ import { GamesService } from '@app/services/local.games.service';
 import { Request, Response, Router } from 'express';
 import { Service } from 'typedi';
 import { StatusCodes } from 'http-status-codes';
+import { MouseHandlerService } from '@app/services/mouse-handler.service';
 
 @Service()
 export class GamesController {
     router: Router;
 
-    constructor(private gamesService: GamesService) {
+    constructor(private gamesService: GamesService, private mouseHandler: MouseHandlerService) {
         gamesService = new GamesService();
         this.configureRouter();
     }
@@ -68,6 +69,11 @@ export class GamesController {
                 // faire des res.sendStatus(StatusCodes.BAD_REQUEST) mais comment je fais
                 // pour récupérer ce code du côté client?????
             }
-        })
+        });
+
+        this.router.post(`/imagesdata`, (req: Request, res: Response) => {
+            console.log('aaa')
+            this.mouseHandler.updateImageData(req.body)
+          });
     }
 }
