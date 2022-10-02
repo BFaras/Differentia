@@ -3,7 +3,6 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommunicationService } from '@app/services/communication.service';
 import { Game } from '@common/game';
 import { StatusCodes } from 'http-status-codes';
-//import { StatusCodes } from 'http-status-codes';
 @Component({
     selector: 'app-pop-dialog-create-game',
     templateUrl: './pop-dialog-create-game.component.html',
