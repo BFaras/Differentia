@@ -33,7 +33,7 @@ export class PlayAreaComponent implements OnInit {
 
         const mainCanvas = this.renderer.createElement('canvas');
 
-        this.originalImage.src = '../../../assets/images/image_7_diff.bmp';
+        this.originalImage.src = '../../../assets/images/gradation.bmp';
         await this.imageToImageDifferenceService.waitForImageToLoad(this.originalImage);
         this.modifiedImage.src = '../../../assets/images/image_7_diff.bmp';
         await this.imageToImageDifferenceService.waitForImageToLoad(this.modifiedImage);
@@ -51,7 +51,7 @@ export class PlayAreaComponent implements OnInit {
         this.canvas.nativeElement.focus();
 
         this.drawService.context = this.canvas2.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.drawService.context.drawImage(this.originalImage, 0, 0);
+        this.drawService.context.drawImage(this.modifiedImage, 0, 0);
         this.canvas2.nativeElement.focus();
     }
 
