@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import { join } from 'path';
 import * as sinon from 'sinon';
 
+import { DEFAULT_OFFSET, IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { DifferenceDetectorService } from './difference-detector.service';
 
@@ -14,11 +15,6 @@ const ORIGINAL_IMAGE_POSITION = 0;
 const MODIFIED_IMAGE_POSITION = 1;
 
 const JSON_DATA = 'data';
-
-//Intra test information constants
-const IMAGE_WIDTH = 640;
-const IMAGE_HEIGHT = 480;
-const DEFAULT_OFFSET = 3;
 
 describe('DifferenceDetectorService', () => {
     const DEFAULT_IMAGES_DATA: ImageDataToCompare = {
