@@ -1,15 +1,13 @@
 .container {
     height: 100%;
     display: flex;
+    max-width: 1920px;
+    max-height: 1080px;
 }
 
 .play-area-container {
     overflow: auto;
     flex: 1 1 auto;
-}
-
-.play-area {
-    display: grid;
-    width: min-content;
-    outline: none;
+    width: 80%;
+    vertical-align: auto;
 }

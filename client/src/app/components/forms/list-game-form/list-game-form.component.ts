@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { FormService } from '@app/services/form.service';
 import { Constants } from '@common/config';
@@ -12,15 +12,17 @@ export class ListGameFormComponent implements OnInit {
     firstElementIndex: number = 0;
     lastElementIndex: number = 3;
     currentPageGameFormList: GameFormDescription[];
+    @Input() page: string;
 
     constructor(public formService: FormService) {}
 
     ngOnInit(): void {
-        if (this.formService.gameForms.length < Constants.MAX_NB_OF_FORMS_PER_PAGE) {
-            this.lastElementIndex = this.formService.gameForms.length - 1;
-        }
-
-        this.addCurrentPageGameForms();
+        this.formService.gamesLoadedSubject.subscribe(()=>{
+            if (this.formService.gameForms.length < Constants.MAX_NB_OF_FORMS_PER_PAGE) {
+                this.lastElementIndex = this.formService.gameForms.length - 1;
+            }
+            this.addCurrentPageGameForms();
+        })
     }
 
     nextPageGameForms() {
@@ -50,7 +52,6 @@ export class ListGameFormComponent implements OnInit {
 
     addCurrentPageGameForms() {
         this.currentPageGameFormList = new Array(this.lastElementIndex - this.firstElementIndex + 1);
-
         for (let index: number = 0; index < this.currentPageGameFormList.length; index++) {
             this.currentPageGameFormList[index] = this.formService.gameForms[index + this.firstElementIndex];
         }

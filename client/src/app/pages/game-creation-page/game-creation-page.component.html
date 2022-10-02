@@ -1,0 +1,16 @@
+<div class="container-view">
+    <button mat-mini-fab aria-label>
+        <mat-icon>home</mat-icon>
+    </button>
+    <div class="container-images-paint">
+        <app-editable-images></app-editable-images>
+        <div class="container-paint">
+            <button mat-mini-fab></button>
+            <button mat-mini-fab></button>
+        </div>
+    </div>
+    <div class="container-buttons">
+        <button id="download" mat-raised-button (click)="onCreateDownloadPopDialog()">D</button>
+        <button id="validate" mat-raised-button (click)="onCreateValidatePopDialog()">Valider</button>
+    </div>
+</div>

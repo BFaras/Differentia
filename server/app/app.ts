@@ -1,6 +1,7 @@
 import { HttpException } from '@app/classes/http.exception';
 import { DateController } from '@app/controllers/date.controller';
 import { ExampleController } from '@app/controllers/example.controller';
+import { GamesController } from './controllers/games.controller';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as express from 'express';
@@ -15,8 +16,11 @@ export class Application {
     private readonly internalError: number = StatusCodes.INTERNAL_SERVER_ERROR;
     private readonly swaggerOptions: swaggerJSDoc.Options;
 
-    constructor(private readonly exampleController: ExampleController, private readonly dateController: DateController) {
-        this.app = express();
+    constructor(private readonly exampleController: ExampleController, 
+        private readonly dateController: DateController,
+        private readonly gamesController: GamesController
+    ) {
+        this.app = express();   
 
         this.swaggerOptions = {
             swaggerDefinition: {
@@ -35,11 +39,12 @@ export class Application {
     }
 
     bindRoutes(): void {
-        this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(this.swaggerOptions)));
-        this.app.use('/api/example', this.exampleController.router);
-        this.app.use('/api/date', this.dateController.router);
+        this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(this.swaggerOptions)));
+        this.app.use('/example', this.exampleController.router);
+        this.app.use('/date', this.dateController.router);
+        this.app.use('/games', this.gamesController.router);
         this.app.use('/', (req, res) => {
-            res.redirect('/api/docs');
+            res.redirect('/docs');
         });
         this.errorHandling();
     }
@@ -49,7 +54,7 @@ export class Application {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(cookieParser());
-        this.app.use(cors());
+        this.app.use(cors({origin: '*'}));
     }
 
     private errorHandling(): void {

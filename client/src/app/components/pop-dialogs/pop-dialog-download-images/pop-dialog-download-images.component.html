@@ -1,0 +1,16 @@
+<div class="container">
+    <div mat-dialog-title class="dialog-title">
+        <button mat-icon-button aria-label="close dialog" mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <mat-dialog-content class="dialog-content">
+        <h1>Televersement</h1>
+        <p [ngClass] = "{
+            'warning': warningActivated === true}
+        ">Contrainte: images en format BMP 24-bit de taille 640x480</p>
+        <mat-dialog-actions>
+            <input type="file" (change)="onClickUploadImage($event)" />
+        </mat-dialog-actions>
+    </mat-dialog-content>
+</div>
