@@ -1,11 +1,11 @@
+import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
 import * as http from 'http';
 import * as io from 'socket.io';
-import { ChronometerService } from './chronometer.service';
-import { MouseHandlerService } from './mouse-handler.service';
-import { ImageDataToCompare } from '@common/image-data-to-compare';
-import { DifferenceDetectorService } from './difference-detector.service';
 import Container from 'typedi';
+import { ChronometerService } from './chronometer.service';
+import { DifferenceDetectorService } from './difference-detector.service';
+import { MouseHandlerService } from './mouse-handler.service';
 
 export class SocketManager {
     private sio: io.Server;
@@ -13,7 +13,7 @@ export class SocketManager {
     public socket: io.Socket;
     private timeInterval: NodeJS.Timer;
     private chronometerService: ChronometerService = new ChronometerService();
-    private mouseHandlerService = Container.get(MouseHandlerService)
+    private mouseHandlerService = Container.get(MouseHandlerService);
 
     constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] }, maxHttpBufferSize: 1e7 });
@@ -56,12 +56,14 @@ export class SocketManager {
             });
 
             socket.on('game page', (message: string) => {
-                console.log(message);
+                //
+                console.log('socketon de gamepage');
                 socket.emit('classic mode', 'bet');
                 socket.emit('The game is', message);
                 this.timeInterval = setInterval(() => {
                     this.emitTime(socket);
                 }, 1000);
+                //socket.emit('images', this.getImages(message));
             });
 
             socket.on('kill the timer', () => {
@@ -76,7 +78,7 @@ export class SocketManager {
             });
 
             socket.on('Verify position', (position) => {
-                this.clickResponse(socket,position);
+                this.clickResponse(socket, position);
             });
         });
     }
@@ -87,8 +89,29 @@ export class SocketManager {
         socket.emit('time', this.chronometerService.time);
     }
 
-    private clickResponse(socket: io.Socket, mousePosition:Position) {
+    private clickResponse(socket: io.Socket, mousePosition: Position) {
         const clickAnswer = this.mouseHandlerService.isValidClick(mousePosition);
-        socket.emit("Valid click", clickAnswer);
+        socket.emit('Valid click', clickAnswer);
     }
+
+    /*
+    private getImages(gameName: string) {
+        const originalImagePos = 0;
+        const modifiedImagePos = 1;
+        console.log('image test');
+        return [this.getImage(gameName, originalImagePos), this.getImage(gameName, modifiedImagePos)];
+    }
+    private getImage(gameName: string, position: number) {
+        let imageToSend: HTMLImageElement = new Image(); // erreur ici : Image is not defined
+        imageToSend.src = this.getImageURL(gameName, position);
+        return imageToSend;
+    }
+
+    // ajouter une fonction pour aller get les url des images dans le json
+    private getImageURL(gameName: string, imagePos: number) {
+        // utilise gameName pour avoir les infos sur la game
+        // ensuite, utilise imagePos pour avoir limage originale ou limage modifie
+        return '../../assets/image_7_diff.bmp'; // trouver l'url dans games.json si cest la qu'elles sont enregistrer
+    }
+    */
 }

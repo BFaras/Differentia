@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-restricted-imports */
-import { Time } from '../../../../../common/time';
 import { Component } from '@angular/core';
-import { SocketClientService } from '@app/services/socket-client.service';
 import { CommunicationService } from '@app/services/communication.service';
+import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
+import { Time } from '../../../../../common/time';
 
 @Component({
     selector: 'app-game-page',
@@ -12,14 +12,11 @@ import { TimeService } from '@app/services/time.service';
     styleUrls: ['./game-page.component.scss'],
 })
 export class GamePageComponent {
-
     nbDifferences: number;
     gameName: string;
+    images: HTMLImageElement[];
 
-    constructor(public socketService: SocketClientService, 
-        private timeService: TimeService,
-        private communicationService: CommunicationService
-    ) {}
+    constructor(public socketService: SocketClientService, private timeService: TimeService, private communicationService: CommunicationService) {}
 
     ngOnInit() {
         this.socketService.connect();
@@ -27,34 +24,35 @@ export class GamePageComponent {
     }
 
     ngOnDestroy() {
-        this.socketService.send("kill the timer");
+        this.socketService.send('kill the timer');
     }
 
     configureGamePageSocketFeatures() {
-        this.socketService.on("classic mode", (message: string) => {
+        this.socketService.on('classic mode', (message: string) => {
             this.timeService.classicMode();
         });
-        this.socketService.on("time", (time: Time) => {
+        this.socketService.on('time', (time: Time) => {
             this.timeService.changeTime(time);
         });
-        this.socketService.on("The game is", (message: string) => {
+        this.socketService.on('The game is', (message: string) => {
             this.receiveNumberOfDifferences(message);
             this.gameName = message;
-        })
-        this.socketService.on("Name repeated", () => {
-            console.log("le nom est répété ");
-        })
+        });
+        this.socketService.on('Name repeated', () => {
+            console.log('le nom est répété ');
+        });
+        this.socketService.on('images', (imagesReceived: HTMLImageElement[]) => {
+            this.images = imagesReceived;
+        });
     }
 
     receiveNumberOfDifferences(nameGame: string): void {
-        this.communicationService
-          .getGames()
-          .subscribe((array) => {
-            console.log("on a recu: " + array);
-            let gameWanted = array.find((x) => x.name === nameGame)
-            // gameWanted ne sera jamais undefined car le nom utilisé dans le .find est d'un jeu qui 
+        this.communicationService.getGames().subscribe((array) => {
+            console.log('on a recu: ' + array);
+            let gameWanted = array.find((x) => x.name === nameGame);
+            // gameWanted ne sera jamais undefined car le nom utilisé dans le .find est d'un jeu qui
             // existe forcément (il est dans la page de sélection )
-            this.nbDifferences = gameWanted? gameWanted.numberOfDifferences: -1;
-          });
+            this.nbDifferences = gameWanted ? gameWanted.numberOfDifferences : -1;
+        });
     }
 }
