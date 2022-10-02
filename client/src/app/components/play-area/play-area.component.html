@@ -14,7 +14,7 @@
     <span class="image-container">
         <span class="image">
             <!--Image de droite-->
-            <canvas id="canvas" #gridCanvas (click)="detectDifference($event)" [attr.width]="width" [attr.height]="height"></canvas>
+            <canvas id="canvas" #gridCanvasref (click)="detectDifference($event)" [attr.width]="width" [attr.height]="height"></canvas>
             <div id="mouse-position-display">
                 <p>Cliquez sur l'image pour détecter les différences</p>
                 <p *ngIf="mousePosition.x !== 0">X : {{ mousePosition.x }}</p>
@@ -26,6 +26,6 @@
 </div>
 <div>
     <span class="button-container">
-        <button mat-raised-button routerLink="/home"> Abandon </button>
+        <button mat-raised-button routerLink="/home">Abandon</button>
     </span>
 </div>
