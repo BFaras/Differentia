@@ -100,10 +100,10 @@ export class SocketManager {
     }
 
     private async sendImagesToClient(gameName: string, socket: io.Socket) {
-        const gameImagesData: Buffer[] = await this.gamesService.getGameImagesData(gameName);
+        const gameImagesData: string[] = await this.gamesService.getGameImagesData(gameName);
 
-        socket.emit('classic solo original image', 'data:image/bmp;base64,' + gameImagesData[ORIGINAL_IMAGE_POSITION].toString('base64'));
-        socket.emit('classic solo modified image', 'data:image/bmp;base64,' + gameImagesData[MODIFIED_IMAGE_POSITION].toString('base64'));
+        socket.emit('classic solo original image', gameImagesData[ORIGINAL_IMAGE_POSITION]);
+        socket.emit('classic solo modified image', gameImagesData[MODIFIED_IMAGE_POSITION]);
     }
     /*
     private getImages(gameName: string) {

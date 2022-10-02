@@ -37,26 +37,28 @@ export class GamesService {
         return this.games;
     }
 
-    async getAllGamesImagesData(): Promise<Buffer[][]> {
+    async getAllGamesWithImagesData() {
         const games: Game[] = await this.getAllGames();
-        const gamesImagesData: Buffer[][] = [];
 
-        games.forEach(async (game) => {
-            gamesImagesData.push(await this.getGameImagesData(game.name));
-        });
-
-        return gamesImagesData;
-    }
-
-    async getGameImagesData(gameName: string): Promise<Buffer[]> {
-        const gameImages = await this.getGameImagesNames(gameName);
-        const gameImageData: Buffer[] = [];
-
-        for (let i = ORIGINAL_IMAGE_POSITION; i <= MODIFIED_IMAGE_POSITION; i++) {
-            gameImageData.push(await this.getGameImageData(gameImages[i]));
+        for (let i = 0; i < games.length; i++) {
+            const gameImagesData: string[] = await this.getGameImagesData(games[i].name);
+            games[i].images[ORIGINAL_IMAGE_POSITION] = gameImagesData[ORIGINAL_IMAGE_POSITION];
+            games[i].images[MODIFIED_IMAGE_POSITION] = gameImagesData[MODIFIED_IMAGE_POSITION];
         }
 
-        return gameImageData;
+        return games;
+    }
+
+    async getGameImagesData(gameName: string): Promise<string[]> {
+        const gameImages = await this.getGameImagesNames(gameName);
+        const gameImagesData: string[] = [];
+
+        for (let i = ORIGINAL_IMAGE_POSITION; i <= MODIFIED_IMAGE_POSITION; i++) {
+            const imageDataBuffer: Buffer = await this.getGameImageData(gameImages[i]);
+            gameImagesData.push('data:image/bmp;base64,' + imageDataBuffer.toString('base64'));
+        }
+
+        return gameImagesData;
     }
 
     async addGame(gameToAdd: Game): Promise<Boolean> {
