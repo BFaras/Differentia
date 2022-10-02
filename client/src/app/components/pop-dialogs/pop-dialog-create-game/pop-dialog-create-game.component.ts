@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommunicationService } from '@app/services/communication.service';
 import { Game } from '@common/game';
+import { StatusCodes } from 'http-status-codes';
 //import { StatusCodes } from 'http-status-codes';
 @Component({
     selector: 'app-pop-dialog-create-game',
@@ -34,9 +35,9 @@ export class PopDialogCreateGameComponent implements OnInit {
         if (this.validateNumberOfDifferences()) {
             this.communicationService.addGame(gameToAdd).subscribe((res) => {
                 if (res) {
-                    //this.statusCodeTreatment(res.status);
+                    this.statusCodeTreatment(res.status);
                 } else {
-                    //this.statusCodeTreatment(StatusCodes.BAD_REQUEST);
+                    this.statusCodeTreatment(StatusCodes.BAD_REQUEST);
                 }
             });
         } else console.log("change ton popUp pour dire que le nombre de différences n'est pas entre 3 et 9");
