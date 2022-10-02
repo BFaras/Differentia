@@ -5,6 +5,7 @@ import { MouseDetectionService } from '@app/services/mouse-detection.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { DEFAULT_HEIGHT_CANVAS, DEFAULT_WIDTH_CANVAs } from '@common/const';
 import { Position } from '@common/position';
+
 @Component({
     selector: 'app-play-area',
     templateUrl: './play-area.component.html',
@@ -33,20 +34,19 @@ export class PlayAreaComponent implements OnInit {
 
         const mainCanvas = this.renderer.createElement('canvas');
 
-        this.originalImage.src = '../../../assets/images/gradation.bmp';
+        this.originalImage.src = '../../../assets/images/ImageBlanche.bmp';
         await this.imageToImageDifferenceService.waitForImageToLoad(this.originalImage);
         this.modifiedImage.src = '../../../assets/images/image_7_diff.bmp';
         await this.imageToImageDifferenceService.waitForImageToLoad(this.modifiedImage);
 
+        this.displayImage();
         this.imageToImageDifferenceService.sendDifferentImagesInformationToServerForGameSolo(
             mainCanvas,
             this.originalImage,
             this.modifiedImage,
             this.finalDifferencesImage,
             0,
-        );
-
-        this.displayImage();
+        ).subscribe();
     }
 
     displayImage() {
