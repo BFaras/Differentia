@@ -56,9 +56,8 @@ export class SocketManager {
             });
 
             socket.on('game page', (message: string) => {
-                //
-                console.log('socketon de gamepage');
-                socket.emit('classic mode', 'bet');
+                console.log(message);
+                socket.emit('classic mode');
                 socket.emit('The game is', message);
                 this.timeInterval = setInterval(() => {
                     this.emitTime(socket);

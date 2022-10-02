@@ -12,7 +12,7 @@ import { Position } from '@common/position';
 })
 export class PlayAreaComponent implements OnInit {
     @ViewChild('gridCanvas', { static: false }) private canvas!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('gridCanvasref', { static: false }) private canvas2!: ElementRef<HTMLCanvasElement>;
+    // @ViewChild('gridCanvasref', { static: false }) private canvas2!: ElementRef<HTMLCanvasElement>;
     mousePosition: Position = { x: 0, y: 0 };
     readonly originalImage: HTMLImageElement = new Image();
     readonly modifiedImage: HTMLImageElement = new Image();

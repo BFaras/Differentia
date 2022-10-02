@@ -15,7 +15,7 @@ export class GameFormComponent {
     constructor(private socketService: SocketClientService) {}
 
     gamePage() {
-        console.log("cliqué");
-        this.socketService.send("game page", this.gameForm.gameName);
+        console.log('cliqué');
+        this.socketService.send('game page', this.gameForm.gameName);
     }
 }
