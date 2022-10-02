@@ -2,6 +2,7 @@ import { ElementRef, Injectable } from '@angular/core';
 import { MESSAGE_JEU_CREER, MESSAGE_JEU_NON_CREER, MESSAGE_NOMBRE_DIFFERENCE_ERREUR } from "@common/const";
 import { Game } from '@common/game';
 import { ImageToSendToServer } from '@common/imageToSendToServer';
+import { StatusCodes } from 'http-status-codes';
 import { CommunicationService } from './communication.service';
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class GameToServerService {
   constructor(private communicationService: CommunicationService) { }
   //HTTP-CODE TO MODIFY AFTER MEETING SEB
   statusCodeTreatment(responseStatusCode: Number) {
-    if(true) alert(MESSAGE_JEU_NON_CREER);
+    if(responseStatusCode === StatusCodes.BAD_REQUEST) alert(MESSAGE_JEU_NON_CREER);
     else alert(MESSAGE_JEU_CREER);
 }
 
