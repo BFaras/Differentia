@@ -2,7 +2,7 @@
     <span class="image-container">
         <span class="image">
             <!--Image de gauche-->
-            <canvas id="canvas" #gridCanvas (click)="detectDifference($event)" [attr.width]="width" [attr.height]="height"></canvas>
+            <canvas id="canvas" #originalCanvas (click)="detectDifference($event)" [attr.width]="width" [attr.height]="height"></canvas>
             <div id="mouse-position-display">
                 <p>Cliquez sur l'image pour détecter les différences</p>
                 <p *ngIf="mousePosition.x !== 0">X : {{ mousePosition.x }}</p>
@@ -14,7 +14,7 @@
     <span class="image-container">
         <span class="image">
             <!--Image de droite-->
-            <canvas id="canvas" #gridCanvasref (click)="detectDifference($event)" [attr.width]="width" [attr.height]="height"></canvas>
+            <canvas id="canvas" #modifiedCanvas (click)="detectDifference($event)" [attr.width]="width" [attr.height]="height"></canvas>
             <div id="mouse-position-display">
                 <p>Cliquez sur l'image pour détecter les différences</p>
                 <p *ngIf="mousePosition.x !== 0">X : {{ mousePosition.x }}</p>

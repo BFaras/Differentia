@@ -11,8 +11,8 @@ import { Position } from '@common/position';
     styleUrls: ['./play-area.component.scss'],
 })
 export class PlayAreaComponent implements OnInit {
-    @ViewChild('gridCanvas', { static: false }) private canvas!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('gridCanvasref', { static: false }) private canvas2!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('originalCanvas', { static: false }) private originalCanvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('modifiedCanvas', { static: false }) private modifiedCanvas!: ElementRef<HTMLCanvasElement>;
     mousePosition: Position = { x: 0, y: 0 };
     readonly originalImage: HTMLImageElement = new Image();
     readonly modifiedImage: HTMLImageElement = new Image();
@@ -46,13 +46,17 @@ export class PlayAreaComponent implements OnInit {
             0,
         );
 
-        this.drawService.context = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.drawService.context.drawImage(this.originalImage, 0, 0);
-        this.canvas.nativeElement.focus();
+        this.displayImage();
+    }
 
-        this.drawService.context = this.canvas2.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+    displayImage() {
+        this.drawService.context = this.originalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawService.context.drawImage(this.originalImage, 0, 0);
+        this.originalCanvas.nativeElement.focus();
+
+        this.drawService.context = this.modifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.drawService.context.drawImage(this.modifiedImage, 0, 0);
-        this.canvas2.nativeElement.focus();
+        this.modifiedCanvas.nativeElement.focus();
     }
 
     get width(): number {
