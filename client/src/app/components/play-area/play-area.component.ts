@@ -44,6 +44,10 @@ export class PlayAreaComponent implements OnInit {
             this.finalDifferencesImage,
             0,
         );
+
+        this.drawService.context = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawService.context.drawImage(this.originalImage, 0, 0);
+        this.canvas.nativeElement.focus();
     }
 
     get width(): number {
@@ -52,12 +56,6 @@ export class PlayAreaComponent implements OnInit {
 
     get height(): number {
         return this.canvasSize.y;
-    }
-
-    ngAfterViewInit(): void {
-        this.drawService.context = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.drawService.context.drawImage(this.originalImage, 0, 0);
-        this.canvas.nativeElement.focus();
     }
 
     /* ngOnInit() {
