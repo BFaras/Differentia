@@ -57,16 +57,10 @@ export class GamesController {
         this.router.post(`/newGame`, async (req: Request, res: Response) =>  {
             const newGame = req.body;
             if(await this.gamesService.addGame(newGame)) {
-                res.json(StatusCodes.CREATED);
-                // je devrais pas faire des json avec des codes mais je devrais faire
-                // faire des res.sendStatus(StatusCodes.CREATED) mais comment je fais
-                // pour récupérer ce code du côté client?????
+                res.sendStatus(StatusCodes.CREATED);
             }
             else {
-                res.json(StatusCodes.BAD_REQUEST);
-                // je devrais pas faire des json avec des codes mais je devrais faire
-                // faire des res.sendStatus(StatusCodes.BAD_REQUEST) mais comment je fais
-                // pour récupérer ce code du côté client?????
+                res.sendStatus(StatusCodes.BAD_REQUEST);
             }
         })
     }

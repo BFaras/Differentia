@@ -94,6 +94,7 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "scss",
+            "codeCoverageExclude": ["src/app/classes/socket-test-helper.ts"],
             "assets": [
               "src/favicon.ico",
               "src/assets"
