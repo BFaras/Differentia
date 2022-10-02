@@ -22,7 +22,7 @@ export class MouseHandlerService {
     isValidClick(mousePosition: Position): boolean {
         console.log(mousePosition);
 
-        //return true;
+        // return true;
         return this.validateDifferencesOnClick(mousePosition);
     }
 

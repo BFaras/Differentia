@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { CommunicationService } from '@app/services/communication.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
+import { MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { Game } from '@common/game';
 import { Time } from '@common/time';
 
@@ -17,7 +18,9 @@ export class GamePageComponent {
     gameName: string;
     images: HTMLImageElement[];
 
-    constructor(public socketService: SocketClientService, private timeService: TimeService, private communicationService: CommunicationService) {}
+    constructor(public socketService: SocketClientService, private timeService: TimeService, private communicationService: CommunicationService) {
+        this.images = [new Image(640, 480), new Image(640, 480)];
+    }
 
     ngOnInit() {
         this.socketService.connect();
@@ -42,8 +45,11 @@ export class GamePageComponent {
         this.socketService.on('Name repeated', () => {
             console.log('le nom est répété ');
         });
-        this.socketService.on('images', (imagesReceived: HTMLImageElement[]) => {
-            this.images = imagesReceived;
+        this.socketService.on('classic solo original image', (imageData: string) => {
+            this.images[ORIGINAL_IMAGE_POSITION].src = imageData;
+        });
+        this.socketService.on('classic solo modified image', (imageData: string) => {
+            this.images[MODIFIED_IMAGE_POSITION].src = imageData;
         });
     }
 

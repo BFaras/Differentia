@@ -4,81 +4,61 @@
             "name": "Car game",
             "numberOfDifferences": 4,
             "times": [],
-            "images": [
-                "../../../assets/images/bird.bmp"
-            ]
+            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
         },
         {
             "name": "Bike game",
             "numberOfDifferences": 5,
             "times": [],
-            "images": [
-                "../../../assets/images/gradation.bmp"
-            ]
+            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
         },
         {
             "name": "House game",
             "numberOfDifferences": 6,
             "times": [],
-            "images": [
-                "../../../assets/images/windows.bmp"
-            ]
+            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
         },
         {
             "name": "Plane game",
             "numberOfDifferences": 7,
             "times": [],
-            "images": [
-                "../../../assets/images/ruelle.bmp"
-            ]
+            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
         },
         {
             "name": "TV game",
             "numberOfDifferences": 8,
             "times": [],
-            "images": [
-                "../../../assets/images/bird.bmp"
-            ]
+            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
         },
         {
             "name": "Table game",
             "numberOfDifferences": 9,
             "times": [],
-            "images": [
-                "../../../assets/images/ruelle.bmp"
-            ]
+            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
         },
         {
             "name": "Chair game",
             "numberOfDifferences": 9,
             "times": [],
-            "images": [
-                "../../../../assets/images/windows.bmp"
-            ]
+            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
         },
         {
             "name": "Clown game",
             "numberOfDifferences": 9,
             "times": [],
-            "images": [
-                "../../../assets/images/gradation.bmp"
-            ]
+            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
         },
         {
             "name": "Dog game",
             "numberOfDifferences": 9,
             "times": [],
-            "images": [
-                "../../../assets/images/gradation.bmp"
-            ]
+            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
         },
         {
             "name": "new game",
             "numberOfDifferences": 6,
             "times": [],
-            "images": [
-                "../../../assets/images/bird.bmp"
-            ]
+            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
         }
     ]
 }
