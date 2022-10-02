@@ -23,7 +23,6 @@ export class ImageDifferenceComponent implements OnInit {
 ) {}
 async ngOnInit(): Promise<void> {
   const mainCanvas = this.renderer.createElement('canvas');
-
   const unwrapedOriginalModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getOriginalImageUploaded().image as SafeValue);
   const unwrapedModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getModifiedImageUploaded().image as SafeValue);
 

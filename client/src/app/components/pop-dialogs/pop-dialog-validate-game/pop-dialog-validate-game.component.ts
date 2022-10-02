@@ -10,7 +10,7 @@ export class PopDialogValidateGameComponent  {
     areImageDifferenceAndNumberDifferenceReady:boolean = false;
     isChecked = false
     isDisabled:boolean ;
-    valueChosen:number = 3;
+    valueChosen:number;
     numberDifference:number;
     imageDifference:any;
     constructor(private dialog: MatDialog) {}
@@ -23,17 +23,18 @@ export class PopDialogValidateGameComponent  {
     }
 
     startsGeneratingImageDifferenceAndNumberDifference(){
-        if(this.valueChosen != null ){
+        if(this.valueChosen ){
             this.areImageDifferenceAndNumberDifferenceReady = true;
-        } else 
-        {
+        } else {
         this.areImageDifferenceAndNumberDifferenceReady = false;
         }
     }
 
 
-    onRadiusChanged(event:any){
-        this.valueChosen = event.value
+    onRadiusChanged(value: number){
+        
+        console.log(value)
+        this.valueChosen = value
     }
 
 

@@ -49,7 +49,4 @@ describe('AssignImageDataService', () => {
   })
 
 
-
-
-
 });

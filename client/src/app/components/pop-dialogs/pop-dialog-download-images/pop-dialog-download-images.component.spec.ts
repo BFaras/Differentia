@@ -62,6 +62,10 @@ describe('PopDialogDownloadImagesComponent', () => {
         expect(component.warningActivated).toBeFalsy()
     })
 
+    afterEach(() => {
+      fixture.destroy();
+    });
+
     
 
 });
