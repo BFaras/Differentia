@@ -34,6 +34,10 @@ export class CommunicationService {
         return this.http.get<Array<Game>>(`${this.baseUrl}/games`).pipe(catchError(this.handleError<Array<Game>>('getGames')));
     }
 
+    getGameImagesData() {
+        return this.http.get<Array<Game>>(`${this.baseUrl}/gameImagesData`).pipe(catchError(this.handleError<Array<string>>('getGameImagesData')));
+    }
+
     addGame(game: Game): Observable<HttpResponse<any>> {
         return this.http
             .post(`${this.baseUrl}/games/newGame`, game, { observe: 'response', responseType: 'text' })

@@ -2,15 +2,12 @@ import { GamesService } from '@app/services/local.games.service';
 import { MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
-import * as fs from 'fs';
 import * as http from 'http';
 import * as io from 'socket.io';
 import Container from 'typedi';
 import { ChronometerService } from './chronometer.service';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { MouseHandlerService } from './mouse-handler.service';
-
-const IMAGES_PATH = 'assets/images/';
 
 export class SocketManager {
     private sio: io.Server;
@@ -103,22 +100,11 @@ export class SocketManager {
     }
 
     private async sendImagesToClient(gameName: string, socket: io.Socket) {
-        const gameImagesNames: string[] = await this.gamesService.getGameImages(gameName);
-        console.log(gameName, gameImagesNames);
-        await this.sendImageToClientDataFromFile(IMAGES_PATH + gameImagesNames[ORIGINAL_IMAGE_POSITION], 'classic solo original image', socket);
-        await this.sendImageToClientDataFromFile(IMAGES_PATH + gameImagesNames[MODIFIED_IMAGE_POSITION], 'classic solo modified image', socket);
-    }
+        const gameImagesData: Buffer[] = await this.gamesService.getGameImagesData(gameName);
 
-    private async sendImageToClientDataFromFile(imagePath: string, eventName: string, socket: io.Socket) {
-        try {
-            const imageData = await fs.promises.readFile(imagePath);
-            socket.emit(eventName, 'data:image/bmp;base64,' + imageData.toString('base64'));
-        } catch (err) {
-            console.log('Something went wrong trying to read the image file:' + err);
-            throw new Error(err);
-        }
+        socket.emit('classic solo original image', 'data:image/bmp;base64,' + gameImagesData[ORIGINAL_IMAGE_POSITION].toString('base64'));
+        socket.emit('classic solo modified image', 'data:image/bmp;base64,' + gameImagesData[MODIFIED_IMAGE_POSITION].toString('base64'));
     }
-
     /*
     private getImages(gameName: string) {
         const originalImagePos = 0;
