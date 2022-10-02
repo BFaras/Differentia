@@ -22,8 +22,8 @@ export class MouseHandlerService {
     isValidClick(mousePosition: Position): boolean {
         console.log(mousePosition);
 
-        return true;
-        // return this.validateDifferencesOnClick(mousePosition);
+        // return true;
+        return this.validateDifferencesOnClick(mousePosition);
     }
 
     generateDifferencesHashmap() {

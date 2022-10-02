@@ -4,6 +4,7 @@ import { MouseDetectionService } from '@app/services/mouse-detection.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { DEFAULT_HEIGHT_CANVAS, DEFAULT_WIDTH_CANVAs, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { Position } from '@common/position';
+
 @Component({
     selector: 'app-play-area',
     templateUrl: './play-area.component.html',

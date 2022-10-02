@@ -47,7 +47,7 @@ export class ImageToImageDifferenceService {
         this.setupDataInService(mainCanvas, originalImage, modifiedImage, new Image());
 
         imagesData = this.generateImagesDataToCompare(offSet);
-        this.communicationService.addImagesToCompareData(imagesData).subscribe();
+        return this.communicationService.addImagesToCompareData(imagesData);
     }
 
     putDifferencesDataInImage(differentPixelsPositionArray: number[]) {
