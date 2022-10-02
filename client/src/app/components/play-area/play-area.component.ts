@@ -1,6 +1,5 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { DrawService } from '@app/services/draw.service';
-import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { MouseDetectionService } from '@app/services/mouse-detection.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { DEFAULT_HEIGHT_CANVAS, DEFAULT_WIDTH_CANVAs, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
@@ -21,23 +20,11 @@ export class PlayAreaComponent implements OnInit {
         public socketService: SocketClientService,
         private readonly drawService: DrawService,
         private readonly mouseDetection: MouseDetectionService,
-        private imageToImageDifferenceService: ImageToImageDifferenceService,
     ) {}
 
     async ngOnInit(): Promise<void> {
         this.socketService.connect();
         this.configurePlayAreaSocket();
-
-        await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[0]);
-        await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[1]);
-
-        // this.imageToImageDifferenceService.sendDifferentImagesInformationToServerForGameSolo(
-        //     mainCanvas,
-        //     this.originalImage,
-        //     this.modifiedImage,
-        //     this.finalDifferencesImage,
-        //     0,
-        // );
 
         this.displayImage();
     }
@@ -59,11 +46,6 @@ export class PlayAreaComponent implements OnInit {
     get height(): number {
         return this.canvasSize.y;
     }
-
-    /* ngOnInit() {
-        this.socketService.connect();
-        this.configurePlayAreaSocket();
-    }*/
 
     detectDifference(event: MouseEvent) {
         this.mouseDetection.mouseHitDetect(event);

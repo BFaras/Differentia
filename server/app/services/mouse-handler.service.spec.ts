@@ -1,16 +1,14 @@
-import { TestBed } from '@angular/core/testing';
+// import { MouseHandlerService } from './mouse-handler.service';
 
-import { MouseHandlerService } from './mouse-handler.service';
+// describe('MouseHandlerService', () => {
+//   let service: MouseHandlerService;
 
-describe('MouseHandlerService', () => {
-  let service: MouseHandlerService;
+//   beforeEach(() => {
+//     service = new MouseHandlerService();
+//   });
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(MouseHandlerService);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
+//   it('should be created', () => {
+//     service = new MouseHandlerService()
+//     expect(service).toBeTruthy();
+//   });
+// });

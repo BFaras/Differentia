@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
-import { ImageGeneratorService } from './difference-detector-feature/image-generator.service';
 import { CommunicationService } from './communication.service';
+import { ImageGeneratorService } from './difference-detector-feature/image-generator.service';
 
 @Injectable({
     providedIn: 'root',
@@ -40,12 +40,11 @@ export class ImageToImageDifferenceService {
         mainCanvas: HTMLCanvasElement,
         originalImage: HTMLImageElement,
         modifiedImage: HTMLImageElement,
-        differencesImageToPutDataIn: HTMLImageElement,
         offSet: number,
     ) {
         let imagesData: ImageDataToCompare;
 
-        this.setupDataInService(mainCanvas, originalImage, modifiedImage, differencesImageToPutDataIn);
+        this.setupDataInService(mainCanvas, originalImage, modifiedImage, new Image());
 
         imagesData = this.generateImagesDataToCompare(offSet);
         this.communicationService.addImagesToCompareData(imagesData).subscribe();
