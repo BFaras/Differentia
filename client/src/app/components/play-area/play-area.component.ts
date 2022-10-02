@@ -12,7 +12,7 @@ import { Position } from '@common/position';
 })
 export class PlayAreaComponent implements OnInit {
     @ViewChild('gridCanvas', { static: false }) private canvas!: ElementRef<HTMLCanvasElement>;
-    // @ViewChild('gridCanvasref', { static: false }) private canvas2!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('gridCanvasref', { static: false }) private canvas2!: ElementRef<HTMLCanvasElement>;
     mousePosition: Position = { x: 0, y: 0 };
     readonly originalImage: HTMLImageElement = new Image();
     readonly modifiedImage: HTMLImageElement = new Image();
@@ -49,6 +49,10 @@ export class PlayAreaComponent implements OnInit {
         this.drawService.context = this.canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.drawService.context.drawImage(this.originalImage, 0, 0);
         this.canvas.nativeElement.focus();
+
+        this.drawService.context = this.canvas2.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawService.context.drawImage(this.originalImage, 0, 0);
+        this.canvas2.nativeElement.focus();
     }
 
     get width(): number {
