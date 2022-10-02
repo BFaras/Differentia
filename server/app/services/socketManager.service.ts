@@ -1,11 +1,16 @@
+import { GamesService } from '@app/services/local.games.service';
+import { MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
+import * as fs from 'fs';
 import * as http from 'http';
 import * as io from 'socket.io';
 import Container from 'typedi';
 import { ChronometerService } from './chronometer.service';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { MouseHandlerService } from './mouse-handler.service';
+
+const IMAGES_PATH = 'assets/images/';
 
 export class SocketManager {
     private sio: io.Server;
@@ -14,6 +19,7 @@ export class SocketManager {
     private timeInterval: NodeJS.Timer;
     private chronometerService: ChronometerService = new ChronometerService();
     private mouseHandlerService = Container.get(MouseHandlerService);
+    private gamesService = new GamesService();
 
     constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] }, maxHttpBufferSize: 1e7 });
@@ -55,13 +61,16 @@ export class SocketManager {
                 console.log(`Raison de deconnexion : ${reason}`);
             });
 
-            socket.on('game page', (message: string) => {
+            socket.on('game page', async (message: string) => {
                 console.log(message);
                 socket.emit('classic mode');
                 socket.emit('The game is', message);
                 this.timeInterval = setInterval(() => {
                     this.emitTime(socket);
                 }, 1000);
+
+                await this.sendImagesToClient(message, socket);
+
                 //socket.emit('images', this.getImages(message));
             });
 
@@ -91,6 +100,23 @@ export class SocketManager {
     private clickResponse(socket: io.Socket, mousePosition: Position) {
         const clickAnswer = this.mouseHandlerService.isValidClick(mousePosition);
         socket.emit('Valid click', clickAnswer);
+    }
+
+    private async sendImagesToClient(gameName: string, socket: io.Socket) {
+        const gameImagesNames: string[] = await this.gamesService.getGameImages(gameName);
+        console.log(gameName, gameImagesNames);
+        await this.sendImageToClientDataFromFile(IMAGES_PATH + gameImagesNames[ORIGINAL_IMAGE_POSITION], 'classic solo original image', socket);
+        await this.sendImageToClientDataFromFile(IMAGES_PATH + gameImagesNames[MODIFIED_IMAGE_POSITION], 'classic solo modified image', socket);
+    }
+
+    private async sendImageToClientDataFromFile(imagePath: string, eventName: string, socket: io.Socket) {
+        try {
+            const imageData = await fs.promises.readFile(imagePath);
+            socket.emit(eventName, 'data:image/bmp;base64,' + imageData.toString('base64'));
+        } catch (err) {
+            console.log('Something went wrong trying to read the image file:' + err);
+            throw new Error(err);
+        }
     }
 
     /*

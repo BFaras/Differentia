@@ -19,3 +19,6 @@ export const BLACK = 0;
 export const ALPHA_OPAQUE = 255;
 export const DEFAULT_DIFFERENCE_POSITION = 0;
 export const RADIUS_AROUND_PIXEL = 1;
+
+export const ORIGINAL_IMAGE_POSITION = 0;
+export const MODIFIED_IMAGE_POSITION = 1;

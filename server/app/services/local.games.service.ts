@@ -1,8 +1,8 @@
-import { Service } from 'typedi';
-import * as fs from 'fs';
-import { join } from 'path'
 import { Game } from '@common/game';
 import { Time } from '@common/time';
+import * as fs from 'fs';
+import { join } from 'path';
+import { Service } from 'typedi';
 // import { SocketManager } from './socketManager.service';
 
 @Service()
@@ -12,18 +12,23 @@ export class GamesService {
 
     // Les constructeurs comme sa est ce que c'est mieux de juste les enlever???
     constructor() {}
-    
+
     async getAllGames(): Promise<Game[]> {
         await this.asyncReadFile();
         return this.games;
     }
 
+    async getGameImages(gameName: string): Promise<string[]> {
+        await this.asyncReadFile();
+        const game = this.games.find((game) => game.name === gameName);
+        return game!.images;
+    }
+
     async addGame(gameToAdd: Game): Promise<Boolean> {
         await this.asyncReadFile();
-        if(!this.validateName(gameToAdd.name)) {
+        if (!this.validateName(gameToAdd.name)) {
             this.gameAdded = false;
-        }
-        else {
+        } else {
             this.games.push(gameToAdd);
             await this.asyncWriteFile();
             this.gameAdded = true;
@@ -31,14 +36,14 @@ export class GamesService {
         return this.gameAdded;
     }
 
-    validateName(name: string): boolean {
-        return this.games.find((x) => x.name === name)? false : true;
+    validateName(name: string): boolean {
+        return this.games.find((x) => x.name === name) ? false : true;
     }
 
     async addTimeToGame(newTime: Time, nameOfGame: string): Promise<void> {
         await this.asyncReadFile();
         this.games.find((game: Game) => {
-            if(game.name === nameOfGame) game.times.push(newTime);
+            if (game.name === nameOfGame) game.times.push(newTime);
         });
         this.asyncWriteFile();
     }
@@ -55,15 +60,11 @@ export class GamesService {
     // }
 
     async asyncWriteFile() {
-        try  {
-            await fs.promises.writeFile(
-                join('games.json'),
-                JSON.stringify({games : this.games}),
-                {
-                    flag: 'w',
-                }
-            );
-        } catch(err) {
+        try {
+            await fs.promises.writeFile(join('games.json'), JSON.stringify({ games: this.games }), {
+                flag: 'w',
+            });
+        } catch (err) {
             console.log('Something went wrong trying to write into the json file' + err);
             throw new Error(err);
         }
@@ -71,15 +72,11 @@ export class GamesService {
 
     async asyncReadFile() {
         try {
-          const result = await fs.promises.readFile(
-            join('games.json'),
-            'utf-8',
-          );     
-          this.games = JSON.parse(result).games;
+            const result = await fs.promises.readFile(join('games.json'), 'utf-8');
+            this.games = JSON.parse(result).games;
         } catch (err) {
-          console.log('Something went wrong trying to read the json file:' + err);
-          throw new Error(err);
+            console.log('Something went wrong trying to read the json file:' + err);
+            throw new Error(err);
         }
     }
-    
 }

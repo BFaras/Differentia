@@ -1,9 +1,9 @@
-import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { DrawService } from '@app/services/draw.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { MouseDetectionService } from '@app/services/mouse-detection.service';
 import { SocketClientService } from '@app/services/socket-client.service';
-import { DEFAULT_HEIGHT_CANVAS, DEFAULT_WIDTH_CANVAs } from '@common/const';
+import { DEFAULT_HEIGHT_CANVAS, DEFAULT_WIDTH_CANVAs, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { Position } from '@common/position';
 @Component({
     selector: 'app-play-area',
@@ -13,17 +13,14 @@ import { Position } from '@common/position';
 export class PlayAreaComponent implements OnInit {
     @ViewChild('originalCanvas', { static: false }) private originalCanvas!: ElementRef<HTMLCanvasElement>;
     @ViewChild('modifiedCanvas', { static: false }) private modifiedCanvas!: ElementRef<HTMLCanvasElement>;
+    @Input() differentImages: HTMLImageElement[];
     mousePosition: Position = { x: 0, y: 0 };
-    readonly originalImage: HTMLImageElement = new Image();
-    readonly modifiedImage: HTMLImageElement = new Image();
-    readonly finalDifferencesImage: HTMLImageElement = new Image();
 
     private canvasSize = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
     constructor(
         public socketService: SocketClientService,
         private readonly drawService: DrawService,
         private readonly mouseDetection: MouseDetectionService,
-        private renderer: Renderer2,
         private imageToImageDifferenceService: ImageToImageDifferenceService,
     ) {}
 
@@ -31,31 +28,27 @@ export class PlayAreaComponent implements OnInit {
         this.socketService.connect();
         this.configurePlayAreaSocket();
 
-        const mainCanvas = this.renderer.createElement('canvas');
+        await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[0]);
+        await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[1]);
 
-        this.originalImage.src = '../../../assets/images/gradation.bmp';
-        await this.imageToImageDifferenceService.waitForImageToLoad(this.originalImage);
-        this.modifiedImage.src = '../../../assets/images/image_7_diff.bmp';
-        await this.imageToImageDifferenceService.waitForImageToLoad(this.modifiedImage);
-
-        this.imageToImageDifferenceService.sendDifferentImagesInformationToServerForGameSolo(
-            mainCanvas,
-            this.originalImage,
-            this.modifiedImage,
-            this.finalDifferencesImage,
-            0,
-        );
+        // this.imageToImageDifferenceService.sendDifferentImagesInformationToServerForGameSolo(
+        //     mainCanvas,
+        //     this.originalImage,
+        //     this.modifiedImage,
+        //     this.finalDifferencesImage,
+        //     0,
+        // );
 
         this.displayImage();
     }
 
     displayImage() {
         this.drawService.context = this.originalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.drawService.context.drawImage(this.originalImage, 0, 0);
+        this.drawService.context.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);
         this.originalCanvas.nativeElement.focus();
 
         this.drawService.context = this.modifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.drawService.context.drawImage(this.modifiedImage, 0, 0);
+        this.drawService.context.drawImage(this.differentImages[MODIFIED_IMAGE_POSITION], 0, 0);
         this.modifiedCanvas.nativeElement.focus();
     }
 
