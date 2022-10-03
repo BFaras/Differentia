@@ -13,6 +13,8 @@ import { Position } from '@common/position';
 export class PlayAreaComponent implements OnInit {
     @ViewChild('originalCanvas', { static: false }) private originalCanvas!: ElementRef<HTMLCanvasElement>;
     @ViewChild('modifiedCanvas', { static: false }) private modifiedCanvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('clickCanvas1', { static: false }) private clickCanvas1!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('clickCanvas2', { static: false }) private clickCanvas2!: ElementRef<HTMLCanvasElement>;
     @Input() differentImages: HTMLImageElement[];
     mousePosition: Position = { x: 0, y: 0 };
 
@@ -37,12 +39,20 @@ export class PlayAreaComponent implements OnInit {
     }
 
     displayImages() {
-        this.drawService.context1 = this.originalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawService.context1 = this.clickCanvas1.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.drawService.context1.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);
         this.originalCanvas.nativeElement.focus();
 
-        this.drawService.context2 = this.modifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawService.context2 = this.clickCanvas2.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.drawService.context2.drawImage(this.differentImages[MODIFIED_IMAGE_POSITION], 0, 0);
+        this.modifiedCanvas.nativeElement.focus();
+
+        this.drawService.context3 = this.originalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawService.context3.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);
+        this.originalCanvas.nativeElement.focus();
+
+        this.drawService.context4 = this.modifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawService.context4.drawImage(this.differentImages[MODIFIED_IMAGE_POSITION], 0, 0);
         this.modifiedCanvas.nativeElement.focus();
     }
 

@@ -33,3 +33,11 @@
 #mouse-position-display {
     margin-top: 15px;
 }
+
+canvas {
+    position: absolute;
+}
+
+#canvasClick {
+    opacity: 0.5;
+}
