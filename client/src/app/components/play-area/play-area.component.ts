@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { DrawService } from '@app/services/draw.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { MouseDetectionService } from '@app/services/mouse-detection.service';
@@ -22,6 +22,7 @@ export class PlayAreaComponent implements OnInit {
         private readonly drawService: DrawService,
         private readonly mouseDetection: MouseDetectionService,
         private imageToImageDifferenceService: ImageToImageDifferenceService,
+        private renderer: Renderer2,
     ) {}
 
     async ngOnInit(): Promise<void> {
@@ -32,6 +33,7 @@ export class PlayAreaComponent implements OnInit {
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[MODIFIED_IMAGE_POSITION]);
 
         this.displayImage();
+        this.sendImagesDataToServer();
     }
 
     displayImage() {
@@ -42,6 +44,24 @@ export class PlayAreaComponent implements OnInit {
         this.drawService.context = this.modifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.drawService.context.drawImage(this.differentImages[MODIFIED_IMAGE_POSITION], 0, 0);
         this.modifiedCanvas.nativeElement.focus();
+    }
+
+    sendImagesDataToServer() {
+        if (
+            this.differentImages[ORIGINAL_IMAGE_POSITION] !== new Image(640, 480) &&
+            this.differentImages[MODIFIED_IMAGE_POSITION] !== new Image(640, 480)
+        ) {
+            const mainCanvas = this.renderer.createElement('canvas');
+            this.socketService.send(
+                'image data to begin game',
+                this.imageToImageDifferenceService.getImagesData(
+                    mainCanvas,
+                    this.differentImages[ORIGINAL_IMAGE_POSITION],
+                    this.differentImages[MODIFIED_IMAGE_POSITION],
+                    0,
+                ),
+            );
+        }
     }
 
     get width(): number {

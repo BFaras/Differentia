@@ -1,8 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-restricted-imports */
-import { Component, Renderer2 } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommunicationService } from '@app/services/communication.service';
-import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
 import { MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
@@ -15,23 +14,17 @@ import { Time } from '@common/time';
     styleUrls: ['./game-page.component.scss'],
 })
 export class GamePageComponent {
-    private mainCanvas: HTMLCanvasElement;
+    //private mainCanvas: HTMLCanvasElement;
     nbDifferences: number;
     gameName: string;
     images: HTMLImageElement[];
 
-    constructor(
-        public socketService: SocketClientService,
-        private timeService: TimeService,
-        private communicationService: CommunicationService,
-        private imageToImageDifferenceService: ImageToImageDifferenceService,
-        private renderer: Renderer2,
-    ) {
+    constructor(public socketService: SocketClientService, private timeService: TimeService, private communicationService: CommunicationService) {
         this.images = [new Image(640, 480), new Image(640, 480)];
     }
 
     ngOnInit() {
-        this.mainCanvas = this.renderer.createElement('canvas');
+        // this.mainCanvas = this.renderer.createElement('canvas');
         this.socketService.connect();
         this.configureGamePageSocketFeatures();
     }
@@ -58,13 +51,6 @@ export class GamePageComponent {
         this.socketService.on('classic solo images', (imagesData: string[]) => {
             this.images[ORIGINAL_IMAGE_POSITION].src = imagesData[ORIGINAL_IMAGE_POSITION];
             this.images[MODIFIED_IMAGE_POSITION].src = imagesData[MODIFIED_IMAGE_POSITION];
-
-            this.imageToImageDifferenceService.sendDifferentImagesInformationToServerForGameSolo(
-                this.mainCanvas,
-                this.images[ORIGINAL_IMAGE_POSITION],
-                this.images[MODIFIED_IMAGE_POSITION],
-                0,
-            );
         });
     }
 

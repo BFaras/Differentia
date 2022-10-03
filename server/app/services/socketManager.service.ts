@@ -67,8 +67,6 @@ export class SocketManager {
                 }, 1000);
 
                 await this.sendImagesToClient(message, socket);
-
-                //socket.emit('images', this.getImages(message));
             });
 
             socket.on('kill the timer', () => {
@@ -80,6 +78,10 @@ export class SocketManager {
                 const differenceDetector = new DifferenceDetectorService(imagesData);
                 socket.emit('game creation difference array', differenceDetector.getDifferentPixelsArrayWithOffset());
                 socket.emit('game creation nb of differences', differenceDetector.getNbDifferences());
+            });
+
+            socket.on('image data to begin game', (imagesData: ImageDataToCompare) => {
+                this.mouseHandlerService.updateImageData(imagesData);
             });
 
             socket.on('Verify position', (position) => {
