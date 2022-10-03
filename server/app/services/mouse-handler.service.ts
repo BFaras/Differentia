@@ -22,7 +22,7 @@ export class MouseHandlerService {
     isValidClick(mousePosition: Position): boolean {
         console.log(mousePosition);
 
-        // return true;
+        //return true;
         return this.validateDifferencesOnClick(mousePosition);
     }
 
@@ -31,13 +31,14 @@ export class MouseHandlerService {
     }
 
     convertMousePositionToPixelNumber(mousePosition: Position): number {
-        return (mousePosition.x + 1) * this.imagesData.imageWidth + mousePosition.y - this.imagesData.imageWidth;
+        return (mousePosition.y + 1) * this.imagesData.imageWidth + mousePosition.x - this.imagesData.imageWidth;
     }
 
     validateDifferencesOnClick(mousePosition: Position): boolean {
         const pixelNumber = this.convertMousePositionToPixelNumber(mousePosition);
         let differencesNumber: number;
         let pixelIsDifferent: boolean = true;
+        console.log(pixelNumber);
 
         if (this.differencesHashmap.has(pixelNumber)) {
             differencesNumber = this.differencesHashmap.get(pixelNumber)!;
@@ -48,6 +49,7 @@ export class MouseHandlerService {
             } else {
                 // Nouvelle Différence trouvée
                 this.differencesNumberFound.push(differencesNumber);
+                console.log(this.differencesNumberFound)
                 return pixelIsDifferent;
             }
         } else {
