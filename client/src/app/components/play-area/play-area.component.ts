@@ -72,27 +72,6 @@ export class PlayAreaComponent implements OnInit {
         return this.canvasSize.y;
     }
 
-    endGame() {
-        // Fonction appeler quand le joueur gagne
-        this.displayWinMessage();
-        this.stopTimer(); // verifier si cest au bon endroit
-        this.stopClicking();
-    }
-
-    displayWinMessage() {
-        // TO DO : Fonctoin qui affiche un message de felicitations au joueur
-        //         Devrait etre un pop-up, avec un bouton vers le menu principal
-    }
-
-    stopTimer() {
-        // TO DO (voir avec sebastien) : Fonction qui arrete le timer et qui garde le temps en memoire
-    }
-
-    stopClicking() {
-        // TO DO : Fonction qui fait en sorte d'ignorer les clics sur les images
-        //         Possible de juste fermer le socket pour les
-    }
-
     detectDifference(event: MouseEvent) {
         this.mouseDetection.mouseHitDetect(event);
     }

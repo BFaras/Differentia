@@ -18,7 +18,7 @@ export class GamePageComponent {
     nbDifferences: number;
     gameName: string;
     images: HTMLImageElement[];
-    nbDiferrencesFound: number;
+    nbDiferrencesFound: number = 0;
 
     constructor(public socketService: SocketClientService, private timeService: TimeService, private communicationService: CommunicationService) {
         this.images = [new Image(640, 480), new Image(640, 480)];
@@ -62,5 +62,14 @@ export class GamePageComponent {
             // existe forcément (il est dans la page de sélection )
             this.nbDifferences = gameWanted ? gameWanted.numberOfDifferences : -1;
         });
+    }
+
+    checkIfGameEnded() {
+        if (this.nbDifferences === this.nbDiferrencesFound) this.endGame();
+    }
+
+    endGame() {
+        this.socketService.send('kill the timer');
+        this.socketService.send('End of game');
     }
 }

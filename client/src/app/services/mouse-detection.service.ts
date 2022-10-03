@@ -45,7 +45,9 @@ export class MouseDetectionService {
     }
 
     incrementNbrDifference(differenceIsValid: boolean) {
-        if (differenceIsValid) this.nbrDifferencesFound += 1;
+        if (differenceIsValid) {
+            this.nbrDifferencesFound += 1;
+        }
     }
 
     drawMessage(message: string) {
