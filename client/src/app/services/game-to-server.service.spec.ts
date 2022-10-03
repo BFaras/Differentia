@@ -1,10 +1,13 @@
 
-import { CommunicationService } from './communication.service';
 import { ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { MESSAGE_JEU_CREER, MESSAGE_JEU_NON_CREER } from "@common/const";
 import { ImageToSendToServer } from '@common/imageToSendToServer';
+import { StatusCodes } from 'http-status-codes';
+import { Subject } from 'rxjs';
+import { CommunicationService } from './communication.service';
 import { GameToServerService } from './game-to-server.service';
-import { Subject} from 'rxjs';
+
 import SpyObj = jasmine.SpyObj;
 describe('GameToServerService', () => {
   let service: GameToServerService;
@@ -13,19 +16,24 @@ describe('GameToServerService', () => {
   let mockEmitterAddGame: Subject<Number>;
 
 
-  class MockElementRef extends ElementRef {}
+  const mockElementRef = {
+    nativeElement: {
+      value: "name"
+    }
+  };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     mockEmitterAddGame = new Subject();
     communicationServiceSpy = jasmine.createSpyObj('CommunicationService',['addGame'])
     communicationServiceSpy.addGame.and.returnValue(mockEmitterAddGame)
     TestBed.configureTestingModule({
-      imports:[
-        {provide: ElementRef, useClass:  MockElementRef},
+      providers:[
+        {provide: ElementRef, useValue: mockElementRef},
         {provide: CommunicationService, useValue: communicationServiceSpy} 
         ]
     });
     service = TestBed.inject(GameToServerService);
+    elmentRef = TestBed.inject(ElementRef);
   });
 
 
@@ -46,8 +54,8 @@ describe('GameToServerService', () => {
     }
     
 
-    service.setOriginalUrlUploaded(mockImageUploaded.image, mockImageUploaded.index)
-    expect(service.getOriginalImageUploaded()).toBe(mockImageUploaded)
+    service.setOriginalUrlUploaded(mockImageUploaded.index,mockImageUploaded.image)
+    expect(service.getOriginalImageUploaded()).toEqual(mockImageUploaded)
   });
 
   it('should verify getter and setter set up modified image and get it', () => {
@@ -56,10 +64,74 @@ describe('GameToServerService', () => {
       index: 8,
     }; 
 
-    service.setModifiedUrlUploaded(mockImageUploaded.image, mockImageUploaded.index);
-    expect(service.getModifiedImageUploaded()).toBe(mockImageUploaded);
-    console.log(elmentRef);
+    service.setModifiedUrlUploaded( mockImageUploaded.index, mockImageUploaded.image);
+    expect(service.getModifiedImageUploaded()).toEqual(mockImageUploaded);
   });
+
+  it('should add new game',()=>{
+    let mockNumberDiff:number = 5
+    let mockIndex:number = 2;
+    let mockImage:string = "src";
+
+    const spy = spyOn(service, 'statusCodeTreatment');
+
+    service.setModifiedUrlUploaded(mockIndex,mockImage)
+    service.setOriginalUrlUploaded(mockIndex,mockImage)
+    service.setNumberDifference(mockNumberDiff)
+    service.setNumberDifference(mockNumberDiff)
+    console.log(elmentRef.nativeElement.value)
+    
+    service.addGame(elmentRef)
+    mockEmitterAddGame.next(200)
+    
+    expect(spy).toHaveBeenCalled()
+
+  })
+
+  it('should not add new game',()=>{
+    let mockNumberDiff:number = 2
+    let mockIndex:number = 2;
+    let mockImage:string = "src";
+
+    const spy = spyOn(service, 'statusCodeTreatment');
+
+    service.setModifiedUrlUploaded(mockIndex,mockImage)
+    service.setOriginalUrlUploaded(mockIndex,mockImage)
+    service.setNumberDifference(mockNumberDiff)
+    service.setNumberDifference(mockNumberDiff)
+    console.log(elmentRef.nativeElement.value)
+    
+    service.addGame(elmentRef)
+    mockEmitterAddGame.next(200)
+    
+    expect(spy).not.toHaveBeenCalled()
+
+  })
+
+  it('should give an alert for game not created ', ()=>{
+    spyOn(window, 'alert')
+    service.statusCodeTreatment(StatusCodes.BAD_GATEWAY)
+    expect(window.alert).toHaveBeenCalledWith(MESSAGE_JEU_NON_CREER)
+  })
+
+
+  it('should give an alert for game created ', ()=>{
+    spyOn(window, 'alert')
+    service.statusCodeTreatment(StatusCodes.CREATED)
+    expect(window.alert).toHaveBeenCalledWith(MESSAGE_JEU_CREER)
+  })
+
+  it('should test set and get url image', ()=>{
+    const mockUrl = "url";
+    service.setUrlImageOfDifference(mockUrl)
+    expect(service.getUrlImageOfDifferences()).toEqual(mockUrl);
+  })
+
+  it('should get number of differences getter and setter',()=>{
+    const mockNumberDifferences = 6;
+    service.setNumberDifference(mockNumberDifferences)
+    expect(service.getNumberDifference()).toEqual(mockNumberDifferences)
+  })
 
 
 });

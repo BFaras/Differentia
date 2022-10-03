@@ -17,7 +17,7 @@ export class GameToServerService {
   constructor(private communicationService: CommunicationService) { }
   //HTTP-CODE TO MODIFY AFTER MEETING SEB
   statusCodeTreatment(responseStatusCode: Number) {
-    if(responseStatusCode === StatusCodes.BAD_REQUEST) alert(MESSAGE_JEU_NON_CREER);
+    if(responseStatusCode === StatusCodes.BAD_GATEWAY) alert(MESSAGE_JEU_NON_CREER);
     else alert(MESSAGE_JEU_CREER);
 }
 

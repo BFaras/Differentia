@@ -8,7 +8,7 @@ import { GameToServerService } from '@app/services/game-to-server.service';
 export class PopDialogCreateGameComponent implements OnInit {
     isImageDifferenceAndNumberReady:boolean;
     imageOfDifferenceSrc :any
-    @ViewChild('name') nameInput: ElementRef;
+    @ViewChild('name', {static: true}) nameInput: ElementRef;
     nameOfGame: string;
     numberOfDifference: number
     constructor(private gameToServerService :GameToServerService ) {}
