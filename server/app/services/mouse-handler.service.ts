@@ -22,7 +22,6 @@ export class MouseHandlerService {
     isValidClick(mousePosition: Position): boolean {
         console.log(mousePosition);
 
-        //return true;
         return this.validateDifferencesOnClick(mousePosition);
     }
 
@@ -48,7 +47,7 @@ export class MouseHandlerService {
             } else {
                 // Nouvelle Différence trouvée
                 this.differencesNumberFound.push(differencesNumber);
-                console.log(this.differencesNumberFound)
+                console.log(this.differencesNumberFound);
                 return pixelIsDifferent;
             }
         } else {

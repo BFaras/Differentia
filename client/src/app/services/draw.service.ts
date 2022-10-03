@@ -5,14 +5,22 @@ import { Position } from '@common/position';
     providedIn: 'root',
 })
 export class DrawService {
-    context: CanvasRenderingContext2D;
+    context1: CanvasRenderingContext2D;
+    context2: CanvasRenderingContext2D;
+    context3: CanvasRenderingContext2D;
+    context4: CanvasRenderingContext2D;
 
-    drawWord(word: string, mousePosition: Position) {
-        const startPosition: Position = { x: mousePosition.x , y: mousePosition.y };
+    drawWord(word: string, mousePosition: Position, context: CanvasRenderingContext2D) {
+        const startPosition: Position = { x: mousePosition.x, y: mousePosition.y };
         const step = 20;
-        this.context.font = '20px system-ui';
+        console.log(startPosition);
         for (let i = 0; i < word.length; i++) {
-            this.context.fillText(word[i], startPosition.x + step * i, startPosition.y);
+            context.fillText(word[i], startPosition.x + step * i, startPosition.y);
+            context.canvas.id = 'noClick';
         }
+        setTimeout(() => {
+            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+            context.canvas.id = 'click';
+        }, 1000);
     }
 }

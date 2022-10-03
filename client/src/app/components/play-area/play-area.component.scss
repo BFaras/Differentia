@@ -17,10 +17,19 @@
     height: 480px;
 }
 
+#noClick {
+    pointer-events: none;
+    transition-delay: 1s;
+}
+
+#click {
+    pointer-events: all;
+}
+
 .button-container {
     padding: 0px 470px 0px 470px;
 }
 
-#mouse-position-display{
-    margin-top:15px ;
+#mouse-position-display {
+    margin-top: 15px;
 }

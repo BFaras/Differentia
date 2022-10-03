@@ -5,40 +5,39 @@
 
 // Est ce que les disable sont corrects?
 
-import { Time } from '../../../common/time';
+import { MAX_TIME, RESET_VALUE } from '@common/const';
+import { Time } from '@common/time';
 import { Service } from 'typedi';
-import { MAX_TIME, RESET_VALUE } from '../../../common/const';
 
 @Service()
 export class ChronometerService {
-    time:Time = {
+    time: Time = {
         minutes: 0,
         seconds: 0,
     };
-    intervalForTimer:any; // On px mettre quelque chose d'autre que any?
-    intervalToCheckTime:any;
+    intervalForTimer: any; // On px mettre quelque chose d'autre que any?
+    intervalToCheckTime: any;
 
     constructor() {}
 
     increaseSeconds() {
-      this.time.seconds += 1;
-    }   
+        this.time.seconds += 1;
+    }
 
     increaseMinutes() {
-      this.time.minutes += 1;
+        this.time.minutes += 1;
     }
 
     resetSeconds() {
-      this.time.seconds = 0; // Le mettre dans le fichier des constantes?
+        this.time.seconds = 0; // Le mettre dans le fichier des constantes?
     }
 
     increaseTime() {
-      if (this.time.seconds !== MAX_TIME)
-        this.increaseSeconds();
-      else {
-        this.increaseMinutes();
-        this.resetSeconds();
-      }
+        if (this.time.seconds !== MAX_TIME) this.increaseSeconds();
+        else {
+            this.increaseMinutes();
+            this.resetSeconds();
+        }
     }
 
     // setMinutes(minutesUpdated:number) {
@@ -65,7 +64,7 @@ export class ChronometerService {
 
     // checktime() {
     //   if(this.time.seconds === MAX_TIME && this.time.minutes === MAX_TIME) {
-    //     this.stopChronometer();  
+    //     this.stopChronometer();
     //     // this.gameOver();
     //   }
     // }
@@ -77,7 +76,7 @@ export class ChronometerService {
     // startChronometer() {
     //   this.resetChrono();
     //   this.intervalForTimer = setInterval(() =>
-    //     this.increaseTime(), ONE_SECOND); 
+    //     this.increaseTime(), ONE_SECOND);
     //   this.intervalToCheckTime = setInterval(() =>
     //     this.checktime(), HALF_A_SECOND);// Est ce que 1000 est un magic number
     // }
@@ -86,9 +85,9 @@ export class ChronometerService {
     //   clearInterval(this.intervalForTimer);
     //   clearInterval(this.intervalToCheckTime);
     // }
-       
+
     public resetChrono() {
-      this.time.minutes = RESET_VALUE;
-      this.time.seconds = RESET_VALUE;
+        this.time.minutes = RESET_VALUE;
+        this.time.seconds = RESET_VALUE;
     }
 }

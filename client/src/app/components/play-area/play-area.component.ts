@@ -37,12 +37,12 @@ export class PlayAreaComponent implements OnInit {
     }
 
     displayImage() {
-        this.drawService.context = this.originalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.drawService.context.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);
+        this.drawService.context1 = this.originalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawService.context1.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);
         this.originalCanvas.nativeElement.focus();
 
-        this.drawService.context = this.modifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.drawService.context.drawImage(this.differentImages[MODIFIED_IMAGE_POSITION], 0, 0);
+        this.drawService.context2 = this.modifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawService.context2.drawImage(this.differentImages[MODIFIED_IMAGE_POSITION], 0, 0);
         this.modifiedCanvas.nativeElement.focus();
     }
 
@@ -72,31 +72,6 @@ export class PlayAreaComponent implements OnInit {
         return this.canvasSize.y;
     }
 
-    /* ngOnInit() {
-        this.socketService.connect();
-        this.configurePlayAreaSocket();
-    }*/
-
-    endGame() {
-        // Fonction appeler quand le joueur gagne
-        this.displayWinMessage();
-        this.stopTimer(); // verifier si cest au bon endroit
-        this.stopClicking();
-    }
-
-    displayWinMessage() {
-        // TO DO : Fonctoin qui affiche un message de felicitations au joueur
-        //         Devrait etre un pop-up, avec un bouton vers le menu principal
-    }
-
-    stopTimer() {
-        // TO DO (voir avec sebastien) : Fonction qui arrete le timer et qui garde le temps en memoire
-    }
-
-    stopClicking() {
-        // TO DO : Fonction qui fait en sorte d'ignorer les clics sur les images
-        //         Possible de juste fermer le socket pour les
-    }
     detectDifference(event: MouseEvent) {
         this.mouseDetection.mouseHitDetect(event);
     }
