@@ -9,7 +9,7 @@ export class MouseHandlerService {
     differencesNumberFound: Array<number>;
     imagesData: ImageDataToCompare;
 
-    constructor(readonly imagesDataToCompare: ImageDataToCompare) {
+    constructor() {
         this.differencesHashmap = new Map<number, number>();
         this.differencesNumberFound = [];
     }

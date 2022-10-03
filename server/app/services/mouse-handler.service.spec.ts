@@ -17,7 +17,8 @@ describe('MouseHandlerService', () => {
     };
 
     beforeEach(async () => {
-        mouseService = new MouseHandlerService(imageService);
+        mouseService = new MouseHandlerService();
+        mouseService.updateImageData(imageService);
     });
 
     it('should be created', () => {
