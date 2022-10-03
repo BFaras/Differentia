@@ -4,8 +4,6 @@ import { MAX_TIME, RESET_VALUE } from '../../../common/const';
 
 describe('Chronometer service', () => {
     let chronometerService: ChronometerService;
-    const LESS_THAN_10 = 5;
-    const MORE_THAN_9 = 10;
 
     beforeEach(async () => {
         chronometerService = new ChronometerService();
@@ -47,27 +45,27 @@ describe('Chronometer service', () => {
         expect(chronometerService.time.minutes).to.equals(RESET_VALUE);
     });
 
-    it('should add a 0 to the seconds when they are lower than 10', () => {
-        chronometerService.time.seconds = LESS_THAN_10;
-        let showableSeconds = chronometerService.showSeconds();
-        expect(showableSeconds).to.equals('0' + LESS_THAN_10);
-    });
+    // it('should add a 0 to the seconds when they are lower than 10', () => {
+    //     chronometerService.time.seconds = LESS_THAN_10;
+    //     let showableSeconds = chronometerService.showSeconds();
+    //     expect(showableSeconds).to.equals('0' + LESS_THAN_10);
+    // });
 
-    it('should add a 0 to the minutes when they are lower than 10', () => {
-        chronometerService.time.minutes = LESS_THAN_10;
-        let showableMinutes = chronometerService.showMinutes();
-        expect(showableMinutes).to.equals('0' + LESS_THAN_10);
-    });
+    // it('should add a 0 to the minutes when they are lower than 10', () => {
+    //     chronometerService.time.minutes = LESS_THAN_10;
+    //     let showableMinutes = chronometerService.showMinutes();
+    //     expect(showableMinutes).to.equals('0' + LESS_THAN_10);
+    // });
 
-    it('should not add a 0 to the seconds when they are higher than 9', () => {
-        chronometerService.time.seconds = MORE_THAN_9;
-        let showableSeconds = chronometerService.showSeconds();
-        expect(showableSeconds).to.equals(MORE_THAN_9.toString());
-    });
+    // it('should not add a 0 to the seconds when they are higher than 9', () => {
+    //     chronometerService.time.seconds = MORE_THAN_9;
+    //     let showableSeconds = chronometerService.showSeconds();
+    //     expect(showableSeconds).to.equals(MORE_THAN_9.toString());
+    // });
 
-    it('should not add a 0 to the minutes when they are higher than 9', () => {
-        chronometerService.time.minutes = MORE_THAN_9;
-        let showableMinutes = chronometerService.showMinutes();
-        expect(showableMinutes).to.equals(MORE_THAN_9.toString());
-    });
+    // it('should not add a 0 to the minutes when they are higher than 9', () => {
+    //     chronometerService.time.minutes = MORE_THAN_9;
+    //     let showableMinutes = chronometerService.showMinutes();
+    //     expect(showableMinutes).to.equals(MORE_THAN_9.toString());
+    // });
 });
