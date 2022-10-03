@@ -31,7 +31,7 @@ export class MouseHandlerService {
     }
 
     convertMousePositionToPixelNumber(mousePosition: Position): number {
-        return (mousePosition.x + 1) * this.imagesDataToCompare.imageWidth + mousePosition.y - this.imagesDataToCompare.imageWidth;
+        return (mousePosition.x + 1) * this.imagesData.imageWidth + mousePosition.y - this.imagesData.imageWidth;
     }
 
     validateDifferencesOnClick(mousePosition: Position): boolean {
