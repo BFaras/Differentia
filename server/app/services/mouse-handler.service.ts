@@ -38,7 +38,6 @@ export class MouseHandlerService {
         const pixelNumber = this.convertMousePositionToPixelNumber(mousePosition);
         let differencesNumber: number;
         let pixelIsDifferent: boolean = true;
-        console.log(pixelNumber);
 
         if (this.differencesHashmap.has(pixelNumber)) {
             differencesNumber = this.differencesHashmap.get(pixelNumber)!;
