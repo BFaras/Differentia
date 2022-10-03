@@ -4,6 +4,7 @@ import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
 import * as http from 'http';
 import * as io from 'socket.io';
+import { clearInterval } from 'timers';
 import Container from 'typedi';
 import { ChronometerService } from './chronometer.service';
 import { DifferenceDetectorService } from './difference-detector.service';
@@ -86,6 +87,10 @@ export class SocketManager {
 
             socket.on('Verify position', (position) => {
                 this.clickResponse(socket, position);
+            });
+
+            socket.on('End of game', () => {
+                clearInterval(this.timeInterval);
             });
         });
     }
