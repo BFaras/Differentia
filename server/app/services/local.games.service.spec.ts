@@ -2,8 +2,8 @@ import { Game } from '@common/game';
 import { Time } from '@common/time';
 import { expect } from 'chai';
 import * as fs from 'fs';
-import { GamesService } from './local.games.service';
 import * as sinon from 'sinon';
+import { GamesService } from './local.games.service';
 
 describe('Games service', () => {
     let gamesService: GamesService;
@@ -14,81 +14,83 @@ describe('Games service', () => {
 
     beforeEach(async () => {
         gamesService = new GamesService();
-        allGames = [{   
-            name: "Car game",
-            numberOfDifferences: 4,
-            times: [],
-            images: []
-        },
-        {
-            name: "Bike game",
-            numberOfDifferences: 5,
-            times: [],
-            images: []
-        },
-        {
-            name: "House game",
-            numberOfDifferences: 6,
-            times: [],
-            images: []
-        },
-        {
-            name: "Plane game",
-            numberOfDifferences: 7,
-            times: [],
-            images: []
-        },
-        {
-            name: "TV game",
-            numberOfDifferences: 8,
-            times: [],
-            images: []
-        },
-        {
-            name: "Table game",
-            numberOfDifferences: 9,
-            times: [],
-            images: []
-        },
-        {
-            name: "Chair game",
-            numberOfDifferences: 9,
-            times: [],
-            images: []
-        },
-        {
-            name: "Clown game",
-            numberOfDifferences: 9,
-            times: [],
-            images: []
-        },
-        {
-            name: "Dog game",
-            numberOfDifferences: 9,
-            times: [],
-            images: []
-        }];
+        allGames = [
+            {
+                name: 'Car game',
+                numberOfDifferences: 4,
+                times: [],
+                images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
+            },
+            {
+                name: 'Bike game',
+                numberOfDifferences: 5,
+                times: [],
+                images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
+            },
+            {
+                name: 'House game',
+                numberOfDifferences: 6,
+                times: [],
+                images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
+            },
+            {
+                name: 'Plane game',
+                numberOfDifferences: 7,
+                times: [],
+                images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
+            },
+            {
+                name: 'TV game',
+                numberOfDifferences: 8,
+                times: [],
+                images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
+            },
+            {
+                name: 'Table game',
+                numberOfDifferences: 9,
+                times: [],
+                images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
+            },
+            {
+                name: 'Chair game',
+                numberOfDifferences: 9,
+                times: [],
+                images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
+            },
+            {
+                name: 'Clown game',
+                numberOfDifferences: 9,
+                times: [],
+                images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
+            },
+            {
+                name: 'Dog game',
+                numberOfDifferences: 9,
+                times: [],
+                images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
+            },
+        ];
         validGameToAdd = {
-            name: "New Game",
+            name: 'New Game',
             numberOfDifferences: 5,
             times: [],
-            images: ["image1", "image2"]
+            images: ['image1', 'image2'],
         };
         unvalidGameToAdd = {
-            name: "Car game",
+            name: 'Car game',
             numberOfDifferences: 5,
             times: [],
-            images: ["image1", "image2"]
+            images: ['image1', 'image2'],
         };
-        newTime = { 
+        newTime = {
             seconds: 0,
-            minutes: 45
+            minutes: 45,
         };
     });
 
     afterEach(async () => {
         sinon.restore();
-    })
+    });
 
     it('should input all the games in the "games" attribute when the JSON file is read', async () => {
         await gamesService.asyncReadFile();
@@ -119,9 +121,8 @@ describe('Games service', () => {
         expect(stub.callsFake);
     });
 
-    
     it('should add a new time to a game', async () => {
-        const nameOfGame = "Car game";
+        const nameOfGame = 'Car game';
         const oldGames = gamesService.games;
         const stub = sinon.stub(fs.promises, 'writeFile').callsFake(async () => {});
         await gamesService.addTimeToGame(newTime, nameOfGame);
@@ -129,12 +130,11 @@ describe('Games service', () => {
         expect(gamesService.games).to.not.equal(oldGames);
     });
 
-    describe("Error handling", async () => {
-
+    describe('Error handling', async () => {
         it('should throw an error when fs.promises.writeFile() crashes', async () => {
             const stub = sinon.stub(fs.promises, 'writeFile').callsFake(async () => {
-                throw new Error;
-            })
+                throw new Error();
+            });
             const spy = sinon.spy(console, 'log');
             expect(gamesService.asyncWriteFile()).to.eventually.rejectedWith(Error);
             expect(stub.callsFake);
@@ -143,12 +143,12 @@ describe('Games service', () => {
 
         it('should throw an error when fs.promises.readFile() crashes', async () => {
             const stub = sinon.stub(fs.promises, 'readFile').callsFake(async () => {
-                throw new Error;
-            })
+                throw new Error();
+            });
             const spy = sinon.spy(console, 'log');
             expect(gamesService.asyncReadFile()).to.eventually.rejectedWith(Error);
             expect(stub.callsFake);
             expect(spy.calledOnce);
         });
-      });
+    });
 });

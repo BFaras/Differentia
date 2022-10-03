@@ -6,6 +6,7 @@ import { io as ioClient, Socket } from 'socket.io-client';
 import { Container } from 'typedi';
 import { ChronometerService } from './chronometer.service';
 import { DifferenceDetectorService } from './difference-detector.service';
+import { GamesService } from './local.games.service';
 import { SocketManager } from './socketManager.service';
 
 // À switch dans le fichier des constantes
@@ -25,6 +26,7 @@ describe('SocketManager service tests', () => {
         offSet: 0,
     };
     let differenceDetectorService: DifferenceDetectorService = new DifferenceDetectorService(imagesData);
+    let gamesService: GamesService = new GamesService();
 
     const urlString = 'http://localhost:3000';
     beforeEach(async () => {
@@ -74,6 +76,16 @@ describe('SocketManager service tests', () => {
     it('should call emitTime on game page event', (done) => {
         const gameName = 'Car game';
         const spy = sinon.spy(service, <any>'emitTime');
+        clientSocket.emit('game page', gameName);
+        setTimeout(() => {
+            expect(spy.calledOnce);
+            done();
+        }, RESPONSE_DELAY * 5); // 1 seconde
+    });
+
+    it('should call getGameImagesData on game page event', (done) => {
+        const gameName = 'Car game';
+        const spy = sinon.spy(gamesService, 'getGameImagesData');
         clientSocket.emit('game page', gameName);
         setTimeout(() => {
             expect(spy.calledOnce);
