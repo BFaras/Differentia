@@ -32,11 +32,11 @@ export class PlayAreaComponent implements OnInit {
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[ORIGINAL_IMAGE_POSITION]);
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[MODIFIED_IMAGE_POSITION]);
 
-        this.displayImage();
+        this.displayImages();
         this.sendImagesDataToServer();
     }
 
-    displayImage() {
+    displayImages() {
         this.drawService.context1 = this.originalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.drawService.context1.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);
         this.originalCanvas.nativeElement.focus();

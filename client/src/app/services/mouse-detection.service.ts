@@ -39,8 +39,12 @@ export class MouseDetectionService {
             this.drawService.context2.fillStyle = 'red';
         }
 
+        this.drawMessage(message);
+        console.log('draw');
+    }
+
+    drawMessage(message: string) {
         this.drawService.drawWord(message, this.mousePosition, this.drawService.context1);
         this.drawService.drawWord(message, this.mousePosition, this.drawService.context2);
-        console.log('draw');
     }
 }
