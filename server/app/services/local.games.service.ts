@@ -10,21 +10,20 @@ const IMAGES_PATH = 'assets/images/';
 
 @Service()
 export class GamesService {
+    gamesFilePath: string = 'games.json';
     games: Game[];
-    gameAdded: boolean;
 
-    // Les constructeurs comme sa est ce que c'est mieux de juste les enlever???
     constructor() {}
 
     private async getGameImagesNames(gameName: string): Promise<string[]> {
-        await this.asyncReadFile();
+        await this.asyncReadGamesFile();
         const game = this.games.find((game) => game.name === gameName);
         return game!.images;
     }
 
-    private async getGameImageData(imagePath: string): Promise<Buffer> {
+    private async getGameImageData(imageName: string): Promise<Buffer> {
         try {
-            const imageData: Buffer = await fs.promises.readFile(IMAGES_PATH + imagePath);
+            const imageData: Buffer = await fs.promises.readFile(IMAGES_PATH + imageName);
             return imageData;
         } catch (err) {
             console.log('Something went wrong trying to read the image file:' + err);
@@ -33,7 +32,7 @@ export class GamesService {
     }
 
     async getAllGames(): Promise<Game[]> {
-        await this.asyncReadFile();
+        await this.asyncReadGamesFile();
         return this.games;
     }
 
@@ -62,15 +61,14 @@ export class GamesService {
     }
 
     async addGame(gameToAdd: Game): Promise<Boolean> {
-        await this.asyncReadFile();
-        if (!this.validateName(gameToAdd.name)) {
-            this.gameAdded = false;
-        } else {
+        let gameAdded = false;
+        await this.asyncReadGamesFile();
+        if (this.validateName(gameToAdd.name)) {
             this.games.push(gameToAdd);
-            await this.asyncWriteFile();
-            this.gameAdded = true;
+            await this.asyncWriteInGamesFile();
+            gameAdded = true;
         }
-        return this.gameAdded;
+        return gameAdded;
     }
 
     validateName(name: string): boolean {
@@ -78,11 +76,11 @@ export class GamesService {
     }
 
     async addTimeToGame(newTime: Time, nameOfGame: string): Promise<void> {
-        await this.asyncReadFile();
+        await this.asyncReadGamesFile();
         this.games.find((game: Game) => {
             if (game.name === nameOfGame) game.times.push(newTime);
         });
-        this.asyncWriteFile();
+        this.asyncWriteInGamesFile();
     }
 
     // Est ce que delete est nécessaire pour le sprint 1???
@@ -96,9 +94,9 @@ export class GamesService {
     //     await this.asyncWriteFile();
     // }
 
-    async asyncWriteFile() {
+    async asyncWriteInGamesFile() {
         try {
-            await fs.promises.writeFile(join('games.json'), JSON.stringify({ games: this.games }), {
+            await fs.promises.writeFile(join(this.gamesFilePath), JSON.stringify({ games: this.games }), {
                 flag: 'w',
             });
         } catch (err) {
@@ -107,9 +105,9 @@ export class GamesService {
         }
     }
 
-    async asyncReadFile() {
+    async asyncReadGamesFile() {
         try {
-            const result = await fs.promises.readFile(join('games.json'), 'utf-8');
+            const result = await fs.promises.readFile(join(this.gamesFilePath), 'utf-8');
             this.games = JSON.parse(result).games;
         } catch (err) {
             console.log('Something went wrong trying to read the json file:' + err);
