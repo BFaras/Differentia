@@ -12,20 +12,20 @@ describe('GamesController', () => {
         name: 'Car game',
         numberOfDifferences: 8,
         times: [],
-        images: ['image1', 'image2'],
+        images: ['image 1', 'image 2'],
     } as Game;
     const newValidGame = {
         name: 'Valid game',
         numberOfDifferences: 5,
         times: [],
-        images: ['image3', 'image4'],
+        images: ['image 3', 'image 4'],
     } as Game;
     let gamesService: SinonStubbedInstance<GamesService>;
     let expressApp: Express.Application;
 
     beforeEach(async () => {
         gamesService = createStubInstance(GamesService);
-        gamesService.getAllGames.resolves([baseGame]);
+        gamesService.getAllGamesWithImagesData.resolves([baseGame]);
         const app = Container.get(Application);
         // eslint-disable-next-line dot-notation
         Object.defineProperty(app['gamesController'], 'gamesService', { value: gamesService });

@@ -7,6 +7,7 @@ import { Container } from 'typedi';
 import { ChronometerService } from './chronometer.service';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { GamesService } from './local.games.service';
+import { MouseHandlerService } from './mouse-handler.service';
 import { SocketManager } from './socketManager.service';
 
 // À switch dans le fichier des constantes
@@ -27,6 +28,7 @@ describe('SocketManager service tests', () => {
     };
     let differenceDetectorService: DifferenceDetectorService = new DifferenceDetectorService(imagesData);
     let gamesService: GamesService = new GamesService();
+    let mouseHandlerService: MouseHandlerService = new MouseHandlerService();
 
     const urlString = 'http://localhost:3000';
     beforeEach(async () => {
@@ -105,6 +107,15 @@ describe('SocketManager service tests', () => {
     it('should handle a detect images difference event and call getNbDifferences', (done) => {
         const spy = sinon.spy(differenceDetectorService, 'getNbDifferences');
         clientSocket.emit('detect images difference', imagesData);
+        setTimeout(() => {
+            expect(spy.calledOnce);
+            done();
+        }, RESPONSE_DELAY * 5); // 1 seconde
+    });
+
+    it('should handle an image data to begin game event and call updateImageData', (done) => {
+        const spy = sinon.spy(mouseHandlerService, 'updateImageData');
+        clientSocket.emit('image data to begin game', imagesData);
         setTimeout(() => {
             expect(spy.calledOnce);
             done();
