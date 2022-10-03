@@ -101,6 +101,7 @@ export class PlayAreaComponent implements OnInit {
         this.socketService.on('Valid click', (clickResponse: boolean) => {
             this.mouseDetection.playSound(clickResponse);
             this.mouseDetection.clickMessage(clickResponse);
+            this.mouseDetection.incrementNbrDifference(clickResponse);
         });
     }
 }

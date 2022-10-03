@@ -18,6 +18,7 @@ export class GamePageComponent {
     nbDifferences: number;
     gameName: string;
     images: HTMLImageElement[];
+    nbDiferrencesFound: number;
 
     constructor(public socketService: SocketClientService, private timeService: TimeService, private communicationService: CommunicationService) {
         this.images = [new Image(640, 480), new Image(640, 480)];

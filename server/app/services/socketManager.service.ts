@@ -106,24 +106,4 @@ export class SocketManager {
 
         socket.emit('classic solo images', [gameImagesData[ORIGINAL_IMAGE_POSITION], gameImagesData[MODIFIED_IMAGE_POSITION]]);
     }
-    /*
-    private getImages(gameName: string) {
-        const originalImagePos = 0;
-        const modifiedImagePos = 1;
-        console.log('image test');
-        return [this.getImage(gameName, originalImagePos), this.getImage(gameName, modifiedImagePos)];
-    }
-    private getImage(gameName: string, position: number) {
-        let imageToSend: HTMLImageElement = new Image(); // erreur ici : Image is not defined
-        imageToSend.src = this.getImageURL(gameName, position);
-        return imageToSend;
-    }
-
-    // ajouter une fonction pour aller get les url des images dans le json
-    private getImageURL(gameName: string, imagePos: number) {
-        // utilise gameName pour avoir les infos sur la game
-        // ensuite, utilise imagePos pour avoir limage originale ou limage modifie
-        return '../../assets/image_7_diff.bmp'; // trouver l'url dans games.json si cest la qu'elles sont enregistrer
-    }
-    */
 }

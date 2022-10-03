@@ -10,6 +10,7 @@ import { SocketClientService } from './socket-client.service';
 export class MouseDetectionService {
     constructor(public socketService: SocketClientService, private drawService: DrawService) {}
     mousePosition: Position = { x: 0, y: 0 };
+    nbrDifferencesFound: number = 0;
 
     mouseHitDetect(event: MouseEvent) {
         if (event.button === MouseButton.Left) {
@@ -41,6 +42,10 @@ export class MouseDetectionService {
 
         this.drawMessage(message);
         console.log('draw');
+    }
+
+    incrementNbrDifference(differenceIsValid: boolean) {
+        if (differenceIsValid) this.nbrDifferencesFound += 1;
     }
 
     drawMessage(message: string) {
