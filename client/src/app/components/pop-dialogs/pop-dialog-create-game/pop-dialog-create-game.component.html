@@ -8,13 +8,15 @@
         <h1>Validation</h1>
         <div class="form-radius-container">
             <!-- <div>Nombre de difference : __NombreDiff__</div> -->
+            <app-test-page class ="image-difference"></app-test-page>
             <mat-form-field>
-                <label for="nbDiff">Nombre de differences : </label>
+                <label for="nbDiff">Nombre de differences :  {{numberOfDifference}} </label>
                 <input matInput name="nbDiff"/>
             </mat-form-field>
+            <img [src] = image >
             <mat-form-field>
                 <label for="name">Nom du Jeu : </label>
-                <input matInput name="name"/>
+                <input matInput name="name" placeholder="nameOfGame"/>
             </mat-form-field>
         </div>
         <mat-dialog-actions>

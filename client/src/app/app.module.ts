@@ -1,6 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PlayAreaComponent } from '@app/components/play-area/play-area.component';
@@ -14,7 +15,6 @@ import { MaterialPageComponent } from '@app/pages/material-page/material-page.co
 import { DialogInputComponent } from './components/dialog-input/dialog-input.component';
 import { EditableImagesComponent } from './components/editable-images/editable-images.component';
 import { ModifiedImageComponent } from './components/editable-images/modified-image/modified-image.component';
-import { OriginalImageComponent } from './components/editable-images/original-image/original-image.component';
 import { GameFormComponent } from './components/forms/game-form/game-form.component';
 import { ListGameFormComponent } from './components/forms/list-game-form/list-game-form.component';
 import { HeaderImageComponent } from './components/header-image/header-image.component';
@@ -25,6 +25,7 @@ import { TopbarComponent } from './components/topbar/topbar.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
 import { GameSelectionComponent } from './pages/game-selection/game-selection.component';
+import { TestPageComponent } from './pages/test-page/test-page.component';
 
 /**
  * Main module that is used in main.ts.
@@ -46,7 +47,6 @@ import { GameSelectionComponent } from './pages/game-selection/game-selection.co
         PopDialogDownloadImagesComponent,
         PopDialogValidateGameComponent,
         PopDialogCreateGameComponent,
-        OriginalImageComponent,
         ModifiedImageComponent,
         TopbarComponent,
         GameSelectionComponent,
@@ -54,9 +54,10 @@ import { GameSelectionComponent } from './pages/game-selection/game-selection.co
         ListGameFormComponent,
         AdminPageComponent,
         DialogInputComponent,
+        TestPageComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
-    providers: [],
+    providers: [ { provide: MAT_DIALOG_DATA , useValue: {bothImage : false} },],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

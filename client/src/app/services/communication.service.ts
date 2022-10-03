@@ -1,7 +1,8 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Game } from '@common/game';
+import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Message } from '@common/message';
-import { Game } from '@common/game'
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -30,10 +31,19 @@ export class CommunicationService {
     }
 
     getGames(): Observable<Array<Game>> {
+        console.log('Called');
         return this.http.get<Array<Game>>(`${this.baseUrl}/games`).pipe(catchError(this.handleError<Array<Game>>('getGames')));
     }
 
-    addGame(game: Game): Observable<HttpResponse<any>>{
-        return this.http.post(`${this.baseUrl}/games/newGame`, game, {observe: 'response', responseType: 'text'} ).pipe(catchError(this.handleError<HttpResponse<any>>('addGame')));    
+    addGame(game: Game): Observable<HttpResponse<any>> {
+        return this.http
+            .post(`${this.baseUrl}/games/newGame`, game, { observe: 'response', responseType: 'text' })
+            .pipe(catchError(this.handleError<HttpResponse<any>>('addGame')));
+    }
+
+    addImagesToCompareData(imagesData: ImageDataToCompare) {
+        return this.http
+            .post<ImageDataToCompare>(`${this.baseUrl}/imagesdata`, imagesData)
+            .pipe(catchError(this.handleError<ImageDataToCompare>('addImagesToCompareData')));
     }
 }
