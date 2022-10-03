@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PopDialogCreateGameComponent } from './pop-dialog-create-game.component';
 import { GameToServerService } from '@app/services/game-to-server.service';
+import { PopDialogCreateGameComponent } from './pop-dialog-create-game.component';
 import SpyObj = jasmine.SpyObj;
 describe('PopDialogCreateGameComponent', () => {
   let component: PopDialogCreateGameComponent;
@@ -38,7 +38,7 @@ describe('PopDialogCreateGameComponent', () => {
 
   it('should call add game of gameToServerService',()=>{
     component.addGame()
-    expect(gameToServerServiceSpy).toHaveBeenCalled()
+    expect(gameToServerServiceSpy.addGame).toHaveBeenCalled()
   })
 
   afterEach(() => {

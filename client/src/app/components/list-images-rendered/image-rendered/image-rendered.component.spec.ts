@@ -1,94 +1,80 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
-// import { ListImagesRenderedService } from '@app/services/list-images-rendered.service';
-// import { Subject } from 'rxjs';
-// import { ImageRenderedComponent } from './image-rendered.component';
-// import SpyObj = jasmine.SpyObj;
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AssignImageDataService } from '@app/services/assign-image-data.service';
+import { ListImagesRenderedService } from '@app/services/list-images-rendered.service';
+import { Subject } from 'rxjs';
+import { ImageRenderedComponent } from './image-rendered.component';
+import SpyObj = jasmine.SpyObj;
 
-// describe('ImageRenderedComponent', () => {
-//     let component: ImageRenderedComponent;
-//     let fixture: ComponentFixture<ImageRenderedComponent>;
-//     let communicationServiceSpy: SpyObj<ListImagesRenderedService>;
-//     let mockEmitterGetIDToRemove: Subject<unknown>;
-//     let mockEmitterGetSingleImage: Subject<{ index: number; url: string }>;
-//     let mockEmitterGetMultipleImage: Subject<string>;
+describe('ImageRenderedComponent', () => {
+    let component: ImageRenderedComponent;
+    let fixture: ComponentFixture<ImageRenderedComponent>;
+    let listImagesRenderedSpy: SpyObj<ListImagesRenderedService>;
+    let assignImageDataSpy: SpyObj<AssignImageDataService>
+    let mockEmitterGetIDToRemove: Subject<unknown>;
+    let mockEmitterGetSingleImage: Subject<{ index: number; url: string }>;
+    let mockEmitterGetMultipleImage: Subject<string>;
 
-//     beforeEach(async () => {
-//         mockEmitterGetIDToRemove = new Subject();
-//         mockEmitterGetSingleImage = new Subject();
-//         mockEmitterGetMultipleImage = new Subject();
-//         communicationServiceSpy = jasmine.createSpyObj('EditImagesService', ['getIdImageToRemove', 'getDataImageSingle', 'getDataImageMultiple']);
-//         communicationServiceSpy.getIdImageToRemove.and.returnValue(mockEmitterGetIDToRemove);
-//         communicationServiceSpy.getDataImageSingle.and.returnValue(mockEmitterGetSingleImage);
-//         communicationServiceSpy.getDataImageMultiple.and.returnValue(mockEmitterGetMultipleImage);
-//         await TestBed.configureTestingModule({
-//             declarations: [ImageRenderedComponent],
-//             providers: [{ provide: ListImagesRenderedService, useValue: communicationServiceSpy }],
-//         }).compileComponents();
-//     });
+    beforeEach(async () => {
+        mockEmitterGetIDToRemove = new Subject();
+        mockEmitterGetSingleImage = new Subject();
+        mockEmitterGetMultipleImage = new Subject();
+        listImagesRenderedSpy = jasmine.createSpyObj('ListImagesRenderedService', ['getIdImageToRemove', 'getDataImageSingle', 'getDataImageMultiple']);
+        listImagesRenderedSpy.getIdImageToRemove.and.returnValue(mockEmitterGetIDToRemove);
+        listImagesRenderedSpy.getDataImageSingle.and.returnValue(mockEmitterGetSingleImage);
+        listImagesRenderedSpy.getDataImageMultiple.and.returnValue(mockEmitterGetMultipleImage);
+        assignImageDataSpy = jasmine.createSpyObj('AssignImageDataService',[
+            'getIsImageObtained','getUrlImage','assignImageData',
+            'deleteImage','assignMultipleImageData'])
+        
+        await TestBed.configureTestingModule({
+            declarations: [ImageRenderedComponent],
+            providers: [{ provide: ListImagesRenderedService, useValue: listImagesRenderedSpy },
+                { provide: AssignImageDataService, useValue: assignImageDataSpy }],
+        }).compileComponents();
+    });
 
-//     beforeEach(() => {
-//         fixture = TestBed.createComponent(ImageRenderedComponent);
-//         component = fixture.componentInstance;
-//         fixture.detectChanges();
-//     });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(ImageRenderedComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-//     it('should create', () => {
-//         expect(component).toBeTruthy();
-//     });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 
-//     it('should test subscription of getIdImageToRemove ', () => {
-//         const spy = spyOn(component, 'deleteImage');
-//         mockEmitterGetIDToRemove.next(1);
-//         expect(spy).toHaveBeenCalled();
-//     });
+    it('should test subscription of getIdImageToRemove ', () => {
+        component.idFromParent = 4
+        mockEmitterGetIDToRemove.next(4);
+        const spyDelete = assignImageDataSpy.deleteImage.and.returnValue()
+        expect(spyDelete).toHaveBeenCalled();
+    });
 
-//     it('should test subscription of getDataImageSingle ', () => {
-//         const spy = spyOn(component, 'assignImageData');
-//         mockEmitterGetSingleImage.next({ index: 1, url: 'string' });
-//         expect(spy).toHaveBeenCalled();
-//     });
+    it('should change value of is image Obtained and get url image', () => {
+        const mokUrl = "url"
+        const mockBool = true;
+        assignImageDataSpy.getIsImageObtained.and.returnValue(mockBool)
+        assignImageDataSpy.getUrlImage.and.returnValue(mokUrl)
+        component.updateIsImageObtainedAndUrl()
+        expect(component.isImageObtained).toBeTruthy()
+        expect(component.urlImage).toEqual(mokUrl)
+    });
 
-//     it('should test subscription of getDataMultipleImage ', () => {
-//         const spy = spyOn(component, 'assignMultipleImageData');
-//         mockEmitterGetMultipleImage.next('string');
-//         expect(spy).toHaveBeenCalled();
-//     });
+    it('should try getDataSingleImage ',()=>{
+        component.idFromParent = 4
+        mockEmitterGetSingleImage.next({index : 4, url :"url"})
+        const spyAssignImageData = assignImageDataSpy.assignImageData.and.returnValue()
+        component.getDeletedImageId()
+        expect(spyAssignImageData).toHaveBeenCalled()
 
-//     it('should delete image if it s the right index', () => {
-//         component.idFromParent = 1;
-//         component.deleteImage(1);
-//         expect(component.secondImageObtained).toBeFalsy();
-//     });
+    })
 
-//     it('should not delete image if it s wrong index', () => {
-//         component.idFromParent = 2;
-//         component.deleteImage(1);
-//         expect(component.secondImageObtained).not.toBeDefined();
-//     });
+    it('should get data multiple Images',()=>{
+        const mockUrl = "url"
+        mockEmitterGetMultipleImage.next(mockUrl)
+        const spy = assignImageDataSpy.assignMultipleImageData.and.returnValue()
+        component.getDataMultipleImage()
+        expect(spy).toHaveBeenCalled()
 
-//     it('should assign imageData to variable if it s the right index', () => {
-//         const mockValue = { index: 1, url: 'string' };
-//         component.idFromParent = 1;
-//         component.assignImageData(mockValue);
-//         expect(component.secondImageObtained).toBeTruthy();
-//         expect(component.urlImageSecond).toEqual(mockValue.url);
-//         expect(component.idFromParent).toEqual(mockValue.index);
-//     });
-
-//     it('shoulda not assign imageData to variable if it s not the right index', () => {
-//         const mockValue = { index: 2, url: 'string' };
-//         component.assignImageData(mockValue);
-//         expect(component.secondImageObtained).not.toBeDefined();
-//         expect(component.urlImageSecond).not.toBeDefined();
-//         expect(component.idFromParent).not.toBeDefined();
-//     });
-
-//     it('should assign Url to variable if it s the right index', () => {
-//         const mockValue = { index: 1, url: 'string' };
-//         component.idFromParent = 1;
-//         component.assignMultipleImageData(mockValue.url);
-//         expect(component.secondImageObtained).toBeTruthy();
-//         expect(component.urlImageSecond).toEqual(mockValue.url);
-//         expect(component.idFromParent).toEqual(mockValue.index);
-//     });
-// });
+    })
+});

@@ -22,13 +22,13 @@ export class GameCreationPageComponent implements OnInit {
         this.gameToServerService.setOriginalUrlUploaded(undefined,undefined)
         this.gameToServerService.setModifiedUrlUploaded(undefined,undefined)
 
-        this.editImageService.getDataImageMultiple().subscribe((url)=>{
+        this.editImageService.getDataImageMultiple().subscribe((url: any)=>{
             this.gameToServerService.setOriginalUrlUploaded(0,url)
             this.gameToServerService.setModifiedUrlUploaded(1,url)
 
         })
 
-        this.editImageService.getDataImageSingle().subscribe((dataOfImage)=>{
+        this.editImageService.getDataImageSingle().subscribe((dataOfImage: { index: number; url: any; })=>{
             if(dataOfImage.index == 0 ){
                 this.gameToServerService.setOriginalUrlUploaded(dataOfImage.index,dataOfImage.url)
             }
@@ -37,7 +37,7 @@ export class GameCreationPageComponent implements OnInit {
             }
         })
 
-        this.editImageService.getIdImageToRemove().subscribe((indexImage)=>{
+        this.editImageService.getIdImageToRemove().subscribe((indexImage: number | undefined)=>{
 
             if (this.gameToServerService.getModifiedImageUploaded().index == indexImage){
                 this.gameToServerService.setModifiedUrlUploaded(undefined,undefined)

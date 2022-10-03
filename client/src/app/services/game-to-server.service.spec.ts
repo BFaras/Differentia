@@ -1,4 +1,5 @@
 
+import { HttpResponse } from '@angular/common/http';
 import { ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { MESSAGE_JEU_CREER, MESSAGE_JEU_NON_CREER } from "@common/const";
@@ -13,7 +14,7 @@ describe('GameToServerService', () => {
   let service: GameToServerService;
   let elmentRef: ElementRef;
   let communicationServiceSpy: SpyObj<CommunicationService>
-  let mockEmitterAddGame: Subject<Number>;
+  let mockEmitterAddGame: Subject<HttpResponse<any>>;
 
 
   const mockElementRef = {
@@ -82,7 +83,7 @@ describe('GameToServerService', () => {
     console.log(elmentRef.nativeElement.value)
     
     service.addGame(elmentRef)
-    mockEmitterAddGame.next(200)
+    // mockEmitterAddGame.next(200)
     
     expect(spy).toHaveBeenCalled()
 
@@ -102,7 +103,7 @@ describe('GameToServerService', () => {
     console.log(elmentRef.nativeElement.value)
     
     service.addGame(elmentRef)
-    mockEmitterAddGame.next(200)
+    // mockEmitterAddGame.next(200)
     
     expect(spy).not.toHaveBeenCalled()
 
@@ -110,6 +111,7 @@ describe('GameToServerService', () => {
 
   it('should give an alert for game not created ', ()=>{
     spyOn(window, 'alert')
+    HttpResponse 
     service.statusCodeTreatment(StatusCodes.BAD_GATEWAY)
     expect(window.alert).toHaveBeenCalledWith(MESSAGE_JEU_NON_CREER)
   })

@@ -1,3 +1,4 @@
+import { HttpResponse } from '@angular/common/http';
 import { ElementRef, Injectable } from '@angular/core';
 import { MESSAGE_JEU_CREER, MESSAGE_JEU_NON_CREER, MESSAGE_NOMBRE_DIFFERENCE_ERREUR } from "@common/const";
 import { Game } from '@common/game';
@@ -16,8 +17,8 @@ export class GameToServerService {
 
   constructor(private communicationService: CommunicationService) { }
   //HTTP-CODE TO MODIFY AFTER MEETING SEB
-  statusCodeTreatment(responseStatusCode: Number) {
-    if(responseStatusCode === StatusCodes.BAD_GATEWAY) alert(MESSAGE_JEU_NON_CREER);
+  statusCodeTreatment(responseStatusCode: any) {
+    if(responseStatusCode == StatusCodes.BAD_GATEWAY) alert(MESSAGE_JEU_NON_CREER);
     else alert(MESSAGE_JEU_CREER);
 }
 
@@ -35,8 +36,8 @@ validateNumberOfDifferences() {
     if(this.validateNumberOfDifferences()) {
         this.communicationService
             .addGame(this.gameToAdd)
-            .subscribe((httpStatus: Number) => {
-                this.statusCodeTreatment(httpStatus);
+            .subscribe((httpStatus: HttpResponse<any>) => {
+                this.statusCodeTreatment(httpStatus.body);
             });
     }
     else alert(MESSAGE_NOMBRE_DIFFERENCE_ERREUR);

@@ -27,7 +27,7 @@ export class ImageRenderedComponent implements OnInit {
     }
 
     getDataSingleImage() {
-        this.editImagesService.getDataImageSingle().subscribe((dataOfImage) => {
+        this.editImagesService.getDataImageSingle().subscribe((dataOfImage: { index: any; url: SafeValue; }) => {
             if (dataOfImage.index === this.idFromParent){
             this.assignImageDataService.assignImageData(dataOfImage);
             this.updateIsImageObtainedAndUrl();
@@ -36,14 +36,14 @@ export class ImageRenderedComponent implements OnInit {
     }
 
     getDataMultipleImage() {
-        this.editImagesService.getDataImageMultiple().subscribe((url) => {
+        this.editImagesService.getDataImageMultiple().subscribe((url: SafeValue) => {
             this.assignImageDataService.assignMultipleImageData(url)
             this.updateIsImageObtainedAndUrl();
         });
     }
 
     getDeletedImageId() {
-        this.editImagesService.getIdImageToRemove().subscribe((dataOfImage) => {
+        this.editImagesService.getIdImageToRemove().subscribe((dataOfImage: number) => {
             if (dataOfImage === this.idFromParent) {
             this.assignImageDataService.deleteImage()
             this.updateIsImageObtainedAndUrl();
