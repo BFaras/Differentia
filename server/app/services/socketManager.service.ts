@@ -74,10 +74,7 @@ export class SocketManager {
             });
 
             socket.on('Check if game is finished', (nbDifferencesFoundAndTotal: number[]) => {
-                // let nbDifferencesFound = nbDifferencesFoundAndTotal[0];
-                // let nbDifferencesTotal = nbDifferencesFoundAndTotal[1];
                 if (nbDifferencesFoundAndTotal[0] === nbDifferencesFoundAndTotal[1]) {
-                    // Nombre a changer pour le nombre de differences du jeu actuel
                     this.mouseHandlerService.resetData();
                     this.endTimer();
                     socket.emit('End game');
