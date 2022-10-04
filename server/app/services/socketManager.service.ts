@@ -70,6 +70,11 @@ export class SocketManager {
                 await this.sendImagesToClient(message, socket);
             });
 
+            socket.on('username is', (username: string) => {
+                socket.emit('show the username', username);
+                console.log(username);
+            })
+
             socket.on('kill the timer', () => {
                 clearInterval(this.timeInterval);
                 this.chronometerService.resetChrono();

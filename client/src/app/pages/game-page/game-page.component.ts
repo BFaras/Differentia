@@ -17,6 +17,7 @@ export class GamePageComponent {
     //private mainCanvas: HTMLCanvasElement;
     nbDifferences: number;
     gameName: string;
+    username: string;
     images: HTMLImageElement[];
     nbDiferrencesFound: number = 0;
 
@@ -46,6 +47,9 @@ export class GamePageComponent {
             this.receiveNumberOfDifferences(message);
             this.gameName = message;
         });
+        this.socketService.on("show the username", (username: string) => {
+            this.username = username;
+        })
         this.socketService.on('Name repeated', () => {
             console.log('le nom est répété ');
         });
@@ -58,6 +62,7 @@ export class GamePageComponent {
 
     receiveNumberOfDifferences(nameGame: string): void {
         this.communicationService.getGames().subscribe((array: Game[]) => {
+            console.log(array);
             let gameWanted = array.find((x) => x.name === nameGame);
             // gameWanted ne sera jamais undefined car le nom utilisé dans le .find est d'un jeu qui
             // existe forcément (il est dans la page de sélection )
