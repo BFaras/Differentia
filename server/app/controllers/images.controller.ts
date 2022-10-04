@@ -18,7 +18,6 @@ export class ImagesController {
         
         this.router.post('/',fileUpload({createParentPath:true}) ,(req: Request, res: Response) => {
             let sampleFile = req['files'].file;
-            console.log(sampleFile)
             const filePatth = './assets/images/' + sampleFile.name;
             sampleFile.mv(filePatth, (err:any)=>{
                 if(err){

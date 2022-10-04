@@ -5,7 +5,7 @@ import { Game } from '@common/game';
 import { ImageToSendToServer } from '@common/imageToSendToServer';
 import { StatusCodes } from 'http-status-codes';
 import { CommunicationService } from './communication.service';
-import { FichierTeleverserService } from './fichier-televerser.service';
+import { UploadFileService } from './upload-file.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -17,7 +17,7 @@ export class GameToServerService {
   gameToAdd: Game
 
   constructor(private communicationService: CommunicationService,
-    private uploadFileService : FichierTeleverserService ) { }
+    private uploadFileService : UploadFileService ) { }
   //HTTP-CODE TO MODIFY AFTER MEETING SEB
   statusCodeTreatment(responseStatusCode: any) {
     if(responseStatusCode == StatusCodes.BAD_GATEWAY) alert(MESSAGE_JEU_NON_CREER);
@@ -55,12 +55,8 @@ getDataUriImageDifference(){
 }
 
   sendBothImagesToServer(){
-    this.uploadFileService.upload(this.uploadFileService.getNameOriginalImage()).subscribe((e)=>{
-      console.log(e)
-    })
-    this.uploadFileService.upload(this.uploadFileService.getNameModifiedImage()).subscribe((e)=>{
-      console.log(e)
-    })
+    this.uploadFileService.upload(this.uploadFileService.getNameOriginalImage())
+    this.uploadFileService.upload(this.uploadFileService.getNameModifiedImage())
   }
 
   getOriginalImageUploaded(){

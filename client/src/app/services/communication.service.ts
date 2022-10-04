@@ -39,4 +39,9 @@ export class CommunicationService {
             .post(`${this.baseUrl}/games/newGame`, game, { observe: 'response', responseType: 'text' })
             .pipe(catchError(this.handleError<HttpResponse<any>>('addGame')));
     }
+
+    uploadFiles(formData:FormData):Observable<Object>{
+        return this.http.post(`${this.baseUrl}/images`,formData).pipe(catchError(this.handleError<Object>('addGame')));
+        
+    }
 }

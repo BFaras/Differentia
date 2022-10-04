@@ -1,19 +1,16 @@
-import { HttpClient } from '@angular/common/http';
+
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+
+import { CommunicationService } from './communication.service';
 @Injectable({
   providedIn: 'root'
 })
-export class FichierTeleverserService {
+export class UploadFileService {
   private nameOriginalImage:File;
   originalIndex:number
   private nameModifiedImage:File
   modifiedIndex:number
-  private readonly baseUrl: string = environment.serverUrl;
-
-
-  constructor(private http:HttpClient) { }
+  constructor(private communicationService:CommunicationService) { }
 
   getNameOriginalImage(){
     return this.nameOriginalImage;
@@ -35,13 +32,15 @@ export class FichierTeleverserService {
       console.log(file)
   }
   
-  upload(file:File):Observable<Object>{
+  upload(file:File){
 
     const formData = new FormData();
 
     formData.append('file',file,file.name);
 
-    return this.http.post(`${this.baseUrl}/images`,formData)
+    this.communicationService.uploadFiles(formData).subscribe((e)=>{
+      console.log(e)
+    })
 
   }
 }
