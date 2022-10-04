@@ -36,10 +36,11 @@ describe('UploadFileService', () => {
   })
 
   it('should verify if I go through uploadFiles nad reach subscribe inside',()=>{
+    
     let mockFile = new File([""], "filename", { type: 'text/html' });
-    service.upload(mockFile)
     const spy = communicationServiceSpy.uploadFiles.and.returnValue(mockEmitterhttpPost);
-    mockEmitterhttpPost.next([])
+    service.upload(mockFile)
+    mockEmitterhttpPost.next({value:123})
     expect(spy).toHaveBeenCalled()
   })
 

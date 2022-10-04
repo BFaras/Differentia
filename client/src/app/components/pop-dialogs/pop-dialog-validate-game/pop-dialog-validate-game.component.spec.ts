@@ -53,6 +53,7 @@ describe('PopDialogValidateGameComponent', () => {
 
   afterEach(() => {
     fixture.destroy();
+    TestBed.resetTestingModule();
   });
 
 

@@ -10,9 +10,10 @@ describe('PopDialogCreateGameComponent', () => {
 
   beforeEach(async () => {
     mockValue = 10;
-    gameToServerServiceSpy= jasmine.createSpyObj('GameToServerService',['getNumberDifference','addGame']);
+    gameToServerServiceSpy= jasmine.createSpyObj('GameToServerService',['getNumberDifference','addGame','getDataUriImageDifference']);
     gameToServerServiceSpy.getNumberDifference.and.returnValue(mockValue);
     gameToServerServiceSpy.addGame.and.returnValue();
+    gameToServerServiceSpy.getDataUriImageDifference.and.returnValue();
     await TestBed.configureTestingModule({
       declarations: [ PopDialogCreateGameComponent ],
       providers:[{provide: GameToServerService, useValue:gameToServerServiceSpy }],
@@ -39,9 +40,12 @@ describe('PopDialogCreateGameComponent', () => {
   it('should call add game of gameToServerService',()=>{
     component.addGame()
     expect(gameToServerServiceSpy.addGame).toHaveBeenCalled()
+    expect(gameToServerServiceSpy.getDataUriImageDifference).toHaveBeenCalled()
   })
 
   afterEach(() => {
     fixture.destroy();
+    TestBed.resetTestingModule();
   });
+
 });

@@ -19,7 +19,6 @@ export class UploadFileService {
   setOriginalImage(file:File,index:number){
       this.nameOriginalImage = file;
       this.originalIndex =  index;
-      console.log(file)
   }
 
   getNameModifiedImage(){
@@ -29,7 +28,6 @@ export class UploadFileService {
   setModifiedImage(file:File,index:number){
       this.nameModifiedImage = file;
       this.modifiedIndex = index;
-      console.log(file)
   }
   
   upload(file:File){

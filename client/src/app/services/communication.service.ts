@@ -41,7 +41,8 @@ export class CommunicationService {
     }
 
     uploadFiles(formData:FormData):Observable<Object>{
-        return this.http.post(`${this.baseUrl}/images`,formData).pipe(catchError(this.handleError<Object>('addGame')));
+        return this.http.post(`${this.baseUrl}/images`,formData)
+        .pipe(catchError(this.handleError<Object>('uploadFiles')));
         
     }
 }
