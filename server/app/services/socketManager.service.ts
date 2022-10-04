@@ -1,8 +1,14 @@
+import { GamesService } from '@app/services/local.games.service';
+import { MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
+import { Position } from '@common/position';
 import * as http from 'http';
 import * as io from 'socket.io';
+import { clearInterval } from 'timers';
+import Container from 'typedi';
 import { ChronometerService } from './chronometer.service';
 import { DifferenceDetectorService } from './difference-detector.service';
+import { MouseHandlerService } from './mouse-handler.service';
 
 export class SocketManager {
     private sio: io.Server;
@@ -10,6 +16,9 @@ export class SocketManager {
     public socket: io.Socket;
     private timeInterval: NodeJS.Timer;
     private chronometerService: ChronometerService = new ChronometerService();
+    private mouseHandlerService = Container.get(MouseHandlerService);
+    private gamesService = new GamesService();
+
     constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] }, maxHttpBufferSize: 1e7 });
     }
@@ -50,13 +59,15 @@ export class SocketManager {
                 console.log(`Raison de deconnexion : ${reason}`);
             });
 
-            socket.on('game page', (message: string) => {
+            socket.on('game page', async (message: string) => {
                 console.log(message);
                 socket.emit('classic mode');
                 socket.emit('The game is', message);
                 this.timeInterval = setInterval(() => {
                     this.emitTime(socket);
                 }, 1000);
+
+                await this.sendImagesToClient(message, socket);
             });
 
             socket.on('kill the timer', () => {
@@ -69,6 +80,18 @@ export class SocketManager {
                 socket.emit('game creation difference array', differenceDetector.getDifferentPixelsArrayWithOffset());
                 socket.emit('game creation nb of differences', differenceDetector.getNbDifferences());
             });
+
+            socket.on('image data to begin game', (imagesData: ImageDataToCompare) => {
+                this.mouseHandlerService.updateImageData(imagesData);
+            });
+
+            socket.on('Verify position', (position) => {
+                this.clickResponse(socket, position);
+            });
+
+            socket.on('End of game', () => {
+                clearInterval(this.timeInterval);
+            });
         });
     }
 
@@ -76,5 +99,16 @@ export class SocketManager {
         this.chronometerService.increaseTime();
         console.log(this.chronometerService.time); // Là que pour debug
         socket.emit('time', this.chronometerService.time);
+    }
+
+    private clickResponse(socket: io.Socket, mousePosition: Position) {
+        const clickAnswer = this.mouseHandlerService.isValidClick(mousePosition);
+        socket.emit('Valid click', clickAnswer);
+    }
+
+    private async sendImagesToClient(gameName: string, socket: io.Socket) {
+        const gameImagesData: string[] = await this.gamesService.getGameImagesData(gameName);
+
+        socket.emit('classic solo images', [gameImagesData[ORIGINAL_IMAGE_POSITION], gameImagesData[MODIFIED_IMAGE_POSITION]]);
     }
 }

@@ -1,7 +1,6 @@
 import { ImageSize } from './image-size';
 
 describe('ImageSize', () => {
-
     const widthTest: number = 10;
     const heightTest: number = 20;
 

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FichierTeleverserService } from '@app/services/fichier-televerser.service';
 import { VerifyImageService } from '@app/services/verify-image.service';
 @Component({
     selector: 'app-pop-dialog-download-images',
@@ -13,11 +14,13 @@ export class PopDialogDownloadImagesComponent {
     constructor(
         @Inject(MAT_DIALOG_DATA) private imageInfo: any,
         public verifyImageService: VerifyImageService,
+        private uploadFileService : FichierTeleverserService
     ) {}
 
     onClickUploadImage(event:any) {
         let target = event.target as HTMLInputElement
         let file = target.files![0]
+        this.saveBmpFiles(file)
         let reader = new FileReader();
         reader.readAsArrayBuffer(file)
         reader.onload = async (e)=>{
@@ -29,6 +32,13 @@ export class PopDialogDownloadImagesComponent {
             
         }
 
+    }
+
+    saveBmpFiles(file:File){
+        console.log(file)
+        this.uploadFileService.upload(file).subscribe((e)=>{
+            console.log(e)
+        })
     }
 
 }

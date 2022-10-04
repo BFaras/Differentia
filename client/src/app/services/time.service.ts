@@ -3,16 +3,16 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-restricted-imports */
 import { Injectable } from '@angular/core';
-import { BASE_ONE } from '../../../../common/const';
-import { Time } from '../../../../common/time';
+import { BASE_ONE } from '@common/const';
+import { Time } from '@common/time';
 
 @Injectable({
     providedIn: 'root',
 })
 export class TimeService {
     time: Time;
-    showableMinutes: string = "";
-    showableSeconds: string = "";
+    showableMinutes: string = '';
+    showableSeconds: string = '';
 
     constructor() {}
 
@@ -36,10 +36,10 @@ export class TimeService {
     }
 
     showMinutes() {
-        this.showableMinutes = (this.time.minutes < BASE_ONE)? `0${this.time.minutes}`:this.time.minutes.toString();
+        this.showableMinutes = this.time.minutes < BASE_ONE ? `0${this.time.minutes}` : this.time.minutes.toString();
     }
 
     showSeconds() {
-        this.showableSeconds = (this.time.seconds < BASE_ONE)? `0${this.time.seconds}`:this.time.seconds.toString();
+        this.showableSeconds = this.time.seconds < BASE_ONE ? `0${this.time.seconds}` : this.time.seconds.toString();
     }
 }

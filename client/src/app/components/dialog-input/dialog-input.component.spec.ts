@@ -1,4 +1,3 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,7 +12,6 @@ describe('DialogInputComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [DialogInputComponent],
-            schemas: [NO_ERRORS_SCHEMA],
             imports: [MatFormFieldModule, MatInputModule, MatDialogModule],
             providers: [
                 { provide: MatDialogRef, useValue: {} },

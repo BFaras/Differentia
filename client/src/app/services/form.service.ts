@@ -15,9 +15,7 @@ export class FormService {
     gameForms: GameFormDescription[] = [];
     gamesLoadedSubject = new Subject();
 
-    constructor(private communicationService: CommunicationService) {
-        this.receiveGameInformations();
-    }
+    constructor(private communicationService: CommunicationService) {}
 
     receiveGameInformations() {
         this.communicationService.getGames().subscribe((gamelist: Game[]) => {

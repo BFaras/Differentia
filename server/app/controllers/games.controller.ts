@@ -1,7 +1,7 @@
 import { GamesService } from '@app/services/local.games.service';
 import { Request, Response, Router } from 'express';
-import { Service } from 'typedi';
 import { StatusCodes } from 'http-status-codes';
+import { Service } from 'typedi';
 
 @Service()
 export class GamesController {
@@ -51,17 +51,16 @@ export class GamesController {
          *           $ref: '#/definitions/Message'
          */
         this.router.get(`/`, async (req: Request, res: Response) => {
-            res.json(await this.gamesService.getAllGames());
+            res.json(await this.gamesService.getAllGamesWithImagesData());
         });
 
-        this.router.post(`/newGame`, async (req: Request, res: Response) =>  {
+        this.router.post(`/newGame`, async (req: Request, res: Response) => {
             const newGame = req.body;
-            if(await this.gamesService.addGame(newGame)) {
+            if (await this.gamesService.addGame(newGame)) {
                 res.sendStatus(StatusCodes.CREATED);
-            }
-            else {
+            } else {
                 res.sendStatus(StatusCodes.BAD_REQUEST);
             }
-        })
+        });
     }
 }

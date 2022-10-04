@@ -37,18 +37,9 @@ export class ImageToImageDifferenceService {
         this.getInformationToGenerateDifferencesImage(imagesData);
     }
 
-    sendDifferentImagesInformationToServerForGameSolo(
-        mainCanvas: HTMLCanvasElement,
-        originalImage: HTMLImageElement,
-        modifiedImage: HTMLImageElement,
-        differencesImageToPutDataIn: HTMLImageElement,
-        offSet: number,
-    ) {
-        //let imagesData: ImageDataToCompare;
-
-        this.setupDataInService(mainCanvas, originalImage, modifiedImage, differencesImageToPutDataIn);
-
-        //imagesData = this.generateImagesDataToCompare(offSet);
+    getImagesData(mainCanvas: HTMLCanvasElement, originalImage: HTMLImageElement, modifiedImage: HTMLImageElement, offSet: number) {
+        this.setupDataInService(mainCanvas, originalImage, modifiedImage, new Image());
+        return this.generateImagesDataToCompare(offSet);
     }
 
     putDifferencesDataInImage(differentPixelsPositionArray: number[]) {

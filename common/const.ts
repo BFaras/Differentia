@@ -1,9 +1,12 @@
 // ChronometerService constants
-
 export const ONE_SECOND = 1000;
 export const HALF_A_SECOND = 500;
 export const MAX_TIME = 59;
 export const BASE_ONE = 10;
+// Image constants
+export const DEFAULT_WIDTH_CANVAs = 640;
+export const DEFAULT_HEIGHT_CANVAS = 480;
+
 export const RESET_VALUE = 0;
 
 // pop-up-validate number unavailable
@@ -34,3 +37,6 @@ export const DEFAULT_OFFSET = 3;
 export const MESSAGE_JEU_NON_CREER = "le jeu n'a pas été créer";
 export const MESSAGE_JEU_CREER = 'Le jeu a été créer ';
 export const MESSAGE_NOMBRE_DIFFERENCE_ERREUR = "Attention!! le nombre de difference n'est pas entre 3 et 9";
+
+export const ORIGINAL_IMAGE_POSITION = 0;
+export const MODIFIED_IMAGE_POSITION = 1;
