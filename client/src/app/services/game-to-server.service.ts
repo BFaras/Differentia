@@ -28,6 +28,14 @@ validateNumberOfDifferences() {
     return this.numberDifference >= 3 && this.numberDifference <= 9;
 }
 
+getDataUriImageDifference(){
+
+  this.urlImageOfDifference = this.urlImageOfDifference.slice(22)
+
+}
+
+
+
   addGame(inputName: ElementRef) {
     this.gameToAdd = { name: inputName.nativeElement.value,
         numberOfDifferences: this.numberDifference , 
@@ -36,13 +44,7 @@ validateNumberOfDifferences() {
             this.urlImageOfDifference] }
             
     if(this.validateNumberOfDifferences()) {
-      console.log(this.uploadFileService.getNameModifiedImage())
-        this.uploadFileService.upload(this.uploadFileService.getNameOriginalImage()).subscribe((e)=>{
-          console.log(e)
-        })
-        this.uploadFileService.upload(this.uploadFileService.getNameModifiedImage()).subscribe((e)=>{
-          console.log(e)
-        })
+       this.sendBothImagesToServer();
         this.communicationService
             .addGame(this.gameToAdd)
             .subscribe((httpStatus: HttpResponse<any>) => {
@@ -51,6 +53,15 @@ validateNumberOfDifferences() {
     }
     else alert(MESSAGE_NOMBRE_DIFFERENCE_ERREUR);
 }
+
+  sendBothImagesToServer(){
+    this.uploadFileService.upload(this.uploadFileService.getNameOriginalImage()).subscribe((e)=>{
+      console.log(e)
+    })
+    this.uploadFileService.upload(this.uploadFileService.getNameModifiedImage()).subscribe((e)=>{
+      console.log(e)
+    })
+  }
 
   getOriginalImageUploaded(){
     return this.originalImagesUploaded

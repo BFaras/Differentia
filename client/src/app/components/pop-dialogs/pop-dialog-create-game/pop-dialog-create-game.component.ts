@@ -20,6 +20,8 @@ export class PopDialogCreateGameComponent implements OnInit {
 
     addGame() {
         this.gameToServerService.addGame(this.nameInput)
+        this.gameToServerService.getDataUriImageDifference()
+
     }
 
     getNumberOfDifference(){
