@@ -73,7 +73,7 @@ export class SocketManager {
             socket.on('username is', (username: string) => {
                 socket.emit('show the username', username);
                 console.log(username);
-            })
+            });
 
             socket.on('kill the timer', () => {
                 clearInterval(this.timeInterval);
@@ -94,8 +94,11 @@ export class SocketManager {
                 this.clickResponse(socket, position);
             });
 
-            socket.on('End of game', () => {
-                clearInterval(this.timeInterval);
+            socket.on('Check if game is finished', (nbDifferencesFound: number) => {
+                if (nbDifferencesFound === 7)
+                    // Nombre a changer pour le nombre de differences du jeu actuel
+                    clearInterval(this.timeInterval);
+                // Ajouter un pop up avec le message de fin
             });
         });
     }
