@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
-import { EditImagesService } from '@app/services/edit-images.service';
+import { ListImagesRenderedService } from '@app/services/list-images-rendered.service';
 import { HeaderImageComponent } from './header-image.component';
 
 class MatDialogMock {
@@ -12,7 +12,7 @@ class MatDialogMock {
 describe('HeaderImageComponent', () => {
     let component: HeaderImageComponent;
     let fixture: ComponentFixture<HeaderImageComponent>;
-    let editImagesServiceSpy: jasmine.SpyObj<EditImagesService>;
+    let editImagesServiceSpy: jasmine.SpyObj<ListImagesRenderedService>;
 
     beforeEach(async () => {
         editImagesServiceSpy = jasmine.createSpyObj('EditImagesService', ['sendIdImageToRemove']);
@@ -21,7 +21,7 @@ describe('HeaderImageComponent', () => {
             declarations: [HeaderImageComponent],
             providers: [
                 { provide: MatDialog, useClass: MatDialogMock },
-                { provide: EditImagesService, useValue: editImagesServiceSpy },
+                { provide: ListImagesRenderedService, useValue: editImagesServiceSpy },
             ],
         }).compileComponents();
 

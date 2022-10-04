@@ -1,7 +1,6 @@
 import { HttpException } from '@app/classes/http.exception';
 import { DateController } from '@app/controllers/date.controller';
 import { ExampleController } from '@app/controllers/example.controller';
-import { GamesController } from './controllers/games.controller';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as express from 'express';
@@ -9,7 +8,8 @@ import { StatusCodes } from 'http-status-codes';
 import * as swaggerJSDoc from 'swagger-jsdoc';
 import * as swaggerUi from 'swagger-ui-express';
 import { Service } from 'typedi';
-
+import { GamesController } from './controllers/games.controller';
+import { ImagesController } from './controllers/images.controller';
 @Service()
 export class Application {
     app: express.Application;
@@ -18,7 +18,8 @@ export class Application {
 
     constructor(private readonly exampleController: ExampleController, 
         private readonly dateController: DateController,
-        private readonly gamesController: GamesController
+        private readonly gamesController: GamesController,
+        private readonly imagesController: ImagesController
     ) {
         this.app = express();   
 
@@ -41,6 +42,7 @@ export class Application {
     bindRoutes(): void {
         this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(this.swaggerOptions)));
         this.app.use('/example', this.exampleController.router);
+        this.app.use('/images', this.imagesController.router)
         this.app.use('/date', this.dateController.router);
         this.app.use('/games', this.gamesController.router);
         this.app.use('/', (req, res) => {
