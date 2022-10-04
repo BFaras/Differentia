@@ -43,7 +43,7 @@ describe('MouseHandlerService', () => {
     it('should reset differencesHashmap and differencesFound array', () => {
         let differencesHashmap = mouseService.differencesHashmap;
         let differencesNumberFound = mouseService.differencesNumberFound;
-        mouseService.resetData;
+        mouseService.resetData();
         expect(mouseService.differencesHashmap).to.equals(differencesHashmap);
         expect(mouseService.differencesNumberFound).to.equals(differencesNumberFound);
     });
