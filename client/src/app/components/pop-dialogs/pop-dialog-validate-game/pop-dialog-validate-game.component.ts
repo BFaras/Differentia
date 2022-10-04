@@ -10,7 +10,7 @@ export class PopDialogValidateGameComponent  {
     areImageDifferenceAndNumberDifferenceReady:boolean = false;
     isChecked = false
     isDisabled:boolean ;
-    valueChosen:number;
+    valueChosen:number = 3;
     numberDifference:number;
     imageDifference:any;
     constructor(private dialog: MatDialog) {}

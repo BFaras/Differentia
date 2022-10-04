@@ -1,5 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { ElementRef, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { MESSAGE_JEU_CREER, MESSAGE_JEU_NON_CREER, MESSAGE_NOMBRE_DIFFERENCE_ERREUR } from "@common/const";
 import { Game } from '@common/game';
 import { ImageToSendToServer } from '@common/imageToSendToServer';
@@ -16,12 +17,19 @@ export class GameToServerService {
   private modifiedImageUploaded:ImageToSendToServer
   gameToAdd: Game
 
-  constructor(private communicationService: CommunicationService,
+  constructor(private route:Router, private communicationService: CommunicationService,
     private uploadFileService : UploadFileService ) { }
-  //HTTP-CODE TO MODIFY AFTER MEETING SEB
+
+  goToAdmin(){
+    this.route.navigate(['/admin'])
+    
+}
   statusCodeTreatment(responseStatusCode: any) {
     if(responseStatusCode == StatusCodes.BAD_GATEWAY) alert(MESSAGE_JEU_NON_CREER);
-    else alert(MESSAGE_JEU_CREER);
+    else {
+      alert(MESSAGE_JEU_CREER)
+      this.goToAdmin()
+    };
 }
 
 validateNumberOfDifferences() {

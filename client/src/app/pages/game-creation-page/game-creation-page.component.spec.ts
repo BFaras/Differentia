@@ -74,6 +74,37 @@ describe('GameCreationPageComponent', () => {
       });
 
     it('should verify getDataMultiple',()=>{
+        mockEmitterGetMultipleImage.next("string");
+        expect(gameToServerServiceSpy.setOriginalUrlUploaded).toHaveBeenCalled()
+        expect(gameToServerServiceSpy.setModifiedUrlUploaded).toHaveBeenCalled()
         
     })
+
+    it('should verify setting Original url',()=>{
+        mockEmitterGetSingleImage.next({index:0, url :'string'})
+        expect(gameToServerServiceSpy.setOriginalUrlUploaded).toHaveBeenCalled()
+
+    })
+
+    it('should verify setting modified url',()=>{
+        mockEmitterGetSingleImage.next({index:1, url :'string'})
+        expect(gameToServerServiceSpy.setModifiedUrlUploaded).toHaveBeenCalled()
+
+    })
+
+    it('verify imageUpload',()=>{
+        expect(component.verifyTwoImagesUploaded()).toBeFalsy()
+
+        
+    })
+
+    it('should test getIdImageToRemove',()=>{
+        mockEmitterGetIDToRemove.next(0);
+        expect(gameToServerServiceSpy.setOriginalUrlUploaded).toHaveBeenCalled()
+
+
+    })
+
+    
 });
+

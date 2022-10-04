@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { PopDialogDownloadImagesComponent } from '@app/components/pop-dialogs/pop-dialog-download-images/pop-dialog-download-images.component';
 import { PopDialogValidateGameComponent } from '@app/components/pop-dialogs/pop-dialog-validate-game/pop-dialog-validate-game.component';
 import { GameToServerService } from '@app/services/game-to-server.service';
@@ -12,8 +11,7 @@ import { ListImagesRenderedService } from '@app/services/list-images-rendered.se
 })
 export class GameCreationPageComponent implements OnInit {
 
-    constructor(private dialog: MatDialog,
-         private route:Router,private editImageService:ListImagesRenderedService,
+    constructor(private dialog: MatDialog,private editImageService:ListImagesRenderedService,
          private gameToServerService: GameToServerService ) {
     }
 
@@ -58,10 +56,6 @@ export class GameCreationPageComponent implements OnInit {
         }
     }
 
-    goToAdmin(){
-        this.route.navigate(['/admin'])
-        
-    }
     onCreateDownloadPopDialog() {
         this.dialog.open(PopDialogDownloadImagesComponent, {
             height: '400px',
