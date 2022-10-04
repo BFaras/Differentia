@@ -48,8 +48,8 @@ export class MouseDetectionService {
     incrementNbrDifference(differenceIsValid: boolean, nbDiffTotal: number) {
         if (differenceIsValid) {
             this.nbrDifferencesFound += 1;
-            console.log("total :" + this.nbrDifferencesTotal);
-            console.log("found :" + this.nbrDifferencesFound);
+            console.log('total :' + nbDiffTotal);
+            console.log('found :' + this.nbrDifferencesFound);
             this.socketService.send('Check if game is finished', [this.nbrDifferencesFound, nbDiffTotal]);
         }
     }
