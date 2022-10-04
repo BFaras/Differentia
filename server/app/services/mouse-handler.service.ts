@@ -9,7 +9,7 @@ export class MouseHandlerService {
     differencesNumberFound: Array<number>;
     imagesData: ImageDataToCompare;
 
-    constructor(readonly imagesDataToCompare: ImageDataToCompare) {
+    constructor() {
         this.differencesHashmap = new Map<number, number>();
         this.differencesNumberFound = [];
     }
@@ -19,10 +19,15 @@ export class MouseHandlerService {
         this.generateDifferencesHashmap();
     }
 
+    resetData()
+    {
+        this.differencesHashmap = new Map<number, number>();
+        this.differencesNumberFound = [];
+    }
+
     isValidClick(mousePosition: Position): boolean {
         console.log(mousePosition);
 
-        // return true;
         return this.validateDifferencesOnClick(mousePosition);
     }
 
@@ -31,7 +36,7 @@ export class MouseHandlerService {
     }
 
     convertMousePositionToPixelNumber(mousePosition: Position): number {
-        return (mousePosition.x + 1) * this.imagesDataToCompare.imageWidth + mousePosition.y - this.imagesDataToCompare.imageWidth;
+        return (mousePosition.y + 1) * this.imagesData.imageWidth + mousePosition.x - this.imagesData.imageWidth;
     }
 
     validateDifferencesOnClick(mousePosition: Position): boolean {
@@ -48,6 +53,7 @@ export class MouseHandlerService {
             } else {
                 // Nouvelle Différence trouvée
                 this.differencesNumberFound.push(differencesNumber);
+                console.log(this.differencesNumberFound);
                 return pixelIsDifferent;
             }
         } else {

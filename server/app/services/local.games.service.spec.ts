@@ -7,14 +7,15 @@ import { GamesService } from './local.games.service';
 
 describe('Games service', () => {
     let gamesService: GamesService;
-    let allGames: Game[];
+    let allGamesTest: Game[];
     let validGameToAdd: Game;
-    let unvalidGameToAdd: Game;
+    let invalidGameToAdd: Game;
     let newTime: Time;
 
     beforeEach(async () => {
         gamesService = new GamesService();
-        allGames = [
+        gamesService.gamesFilePath = 'testGames.json';
+        allGamesTest = [
             {
                 name: 'Car game',
                 numberOfDifferences: 4,
@@ -27,48 +28,6 @@ describe('Games service', () => {
                 times: [],
                 images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
             },
-            {
-                name: 'House game',
-                numberOfDifferences: 6,
-                times: [],
-                images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
-            },
-            {
-                name: 'Plane game',
-                numberOfDifferences: 7,
-                times: [],
-                images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
-            },
-            {
-                name: 'TV game',
-                numberOfDifferences: 8,
-                times: [],
-                images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
-            },
-            {
-                name: 'Table game',
-                numberOfDifferences: 9,
-                times: [],
-                images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
-            },
-            {
-                name: 'Chair game',
-                numberOfDifferences: 9,
-                times: [],
-                images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
-            },
-            {
-                name: 'Clown game',
-                numberOfDifferences: 9,
-                times: [],
-                images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
-            },
-            {
-                name: 'Dog game',
-                numberOfDifferences: 9,
-                times: [],
-                images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
-            },
         ];
         validGameToAdd = {
             name: 'New Game',
@@ -76,7 +35,7 @@ describe('Games service', () => {
             times: [],
             images: ['image1', 'image2'],
         };
-        unvalidGameToAdd = {
+        invalidGameToAdd = {
             name: 'Car game',
             numberOfDifferences: 5,
             times: [],
@@ -93,26 +52,26 @@ describe('Games service', () => {
     });
 
     it('should input all the games in the "games" attribute when the JSON file is read', async () => {
-        await gamesService.asyncReadFile();
-        expect(gamesService.games).to.deep.equals(allGames);
+        await gamesService.asyncReadGamesFile();
+        expect(gamesService.games).to.deep.equals(allGamesTest);
     });
 
     it('should return all the games in the JSON file', async () => {
-        expect(await gamesService.getAllGames()).to.deep.equals(allGames);
+        expect(await gamesService.getAllGames()).to.deep.equals(allGamesTest);
     });
 
     it('should not validate the name of the game when a game with the same name already exists', async () => {
-        await gamesService.asyncReadFile();
-        expect(gamesService.validateName(unvalidGameToAdd.name)).to.be.false;
+        await gamesService.asyncReadGamesFile();
+        expect(gamesService.validateName(invalidGameToAdd.name)).to.be.false;
     });
 
     it('should validate the name of the game when a game with the same name doesnt already exists', async () => {
-        await gamesService.asyncReadFile();
+        await gamesService.asyncReadGamesFile();
         expect(gamesService.validateName(validGameToAdd.name)).to.be.true;
     });
 
     it('should not add a game when a game with the same name already exists', async () => {
-        expect(await gamesService.addGame(unvalidGameToAdd)).to.be.false;
+        expect(await gamesService.addGame(invalidGameToAdd)).to.be.false;
     });
 
     it('should add a game when a game with the same name doesnt already exists', async () => {
@@ -130,13 +89,26 @@ describe('Games service', () => {
         expect(gamesService.games).to.not.equal(oldGames);
     });
 
+    it('should return all games with images data in the data structure', async () => {
+        const FIRST_GAME = 0;
+        const LAST_GAME = 1;
+        const gamesWithImagesData: Game[] = await gamesService.getAllGamesWithImagesData();
+
+        for (let i = FIRST_GAME; i <= LAST_GAME; i++) {
+            expect(gamesWithImagesData[i].name).to.equal(allGamesTest[i].name);
+            expect(gamesWithImagesData[i].numberOfDifferences).to.equal(allGamesTest[i].numberOfDifferences);
+            expect(gamesWithImagesData[i].times).to.deep.equals(allGamesTest[i].times);
+            expect(gamesWithImagesData[i].images).to.not.deep.equals(allGamesTest[i].images);
+        }
+    });
+
     describe('Error handling', async () => {
         it('should throw an error when fs.promises.writeFile() crashes', async () => {
             const stub = sinon.stub(fs.promises, 'writeFile').callsFake(async () => {
                 throw new Error();
             });
             const spy = sinon.spy(console, 'log');
-            expect(gamesService.asyncWriteFile()).to.eventually.rejectedWith(Error);
+            expect(gamesService.asyncWriteInGamesFile()).to.eventually.rejectedWith(Error);
             expect(stub.callsFake);
             expect(spy.calledOnce);
         });
@@ -146,7 +118,7 @@ describe('Games service', () => {
                 throw new Error();
             });
             const spy = sinon.spy(console, 'log');
-            expect(gamesService.asyncReadFile()).to.eventually.rejectedWith(Error);
+            expect(gamesService.asyncReadGamesFile()).to.eventually.rejectedWith(Error);
             expect(stub.callsFake);
             expect(spy.calledOnce);
         });

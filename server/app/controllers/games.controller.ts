@@ -1,5 +1,4 @@
 import { GamesService } from '@app/services/local.games.service';
-import { MouseHandlerService } from '@app/services/mouse-handler.service';
 import { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
@@ -8,7 +7,7 @@ import { Service } from 'typedi';
 export class GamesController {
     router: Router;
 
-    constructor(private gamesService: GamesService, private mouseHandler: MouseHandlerService) {
+    constructor(private gamesService: GamesService) {
         gamesService = new GamesService();
         this.configureRouter();
     }
@@ -62,11 +61,6 @@ export class GamesController {
             } else {
                 res.sendStatus(StatusCodes.BAD_REQUEST);
             }
-        });
-
-        this.router.post(`/imagesdata`, (req: Request, res: Response) => {
-            console.log('aaa');
-            this.mouseHandler.updateImageData(req.body);
         });
     }
 }

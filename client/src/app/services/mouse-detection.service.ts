@@ -5,36 +5,54 @@ import { DrawService } from './draw.service';
 import { SocketClientService } from './socket-client.service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class MouseDetectionService {
+    constructor(public socketService: SocketClientService, private drawService: DrawService) {}
+    mousePosition: Position = { x: 0, y: 0 };
+    nbrDifferencesFound: number = 0;
 
-  constructor(public socketService: SocketClientService, private drawService: DrawService) { }
-  mousePosition: Position = { x: 0, y: 0 };
-
-  mouseHitDetect(event: MouseEvent){
-    if (event.button === MouseButton.Left) {
-      this.mousePosition = { x: event.offsetX, y: event.offsetY };
-      console.log('mouseHit');
-      this.socketService.send("Verify position", this.mousePosition);
+    mouseHitDetect(event: MouseEvent) {
+        if (event.button === MouseButton.Left) {
+            this.mousePosition = { x: event.offsetX, y: event.offsetY };
+            console.log('mouseHit');
+            this.socketService.send('Verify position', this.mousePosition);
+        }
     }
-  }
 
-  getPosition(mousePosition:Position){return mousePosition;}
+    playSound(differenceIsValid: boolean) {
+        let audio = new Audio();
+        if (differenceIsValid) audio.src = '../../assets/sounds/validSound.mp3';
+        else audio.src = '../../assets/sounds/invalidSound.mp3';
+        audio.load();
+        audio.play();
+    }
 
-  playSound(differenceIsValid:boolean){
-      let audio = new Audio();
-      if (differenceIsValid) audio.src ="../../assets/sounds/validSound.mp3";
-      else audio.src ="../../assets/sounds/invalidSound.mp3";
-      audio.load();
-      audio.play();
-  }
+    clickMessage(differenceIsValid: boolean) {
+        let message: string = '';
+        if (differenceIsValid) {
+            message = 'GOOD JOB';
+            this.drawService.context1.fillStyle = 'green';
+            this.drawService.context2.fillStyle = 'green';
+        } else {
+            message = 'ERROR';
+            this.drawService.context1.fillStyle = 'red';
+            this.drawService.context2.fillStyle = 'red';
+        }
 
-  clickMessage(differenceIsValid:boolean){
-    let message: string = '';
-    if (differenceIsValid) message = "GOOD JOB";
-    else message ="ERROR";
-    this.drawService.drawWord(message, this.mousePosition);
-    console.log('draw');
-  }
+        this.drawMessage(message);
+        console.log('draw');
+    }
+
+    incrementNbrDifference(differenceIsValid: boolean) {
+        if (differenceIsValid) {
+            this.nbrDifferencesFound += 1;
+            this.socketService.send('Check if game is finished', this.nbrDifferencesFound);
+        }
+    }
+
+    drawMessage(message: string) {
+        this.drawService.drawWord(message, this.mousePosition, this.drawService.context1);
+        this.drawService.drawWord(message, this.mousePosition, this.drawService.context2);
+    }
 }

@@ -10,7 +10,7 @@
             "name": "Bike game",
             "numberOfDifferences": 5,
             "times": [],
-            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
+            "images": ["image_7_diff.bmp", "image_7_diff_2.bmp"]
         },
         {
             "name": "House game",
@@ -22,7 +22,7 @@
             "name": "Plane game",
             "numberOfDifferences": 7,
             "times": [],
-            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
+            "images": ["image_7_diff.bmp", "image_7_diff_2.bmp"]
         },
         {
             "name": "TV game",
@@ -34,13 +34,13 @@
             "name": "Table game",
             "numberOfDifferences": 9,
             "times": [],
-            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
+            "images": ["image_7_diff.bmp", "image_7_diff_2.bmp"]
         },
         {
             "name": "Chair game",
             "numberOfDifferences": 9,
             "times": [],
-            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
+            "images": ["image_7_diff.bmp", "image_7_diff_2.bmp"]
         },
         {
             "name": "Clown game",

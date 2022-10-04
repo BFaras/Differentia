@@ -17,7 +17,8 @@ describe('MouseHandlerService', () => {
     };
 
     beforeEach(async () => {
-        mouseService = new MouseHandlerService(imageService);
+        mouseService = new MouseHandlerService();
+        mouseService.updateImageData(imageService);
     });
 
     it('should be created', () => {
@@ -30,7 +31,6 @@ describe('MouseHandlerService', () => {
         updateImagespy.restore();
         mouseService.isValidClick(position);
         sinon.assert.calledWith(updateImagespy, imageService);
-        // sinon.assert.calledOnce(updateImagespy);
     });
 
     it('should called ', () => {
@@ -38,6 +38,5 @@ describe('MouseHandlerService', () => {
         convertPositionspy.restore();
         mouseService.isValidClick(position);
         sinon.assert.alwaysCalledWith(convertPositionspy, position);
-        // sinon.assert.calledOnce(updateImagespy);
     });
 });

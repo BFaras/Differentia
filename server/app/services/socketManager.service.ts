@@ -4,6 +4,7 @@ import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
 import * as http from 'http';
 import * as io from 'socket.io';
+import { clearInterval } from 'timers';
 import Container from 'typedi';
 import { ChronometerService } from './chronometer.service';
 import { DifferenceDetectorService } from './difference-detector.service';
@@ -33,26 +34,6 @@ export class SocketManager {
                 console.log(message);
             });
 
-            // socket.on('validate', (word: string) => {
-            //     const isValid = word.length > 5;
-            //     socket.emit('wordValidated', isValid);
-            // })
-
-            // socket.on('broadcastAll', (message: string) => {
-            //     this.sio.sockets.emit("massMessage", `${socket.id} : ${message}`)
-            // })
-
-            // socket.on('joinRoom', () => {
-            //     socket.join(this.room);
-            // });
-
-            // socket.on('roomMessage', (message: string) => {
-            //     // Seulement un membre de la salle peut envoyer un message aux autres
-            //     if (socket.rooms.has(this.room)) {
-            //         this.sio.to(this.room).emit("roomMessage", `${socket.id} : ${message}`);
-            //     }
-            // });
-
             socket.on('disconnect', (reason) => {
                 console.log(`Deconnexion par l'utilisateur avec id : ${socket.id}`);
                 console.log(`Raison de deconnexion : ${reason}`);
@@ -67,8 +48,11 @@ export class SocketManager {
                 }, 1000);
 
                 await this.sendImagesToClient(message, socket);
+            });
 
-                //socket.emit('images', this.getImages(message));
+            socket.on('username is', (username: string) => {
+                socket.emit('show the username', username);
+                console.log(username);
             });
 
             socket.on('kill the timer', () => {
@@ -82,8 +66,20 @@ export class SocketManager {
                 socket.emit('game creation nb of differences', differenceDetector.getNbDifferences());
             });
 
+            socket.on('image data to begin game', (imagesData: ImageDataToCompare) => {
+                this.mouseHandlerService.updateImageData(imagesData);
+            });
+
             socket.on('Verify position', (position) => {
                 this.clickResponse(socket, position);
+            });
+
+            socket.on('Check if game is finished', (nbDifferencesFound: number) => {
+                if (nbDifferencesFound === 7)
+                    // Nombre a changer pour le nombre de differences du jeu actuel
+                    this.mouseHandlerService.resetData();
+                    clearInterval(this.timeInterval);
+                // Ajouter un pop up avec le message de fin
             });
         });
     }
@@ -104,24 +100,4 @@ export class SocketManager {
 
         socket.emit('classic solo images', [gameImagesData[ORIGINAL_IMAGE_POSITION], gameImagesData[MODIFIED_IMAGE_POSITION]]);
     }
-    /*
-    private getImages(gameName: string) {
-        const originalImagePos = 0;
-        const modifiedImagePos = 1;
-        console.log('image test');
-        return [this.getImage(gameName, originalImagePos), this.getImage(gameName, modifiedImagePos)];
-    }
-    private getImage(gameName: string, position: number) {
-        let imageToSend: HTMLImageElement = new Image(); // erreur ici : Image is not defined
-        imageToSend.src = this.getImageURL(gameName, position);
-        return imageToSend;
-    }
-
-    // ajouter une fonction pour aller get les url des images dans le json
-    private getImageURL(gameName: string, imagePos: number) {
-        // utilise gameName pour avoir les infos sur la game
-        // ensuite, utilise imagePos pour avoir limage originale ou limage modifie
-        return '../../assets/image_7_diff.bmp'; // trouver l'url dans games.json si cest la qu'elles sont enregistrer
-    }
-    */
 }

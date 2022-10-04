@@ -21,7 +21,7 @@
         </ng-container>
         <ng-container *ngIf="buttonPage == 'GameSelection'">
             <button mat-raised-button>{{ selectionGameFormsButton[0] }}</button>
-            <button mat-stroked-button (click)="gamePage()" routerLink="/game">{{ selectionGameFormsButton[1] }}</button>
+            <button mat-stroked-button (click)="openDialog()">{{ selectionGameFormsButton[1] }}</button>
         </ng-container>
     </div>
 </body>

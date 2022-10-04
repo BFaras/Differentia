@@ -39,24 +39,28 @@ describe('FormService', () => {
 
     it('should receive info', () => {
         const parseInfoSpy = spyOn(service, 'parseGameList');
+        service.receiveGameInformations();
         formsSubject.next(allGames);
         expect(parseInfoSpy).toHaveBeenCalled();
     });
 
     it('should fill game name list', () => {
         const listGameNameSpy = spyOn(service, 'fillListGameName');
+        service.receiveGameInformations();
         formsSubject.next(allGames);
         expect(listGameNameSpy).toHaveBeenCalled();
     });
 
     it('should fill game image list', () => {
         const listGameImageSpy = spyOn(service, 'fillListGameImage');
+        service.receiveGameInformations();
         formsSubject.next(allGames);
         expect(listGameImageSpy).toHaveBeenCalled();
     });
 
     it('should initialize gameForm structure', () => {
         const gameFormSpy = spyOn(service, 'initializeGameForm');
+        service.receiveGameInformations();
         formsSubject.next(allGames);
         expect(gameFormSpy).toHaveBeenCalled();
     });

@@ -1,9 +1,9 @@
-import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { DrawService } from '@app/services/draw.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { MouseDetectionService } from '@app/services/mouse-detection.service';
 import { SocketClientService } from '@app/services/socket-client.service';
-import { DEFAULT_HEIGHT_CANVAS, DEFAULT_WIDTH_CANVAs } from '@common/const';
+import { DEFAULT_HEIGHT_CANVAS, DEFAULT_WIDTH_CANVAs, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { Position } from '@common/position';
 @Component({
     selector: 'app-play-area',
@@ -13,50 +13,65 @@ import { Position } from '@common/position';
 export class PlayAreaComponent implements OnInit {
     @ViewChild('originalCanvas', { static: false }) private originalCanvas!: ElementRef<HTMLCanvasElement>;
     @ViewChild('modifiedCanvas', { static: false }) private modifiedCanvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('clickCanvas1', { static: false }) private clickCanvas1!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('clickCanvas2', { static: false }) private clickCanvas2!: ElementRef<HTMLCanvasElement>;
+    @Input() differentImages: HTMLImageElement[];
     mousePosition: Position = { x: 0, y: 0 };
-    readonly originalImage: HTMLImageElement = new Image();
-    readonly modifiedImage: HTMLImageElement = new Image();
-    readonly finalDifferencesImage: HTMLImageElement = new Image();
 
     private canvasSize = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
     constructor(
         public socketService: SocketClientService,
         private readonly drawService: DrawService,
         private readonly mouseDetection: MouseDetectionService,
-        private renderer: Renderer2,
         private imageToImageDifferenceService: ImageToImageDifferenceService,
+        private renderer: Renderer2,
     ) {}
 
     async ngOnInit(): Promise<void> {
         this.socketService.connect();
         this.configurePlayAreaSocket();
 
-        const mainCanvas = this.renderer.createElement('canvas');
+        await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[ORIGINAL_IMAGE_POSITION]);
+        await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[MODIFIED_IMAGE_POSITION]);
 
-        this.originalImage.src = '../../../assets/images/gradation.bmp';
-        await this.imageToImageDifferenceService.waitForImageToLoad(this.originalImage);
-        this.modifiedImage.src = '../../../assets/images/image_7_diff.bmp';
-        await this.imageToImageDifferenceService.waitForImageToLoad(this.modifiedImage);
-
-        this.imageToImageDifferenceService.sendDifferentImagesInformationToServerForGameSolo(
-            mainCanvas,
-            this.originalImage,
-            this.modifiedImage,
-            this.finalDifferencesImage,
-            0,
-        );
-
-        this.displayImage();
+        this.displayImages();
+        this.sendImagesDataToServer();
     }
 
-    displayImage() {
-        this.drawService.context = this.originalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.drawService.context.drawImage(this.originalImage, 0, 0);
+    displayImages() {
+        this.drawService.context1 = this.clickCanvas1.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawService.context1.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);
         this.originalCanvas.nativeElement.focus();
 
-        this.drawService.context = this.modifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.drawService.context.drawImage(this.modifiedImage, 0, 0);
+        this.drawService.context2 = this.clickCanvas2.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawService.context2.drawImage(this.differentImages[MODIFIED_IMAGE_POSITION], 0, 0);
         this.modifiedCanvas.nativeElement.focus();
+
+        this.drawService.context3 = this.originalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawService.context3.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);
+        this.originalCanvas.nativeElement.focus();
+
+        this.drawService.context4 = this.modifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawService.context4.drawImage(this.differentImages[MODIFIED_IMAGE_POSITION], 0, 0);
+        this.modifiedCanvas.nativeElement.focus();
+    }
+
+    sendImagesDataToServer() {
+        if (
+            this.differentImages[ORIGINAL_IMAGE_POSITION] !== new Image(640, 480) &&
+            this.differentImages[MODIFIED_IMAGE_POSITION] !== new Image(640, 480)
+        ) {
+            const mainCanvas = this.renderer.createElement('canvas');
+            this.socketService.send(
+                'image data to begin game',
+                this.imageToImageDifferenceService.getImagesData(
+                    mainCanvas,
+                    this.differentImages[ORIGINAL_IMAGE_POSITION],
+                    this.differentImages[MODIFIED_IMAGE_POSITION],
+                    0,
+                ),
+            );
+        }
     }
 
     get width(): number {
@@ -67,31 +82,6 @@ export class PlayAreaComponent implements OnInit {
         return this.canvasSize.y;
     }
 
-    /* ngOnInit() {
-        this.socketService.connect();
-        this.configurePlayAreaSocket();
-    }*/
-
-    endGame() {
-        // Fonction appeler quand le joueur gagne
-        this.displayWinMessage();
-        this.stopTimer(); // verifier si cest au bon endroit
-        this.stopClicking();
-    }
-
-    displayWinMessage() {
-        // TO DO : Fonctoin qui affiche un message de felicitations au joueur
-        //         Devrait etre un pop-up, avec un bouton vers le menu principal
-    }
-
-    stopTimer() {
-        // TO DO (voir avec sebastien) : Fonction qui arrete le timer et qui garde le temps en memoire
-    }
-
-    stopClicking() {
-        // TO DO : Fonction qui fait en sorte d'ignorer les clics sur les images
-        //         Possible de juste fermer le socket pour les
-    }
     detectDifference(event: MouseEvent) {
         this.mouseDetection.mouseHitDetect(event);
     }
@@ -100,6 +90,7 @@ export class PlayAreaComponent implements OnInit {
         this.socketService.on('Valid click', (clickResponse: boolean) => {
             this.mouseDetection.playSound(clickResponse);
             this.mouseDetection.clickMessage(clickResponse);
+            this.mouseDetection.incrementNbrDifference(clickResponse);
         });
     }
 }

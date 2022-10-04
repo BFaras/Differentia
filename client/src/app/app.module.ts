@@ -26,6 +26,7 @@ import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
 import { GameSelectionComponent } from './pages/game-selection/game-selection.component';
 import { TestPageComponent } from './pages/test-page/test-page.component';
+import { PopDialogUsernameComponent } from './components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
 
 /**
  * Main module that is used in main.ts.
@@ -55,6 +56,7 @@ import { TestPageComponent } from './pages/test-page/test-page.component';
         AdminPageComponent,
         DialogInputComponent,
         TestPageComponent,
+        PopDialogUsernameComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
     providers: [ { provide: MAT_DIALOG_DATA , useValue: {bothImage : false} },],
