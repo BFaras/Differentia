@@ -97,6 +97,7 @@ export class SocketManager {
             socket.on('Check if game is finished', (nbDifferencesFound: number) => {
                 if (nbDifferencesFound === 7)
                     // Nombre a changer pour le nombre de differences du jeu actuel
+                    this.mouseHandlerService.resetData();
                     clearInterval(this.timeInterval);
                 // Ajouter un pop up avec le message de fin
             });
