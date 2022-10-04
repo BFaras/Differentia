@@ -19,6 +19,12 @@ export class MouseHandlerService {
         this.generateDifferencesHashmap();
     }
 
+    resetData()
+    {
+        this.differencesHashmap = new Map<number, number>();
+        this.differencesNumberFound = [];
+    }
+
     isValidClick(mousePosition: Position): boolean {
         console.log(mousePosition);
 

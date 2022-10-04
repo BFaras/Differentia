@@ -34,26 +34,6 @@ export class SocketManager {
                 console.log(message);
             });
 
-            // socket.on('validate', (word: string) => {
-            //     const isValid = word.length > 5;
-            //     socket.emit('wordValidated', isValid);
-            // })
-
-            // socket.on('broadcastAll', (message: string) => {
-            //     this.sio.sockets.emit("massMessage", `${socket.id} : ${message}`)
-            // })
-
-            // socket.on('joinRoom', () => {
-            //     socket.join(this.room);
-            // });
-
-            // socket.on('roomMessage', (message: string) => {
-            //     // Seulement un membre de la salle peut envoyer un message aux autres
-            //     if (socket.rooms.has(this.room)) {
-            //         this.sio.to(this.room).emit("roomMessage", `${socket.id} : ${message}`);
-            //     }
-            // });
-
             socket.on('disconnect', (reason) => {
                 console.log(`Deconnexion par l'utilisateur avec id : ${socket.id}`);
                 console.log(`Raison de deconnexion : ${reason}`);
@@ -68,6 +48,11 @@ export class SocketManager {
                 }, 1000);
 
                 await this.sendImagesToClient(message, socket);
+            });
+
+            socket.on('username is', (username: string) => {
+                socket.emit('show the username', username);
+                console.log(username);
             });
 
             socket.on('kill the timer', () => {
@@ -89,8 +74,12 @@ export class SocketManager {
                 this.clickResponse(socket, position);
             });
 
-            socket.on('End of game', () => {
-                clearInterval(this.timeInterval);
+            socket.on('Check if game is finished', (nbDifferencesFound: number) => {
+                if (nbDifferencesFound === 7)
+                    // Nombre a changer pour le nombre de differences du jeu actuel
+                    this.mouseHandlerService.resetData();
+                    clearInterval(this.timeInterval);
+                // Ajouter un pop up avec le message de fin
             });
         });
     }

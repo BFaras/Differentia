@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { SocketClientService } from '@app/services/socket-client.service';
+import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component'
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-game-form',
@@ -12,10 +14,24 @@ export class GameFormComponent {
     @Input() buttonPage: string;
     adminGameFormsButton = ['Supprimer', 'Réinitialiser'];
     selectionGameFormsButton = ['Créer', 'Jouer'];
-    constructor(private socketService: SocketClientService) {}
+    constructor(private socketService: SocketClientService,
+        private dialog: MatDialog) {}
 
-    gamePage() {
-        console.log('cliqué');
-        this.socketService.send('game page', this.gameForm.gameName);
+    ngOnInit() {
+        this.socketService.connect();
     }
+
+    openDialog() {
+        this.dialog.open(PopDialogUsernameComponent, {
+            height: '400px',
+            width: '600px',
+            data: {
+                nameGame: this.gameForm.gameName
+            }
+        });
+    }
+
+    // gamePage() {
+    //     this.socketService.send('game page', this.gameForm.gameName);
+    // }
 }

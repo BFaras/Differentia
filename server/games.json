@@ -1,0 +1,64 @@
+{
+    "games": [
+        {
+            "name": "Car game",
+            "numberOfDifferences": 4,
+            "times": [],
+            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
+        },
+        {
+            "name": "Bike game",
+            "numberOfDifferences": 5,
+            "times": [],
+            "images": ["image_7_diff.bmp", "image_7_diff_2.bmp"]
+        },
+        {
+            "name": "House game",
+            "numberOfDifferences": 6,
+            "times": [],
+            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
+        },
+        {
+            "name": "Plane game",
+            "numberOfDifferences": 7,
+            "times": [],
+            "images": ["image_7_diff.bmp", "image_7_diff_2.bmp"]
+        },
+        {
+            "name": "TV game",
+            "numberOfDifferences": 8,
+            "times": [],
+            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
+        },
+        {
+            "name": "Table game",
+            "numberOfDifferences": 9,
+            "times": [],
+            "images": ["image_7_diff.bmp", "image_7_diff_2.bmp"]
+        },
+        {
+            "name": "Chair game",
+            "numberOfDifferences": 9,
+            "times": [],
+            "images": ["image_7_diff.bmp", "image_7_diff_2.bmp"]
+        },
+        {
+            "name": "Clown game",
+            "numberOfDifferences": 9,
+            "times": [],
+            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
+        },
+        {
+            "name": "Dog game",
+            "numberOfDifferences": 9,
+            "times": [],
+            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
+        },
+        {
+            "name": "new game",
+            "numberOfDifferences": 6,
+            "times": [],
+            "images": ["ImageBlanche.bmp", "image_7_diff.bmp"]
+        }
+    ]
+}
