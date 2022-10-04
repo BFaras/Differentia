@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ImageSize } from '@app/classes/image-size';
+import { FichierTeleverserService } from './fichier-televerser.service';
 import { ListImagesRenderedService } from './list-images-rendered.service';
 @Injectable({
     providedIn: 'root',
@@ -9,7 +10,13 @@ export class VerifyImageService {
     imageToVerify = new Image();
     imageSizeConstraint: ImageSize = new ImageSize(640, 480);
     bitDepth:number
-    constructor(private editImagesService: ListImagesRenderedService,private sanitizer: DomSanitizer){}
+    file:File;
+    constructor(private editImagesService: ListImagesRenderedService,private sanitizer: DomSanitizer,
+        private uploadFileService : FichierTeleverserService){}
+
+    setFile(file:File){
+        this.file = file;
+    }
 
     transformByteToImage(buffer : any) {
         let bytes = new Uint8Array(buffer)
@@ -64,6 +71,15 @@ export class VerifyImageService {
             this.editImagesService.activatedEmitterUrlImageBoth.emit(urlOfImage);
         } else {
             this.editImagesService.activatedEmitterUrlImageSingle.emit({ index: imageInfo.indexOfImage, url: urlOfImage });
+            console.log(imageInfo.indexOfImage)
+            if(imageInfo.indexOfImage == 0){
+                this.uploadFileService.setOriginalImage(this.file,imageInfo.indexOfImage)
+                console.log('premier original')
+            }
+            if (imageInfo.indexOfImage == 1){
+                console.log('2em modifier')
+                this.uploadFileService.setModifiedImage(this.file,imageInfo.indexOfImage)
+            }
         }
     }
 }

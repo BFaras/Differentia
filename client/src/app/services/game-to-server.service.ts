@@ -5,6 +5,7 @@ import { Game } from '@common/game';
 import { ImageToSendToServer } from '@common/imageToSendToServer';
 import { StatusCodes } from 'http-status-codes';
 import { CommunicationService } from './communication.service';
+import { FichierTeleverserService } from './fichier-televerser.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,7 +16,8 @@ export class GameToServerService {
   private modifiedImageUploaded:ImageToSendToServer
   gameToAdd: Game
 
-  constructor(private communicationService: CommunicationService) { }
+  constructor(private communicationService: CommunicationService,
+    private uploadFileService : FichierTeleverserService ) { }
   //HTTP-CODE TO MODIFY AFTER MEETING SEB
   statusCodeTreatment(responseStatusCode: any) {
     if(responseStatusCode == StatusCodes.BAD_GATEWAY) alert(MESSAGE_JEU_NON_CREER);
@@ -29,11 +31,18 @@ validateNumberOfDifferences() {
   addGame(inputName: ElementRef) {
     this.gameToAdd = { name: inputName.nativeElement.value,
         numberOfDifferences: this.numberDifference , 
-        times:[], images : [this.originalImagesUploaded.image,
-            this.modifiedImageUploaded.image,
+        times:[], images : [this.uploadFileService.getNameOriginalImage().name,
+            this.uploadFileService.getNameModifiedImage().name,
             this.urlImageOfDifference] }
             
     if(this.validateNumberOfDifferences()) {
+      console.log(this.uploadFileService.getNameModifiedImage())
+        this.uploadFileService.upload(this.uploadFileService.getNameOriginalImage()).subscribe((e)=>{
+          console.log(e)
+        })
+        this.uploadFileService.upload(this.uploadFileService.getNameModifiedImage()).subscribe((e)=>{
+          console.log(e)
+        })
         this.communicationService
             .addGame(this.gameToAdd)
             .subscribe((httpStatus: HttpResponse<any>) => {
