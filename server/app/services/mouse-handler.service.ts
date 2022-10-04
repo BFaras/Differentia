@@ -19,8 +19,7 @@ export class MouseHandlerService {
         this.generateDifferencesHashmap();
     }
 
-    resetData()
-    {
+    resetData() {
         this.differencesHashmap = new Map<number, number>();
         this.differencesNumberFound = [];
     }
