@@ -3,6 +3,8 @@ import { DrawService } from '@app/services/draw.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { MouseDetectionService } from '@app/services/mouse-detection.service';
 import { SocketClientService } from '@app/services/socket-client.service';
+import { PopDialogEndgameComponent } from '../pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
+import { MatDialog } from '@angular/material/dialog';
 import { DEFAULT_HEIGHT_CANVAS, DEFAULT_WIDTH_CANVAs, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { Position } from '@common/position';
 @Component({
@@ -16,6 +18,7 @@ export class PlayAreaComponent implements OnInit {
     @ViewChild('clickCanvas1', { static: false }) private clickCanvas1!: ElementRef<HTMLCanvasElement>;
     @ViewChild('clickCanvas2', { static: false }) private clickCanvas2!: ElementRef<HTMLCanvasElement>;
     @Input() differentImages: HTMLImageElement[];
+    @Input() nbDifferencesTotal: number = 0;
     mousePosition: Position = { x: 0, y: 0 };
 
     private canvasSize = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
@@ -24,18 +27,26 @@ export class PlayAreaComponent implements OnInit {
         private readonly drawService: DrawService,
         private readonly mouseDetection: MouseDetectionService,
         private imageToImageDifferenceService: ImageToImageDifferenceService,
+        private dialog: MatDialog,
         private renderer: Renderer2,
     ) {}
 
     async ngOnInit(): Promise<void> {
         this.socketService.connect();
         this.configurePlayAreaSocket();
+        
+
+        this.mouseDetection.nbrDifferencesTotal = this.nbDifferencesTotal;
 
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[ORIGINAL_IMAGE_POSITION]);
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[MODIFIED_IMAGE_POSITION]);
 
         this.displayImages();
         this.sendImagesDataToServer();
+    }
+
+    async ngAfterViewInit() {
+        console.log("nb differences =" + this.nbDifferencesTotal);
     }
 
     displayImages() {
@@ -86,11 +97,22 @@ export class PlayAreaComponent implements OnInit {
         this.mouseDetection.mouseHitDetect(event);
     }
 
+    openDialog() {
+        this.dialog.open(PopDialogEndgameComponent, {
+            height: '400px',
+            width: '600px'
+        });
+    }
+
     configurePlayAreaSocket() {
         this.socketService.on('Valid click', (clickResponse: boolean) => {
             this.mouseDetection.playSound(clickResponse);
             this.mouseDetection.clickMessage(clickResponse);
-            this.mouseDetection.incrementNbrDifference(clickResponse);
+            this.mouseDetection.incrementNbrDifference(clickResponse, this.nbDifferencesTotal);
         });
+
+        this.socketService.on('End game', () => {
+            this.openDialog();
+        })
     }
 }

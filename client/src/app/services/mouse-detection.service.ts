@@ -10,6 +10,7 @@ import { SocketClientService } from './socket-client.service';
 export class MouseDetectionService {
     constructor(public socketService: SocketClientService, private drawService: DrawService) {}
     mousePosition: Position = { x: 0, y: 0 };
+    nbrDifferencesTotal: number;
     nbrDifferencesFound: number = 0;
 
     mouseHitDetect(event: MouseEvent) {
@@ -44,10 +45,12 @@ export class MouseDetectionService {
         console.log('draw');
     }
 
-    incrementNbrDifference(differenceIsValid: boolean) {
+    incrementNbrDifference(differenceIsValid: boolean, nbDiffTotal: number) {
         if (differenceIsValid) {
             this.nbrDifferencesFound += 1;
-            this.socketService.send('Check if game is finished', this.nbrDifferencesFound);
+            console.log("total :" + this.nbrDifferencesTotal);
+            console.log("found :" + this.nbrDifferencesFound);
+            this.socketService.send('Check if game is finished', [this.nbrDifferencesFound, nbDiffTotal]);
         }
     }
 

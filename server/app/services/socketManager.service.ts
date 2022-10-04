@@ -56,8 +56,7 @@ export class SocketManager {
             });
 
             socket.on('kill the timer', () => {
-                clearInterval(this.timeInterval);
-                this.chronometerService.resetChrono();
+                this.endTimer();
             });
 
             socket.on('detect images difference', (imagesData: ImageDataToCompare) => {
@@ -74,19 +73,21 @@ export class SocketManager {
                 this.clickResponse(socket, position);
             });
 
-            socket.on('Check if game is finished', (nbDifferencesFound: number) => {
-                if (nbDifferencesFound === 7)
+            socket.on('Check if game is finished', (nbDifferencesFoundAndTotal: number[]) => {
+                // let nbDifferencesFound = nbDifferencesFoundAndTotal[0];
+                // let nbDifferencesTotal = nbDifferencesFoundAndTotal[1];
+                if (nbDifferencesFoundAndTotal[0] === nbDifferencesFoundAndTotal[1]) {
                     // Nombre a changer pour le nombre de differences du jeu actuel
                     this.mouseHandlerService.resetData();
-                    clearInterval(this.timeInterval);
-                // Ajouter un pop up avec le message de fin
+                    this.endTimer();
+                    socket.emit('End game');
+                }
             });
         });
     }
 
     private emitTime(socket: io.Socket) {
         this.chronometerService.increaseTime();
-        console.log(this.chronometerService.time); // Là que pour debug
         socket.emit('time', this.chronometerService.time);
     }
 
@@ -99,5 +100,10 @@ export class SocketManager {
         const gameImagesData: string[] = await this.gamesService.getGameImagesData(gameName);
 
         socket.emit('classic solo images', [gameImagesData[ORIGINAL_IMAGE_POSITION], gameImagesData[MODIFIED_IMAGE_POSITION]]);
+    }
+
+    private endTimer() {
+        clearInterval(this.timeInterval);
+        this.chronometerService.resetChrono();
     }
 }
