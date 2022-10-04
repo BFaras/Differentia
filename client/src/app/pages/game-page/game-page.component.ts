@@ -64,15 +64,4 @@ export class GamePageComponent {
             this.nbDifferences = gameWanted ? gameWanted.numberOfDifferences : -1;
         });
     }
-
-    checkIfGameEnded() {
-        // Voir ou devrait etre appeler
-        if (this.nbDifferences === this.nbDiferrencesFound) this.endGame();
-    }
-
-    endGame() {
-        // Afficher un pop-up
-        console.log('fin de partie');
-        this.socketService.send('End of game');
-    }
 }
