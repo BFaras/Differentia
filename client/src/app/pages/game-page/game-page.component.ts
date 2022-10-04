@@ -32,6 +32,7 @@ export class GamePageComponent {
 
     ngOnDestroy() {
         this.socketService.send('kill the timer');
+        this.nbDiferrencesFound = 0;
     }
 
     configureGamePageSocketFeatures() {
@@ -65,11 +66,13 @@ export class GamePageComponent {
     }
 
     checkIfGameEnded() {
+        // Voir ou devrait etre appeler
         if (this.nbDifferences === this.nbDiferrencesFound) this.endGame();
     }
 
     endGame() {
-        this.socketService.send('kill the timer');
+        // Afficher un pop-up
+        console.log('fin de partie');
         this.socketService.send('End of game');
     }
 }
