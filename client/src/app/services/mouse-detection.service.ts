@@ -16,7 +16,6 @@ export class MouseDetectionService {
     mouseHitDetect(event: MouseEvent) {
         if (event.button === MouseButton.Left) {
             this.mousePosition = { x: event.offsetX, y: event.offsetY };
-            console.log('mouseHit');
             this.socketService.send('Verify position', this.mousePosition);
         }
     }
@@ -40,16 +39,12 @@ export class MouseDetectionService {
             this.drawService.context1.fillStyle = 'red';
             this.drawService.context2.fillStyle = 'red';
         }
-
         this.drawMessage(message);
-        console.log('draw');
     }
 
     incrementNbrDifference(differenceIsValid: boolean, nbDiffTotal: number) {
         if (differenceIsValid) {
             this.nbrDifferencesFound += 1;
-            console.log('total :' + nbDiffTotal);
-            console.log('found :' + this.nbrDifferencesFound);
             this.socketService.send('Check if game is finished', [this.nbrDifferencesFound, nbDiffTotal]);
         }
     }

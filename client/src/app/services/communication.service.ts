@@ -30,7 +30,6 @@ export class CommunicationService {
     }
 
     getGames(): Observable<Array<Game>> {
-        console.log('Called');
         return this.http.get<Array<Game>>(`${this.baseUrl}/games`).pipe(catchError(this.handleError<Array<Game>>('getGames')));
     }
 
@@ -38,5 +37,9 @@ export class CommunicationService {
         return this.http
             .post(`${this.baseUrl}/games/newGame`, game, { observe: 'response', responseType: 'text' })
             .pipe(catchError(this.handleError<HttpResponse<any>>('addGame')));
+    }
+
+    uploadFiles(formData: FormData): Observable<Object> {
+        return this.http.post(`${this.baseUrl}/images`, formData).pipe(catchError(this.handleError<Object>('uploadFiles')));
     }
 }

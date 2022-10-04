@@ -1,7 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PlayAreaComponent } from '@app/components/play-area/play-area.component';
@@ -13,21 +12,22 @@ import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
 import { DialogInputComponent } from './components/dialog-input/dialog-input.component';
-import { EditableImagesComponent } from './components/editable-images/editable-images.component';
-import { ModifiedImageComponent } from './components/editable-images/modified-image/modified-image.component';
 import { GameFormComponent } from './components/forms/game-form/game-form.component';
 import { ListGameFormComponent } from './components/forms/list-game-form/list-game-form.component';
 import { HeaderImageComponent } from './components/header-image/header-image.component';
+import { ImageDifferenceComponent } from './components/image-difference/image-difference.component';
+import { ImageRenderedComponent } from './components/list-images-rendered/image-rendered/image-rendered.component';
+import { ListImagesRenderedComponent } from './components/list-images-rendered/list-images-rendered.component';
 import { PopDialogCreateGameComponent } from './components/pop-dialogs/pop-dialog-create-game/pop-dialog-create-game.component';
 import { PopDialogDownloadImagesComponent } from './components/pop-dialogs/pop-dialog-download-images/pop-dialog-download-images.component';
+import { PopDialogEndgameComponent } from './components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
+import { PopDialogUsernameComponent } from './components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
 import { PopDialogValidateGameComponent } from './components/pop-dialogs/pop-dialog-validate-game/pop-dialog-validate-game.component';
 import { TopbarComponent } from './components/topbar/topbar.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
 import { GameSelectionComponent } from './pages/game-selection/game-selection.component';
 import { TestPageComponent } from './pages/test-page/test-page.component';
-import { PopDialogUsernameComponent } from './components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
-import { PopDialogEndgameComponent } from './components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
 
 /**
  * Main module that is used in main.ts.
@@ -44,12 +44,12 @@ import { PopDialogEndgameComponent } from './components/pop-dialogs/pop-dialog-e
         PlayAreaComponent,
         SidebarComponent,
         GameCreationPageComponent,
-        EditableImagesComponent,
+        ListImagesRenderedComponent,
         HeaderImageComponent,
         PopDialogDownloadImagesComponent,
         PopDialogValidateGameComponent,
         PopDialogCreateGameComponent,
-        ModifiedImageComponent,
+        ImageRenderedComponent,
         TopbarComponent,
         GameSelectionComponent,
         GameFormComponent,
@@ -57,11 +57,12 @@ import { PopDialogEndgameComponent } from './components/pop-dialogs/pop-dialog-e
         AdminPageComponent,
         DialogInputComponent,
         TestPageComponent,
+        ImageDifferenceComponent,
         PopDialogUsernameComponent,
         PopDialogEndgameComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
-    providers: [ { provide: MAT_DIALOG_DATA , useValue: {bothImage : false} },],
+    providers: [],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

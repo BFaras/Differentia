@@ -1,9 +1,8 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
-// import { DifferencesDetector } from '@common/differences-classes/differences-detector';
-// import { DifferencesImageGenerator } from '@common/differences-classes/differences-image-generator';
-// import { ImageDataToCompare } from '@common/differences-classes/image-data-to-compare';
-
+import { Component, Input, OnInit, Renderer2, ɵunwrapSafeValue as unwrapSafeValue } from '@angular/core';
+import { SafeValue } from '@angular/platform-browser';
+import { GameToServerService } from '@app/services/game-to-server.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
+
 
 @Component({
     selector: 'app-test-page',
@@ -11,17 +10,28 @@ import { ImageToImageDifferenceService } from '@app/services/image-to-image-diff
     styleUrls: ['./test-page.component.scss'],
 })
 export class TestPageComponent implements OnInit {
+    @Input() offset:number;
+    numberOfDifference: number;
     readonly originalImage: HTMLImageElement = new Image();
     readonly modifiedImage: HTMLImageElement = new Image();
     readonly finalDifferencesImage: HTMLImageElement = new Image();
-    constructor(private renderer: Renderer2, private imageToImageDifferenceService: ImageToImageDifferenceService) {}
+
+    constructor(
+        private renderer: Renderer2,
+        private imageToImageDifferenceService: ImageToImageDifferenceService,
+        private gameToServerService: GameToServerService,
+    ) {}
 
     async ngOnInit(): Promise<void> {
         const mainCanvas = this.renderer.createElement('canvas');
 
-        this.originalImage.src = '../../../assets/ImageBlanche.bmp';
+        const unwrapedOriginalModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getOriginalImageUploaded().image as SafeValue);
+        const unwrapedModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getModifiedImageUploaded().image as SafeValue);
+
+        this.originalImage.src = unwrapedOriginalModifiedSafeUrl;
         await this.imageToImageDifferenceService.waitForImageToLoad(this.originalImage);
-        this.modifiedImage.src = '../../../assets/image_7_diff.bmp';
+
+        this.modifiedImage.src = unwrapedModifiedSafeUrl;
         await this.imageToImageDifferenceService.waitForImageToLoad(this.modifiedImage);
 
         this.imageToImageDifferenceService.sendDifferentImagesInformationToServerForGameCreation(
@@ -29,7 +39,24 @@ export class TestPageComponent implements OnInit {
             this.originalImage,
             this.modifiedImage,
             this.finalDifferencesImage,
-            0,
+            this.offset,
         );
+    }
+
+    loaded() {
+        if (this.finalDifferencesImage.src !== '' ) {
+            this.imageToImageDifferenceService.socketService.on('game creation nb of differences', (nbOfDiffs: number) => {
+                this.numberOfDifference = nbOfDiffs;
+                console.log('numberOfDifferences obtained in socket');
+            });
+                if (this.numberOfDifference !== undefined){
+                this.gameToServerService.setNumberDifference(this.numberOfDifference);
+                this.gameToServerService.setUrlImageOfDifference(this.finalDifferencesImage.src);
+                }
+
+            return true;
+        } else {
+            return false;
+        }
     }
 }
