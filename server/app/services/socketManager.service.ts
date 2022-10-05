@@ -27,8 +27,6 @@ export class SocketManager {
         this.sio.on('connection', (socket) => {
             console.log(`Connexion par l'utilisateur avec id : ${socket.id}`);
             this.socket = socket;
-            // message initial
-            socket.emit('hello', 'Hello World!');
 
             socket.on('message', (message: string) => {
                 console.log(message);
