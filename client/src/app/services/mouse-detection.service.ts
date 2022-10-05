@@ -42,10 +42,10 @@ export class MouseDetectionService {
         this.drawMessage(message);
     }
 
-    incrementNbrDifference(differenceIsValid: boolean, nbDiffTotal: number) {
+    incrementNbrDifference(differenceIsValid: boolean) {
         if (differenceIsValid) {
             this.nbrDifferencesFound += 1;
-            this.socketService.send('Check if game is finished', [this.nbrDifferencesFound, nbDiffTotal]);
+            this.socketService.send('Check if game is finished');
         }
     }
 

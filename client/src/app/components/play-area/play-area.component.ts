@@ -35,7 +35,6 @@ export class PlayAreaComponent implements OnInit {
         this.socketService.connect();
         this.configurePlayAreaSocket();
 
-        this.nbDifferencesTotal = 0;
         this.mouseDetection.nbrDifferencesTotal = this.nbDifferencesTotal;
 
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[ORIGINAL_IMAGE_POSITION]);
@@ -43,6 +42,10 @@ export class PlayAreaComponent implements OnInit {
 
         this.displayImages();
         this.sendImagesDataToServer();
+    }
+
+    ngOnDestroy() {
+        this.mouseDetection.nbrDifferencesFound = 0;
     }
 
     displayImages() {
@@ -104,7 +107,7 @@ export class PlayAreaComponent implements OnInit {
         this.socketService.on('Valid click', (clickResponse: boolean) => {
             this.mouseDetection.playSound(clickResponse);
             this.mouseDetection.clickMessage(clickResponse);
-            this.mouseDetection.incrementNbrDifference(clickResponse, this.nbDifferencesTotal);
+            this.mouseDetection.incrementNbrDifference(clickResponse);
         });
 
         this.socketService.on('End game', () => {

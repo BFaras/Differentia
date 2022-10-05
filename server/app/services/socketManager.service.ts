@@ -66,6 +66,7 @@ export class SocketManager {
             });
 
             socket.on('image data to begin game', (imagesData: ImageDataToCompare) => {
+                this.mouseHandlerService.resetData();
                 this.mouseHandlerService.updateImageData(imagesData);
             });
 
@@ -73,8 +74,8 @@ export class SocketManager {
                 this.clickResponse(socket, position);
             });
 
-            socket.on('Check if game is finished', (nbDifferencesFoundAndTotal: number[]) => {
-                if (nbDifferencesFoundAndTotal[0] === nbDifferencesFoundAndTotal[1]) {
+            socket.on('Check if game is finished', () => {
+                if (this.mouseHandlerService.differencesNumberFound.length === this.mouseHandlerService.nbDifferencesTotal) {
                     this.mouseHandlerService.resetData();
                     this.endTimer();
                     socket.emit('End game');
