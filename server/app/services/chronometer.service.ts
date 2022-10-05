@@ -40,52 +40,6 @@ export class ChronometerService {
         }
     }
 
-    // setMinutes(minutesUpdated:number) {
-    //   this.time.minutes = minutesUpdated;
-    // }
-    // // EST CE QUE DE LA DUPLICATION DE CODE PCQ ON FAIT LA MM FONCTION POUR MINUTES ET SECONDES
-    // setSeconds(secondsUpdated:number) {
-    //   this.time.seconds = secondsUpdated;
-    // }
-
-    // showMinutes() {
-    //   if(this.time.minutes < BASE_ONE) {
-    //     return '0' + this.time.minutes.toString();
-    //   }
-    //   return this.time.minutes.toString();
-    // }
-
-    // showSeconds() {
-    //   if(this.time.seconds < BASE_ONE) {
-    //     return '0' + this.time.seconds.toString();
-    //   }
-    //   return this.time.seconds.toString();
-    // }
-
-    // checktime() {
-    //   if(this.time.seconds === MAX_TIME && this.time.minutes === MAX_TIME) {
-    //     this.stopChronometer();
-    //     // this.gameOver();
-    //   }
-    // }
-
-    // gameOver() {
-    //   this.dialogService.openDialog();
-    // }
-
-    // startChronometer() {
-    //   this.resetChrono();
-    //   this.intervalForTimer = setInterval(() =>
-    //     this.increaseTime(), ONE_SECOND);
-    //   this.intervalToCheckTime = setInterval(() =>
-    //     this.checktime(), HALF_A_SECOND);// Est ce que 1000 est un magic number
-    // }
-
-    // stopChronometer() {
-    //   clearInterval(this.intervalForTimer);
-    //   clearInterval(this.intervalToCheckTime);
-    // }
-
     public resetChrono() {
         this.time.minutes = RESET_VALUE;
         this.time.seconds = RESET_VALUE;
