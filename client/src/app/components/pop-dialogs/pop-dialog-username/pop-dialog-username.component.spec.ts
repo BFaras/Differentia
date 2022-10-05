@@ -19,6 +19,7 @@ describe('PopDialogUsernameComponent', () => {
         }).compileComponents();
 
         socketSpy = jasmine.createSpyObj('SocketClientService', ['send']);
+        socketSpy.send('game page');
         fixture = TestBed.createComponent(PopDialogUsernameComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
