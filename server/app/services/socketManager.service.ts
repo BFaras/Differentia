@@ -50,7 +50,6 @@ export class SocketManager {
 
             socket.on('username is', (username: string) => {
                 socket.emit('show the username', username);
-                console.log(username);
             });
 
             socket.on('kill the timer', () => {
