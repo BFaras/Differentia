@@ -2,6 +2,8 @@
 import { HttpResponse } from '@angular/common/http';
 import { ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { MESSAGE_JEU_CREER, MESSAGE_JEU_NON_CREER } from "@common/const";
 import { ImageToSendToServer } from '@common/imageToSendToServer';
 import { StatusCodes } from 'http-status-codes';
@@ -15,6 +17,7 @@ describe('GameToServerService', () => {
   let elmentRef: ElementRef;
   let communicationServiceSpy: SpyObj<CommunicationService>
   let mockEmitterAddGame: Subject<HttpResponse<any>>;
+  let router: Router;
 
 
   const mockElementRef = {
@@ -23,19 +26,37 @@ describe('GameToServerService', () => {
     }
   };
 
+  let mockRouter = {
+    navigate: jasmine.createSpy('navigate')
+  };
+
   beforeEach(async () => {
     mockEmitterAddGame = new Subject();
     communicationServiceSpy = jasmine.createSpyObj('CommunicationService',['addGame'])
     communicationServiceSpy.addGame.and.returnValue(mockEmitterAddGame)
     TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule.withRoutes([]),
+    ],
       providers:[
         {provide: ElementRef, useValue: mockElementRef},
-        {provide: CommunicationService, useValue: communicationServiceSpy} 
+        {provide: CommunicationService, useValue: communicationServiceSpy},
+        { provide: Router, useValue: mockRouter } 
         ]
     });
+    router = TestBed.inject(Router);
     service = TestBed.inject(GameToServerService);
     elmentRef = TestBed.inject(ElementRef);
   });
+
+  it('should navigate',()=>{
+
+    const navigateSpy = spyOn(router, 'navigate');
+
+    service.goToAdmin();
+    expect(navigateSpy).toHaveBeenCalledWith(['/admin']);
+
+  })
 
 
 

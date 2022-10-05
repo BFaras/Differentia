@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { DrawService } from '@app/services/draw.service';
 
-fdescribe('DrawService', () => {
+describe('DrawService', () => {
     let service: DrawService;
     let ctxStub: CanvasRenderingContext2D;
 
