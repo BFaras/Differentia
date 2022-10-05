@@ -1,9 +1,12 @@
 import { Game } from '@common/game';
+import * as chai from "chai";
 import { Time } from '@common/time';
 import { expect } from 'chai';
+import * as chaiAsPromised from "chai-as-promised";
 import * as fs from 'fs';
 import * as sinon from 'sinon';
 import { GamesService } from './local.games.service';
+chai.use(chaiAsPromised);
 
 describe('Games service', () => {
     let gamesService: GamesService;
@@ -108,7 +111,7 @@ describe('Games service', () => {
                 throw new Error();
             });
             const spy = sinon.spy(console, 'log');
-            expect(gamesService.asyncWriteInGamesFile()).to.eventually.rejectedWith(Error);
+            expect(gamesService.asyncWriteInGamesFile()).to.eventually.be.rejectedWith(Error);
             expect(stub.callsFake);
             expect(spy.calledOnce);
         });
@@ -118,7 +121,18 @@ describe('Games service', () => {
                 throw new Error();
             });
             const spy = sinon.spy(console, 'log');
-            expect(gamesService.asyncReadGamesFile()).to.eventually.rejectedWith(Error);
+            expect(gamesService.asyncReadGamesFile()).to.eventually.be.rejectedWith(Error);
+            expect(stub.callsFake);
+            expect(spy.calledOnce);
+        });
+
+        it('should throw an error when fs.promises.readFile(images_path) crashes', async () => {
+            let testImageName = "test name";
+            const stub = sinon.stub(fs.promises, 'readFile').callsFake(async () => {
+                throw new Error();
+            });
+            const spy = sinon.spy(console, 'log');
+            expect(gamesService['getGameImageData'](testImageName)).to.eventually.be.rejectedWith(Error);
             expect(stub.callsFake);
             expect(spy.calledOnce);
         });

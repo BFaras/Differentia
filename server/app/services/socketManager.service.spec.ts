@@ -1,4 +1,5 @@
 import { ImageDataToCompare } from '@common/image-data-to-compare';
+import { Position } from '@common/position';
 import { Server } from 'app/server';
 import { assert, expect } from 'chai';
 import * as sinon from 'sinon';
@@ -64,6 +65,43 @@ describe('SocketManager service tests', () => {
             expect(chronometerService.time.seconds).to.equal(0);
             done();
         }, RESPONSE_DELAY);
+    });
+
+    it('should handle a game page event and return the game of the name that was launched', (done) => {
+        const gameName = 'Car game';
+        clientSocket.emit('game page', gameName);
+        clientSocket.on('The game is', (nameOfGame: string) => {
+            expect(nameOfGame).to.equal(gameName);
+            done();
+        });
+    });
+
+    it('should handle a username is event and emit a show the username event', (done) => {
+        const usernameTest = 'Test username';
+        clientSocket.emit('username is', usernameTest);
+        clientSocket.on('show the username', (username: string) => {
+            expect(username).to.equal(usernameTest);
+            done();
+        });
+    });
+
+    // pk sa fonctionne pas?
+    it('should handle a verify position event and call clickResponse', (done) => {
+        let positionTest: Position = {
+            x: 0,
+            y: 0
+        };
+        const stub = sinon.stub(mouseHandlerService, 'isValidClick').callsFake((positionTest) => {
+            console.log("salut");
+            return true;
+        });
+        const spy = sinon.spy(service, <any>'clickResponse');
+        clientSocket.emit('Verify position', positionTest);
+        clientSocket.on('Valid click', () => {
+            expect(stub.callsFake);
+            expect(spy.calledOnce);
+            done();
+        })
     });
 
     it('should handle a game page event and return the game of the name that was launched', (done) => {
