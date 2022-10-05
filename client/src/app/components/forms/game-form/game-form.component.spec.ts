@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { GameFormDescription } from '../../../classes/game-form-description';
 import { RecordTimesBoard } from '../../../classes/record-times-board';
 import { GameFormComponent } from './game-form.component';
@@ -14,6 +17,11 @@ describe('GameFormComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [GameFormComponent],
+            imports: [MatFormFieldModule, MatInputModule, MatDialogModule],
+            providers: [
+                { provide: MatDialogRef, useValue: {} },
+                { provide: MAT_DIALOG_DATA, useValue: {} },
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(GameFormComponent);
