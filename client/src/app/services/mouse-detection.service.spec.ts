@@ -5,7 +5,7 @@ import { DrawService } from './draw.service';
 import { MouseDetectionService } from './mouse-detection.service';
 import { SocketClientService } from './socket-client.service';
 
-fdescribe('MouseDetectionService', () => {
+describe('MouseDetectionService', () => {
     let service: MouseDetectionService;
     let socketSpy: jasmine.SpyObj<SocketClientService>;
     let drawServiceSpy: jasmine.SpyObj<DrawService>;
