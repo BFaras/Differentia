@@ -18,7 +18,7 @@ export class MouseHandlerService {
 
     updateImageData(imagesData: ImageDataToCompare) {
         this.imagesData = imagesData;
-        this.generateDifferencesHashmap();
+        this.generateDifferencesInformations();
     }
 
     resetData() {
@@ -30,7 +30,7 @@ export class MouseHandlerService {
         return this.validateDifferencesOnClick(mousePosition);
     }
 
-    generateDifferencesHashmap() {
+    private generateDifferencesInformations() {
         const diffDetector = new DifferenceDetectorService(this.imagesData);
         this.differencesHashmap = diffDetector.getPixelsDifferencesNbMap();
         this.nbDifferencesTotal = diffDetector.getNbDifferences();
@@ -40,7 +40,7 @@ export class MouseHandlerService {
         return (mousePosition.y + 1) * this.imagesData.imageWidth + mousePosition.x - this.imagesData.imageWidth;
     }
 
-    validateDifferencesOnClick(mousePosition: Position): boolean {
+    private validateDifferencesOnClick(mousePosition: Position): boolean {
         const pixelNumber = this.convertMousePositionToPixelNumber(mousePosition);
         let differencesNumber: number;
         let pixelIsDifferent: boolean = true;
