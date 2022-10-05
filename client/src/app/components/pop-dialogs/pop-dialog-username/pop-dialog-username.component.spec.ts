@@ -4,7 +4,7 @@ import { SocketClientService } from '@app/services/socket-client.service';
 
 import { PopDialogUsernameComponent } from './pop-dialog-username.component';
 
-fdescribe('PopDialogUsernameComponent', () => {
+describe('PopDialogUsernameComponent', () => {
     let component: PopDialogUsernameComponent;
     let fixture: ComponentFixture<PopDialogUsernameComponent>;
     let socketSpy: jasmine.SpyObj<SocketClientService>;
