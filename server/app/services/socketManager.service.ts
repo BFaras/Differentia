@@ -70,7 +70,7 @@ export class SocketManager {
                 this.mouseHandlerService.updateImageData(imagesData);
             });
 
-            socket.on('Verify position', (position) => {
+            socket.on('Verify position', (position: Position) => {
                 this.clickResponse(socket, position);
             });
 

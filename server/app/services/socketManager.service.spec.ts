@@ -121,4 +121,23 @@ describe('SocketManager service tests', () => {
             done();
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
+
+    it('should handle a Verify position should call isValidClick from MouseHandlerService', (done) => {
+        const spy = sinon.spy(mouseHandlerService, 'isValidClick');
+        const positionTest = { x: 0, y: 0 };
+        clientSocket.emit('Verify position', positionTest);
+        setTimeout(() => {
+            expect(spy.calledOnce);
+            done();
+        }, RESPONSE_DELAY * 5); // 1 seconde
+    });
+
+    it('should handle a Check if game is finished on finished game and call resetData', (done) => {
+        const spy = sinon.spy(mouseHandlerService, 'resetData');
+        clientSocket.emit('Check if game is finished');
+        setTimeout(() => {
+            expect(spy.calledOnce);
+            done();
+        }, RESPONSE_DELAY * 5); // 1 seconde
+    });
 });
