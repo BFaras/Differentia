@@ -21,8 +21,7 @@ describe('ImageDifferenceComponent', () => {
 
     imageToImagesDifferenceServiceSpy = jasmine.createSpyObj('ImageToImageDifferenceService', 
     ['waitForImageToLoad', 'getDataImageSsendDifferentImagesInformationToServerForGameCreationingle']);
-    imageToImagesDifferenceServiceSpy.waitForImageToLoad.and.returnValue(new Promise((resolve, reject) => reject(new Error())))
-    imageToImagesDifferenceServiceSpy.sendDifferentImagesInformationToServerForGameCreation.and.returnValue()
+
     gameToServerServiceSpy = jasmine.createSpyObj('GameToServerService',[
       'getOriginalImageUploaded','getModifiedImageUploaded','setNumberDifference',
       'setUrlImageOfDifference'])
@@ -47,9 +46,16 @@ describe('ImageDifferenceComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call functions in ngOnINit',()=>{
-    component.ngOnInit();
+  it('should test load return true with number difference', () => {
+      component.finalDifferencesImage.src = "string";
+      component.numberOfDifference =2 ;
 
-  })
+      expect(component.loaded()).toBeTruthy()
+  });
+
+  it('should test load return true', () => {
+    component.finalDifferencesImage.src = "string";
+    expect(component.loaded()).toBeTruthy()
+});
 
 });

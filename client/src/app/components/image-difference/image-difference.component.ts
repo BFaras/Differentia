@@ -31,7 +31,6 @@ async ngOnInit(): Promise<void> {
 
   this.modifiedImage.src = unwrapedModifiedSafeUrl;
   await this.imageToImageDifferenceService.waitForImageToLoad(this.modifiedImage);
-
   this.imageToImageDifferenceService.sendDifferentImagesInformationToServerForGameCreation(
       mainCanvas,
       this.originalImage,
@@ -45,7 +44,6 @@ loaded() {
   if (this.finalDifferencesImage.src !== '' ) {
       this.imageToImageDifferenceService.socketService.on('game creation nb of differences', (nbOfDiffs: number) => {
           this.numberOfDifference = nbOfDiffs;
-          console.log('numberOfDifferences obtained in socket');
       });
           if (this.numberOfDifference !== undefined){
           this.gameToServerService.setNumberDifference(this.numberOfDifference);
