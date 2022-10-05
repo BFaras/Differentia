@@ -13,6 +13,7 @@ export class MouseHandlerService {
     constructor() {
         this.differencesHashmap = new Map<number, number>();
         this.differencesNumberFound = [];
+        this.nbDifferencesTotal = 0;
     }
 
     updateImageData(imagesData: ImageDataToCompare) {
