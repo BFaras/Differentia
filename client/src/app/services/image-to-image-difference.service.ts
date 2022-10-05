@@ -51,7 +51,7 @@ export class ImageToImageDifferenceService {
         this.differencesImageToPutDataIn.src = canvasResult.toDataURL();
     }
 
-    setupDataInService(
+    private setupDataInService(
         mainCanvas: HTMLCanvasElement,
         originalImage: HTMLImageElement,
         modifiedImage: HTMLImageElement,

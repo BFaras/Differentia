@@ -31,7 +31,7 @@ export class GamePageComponent {
 
     ngOnDestroy() {
         this.socketService.send('kill the timer');
-        this.nbDifferrencesFound = 0;
+        this.socketService.disconnect();
     }
 
     configureGamePageSocketFeatures() {
@@ -45,9 +45,9 @@ export class GamePageComponent {
             this.receiveNumberOfDifferences(message);
             this.gameName = message;
         });
-        this.socketService.on("show the username", (username: string) => {
+        this.socketService.on('show the username', (username: string) => {
             this.username = username;
-        })
+        });
         this.socketService.on('Name repeated', () => {
             console.log('le nom est répété ');
         });
