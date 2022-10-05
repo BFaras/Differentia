@@ -60,4 +60,14 @@ describe('ImageToImageDifferenceService', () => {
 
         expect(imageHasDifferencesPixelsAtRightPosition).toBeTruthy();
     });
+
+    it('should call setupDataInService and generateImagesDataToCompare in getImagesData', () => {
+        const spySetupDataInService = spyOn(imageToImageDiffService, <any>'setupDataInService');
+        const spyGenerateImagesDataToCompare = spyOn(imageToImageDiffService, <any>'generateImagesDataToCompare');
+
+        imageToImageDiffService.getImagesData(mainCanvas, originalImage, modifiedImage, 0);
+
+        expect(spySetupDataInService).toHaveBeenCalled();
+        expect(spyGenerateImagesDataToCompare).toHaveBeenCalled();
+    });
 });
