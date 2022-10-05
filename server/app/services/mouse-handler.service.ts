@@ -7,39 +7,40 @@ import { DifferenceDetectorService } from './difference-detector.service';
 export class MouseHandlerService {
     differencesHashmap: Map<number, number>;
     differencesNumberFound: Array<number>;
+    nbDifferencesTotal: number;
     imagesData: ImageDataToCompare;
 
     constructor() {
         this.differencesHashmap = new Map<number, number>();
         this.differencesNumberFound = [];
+        this.nbDifferencesTotal = 0;
     }
 
     updateImageData(imagesData: ImageDataToCompare) {
         this.imagesData = imagesData;
-        this.generateDifferencesHashmap();
+        this.generateDifferencesInformations();
     }
 
-    resetData()
-    {
+    resetData() {
         this.differencesHashmap = new Map<number, number>();
         this.differencesNumberFound = [];
     }
 
     isValidClick(mousePosition: Position): boolean {
-        console.log(mousePosition);
-
         return this.validateDifferencesOnClick(mousePosition);
     }
 
-    generateDifferencesHashmap() {
-        this.differencesHashmap = new DifferenceDetectorService(this.imagesData).getPixelsDifferencesNbMap();
+    private generateDifferencesInformations() {
+        const diffDetector = new DifferenceDetectorService(this.imagesData);
+        this.differencesHashmap = diffDetector.getPixelsDifferencesNbMap();
+        this.nbDifferencesTotal = diffDetector.getNbDifferences();
     }
 
     convertMousePositionToPixelNumber(mousePosition: Position): number {
         return (mousePosition.y + 1) * this.imagesData.imageWidth + mousePosition.x - this.imagesData.imageWidth;
     }
 
-    validateDifferencesOnClick(mousePosition: Position): boolean {
+    private validateDifferencesOnClick(mousePosition: Position): boolean {
         const pixelNumber = this.convertMousePositionToPixelNumber(mousePosition);
         let differencesNumber: number;
         let pixelIsDifferent: boolean = true;
@@ -53,7 +54,6 @@ export class MouseHandlerService {
             } else {
                 // Nouvelle Différence trouvée
                 this.differencesNumberFound.push(differencesNumber);
-                console.log(this.differencesNumberFound);
                 return pixelIsDifferent;
             }
         } else {

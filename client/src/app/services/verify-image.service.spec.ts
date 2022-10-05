@@ -1,6 +1,8 @@
 
 import { TestBed } from '@angular/core/testing';
 import { VerifyImageService } from './verify-image.service';
+import { UploadFileService } from './upload-file.service';
+import SpyObj = jasmine.SpyObj;
 const mockEventFile = {
   target: {
     files: [
@@ -17,9 +19,15 @@ class MatDialogMock {
 
 describe('VerifyImageService', () => {
   let service: VerifyImageService;
+  let uploadFileSpy: SpyObj<UploadFileService>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    uploadFileSpy = jasmine.createSpyObj('UploadFileService',['setOriginalImage','setModifiedImage'])
+    uploadFileSpy.setModifiedImage.and.returnValue();
+    uploadFileSpy.setOriginalImage.and.returnValue();
+    TestBed.configureTestingModule({
+      providers:[{provide: UploadFileService,useValue: uploadFileSpy}]
+    });
     service = TestBed.inject(VerifyImageService);
   });
 
@@ -27,6 +35,11 @@ describe('VerifyImageService', () => {
     expect(service).toBeTruthy();
   });
 
+  it('should set the file',()=>{
+    const imageToSend = new File([""], "filename", { type: 'text/html' });
+    service.setFile(imageToSend);
+    expect(service.file).toEqual(imageToSend)
+  })
   it('should test process Buffer',()=>{
     const spyGettingBmp = spyOn<any>(service,'getBmp').and.returnValue({})
     const spyTransformation = spyOn<any>(service,'transformByteToImage').and.returnValue({})
@@ -132,16 +145,31 @@ describe('VerifyImageService', () => {
 
   })
 
-  it('should verifyIfSentMultipleOrSingle single ',()=>{
+  it('should update single original file ',()=>{
     const fakeUrlInfo = "string";
     const fakeDialog = {
       bothImage: false,
+      indexOfImage:0
     }
 
-
+    uploadFileSpy.setModifiedImage.and.returnValue();
+    let spy = uploadFileSpy.setOriginalImage.and.returnValue();
     service.verifyIfSentMultipleOrSingle(fakeUrlInfo,fakeDialog)
     expect(service.verifyIfSentMultipleOrSingle(fakeUrlInfo,fakeDialog)).toBe()
+    expect(spy).toHaveBeenCalled()
+  })
 
+  it('should update single modified filed ',()=>{
+    const fakeUrlInfo = "string";
+    const fakeDialog = {
+      bothImage: false,
+      indexOfImage:1
+    }
+
+    let spy = uploadFileSpy.setModifiedImage.and.returnValue();
+    service.verifyIfSentMultipleOrSingle(fakeUrlInfo,fakeDialog)
+    expect(service.verifyIfSentMultipleOrSingle(fakeUrlInfo,fakeDialog)).toBe()
+    expect(spy).toHaveBeenCalled()
   })
 
 

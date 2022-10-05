@@ -23,10 +23,11 @@ describe('PopDialogDownloadImagesComponent', () => {
     beforeEach(async () => {
         imageToMock.src = "string";
         verifyImageServiceSpy = jasmine.createSpyObj('VerifyImageService', 
-        ['processBuffer', 'getImage', 'verifyRespectAllContraints','getWarningActivated']);
+        ['setFile','processBuffer', 'getImage', 'verifyRespectAllContraints','getWarningActivated']);
         verifyImageServiceSpy.verifyRespectAllContraints.and.returnValue(true);
         verifyImageServiceSpy.processBuffer.and.returnValue();
         verifyImageServiceSpy.getImage.and.returnValue(imageToMock);
+        verifyImageServiceSpy.setFile.and.returnValue();
         await TestBed.configureTestingModule({
             declarations: [PopDialogDownloadImagesComponent],
             imports: [ MatIconModule,MatDialogModule ],
@@ -61,6 +62,11 @@ describe('PopDialogDownloadImagesComponent', () => {
         component.onClickUploadImage(mockEventFile)
         expect(component.warningActivated).toBeFalsy()
     })
+
+    afterEach(() => {
+      fixture.destroy();
+      TestBed.resetTestingModule();
+    });
 
     
 

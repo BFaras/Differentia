@@ -10,12 +10,12 @@ import { SocketClientService } from './socket-client.service';
 export class MouseDetectionService {
     constructor(public socketService: SocketClientService, private drawService: DrawService) {}
     mousePosition: Position = { x: 0, y: 0 };
+    nbrDifferencesTotal: number;
     nbrDifferencesFound: number = 0;
 
     mouseHitDetect(event: MouseEvent) {
         if (event.button === MouseButton.Left) {
             this.mousePosition = { x: event.offsetX, y: event.offsetY };
-            console.log('mouseHit');
             this.socketService.send('Verify position', this.mousePosition);
         }
     }
@@ -39,15 +39,13 @@ export class MouseDetectionService {
             this.drawService.context1.fillStyle = 'red';
             this.drawService.context2.fillStyle = 'red';
         }
-
         this.drawMessage(message);
-        console.log('draw');
     }
 
     incrementNbrDifference(differenceIsValid: boolean) {
         if (differenceIsValid) {
             this.nbrDifferencesFound += 1;
-            this.socketService.send('Check if game is finished', this.nbrDifferencesFound);
+            this.socketService.send('Check if game is finished');
         }
     }
 

@@ -33,14 +33,6 @@ export class ExampleService {
             });
     }
 
-    // TODO : ceci est à titre d'exemple. À enlever pour la remise
-    storeMessage(message: Message): void {
-        // eslint-disable-next-line no-console
-        console.log(message);
-        this.clientMessages.push(message);
-        // FAIRE SA MAIS AVEC UNE REQUÊTE HTTP VERS LA DATABASE POUR PUSH LE TEMPS DU JOUEUR
-    }
-
     getAllMessages(): Message[] {
         return this.clientMessages;
     }

@@ -12,12 +12,13 @@ export class PopDialogDownloadImagesComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA) private imageInfo: any,
-        public verifyImageService: VerifyImageService,
+        public verifyImageService: VerifyImageService
     ) {}
 
     onClickUploadImage(event:any) {
         let target = event.target as HTMLInputElement
         let file = target.files![0]
+        this.verifyImageService.setFile(file)
         let reader = new FileReader();
         reader.readAsArrayBuffer(file)
         reader.onload = async (e)=>{
@@ -30,5 +31,7 @@ export class PopDialogDownloadImagesComponent {
         }
 
     }
+
+    
 
 }

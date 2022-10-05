@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable no-restricted-imports */
 import { Component } from '@angular/core';
 import { CommunicationService } from '@app/services/communication.service';
 import { SocketClientService } from '@app/services/socket-client.service';
@@ -19,7 +17,7 @@ export class GamePageComponent {
     gameName: string;
     username: string;
     images: HTMLImageElement[];
-    nbDiferrencesFound: number = 0;
+    nbDifferrencesFound: number = 0;
 
     constructor(public socketService: SocketClientService, private timeService: TimeService, private communicationService: CommunicationService) {
         this.images = [new Image(640, 480), new Image(640, 480)];
@@ -33,7 +31,7 @@ export class GamePageComponent {
 
     ngOnDestroy() {
         this.socketService.send('kill the timer');
-        this.nbDiferrencesFound = 0;
+        this.socketService.disconnect();
     }
 
     configureGamePageSocketFeatures() {
@@ -47,9 +45,9 @@ export class GamePageComponent {
             this.receiveNumberOfDifferences(message);
             this.gameName = message;
         });
-        this.socketService.on("show the username", (username: string) => {
+        this.socketService.on('show the username', (username: string) => {
             this.username = username;
-        })
+        });
         this.socketService.on('Name repeated', () => {
             console.log('le nom est répété ');
         });
@@ -62,7 +60,6 @@ export class GamePageComponent {
 
     receiveNumberOfDifferences(nameGame: string): void {
         this.communicationService.getGames().subscribe((array: Game[]) => {
-            console.log(array);
             let gameWanted = array.find((x) => x.name === nameGame);
             // gameWanted ne sera jamais undefined car le nom utilisé dans le .find est d'un jeu qui
             // existe forcément (il est dans la page de sélection )
