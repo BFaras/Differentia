@@ -27,6 +27,7 @@ export class DifferenceDetectorService {
         return this.differentPixelsNumbersArrayWithOffset;
     }
 
+    //To test
     generateDifferencesList(): number[][] {
         const differencesList: number[][] = [];
 

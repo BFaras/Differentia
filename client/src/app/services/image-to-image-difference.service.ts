@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { SocketClientService } from '@app/services/socket-client.service';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { ImageGeneratorService } from './difference-detector-feature/image-generator.service';
 
@@ -9,57 +8,27 @@ import { ImageGeneratorService } from './difference-detector-feature/image-gener
 export class ImageToImageDifferenceService {
     private originalImage: HTMLImageElement = new Image();
     private modifiedImage: HTMLImageElement = new Image();
-    private differencesImageToPutDataIn: HTMLImageElement;
     private mainCanvas: HTMLCanvasElement;
 
-    constructor(public socketService: SocketClientService, private imageGeneratorService: ImageGeneratorService) {
-        this.setUpSocket();
-    }
-
-    configureGamePageSocketFeatures() {
-        this.socketService.on('game creation difference array', (differentPixelsPositionArray: number[]) => {
-            this.putDifferencesDataInImage(differentPixelsPositionArray);
-        });
-    }
-
-    sendDifferentImagesInformationToServerForGameCreation(
-        mainCanvas: HTMLCanvasElement,
-        originalImage: HTMLImageElement,
-        modifiedImage: HTMLImageElement,
-        differencesImageToPutDataIn: HTMLImageElement,
-        offSet: number,
-    ) {
-        let imagesData: ImageDataToCompare;
-
-        this.setupDataInService(mainCanvas, originalImage, modifiedImage, differencesImageToPutDataIn);
-
-        imagesData = this.generateImagesDataToCompare(offSet);
-        this.getInformationToGenerateDifferencesImage(imagesData);
-    }
+    constructor(private imageGeneratorService: ImageGeneratorService) {}
 
     getImagesData(mainCanvas: HTMLCanvasElement, originalImage: HTMLImageElement, modifiedImage: HTMLImageElement, offSet: number) {
-        this.setupDataInService(mainCanvas, originalImage, modifiedImage, new Image());
+        this.setupDataInService(mainCanvas, originalImage, modifiedImage);
         return this.generateImagesDataToCompare(offSet);
     }
 
-    putDifferencesDataInImage(differentPixelsPositionArray: number[]) {
+    putDifferencesDataInImage(differentPixelsPositionArray: number[], differencesImageToPutDataIn: HTMLImageElement) {
         const canvasResult = this.adaptCanvasSizeToImage(this.mainCanvas, this.originalImage);
         const canvasResultContext: CanvasRenderingContext2D = canvasResult.getContext('2d')!;
         const resultImageData: ImageData = this.imageGeneratorService.generateImageFromPixelsDataArray(differentPixelsPositionArray, this.mainCanvas);
 
         canvasResultContext.putImageData(resultImageData, 0, 0);
-        this.differencesImageToPutDataIn.src = canvasResult.toDataURL();
+        differencesImageToPutDataIn.src = canvasResult.toDataURL();
     }
 
-    private setupDataInService(
-        mainCanvas: HTMLCanvasElement,
-        originalImage: HTMLImageElement,
-        modifiedImage: HTMLImageElement,
-        differencesImageToPutDataIn: HTMLImageElement,
-    ) {
+    private setupDataInService(mainCanvas: HTMLCanvasElement, originalImage: HTMLImageElement, modifiedImage: HTMLImageElement) {
         this.originalImage = originalImage;
         this.modifiedImage = modifiedImage;
-        this.differencesImageToPutDataIn = differencesImageToPutDataIn;
         this.mainCanvas = mainCanvas;
     }
 
@@ -91,18 +60,6 @@ export class ImageToImageDifferenceService {
         };
 
         return imagesdata;
-    }
-
-    private getInformationToGenerateDifferencesImage(imagesData: ImageDataToCompare) {
-        this.setUpSocket();
-        this.socketService.send('detect images difference', imagesData);
-    }
-
-    private setUpSocket() {
-        if (!this.socketService.isSocketAlive()) {
-            this.socketService.connect();
-            this.configureGamePageSocketFeatures();
-        }
     }
 
     async waitForImageToLoad(imageToLoad: HTMLImageElement) {

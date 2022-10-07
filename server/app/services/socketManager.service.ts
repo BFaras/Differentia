@@ -1,5 +1,6 @@
 import { GamesService } from '@app/services/local.games.service';
 import { MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
+import { DifferencesInformations } from '@common/differences-informations';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
 import * as http from 'http';
@@ -56,10 +57,14 @@ export class SocketManager {
                 this.endTimer();
             });
 
+            //To test
             socket.on('detect images difference', (imagesData: ImageDataToCompare) => {
                 const differenceDetector = new DifferenceDetectorService(imagesData);
-                socket.emit('game creation difference array', differenceDetector.getDifferentPixelsArrayWithOffset());
-                socket.emit('game creation nb of differences', differenceDetector.getNbDifferences());
+                const differencesInformations: DifferencesInformations = {
+                    differencesList: differenceDetector.generateDifferencesList(),
+                    nbOfDifferences: differenceDetector.getNbDifferences(),
+                };
+                socket.emit('game creation differences informations', differencesInformations);
             });
 
             socket.on('image data to begin game', (imagesData: ImageDataToCompare) => {
