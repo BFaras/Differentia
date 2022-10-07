@@ -32,7 +32,6 @@ export class MouseHandlerService {
 
     private generateDifferencesInformations() {
         const diffDetector = new DifferenceDetectorService(this.imagesData);
-        this.differencesHashmap = diffDetector.getPixelsDifferencesNbMap();
         this.nbDifferencesTotal = diffDetector.getNbDifferences();
     }
 

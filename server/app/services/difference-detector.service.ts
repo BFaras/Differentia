@@ -8,7 +8,6 @@ export class DifferenceDetectorService {
     private differentPixelsNumbersArrayWithOffset: number[];
     private pixelsDifferencesNbMap: Map<number, number>;
     private offset: number;
-    imagesDataToCompare: ImageDataToCompare
 
     constructor(private imageDatasToCompare: ImageDataToCompare) {
         this.differentPixelsNumbersArrayWithOffset = [];
@@ -28,21 +27,35 @@ export class DifferenceDetectorService {
         return this.differentPixelsNumbersArrayWithOffset;
     }
 
-    getPixelsDifferencesNbMap() {
-        return this.pixelsDifferencesNbMap;
+    generateDifferencesList(): number[][] {
+        const differencesList: number[][] = [];
+
+        for (let i = 0; i < this.nbOfDifferences; i++) {
+            differencesList[i] = [];
+        }
+
+        this.pixelsDifferencesNbMap.forEach((differenceNb, diffPixelNumber) => {
+            //Difference number begins at 1 and not 0 like the list
+            differencesList[differenceNb - 1].push(diffPixelNumber);
+        });
+        return differencesList;
     }
 
     private generateDifferencesInformation() {
         let differentPixelsNumbersArray: number[];
 
         this.compareImagesPixels();
-        differentPixelsNumbersArray = [...this.differentPixelsNumbersArrayWithOffset];
+        differentPixelsNumbersArray = this.copyNumberArray(this.differentPixelsNumbersArrayWithOffset);
 
         if (this.offset != 0) {
             differentPixelsNumbersArray.forEach((diffPixelNumber) => {
                 this.addPixelDifferenceOffset(diffPixelNumber);
             });
         }
+    }
+
+    private copyNumberArray(arrayToCopy: number[]): number[] {
+        return [...arrayToCopy];
     }
 
     private compareImagesPixels() {
@@ -170,7 +183,7 @@ export class DifferenceDetectorService {
         }
     }
 
-    private isPixelInCircle(currentLine: number, currentColumn: number, centerPixelLine: number, centerPixelColumn: number, offset: number) {
+    private isPixelInCircle(currentLine: number, currentColumn: number, centerPixelLine: number, centerPixelColumn: number, offset: number): boolean {
         return (currentLine - centerPixelLine) ** 2 + (currentColumn - centerPixelColumn) ** 2 <= offset ** 2 + 1;
     }
 
@@ -184,7 +197,7 @@ export class DifferenceDetectorService {
         }
     }
 
-    private clampValue(value: number, min: number, max: number) {
+    private clampValue(value: number, min: number, max: number): number {
         if (value < min) {
             value = min;
         } else if (value > max) {
