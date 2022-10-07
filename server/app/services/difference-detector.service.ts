@@ -5,12 +5,10 @@ import { Service } from 'typedi';
 @Service()
 export class DifferenceDetectorService {
     private nbOfDifferences: number;
-    private differentPixelsNumbersArrayWithOffset: number[];
     private pixelsDifferencesNbMap: Map<number, number>;
     private offset: number;
 
     constructor(private imageDatasToCompare: ImageDataToCompare) {
-        this.differentPixelsNumbersArrayWithOffset = [];
         this.offset = imageDatasToCompare.offSet;
         this.pixelsDifferencesNbMap = new Map<number, number>();
         this.nbOfDifferences = 0;
@@ -21,10 +19,6 @@ export class DifferenceDetectorService {
 
     getNbDifferences(): number {
         return this.nbOfDifferences;
-    }
-
-    getDifferentPixelsArrayWithOffset(): number[] {
-        return this.differentPixelsNumbersArrayWithOffset;
     }
 
     //To test
@@ -43,10 +37,9 @@ export class DifferenceDetectorService {
     }
 
     private generateDifferencesInformation() {
-        let differentPixelsNumbersArray: number[];
+        let differentPixelsNumbersArray: number[] = [];
 
-        this.compareImagesPixels();
-        differentPixelsNumbersArray = this.copyNumberArray(this.differentPixelsNumbersArrayWithOffset);
+        this.compareImagesPixels(differentPixelsNumbersArray);
 
         if (this.offset != 0) {
             differentPixelsNumbersArray.forEach((diffPixelNumber) => {
@@ -55,16 +48,12 @@ export class DifferenceDetectorService {
         }
     }
 
-    private copyNumberArray(arrayToCopy: number[]): number[] {
-        return [...arrayToCopy];
-    }
-
-    private compareImagesPixels() {
+    private compareImagesPixels(differentPixelsNumbersArray: number[]) {
         for (let i = 0; i < this.imageDatasToCompare.originalImageData.length; i += NB_BIT_PER_PIXEL) {
             if (this.isPixelDifferent(i)) {
                 const pixelPosition = i / NB_BIT_PER_PIXEL;
 
-                this.differentPixelsNumbersArrayWithOffset.push(pixelPosition);
+                differentPixelsNumbersArray.push(pixelPosition);
                 this.pixelsDifferencesNbMap.set(pixelPosition, DEFAULT_DIFFERENCE_POSITION);
             }
         }
@@ -118,7 +107,6 @@ export class DifferenceDetectorService {
 
             if (!this.pixelsDifferencesNbMap.has(currentVisitingPixelPosition)) {
                 this.pixelsDifferencesNbMap.set(currentVisitingPixelPosition, DEFAULT_DIFFERENCE_POSITION);
-                this.differentPixelsNumbersArrayWithOffset.push(currentVisitingPixelPosition);
             }
         }
     }
