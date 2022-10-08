@@ -88,9 +88,7 @@ export class TestPageComponent implements OnInit {
 
     //To test
     private setUpSocket() {
-        if (!this.socketService.isSocketAlive()) {
-            this.socketService.connect();
-            this.configureGameCreationPageSocketFeatures();
-        }
+        this.socketService.connect();
+        this.configureGameCreationPageSocketFeatures();
     }
 }
