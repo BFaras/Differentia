@@ -12,7 +12,8 @@ import { DifferencesInformations } from '@common/differences-informations';
 })
 export class TestPageComponent implements OnInit {
     @Input() offset: number;
-    numberOfDifferences: number;
+    private numberOfDifferences: number;
+    private differencesList: number[][];
     readonly originalImage: HTMLImageElement = new Image();
     readonly modifiedImage: HTMLImageElement = new Image();
     readonly finalDifferencesImage: HTMLImageElement = new Image();
@@ -41,6 +42,7 @@ export class TestPageComponent implements OnInit {
             if (this.numberOfDifferences !== undefined) {
                 this.gameToServerService.setNumberDifference(this.numberOfDifferences);
                 this.gameToServerService.setUrlImageOfDifference(this.finalDifferencesImage.src);
+                this.gameToServerService.setDifferencesList(this.differencesList);
             }
 
             return true;
@@ -65,6 +67,7 @@ export class TestPageComponent implements OnInit {
     private configureGameCreationPageSocketFeatures() {
         this.socketService.on('game creation differences informations', (differencesInformations: DifferencesInformations) => {
             const differentPixelsPositionArray = this.linearizeDoubleArray(differencesInformations.differencesList);
+            this.differencesList = differencesInformations.differencesList;
             this.numberOfDifferences = differencesInformations.nbOfDifferences;
             this.imageToImageDifferenceService.putDifferencesDataInImage(differentPixelsPositionArray, this.finalDifferencesImage);
         });
