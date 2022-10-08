@@ -34,20 +34,12 @@ export class GameToServerService {
         return this.numberDifference >= 3 && this.numberDifference <= 9;
     }
 
-    getDataUriImageDifference() {
-        this.urlImageOfDifference = this.urlImageOfDifference.slice(22);
-    }
-
     addGame(inputName: ElementRef) {
         const gameToAdd: Game = {
             name: inputName.nativeElement.value,
             numberOfDifferences: this.numberDifference,
             times: [],
-            images: [
-                this.uploadFileService.getNameOriginalImage().name,
-                this.uploadFileService.getNameModifiedImage().name,
-                this.urlImageOfDifference,
-            ],
+            images: [this.uploadFileService.getNameOriginalImage().name, this.uploadFileService.getNameModifiedImage().name],
             differencesList: this.differencesList,
         };
 

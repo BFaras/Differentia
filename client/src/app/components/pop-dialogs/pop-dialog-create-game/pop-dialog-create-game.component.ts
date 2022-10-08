@@ -6,25 +6,22 @@ import { GameToServerService } from '@app/services/game-to-server.service';
     styleUrls: ['./pop-dialog-create-game.component.scss'],
 })
 export class PopDialogCreateGameComponent implements OnInit {
-    isImageDifferenceAndNumberReady:boolean;
-    imageOfDifferenceSrc :any
-    @ViewChild('name', {static: true}) nameInput: ElementRef;
+    isImageDifferenceAndNumberReady: boolean;
+    imageOfDifferenceSrc: any;
+    @ViewChild('name', { static: true }) nameInput: ElementRef;
     nameOfGame: string;
-    numberOfDifference: number
-    constructor(private gameToServerService :GameToServerService ) {}
-    
+    numberOfDifference: number;
+    constructor(private gameToServerService: GameToServerService) {}
 
     ngOnInit(): void {
-        this.getNumberOfDifference()
+        this.getNumberOfDifference();
     }
 
     addGame() {
-        this.gameToServerService.getDataUriImageDifference()
-        this.gameToServerService.addGame(this.nameInput)
-
+        this.gameToServerService.addGame(this.nameInput);
     }
 
-    getNumberOfDifference(){
-        this.numberOfDifference= this.gameToServerService.getNumberDifference()
+    getNumberOfDifference() {
+        this.numberOfDifference = this.gameToServerService.getNumberDifference();
     }
 }
