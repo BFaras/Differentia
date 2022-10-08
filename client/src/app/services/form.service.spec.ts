@@ -14,12 +14,14 @@ describe('FormService', () => {
             numberOfDifferences: 4,
             times: [],
             images: [],
+            differencesList: [],
         },
         {
             name: 'Bike game',
             numberOfDifferences: 5,
             times: [],
             images: [],
+            differencesList: [],
         },
     ];
 

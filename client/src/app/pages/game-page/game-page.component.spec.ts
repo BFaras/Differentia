@@ -13,8 +13,8 @@ import { GamePageComponent } from './game-page.component';
 import SpyObj = jasmine.SpyObj;
 
 class SocketClientServiceMock extends SocketClientService {
-    override connect() { }
-  }
+    override connect() {}
+}
 
 describe('GamePageComponent', () => {
     let component: GamePageComponent;
@@ -31,24 +31,25 @@ describe('GamePageComponent', () => {
         socketServiceMock = new SocketClientServiceMock();
         socketServiceMock.socket = socketHelper as unknown as Socket;
         testGame = {
-            name: "test game",
+            name: 'test game',
             numberOfDifferences: 7,
             times: [],
-            images: []
+            images: [],
+            differencesList: [],
         };
         // gamesMock = [testGame];
         // gamesMock = new Subject();
-
 
         timeServiceSpy = jasmine.createSpyObj('TimeService', ['classicMode', 'changeTime']);
         communicationServiceSpy = jasmine.createSpyObj('CommunicationService', ['getGames']);
         communicationServiceSpy.getGames.and.returnValue(of([testGame]));
         await TestBed.configureTestingModule({
             declarations: [GamePageComponent, SidebarComponent, PlayAreaComponent, TopbarComponent],
-            providers: [{ provide: SocketClientService, useValue: socketServiceMock },
-                {provide: TimeService, useValue: timeServiceSpy},
-                {provide: CommunicationService, useValue: communicationServiceSpy}
-            ]
+            providers: [
+                { provide: SocketClientService, useValue: socketServiceMock },
+                { provide: TimeService, useValue: timeServiceSpy },
+                { provide: CommunicationService, useValue: communicationServiceSpy },
+            ],
         }).compileComponents();
     });
 
@@ -64,44 +65,43 @@ describe('GamePageComponent', () => {
 
     describe('Receiving events', () => {
         it('should handle classic mode event and call the classicMode method of the time service', () => {
-            socketHelper.peerSideEmit("classic mode");
+            socketHelper.peerSideEmit('classic mode');
             expect(component['timeService'].classicMode).toHaveBeenCalled();
         });
-    
+
         it('should handle time event and call the changeTime method of the time service', () => {
             const testTime = {
                 seconds: 0,
-                minutes: 0
+                minutes: 0,
             };
-            socketHelper.peerSideEmit("time", testTime);
+            socketHelper.peerSideEmit('time', testTime);
             expect(component['timeService'].changeTime).toHaveBeenCalledWith(testTime);
         });
-    
+
         it("should handle 'The game is' event and set the value of its attribute nbDifferences to the value of the number of differences of the game wanted", () => {
-          const nameOfGame = "test game";
-          socketHelper.peerSideEmit("The game is", nameOfGame);
-          expect(component['communicationService'].getGames).toHaveBeenCalled();
-          expect(component.nbDifferences).toEqual(testGame.numberOfDifferences);
+            const nameOfGame = 'test game';
+            socketHelper.peerSideEmit('The game is', nameOfGame);
+            expect(component['communicationService'].getGames).toHaveBeenCalled();
+            expect(component.nbDifferences).toEqual(testGame.numberOfDifferences);
         });
 
         // Ce test est inutile comme expliqué aux lignes 54 et 55 du fichier game-page.component.ts, cependant il a été fait car sinon nous n'atteignons pas
         // une couverture de 100%
         it("should handle 'The game is' event and set the value of its attribute nbDifferences to -1 when the game wanted doesn't exists", () => {
-            const nameOfGame = "unvalid game";
+            const nameOfGame = 'unvalid game';
             const errorNumberOfDifferences = -1;
-            socketHelper.peerSideEmit("The game is", nameOfGame);
+            socketHelper.peerSideEmit('The game is', nameOfGame);
             expect(component['communicationService'].getGames).toHaveBeenCalled();
             expect(component.nbDifferences).toEqual(errorNumberOfDifferences);
-          }); 
-      })
-    
-    describe('Emiting events', () => {   
-        it('should send a kill the timer event on destroy', () => {
-          const spy = spyOn(component.socketService, "send");
-          const eventName = "kill the timer";
-          component.ngOnDestroy();
-          expect(spy).toHaveBeenCalledWith(eventName);
-        })
+        });
     });
 
+    describe('Emiting events', () => {
+        it('should send a kill the timer event on destroy', () => {
+            const spy = spyOn(component.socketService, 'send');
+            const eventName = 'kill the timer';
+            component.ngOnDestroy();
+            expect(spy).toHaveBeenCalledWith(eventName);
+        });
+    });
 });
