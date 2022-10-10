@@ -38,6 +38,7 @@ export class SocketManager {
                 console.log(`Raison de deconnexion : ${reason}`);
             });
 
+            //To test
             socket.on('game page', async (message: string) => {
                 console.log(message);
                 socket.emit('classic mode');

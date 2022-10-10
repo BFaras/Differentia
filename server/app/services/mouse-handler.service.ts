@@ -2,6 +2,7 @@ import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
 import { Service } from 'typedi';
 import { DifferenceDetectorService } from './difference-detector.service';
+import { HashmapConverterService } from './hashmap-converter.service';
 
 @Service()
 export class MouseHandlerService {
@@ -9,11 +10,13 @@ export class MouseHandlerService {
     differencesNumberFound: Array<number>;
     nbDifferencesTotal: number;
     imagesData: ImageDataToCompare;
+    hashmapConverterService: HashmapConverterService;
 
     constructor() {
         this.differencesHashmap = new Map<number, number>();
         this.differencesNumberFound = [];
         this.nbDifferencesTotal = 0;
+        this.hashmapConverterService = new HashmapConverterService();
     }
 
     updateImageData(imagesData: ImageDataToCompare) {
