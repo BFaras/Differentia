@@ -16,9 +16,7 @@ export class GamesService {
     constructor() {}
 
     private async getGameImagesNames(gameName: string): Promise<string[]> {
-        await this.asyncReadGamesFile();
-        const game = this.games.find((game) => game.name === gameName);
-        return game!.images;
+        return (await this.getGame(gameName)).images;
     }
 
     private async getGameImageData(imageName: string): Promise<Buffer> {
@@ -29,6 +27,13 @@ export class GamesService {
             console.log('Something went wrong trying to read the image file:' + err);
             throw new Error(err);
         }
+    }
+
+    //To test
+    async getGame(gameName: string): Promise<Game> {
+        await this.asyncReadGamesFile();
+        const game: Game = (await this.getAllGames()).find((game) => game.name === gameName)!;
+        return game;
     }
 
     async getAllGames(): Promise<Game[]> {

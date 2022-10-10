@@ -1,27 +1,20 @@
-import { ImageDataToCompare } from '@common/image-data-to-compare';
+import { IMAGE_WIDTH } from '@common/const';
+import { Game } from '@common/game';
 import { Position } from '@common/position';
 import { Service } from 'typedi';
-import { DifferenceDetectorService } from './difference-detector.service';
 import { HashmapConverterService } from './hashmap-converter.service';
+import { GamesService } from './local.games.service';
 
 @Service()
 export class MouseHandlerService {
     differencesHashmap: Map<number, number>;
     differencesNumberFound: Array<number>;
     nbDifferencesTotal: number;
-    imagesData: ImageDataToCompare;
-    hashmapConverterService: HashmapConverterService;
 
     constructor() {
         this.differencesHashmap = new Map<number, number>();
         this.differencesNumberFound = [];
         this.nbDifferencesTotal = 0;
-        this.hashmapConverterService = new HashmapConverterService();
-    }
-
-    updateImageData(imagesData: ImageDataToCompare) {
-        this.imagesData = imagesData;
-        this.generateDifferencesInformations();
     }
 
     resetData() {
@@ -33,13 +26,18 @@ export class MouseHandlerService {
         return this.validateDifferencesOnClick(mousePosition);
     }
 
-    private generateDifferencesInformations() {
-        const diffDetector = new DifferenceDetectorService(this.imagesData);
-        this.nbDifferencesTotal = diffDetector.getNbDifferences();
+    //To test
+    async generateDifferencesInformations(gameName: string) {
+        const gamesService: GamesService = new GamesService();
+        const hashmapConverter: HashmapConverterService = new HashmapConverterService();
+        const game: Game = await gamesService.getGame(gameName);
+
+        this.nbDifferencesTotal = game.numberOfDifferences;
+        this.differencesHashmap = hashmapConverter.convertNumber2DArrayToNumberMap(game.differencesList);
     }
 
     convertMousePositionToPixelNumber(mousePosition: Position): number {
-        return (mousePosition.y + 1) * this.imagesData.imageWidth + mousePosition.x - this.imagesData.imageWidth;
+        return (mousePosition.y + 1) * IMAGE_WIDTH + mousePosition.x - IMAGE_WIDTH;
     }
 
     private validateDifferencesOnClick(mousePosition: Position): boolean {

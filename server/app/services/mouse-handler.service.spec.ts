@@ -1,4 +1,3 @@
-import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
 import { expect } from 'chai';
 import { MouseHandlerService } from './mouse-handler.service';
@@ -7,17 +6,11 @@ import Sinon = require('sinon');
 describe('MouseHandlerService', () => {
     let mouseService: MouseHandlerService;
     let position: Position = { x: 0, y: 0 };
-    let imageService: ImageDataToCompare = {
-        originalImageData: new Uint8ClampedArray(),
-        modifiedImageData: new Uint8ClampedArray(),
-        imageWidth: 1,
-        imageHeight: 1,
-        offSet: 0,
-    };
 
     beforeEach(async () => {
+        //we need a mock of a local games service which will return a game by default
         mouseService = new MouseHandlerService();
-        mouseService.updateImageData(imageService);
+        mouseService.generateDifferencesInformations('new game');
         mouseService.differencesHashmap.set(0, 1);
         position = { x: 0, y: 0 };
     });

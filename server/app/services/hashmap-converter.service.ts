@@ -1,6 +1,5 @@
 import { FIRST_ARRAY_POSITION } from '@common/const';
 import { Service } from 'typedi';
-import e = require('express');
 
 @Service()
 export class HashmapConverterService {

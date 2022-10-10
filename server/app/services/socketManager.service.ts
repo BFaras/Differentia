@@ -39,15 +39,16 @@ export class SocketManager {
             });
 
             //To test
-            socket.on('game page', async (message: string) => {
-                console.log(message);
+            socket.on('game page', async (gameName: string) => {
+                console.log(gameName);
                 socket.emit('classic mode');
-                socket.emit('The game is', message);
+                socket.emit('The game is', gameName);
                 this.timeInterval = setInterval(() => {
                     this.emitTime(socket);
                 }, 1000);
 
-                await this.sendImagesToClient(message, socket);
+                await this.mouseHandlerService.generateDifferencesInformations(gameName);
+                await this.sendImagesToClient(gameName, socket);
             });
 
             socket.on('username is', (username: string) => {

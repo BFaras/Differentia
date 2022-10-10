@@ -23,13 +23,11 @@ const EMPTY_OFFSET_NB = 0;
 export class DifferenceDetectorService {
     private nbOfDifferences: number;
     private pixelsDifferencesNbMap: Map<number, number>;
-    private hashmapConverterService: HashmapConverterService;
     private offset: number;
 
     constructor(private imageDatasToCompare: ImageDataToCompare) {
         this.offset = imageDatasToCompare.offSet;
         this.pixelsDifferencesNbMap = new Map<number, number>();
-        this.hashmapConverterService = new HashmapConverterService();
         this.nbOfDifferences = DEFAULT_NB_OF_DIFFERENCES;
 
         this.generateDifferencesInformation();
@@ -42,7 +40,8 @@ export class DifferenceDetectorService {
 
     //To test
     generateDifferencesList(): number[][] {
-        return this.hashmapConverterService.convertNumberMapToNumber2DArray(this.pixelsDifferencesNbMap, this.nbOfDifferences);
+        const hashmapConverterService = new HashmapConverterService();
+        return hashmapConverterService.convertNumberMapToNumber2DArray(this.pixelsDifferencesNbMap, this.nbOfDifferences);
     }
 
     private generateDifferencesInformation() {
