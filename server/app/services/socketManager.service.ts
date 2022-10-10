@@ -67,11 +67,6 @@ export class SocketManager {
                 socket.emit('game creation differences informations', differencesInformations);
             });
 
-            socket.on('image data to begin game', (imagesData: ImageDataToCompare) => {
-                this.mouseHandlerService.resetData();
-                this.mouseHandlerService.updateImageData(imagesData);
-            });
-
             socket.on('Verify position', (position: Position) => {
                 this.clickResponse(socket, position);
             });
