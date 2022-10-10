@@ -20,12 +20,13 @@ export class HashmapConverterService {
         return differencesList;
     }
 
+    //To test
     convertNumber2DArrayToNumberMap(arrayToConvert: number[][]): Map<number, number> {
         const mapGenerated = new Map<number, number>();
 
         for (let subbArrayPosition = FIRST_ARRAY_POSITION; subbArrayPosition < arrayToConvert.length; subbArrayPosition++) {
             for (let elementPosition = FIRST_ARRAY_POSITION; elementPosition < arrayToConvert[subbArrayPosition].length; elementPosition++) {
-                mapGenerated.set(elementPosition, subbArrayPosition);
+                mapGenerated.set(arrayToConvert[subbArrayPosition][elementPosition], subbArrayPosition);
             }
         }
 
