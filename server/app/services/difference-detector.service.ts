@@ -38,7 +38,6 @@ export class DifferenceDetectorService {
         return this.nbOfDifferences;
     }
 
-    //To test
     generateDifferencesList(): number[][] {
         const hashmapConverterService = new HashmapConverterService();
         return hashmapConverterService.convertNumberMapToNumber2DArray(this.pixelsDifferencesNbMap, this.nbOfDifferences);
