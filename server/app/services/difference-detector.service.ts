@@ -130,28 +130,29 @@ export class DifferenceDetectorService {
         let pixelsToVisit: number[] = [initialVisitedDifferentPixelNb];
 
         while (pixelsToVisit.length != EMPTY_ARRAY_LENGTH) {
-            this.markPixelDifferenceNb(pixelsToVisit[FIRST_ARRAY_POSITION]);
-            this.determinePixelsAround(pixelsToVisit[FIRST_ARRAY_POSITION], pixelsToVisit);
+            const pixelPositionToVisit = pixelsToVisit[FIRST_ARRAY_POSITION];
+            if (this.isPixelDifferenceInMap(pixelPositionToVisit)) {
+                this.markPixelDifferenceNb(pixelPositionToVisit);
+                this.determinePixelsAround(pixelPositionToVisit, pixelsToVisit);
+            }
 
             pixelsToVisit = pixelsToVisit.filter((value, i, arr) => {
-                return value != pixelsToVisit[FIRST_ARRAY_POSITION];
+                return value != pixelPositionToVisit;
             });
         }
     }
 
     private determinePixelsAround(diffPixelNumber: number, pixelsToVisit: number[]) {
-        if (this.isPixelDifferenceInMap(diffPixelNumber)) {
-            const centerPixelLine = Math.floor(diffPixelNumber / this.imageDatasToCompare.imageWidth);
-            const centerPixelColumn = diffPixelNumber % this.imageDatasToCompare.imageWidth;
-            let offsetCloumnBeginning = this.clampValue(
-                centerPixelColumn - RADIUS_AROUND_PIXEL,
-                MINIMUM_PIXEL_POSITION,
-                this.imageDatasToCompare.imageWidth,
-            );
+        const centerPixelLine = Math.floor(diffPixelNumber / this.imageDatasToCompare.imageWidth);
+        const centerPixelColumn = diffPixelNumber % this.imageDatasToCompare.imageWidth;
+        let offsetCloumnBeginning = this.clampValue(
+            centerPixelColumn - RADIUS_AROUND_PIXEL,
+            MINIMUM_PIXEL_POSITION,
+            this.imageDatasToCompare.imageWidth,
+        );
 
-            for (let column = offsetCloumnBeginning; column <= centerPixelColumn + RADIUS_AROUND_PIXEL; column++) {
-                this.addPixelsToCurrentColumnToVisit(column, centerPixelLine, centerPixelColumn, pixelsToVisit);
-            }
+        for (let column = offsetCloumnBeginning; column <= centerPixelColumn + RADIUS_AROUND_PIXEL; column++) {
+            this.addPixelsToCurrentColumnToVisit(column, centerPixelLine, centerPixelColumn, pixelsToVisit);
         }
     }
 
