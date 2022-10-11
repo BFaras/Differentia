@@ -69,7 +69,6 @@ describe('MouseHandlerService', () => {
 
         const stub = sinon.stub(gamesService, 'getGame').callsFake(async (gameName: string) => {
             testGame.name = gameName;
-            console.log('called');
             return Promise.resolve(testGame);
         });
 
