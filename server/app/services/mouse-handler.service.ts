@@ -1,7 +1,7 @@
-import { IMAGE_WIDTH } from '@common/const';
+import { FIRST_ARRAY_POSITION, IMAGE_WIDTH } from '@common/const';
 import { Game } from '@common/game';
 import { Position } from '@common/position';
-import { Service } from 'typedi';
+import Container, { Service } from 'typedi';
 import { HashmapConverterService } from './hashmap-converter.service';
 import { GamesService } from './local.games.service';
 
@@ -31,16 +31,28 @@ export class MouseHandlerService {
 
     //To test
     async generateDifferencesInformations(gameName: string) {
-        const gamesService: GamesService = new GamesService();
-        const hashmapConverter: HashmapConverterService = new HashmapConverterService();
+        const gamesService: GamesService = Container.get(GamesService);
+        const hashmapConverter: HashmapConverterService = Container.get(HashmapConverterService);
         const game: Game = await gamesService.getGame(gameName);
 
         this.nbDifferencesTotal = game.numberOfDifferences;
-        this.differencesList = game.differencesList;
+        this.differencesList = this.copy2DNumberArray(game.differencesList);
         this.differencesHashmap = hashmapConverter.convertNumber2DArrayToNumberMap(this.differencesList);
     }
 
-    convertMousePositionToPixelNumber(mousePosition: Position): number {
+    private copy2DNumberArray(arrayToCopy: number[][]) {
+        const copiedArray: number[][] = [];
+
+        for (let i = FIRST_ARRAY_POSITION; i < arrayToCopy.length; i++) {
+            copiedArray[i] = [];
+            for (let j = FIRST_ARRAY_POSITION; j < arrayToCopy[i].length; j++) {
+                copiedArray[i][j] = arrayToCopy[i][j];
+            }
+        }
+        return copiedArray;
+    }
+
+    private convertMousePositionToPixelNumber(mousePosition: Position): number {
         return (mousePosition.y + 1) * IMAGE_WIDTH + mousePosition.x - IMAGE_WIDTH;
     }
 
