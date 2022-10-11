@@ -19,6 +19,8 @@ describe('MouseHandlerService', () => {
             [899, 951],
         ],
     };
+    const gamesService: GamesService = Container.get(GamesService);
+    const hashmapConverter: HashmapConverterService = Container.get(HashmapConverterService);
 
     let mouseService: MouseHandlerService;
     let position: Position = { x: 0, y: 0 };
@@ -31,13 +33,16 @@ describe('MouseHandlerService', () => {
         position = { x: 0, y: 0 };
     });
 
+    afterEach(() => {
+        sinon.restore();
+    });
+
     it('should call generateDifferencesInformations on updateImageData', () => {
         const spy = sinon.spy(mouseService, <any>'generateDifferencesInformations');
         expect(spy.called);
     });
 
     it('should set the differences list at the right value when generateDifferencesInformations() is called', async () => {
-        const gamesService: GamesService = Container.get(GamesService);
         const stub = sinon.stub(gamesService, 'getGame').callsFake(async (gameName: string) => {
             testGame.name = gameName;
             return Promise.resolve(testGame);
@@ -49,11 +54,9 @@ describe('MouseHandlerService', () => {
     });
 
     it('should change the differencesMap value when generateDifferencesInformations() is called', async () => {
-        const gamesService: GamesService = Container.get(GamesService);
         const originalDifferencesMap = mouseService.differencesHashmap;
         const stub = sinon.stub(gamesService, 'getGame').callsFake(async (gameName: string) => {
             testGame.name = gameName;
-            console.log('called');
             return Promise.resolve(testGame);
         });
 
@@ -63,8 +66,6 @@ describe('MouseHandlerService', () => {
     });
 
     it('should call convertNumber2DArrayToNumberMap() from hashmapConverter when generateDifferencesInformations() is called', async () => {
-        const gamesService: GamesService = Container.get(GamesService);
-        const hashmapConverter: HashmapConverterService = Container.get(HashmapConverterService);
         const spy = sinon.spy(hashmapConverter, 'convertNumber2DArrayToNumberMap');
 
         const stub = sinon.stub(gamesService, 'getGame').callsFake(async (gameName: string) => {

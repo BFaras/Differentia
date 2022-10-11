@@ -29,7 +29,6 @@ export class MouseHandlerService {
         return this.validateDifferencesOnClick(mousePosition);
     }
 
-    //To test
     async generateDifferencesInformations(gameName: string) {
         const gamesService: GamesService = Container.get(GamesService);
         const hashmapConverter: HashmapConverterService = Container.get(HashmapConverterService);
