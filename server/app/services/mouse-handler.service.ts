@@ -8,11 +8,13 @@ import { GamesService } from './local.games.service';
 @Service()
 export class MouseHandlerService {
     differencesHashmap: Map<number, number>;
+    differencesList: number[][];
     differencesNumberFound: Array<number>;
     nbDifferencesTotal: number;
 
     constructor() {
         this.differencesHashmap = new Map<number, number>();
+        this.differencesList = [];
         this.differencesNumberFound = [];
         this.nbDifferencesTotal = 0;
     }
@@ -20,6 +22,7 @@ export class MouseHandlerService {
     resetData() {
         this.differencesHashmap = new Map<number, number>();
         this.differencesNumberFound = [];
+        this.differencesList = [];
     }
 
     isValidClick(mousePosition: Position) {
@@ -33,7 +36,8 @@ export class MouseHandlerService {
         const game: Game = await gamesService.getGame(gameName);
 
         this.nbDifferencesTotal = game.numberOfDifferences;
-        this.differencesHashmap = hashmapConverter.convertNumber2DArrayToNumberMap(game.differencesList);
+        this.differencesList = game.differencesList;
+        this.differencesHashmap = hashmapConverter.convertNumber2DArrayToNumberMap(this.differencesList);
     }
 
     convertMousePositionToPixelNumber(mousePosition: Position): number {
@@ -44,6 +48,7 @@ export class MouseHandlerService {
         const pixelNumber = this.convertMousePositionToPixelNumber(mousePosition);
         let differencesNumber: number;
         let pixelIsDifferent: boolean = true;
+        let pixelsOfDifference: number[] = [];
         let mapResponse = new Map<string, any>();
 
         if (this.differencesHashmap.has(pixelNumber)) {
@@ -55,13 +60,14 @@ export class MouseHandlerService {
             } else {
                 // Nouvelle Différence trouvée
                 this.differencesNumberFound.push(differencesNumber);
+                pixelsOfDifference = this.differencesList[differencesNumber];
             }
         } else {
             // Afficher Erreur et suspendre/ignorer les clics pendant 1s
             pixelIsDifferent = false;
         }
         mapResponse.set('booleanValue', pixelIsDifferent);
-        mapResponse.set('pixelList', this.differencesNumberFound);
+        mapResponse.set('pixelList', pixelsOfDifference);
         return mapResponse;
     }
 }
