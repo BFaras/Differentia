@@ -176,7 +176,7 @@ export class DifferenceDetectorService {
                 (line + 1) * this.imageDatasToCompare.imageWidth + currentColumn - this.imageDatasToCompare.imageWidth;
 
             if (this.isPixelDifferenceInMap(currentVisitingPixelPosition) && !this.isPixelVisited(currentVisitingPixelPosition)) {
-                this.markPixelDifferenceNb(currentVisitingPixelPosition);
+                //this.markPixelDifferenceNb(currentVisitingPixelPosition);
                 pixelsToVisit.push(currentVisitingPixelPosition);
             }
         }
