@@ -1,5 +1,6 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ImageGeneratorService } from '@app/services/difference-detector-feature/image-generator.service';
 import { DrawService } from '@app/services/draw.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { MouseDetectionService } from '@app/services/mouse-detection.service';
@@ -29,7 +30,8 @@ export class PlayAreaComponent implements OnInit {
         private readonly drawService: DrawService,
         private readonly mouseDetection: MouseDetectionService,
         private imageToImageDifferenceService: ImageToImageDifferenceService,
-        private dialog: MatDialog, // private imageGenerator: ImageGeneratorService,
+        private dialog: MatDialog,
+        private imageGenerator: ImageGeneratorService,
     ) {}
 
     async ngOnInit(): Promise<void> {
@@ -106,6 +108,14 @@ export class PlayAreaComponent implements OnInit {
             this.mouseDetection.playSound(isDifference);
             this.mouseDetection.clickMessage(isDifference);
             this.mouseDetection.incrementNbrDifference(isDifference);
+
+            if (isDifference) {
+                this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
+                    this.pixelList,
+                    this.originalCanvas.nativeElement,
+                    this.modifiedCanvas.nativeElement,
+                );
+            }
         });
 
         this.socketService.on('End game', () => {
