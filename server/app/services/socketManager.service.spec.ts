@@ -28,7 +28,7 @@ describe('SocketManager service tests', () => {
         offSet: 0,
     };
     let differenceDetectorService: DifferenceDetectorService = new DifferenceDetectorService(imagesData);
-    let gamesService: GamesService = new GamesService();
+    let gamesService: GamesService = Container.get(GamesService);
     let mouseHandlerService: MouseHandlerService = new MouseHandlerService();
 
     const urlString = 'http://localhost:3000';

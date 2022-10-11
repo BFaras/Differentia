@@ -1,7 +1,7 @@
-import { IMAGE_WIDTH } from '@common/const';
+import { FIRST_ARRAY_POSITION, IMAGE_WIDTH } from '@common/const';
 import { Game } from '@common/game';
 import { Position } from '@common/position';
-import { Service } from 'typedi';
+import Container, { Service } from 'typedi';
 import { HashmapConverterService } from './hashmap-converter.service';
 import { GamesService } from './local.games.service';
 
@@ -29,34 +29,43 @@ export class MouseHandlerService {
         return this.validateDifferencesOnClick(mousePosition);
     }
 
-    //To test
     async generateDifferencesInformations(gameName: string) {
-        const gamesService: GamesService = new GamesService();
-        const hashmapConverter: HashmapConverterService = new HashmapConverterService();
+        const gamesService: GamesService = Container.get(GamesService);
+        const hashmapConverter: HashmapConverterService = Container.get(HashmapConverterService);
         const game: Game = await gamesService.getGame(gameName);
 
         this.nbDifferencesTotal = game.numberOfDifferences;
-        this.differencesList = game.differencesList;
+        this.differencesList = this.copy2DNumberArray(game.differencesList);
         this.differencesHashmap = hashmapConverter.convertNumber2DArrayToNumberMap(this.differencesList);
     }
 
-    convertMousePositionToPixelNumber(mousePosition: Position): number {
+    private copy2DNumberArray(arrayToCopy: number[][]) {
+        const copiedArray: number[][] = [];
+
+        for (let i = FIRST_ARRAY_POSITION; i < arrayToCopy.length; i++) {
+            copiedArray[i] = [];
+            for (let j = FIRST_ARRAY_POSITION; j < arrayToCopy[i].length; j++) {
+                copiedArray[i][j] = arrayToCopy[i][j];
+            }
+        }
+        return copiedArray;
+    }
+
+    private convertMousePositionToPixelNumber(mousePosition: Position): number {
         return (mousePosition.y + 1) * IMAGE_WIDTH + mousePosition.x - IMAGE_WIDTH;
     }
 
     private validateDifferencesOnClick(mousePosition: Position) {
         const pixelNumber = this.convertMousePositionToPixelNumber(mousePosition);
         let differencesNumber: number;
-        let pixelIsDifferent: boolean = true;
         let pixelsOfDifference: number[] = [];
-        let mapResponse = new Map<string, any>();
 
         if (this.differencesHashmap.has(pixelNumber)) {
             differencesNumber = this.differencesHashmap.get(pixelNumber)!;
 
             if (this.differencesNumberFound.includes(differencesNumber)) {
                 // La différence a déjà été trouvée précédemment
-                pixelIsDifferent = false;
+                pixelsOfDifference = [];
             } else {
                 // Nouvelle Différence trouvée
                 this.differencesNumberFound.push(differencesNumber);
@@ -64,10 +73,9 @@ export class MouseHandlerService {
             }
         } else {
             // Afficher Erreur et suspendre/ignorer les clics pendant 1s
-            pixelIsDifferent = false;
+            pixelsOfDifference = [];
         }
-        mapResponse.set('booleanValue', pixelIsDifferent);
-        mapResponse.set('pixelList', pixelsOfDifference);
-        return mapResponse;
+
+        return pixelsOfDifference;
     }
 }

@@ -17,9 +17,11 @@ export class PlayAreaComponent implements OnInit {
     @ViewChild('modifiedCanvas', { static: false }) private modifiedCanvas!: ElementRef<HTMLCanvasElement>;
     @ViewChild('clickCanvas1', { static: false }) private clickCanvas1!: ElementRef<HTMLCanvasElement>;
     @ViewChild('clickCanvas2', { static: false }) private clickCanvas2!: ElementRef<HTMLCanvasElement>;
+    // @ViewChild('clignotementCanvas', { static: false }) private clignotementCanvas!: ElementRef<HTMLCanvasElement>;
     @Input() differentImages: HTMLImageElement[];
     @Input() nbDifferencesTotal: number = 0;
     mousePosition: Position = { x: 0, y: 0 };
+    pixelList: number[] = [];
 
     private canvasSize = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
     constructor(
@@ -27,7 +29,7 @@ export class PlayAreaComponent implements OnInit {
         private readonly drawService: DrawService,
         private readonly mouseDetection: MouseDetectionService,
         private imageToImageDifferenceService: ImageToImageDifferenceService,
-        private dialog: MatDialog,
+        private dialog: MatDialog, // private imageGenerator: ImageGeneratorService,
     ) {}
 
     async ngOnInit(): Promise<void> {
@@ -84,13 +86,26 @@ export class PlayAreaComponent implements OnInit {
     }
 
     configurePlayAreaSocket(): void {
-        this.socketService.on('Valid click boolean', (booleanResponse: boolean) => {
+        this.socketService.on('Valid click', (response: number[]) => {
+            this.pixelList = response;
+            // this.originalCanvas.nativeElement.width = this.width;
+            // this.originalCanvas.nativeElement.height = this.height;
+            // this.clignotementCanvas.nativeElement.width = this.width;
+            // this.clignotementCanvas.nativeElement.height = this.height;
+            console.log(this.pixelList);
+            // this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
+            //     pixelList,
+            //     this.originalCanvas.nativeElement,
+            //     this.clignotementCanvas.nativeElement,
+            // );
+            let booleanResponse: boolean = true;
+            if (this.pixelList.length == 0) {
+                booleanResponse = false;
+            }
+            console.log(booleanResponse);
             this.mouseDetection.playSound(booleanResponse);
             this.mouseDetection.clickMessage(booleanResponse);
             this.mouseDetection.incrementNbrDifference(booleanResponse);
-        });
-        this.socketService.on('Valid click pixelList', (pixeList: number[]) => {
-            console.log(pixeList);
         });
 
         this.socketService.on('End game', () => {
