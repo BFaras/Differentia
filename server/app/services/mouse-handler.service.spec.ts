@@ -25,6 +25,13 @@ describe('MouseHandlerService', () => {
     let mouseService: MouseHandlerService;
     let position: Position = { x: 0, y: 0 };
 
+    before(() => {
+        sinon.stub(gamesService, 'getGame').callsFake(async (gameName: string) => {
+            testGame.name = gameName;
+            return Promise.resolve(testGame);
+        });
+    });
+
     beforeEach(async () => {
         //we need a mock of a local games service which will return a game by default
         mouseService = new MouseHandlerService();
@@ -33,7 +40,7 @@ describe('MouseHandlerService', () => {
         position = { x: 0, y: 0 };
     });
 
-    afterEach(() => {
+    after(() => {
         sinon.restore();
     });
 
@@ -43,39 +50,20 @@ describe('MouseHandlerService', () => {
     });
 
     it('should set the differences list at the right value when generateDifferencesInformations() is called', async () => {
-        const stub = sinon.stub(gamesService, 'getGame').callsFake(async (gameName: string) => {
-            testGame.name = gameName;
-            return Promise.resolve(testGame);
-        });
-
         await mouseService.generateDifferencesInformations(testGameName);
         expect(mouseService.differencesList).to.deep.equals(testGame.differencesList);
-        expect(stub.callsFake);
     });
 
     it('should change the differencesMap value when generateDifferencesInformations() is called', async () => {
         const originalDifferencesMap = mouseService.differencesHashmap;
-        const stub = sinon.stub(gamesService, 'getGame').callsFake(async (gameName: string) => {
-            testGame.name = gameName;
-            return Promise.resolve(testGame);
-        });
-
         await mouseService.generateDifferencesInformations(testGameName);
         expect(mouseService.differencesHashmap).to.not.deep.equals(originalDifferencesMap);
-        expect(stub.callsFake);
     });
 
     it('should call convertNumber2DArrayToNumberMap() from hashmapConverter when generateDifferencesInformations() is called', async () => {
         const spy = sinon.spy(hashmapConverter, 'convertNumber2DArrayToNumberMap');
-
-        const stub = sinon.stub(gamesService, 'getGame').callsFake(async (gameName: string) => {
-            testGame.name = gameName;
-            return Promise.resolve(testGame);
-        });
-
         await mouseService.generateDifferencesInformations(testGameName);
         expect(spy.called);
-        expect(stub.callsFake);
     });
 
     it('should return false if difference is already found ', () => {
