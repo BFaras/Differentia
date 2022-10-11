@@ -1,8 +1,8 @@
 import { Game } from '@common/game';
-import * as chai from "chai";
 import { Time } from '@common/time';
+import * as chai from 'chai';
 import { expect } from 'chai';
-import * as chaiAsPromised from "chai-as-promised";
+import * as chaiAsPromised from 'chai-as-promised';
 import * as fs from 'fs';
 import * as sinon from 'sinon';
 import { GamesService } from './local.games.service';
@@ -24,12 +24,14 @@ describe('Games service', () => {
                 numberOfDifferences: 4,
                 times: [],
                 images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
+                differencesList: [],
             },
             {
                 name: 'Bike game',
                 numberOfDifferences: 5,
                 times: [],
                 images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
+                differencesList: [],
             },
         ];
         validGameToAdd = {
@@ -37,12 +39,14 @@ describe('Games service', () => {
             numberOfDifferences: 5,
             times: [],
             images: ['image1', 'image2'],
+            differencesList: [],
         };
         invalidGameToAdd = {
             name: 'Car game',
             numberOfDifferences: 5,
             times: [],
             images: ['image1', 'image2'],
+            differencesList: [],
         };
         newTime = {
             seconds: 0,
@@ -127,7 +131,7 @@ describe('Games service', () => {
         });
 
         it('should throw an error when fs.promises.readFile(images_path) crashes', async () => {
-            let testImageName = "test name";
+            let testImageName = 'test name';
             const stub = sinon.stub(fs.promises, 'readFile').callsFake(async () => {
                 throw new Error();
             });

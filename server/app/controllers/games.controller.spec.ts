@@ -13,12 +13,14 @@ describe('GamesController', () => {
         numberOfDifferences: 8,
         times: [],
         images: ['image 1', 'image 2'],
+        differencesList: [],
     } as Game;
     const newValidGame = {
         name: 'Valid game',
         numberOfDifferences: 5,
         times: [],
         images: ['image 3', 'image 4'],
+        differencesList: [],
     } as Game;
     let gamesService: SinonStubbedInstance<GamesService>;
     let expressApp: Express.Application;

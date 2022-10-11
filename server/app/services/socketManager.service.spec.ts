@@ -89,10 +89,10 @@ describe('SocketManager service tests', () => {
     it('should handle a verify position event and call clickResponse', (done) => {
         let positionTest: Position = {
             x: 0,
-            y: 0
+            y: 0,
         };
         const stub = sinon.stub(mouseHandlerService, 'isValidClick').callsFake((positionTest) => {
-            console.log("salut");
+            console.log('salut');
             return true;
         });
         const spy = sinon.spy(service, <any>'clickResponse');
@@ -101,7 +101,7 @@ describe('SocketManager service tests', () => {
             expect(stub.callsFake);
             expect(spy.calledOnce);
             done();
-        })
+        });
     });
 
     it('should handle a game page event and return the game of the name that was launched', (done) => {
@@ -111,6 +111,15 @@ describe('SocketManager service tests', () => {
             expect(nameOfGame).to.equal(gameName);
             done();
         });
+    });
+
+    it('should handle a game page event and call generateDifferencesInformations', (done) => {
+        const spy = sinon.spy(mouseHandlerService, 'generateDifferencesInformations');
+        clientSocket.emit('game page', 'new game');
+        setTimeout(() => {
+            expect(spy.calledOnce);
+            done();
+        }, RESPONSE_DELAY * 5); // 1 seconde
     });
 
     it('should call emitTime on game page event', (done) => {
@@ -133,8 +142,8 @@ describe('SocketManager service tests', () => {
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
 
-    it('should handle a detect images difference event and call getDifferentPixelsArrayWithOffset', (done) => {
-        const spy = sinon.spy(differenceDetectorService, 'getDifferentPixelsArrayWithOffset');
+    it('should handle a detect images difference event and call generateDifferencesList', (done) => {
+        const spy = sinon.spy(differenceDetectorService, 'generateDifferencesList');
         clientSocket.emit('detect images difference', imagesData);
         setTimeout(() => {
             expect(spy.calledOnce);
@@ -145,15 +154,6 @@ describe('SocketManager service tests', () => {
     it('should handle a detect images difference event and call getNbDifferences', (done) => {
         const spy = sinon.spy(differenceDetectorService, 'getNbDifferences');
         clientSocket.emit('detect images difference', imagesData);
-        setTimeout(() => {
-            expect(spy.calledOnce);
-            done();
-        }, RESPONSE_DELAY * 5); // 1 seconde
-    });
-
-    it('should handle an image data to begin game event and call updateImageData', (done) => {
-        const spy = sinon.spy(mouseHandlerService, 'updateImageData');
-        clientSocket.emit('image data to begin game', imagesData);
         setTimeout(() => {
             expect(spy.calledOnce);
             done();
