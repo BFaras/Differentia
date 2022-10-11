@@ -38,7 +38,6 @@ export class SocketManager {
                 console.log(`Raison de deconnexion : ${reason}`);
             });
 
-            //To test
             socket.on('game page', async (gameName: string) => {
                 console.log(gameName);
                 socket.emit('classic mode');
@@ -59,7 +58,6 @@ export class SocketManager {
                 this.endTimer();
             });
 
-            //To test
             socket.on('detect images difference', (imagesData: ImageDataToCompare) => {
                 const differenceDetector = new DifferenceDetectorService(imagesData);
                 const differencesInformations: DifferencesInformations = {

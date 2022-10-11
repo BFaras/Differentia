@@ -67,6 +67,10 @@ describe('Games service', () => {
         expect(await gamesService.getAllGames()).to.deep.equals(allGamesTest);
     });
 
+    it('should get a specific game when calling getGame', async () => {
+        expect(await gamesService.getGame('Car game')).to.deep.equals(allGamesTest[0]);
+    });
+
     it('should not validate the name of the game when a game with the same name already exists', async () => {
         await gamesService.asyncReadGamesFile();
         expect(gamesService.validateName(invalidGameToAdd.name)).to.be.false;
