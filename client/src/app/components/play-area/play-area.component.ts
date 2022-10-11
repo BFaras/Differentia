@@ -98,14 +98,14 @@ export class PlayAreaComponent implements OnInit {
             //     this.originalCanvas.nativeElement,
             //     this.clignotementCanvas.nativeElement,
             // );
-            let booleanResponse: boolean = true;
+            let isDifference: boolean = true;
             if (this.pixelList.length == 0) {
-                booleanResponse = false;
+                isDifference = false;
             }
-            console.log(booleanResponse);
-            this.mouseDetection.playSound(booleanResponse);
-            this.mouseDetection.clickMessage(booleanResponse);
-            this.mouseDetection.incrementNbrDifference(booleanResponse);
+            console.log(isDifference);
+            this.mouseDetection.playSound(isDifference);
+            this.mouseDetection.clickMessage(isDifference);
+            this.mouseDetection.incrementNbrDifference(isDifference);
         });
 
         this.socketService.on('End game', () => {
