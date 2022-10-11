@@ -88,8 +88,7 @@ export class SocketManager {
 
     private clickResponse(socket: io.Socket, mousePosition: Position) {
         const clickAnswer = this.mouseHandlerService.isValidClick(mousePosition);
-        socket.emit('Valid click boolean', clickAnswer.get('booleanValue'));
-        socket.emit('Valid click pixelList', clickAnswer.get('pixelList'));
+        socket.emit('Valid click', clickAnswer);
     }
 
     private async sendImagesToClient(gameName: string, socket: io.Socket) {
