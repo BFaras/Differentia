@@ -1,3 +1,4 @@
+import { DifferencesInformations } from '@common/differences-informations';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Server } from 'app/server';
 import { assert, expect } from 'chai';
@@ -85,6 +86,7 @@ describe('SocketManager service tests', () => {
     });
 
     // pk sa fonctionne pas?
+    //TESTER QUAND LA FONCTION DANS MOUSEHANDLERSERVICE SERA TERMINÉE
     // it('should handle a verify position event and call clickResponse', (done) => {
     //     let positionTest: Position = {
     //         x: 0,
@@ -144,8 +146,8 @@ describe('SocketManager service tests', () => {
     it('should emit a classic solo images event on game page event', (done) => {
         const gameName = 'Car game';
         clientSocket.emit('game page', gameName);
-        clientSocket.on('classic solo images', (imagesData: string[]) => {
-            expect(imagesData).to.exist;
+        clientSocket.on('classic solo images', (imagesDataReceived: string[]) => {
+            expect(imagesDataReceived).to.exist;
             done();
         }); // 1 seconde
     });
@@ -166,6 +168,14 @@ describe('SocketManager service tests', () => {
             expect(spy.calledOnce);
             done();
         }, RESPONSE_DELAY * 5); // 1 seconde
+    });
+
+    it('should handle a detect images difference event and emit a game creation differences informations event', (done) => {
+        clientSocket.emit('detect images difference', imagesData);
+        clientSocket.on('game creation differences informations', (differencesInfos: DifferencesInformations) => {
+            expect(differencesInfos).to.exist;
+            done();
+        }); // 1 seconde
     });
 
     it('should handle a Verify position should call isValidClick from MouseHandlerService', (done) => {

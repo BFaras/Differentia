@@ -29,7 +29,6 @@ export class GamesService {
         }
     }
 
-    //To test
     async getGame(gameName: string): Promise<Game> {
         await this.asyncReadGamesFile();
         const game: Game = (await this.getAllGames()).find((game) => game.name === gameName)!;
