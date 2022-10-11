@@ -47,32 +47,24 @@ export class MouseHandlerService {
     private validateDifferencesOnClick(mousePosition: Position) {
         const pixelNumber = this.convertMousePositionToPixelNumber(mousePosition);
         let differencesNumber: number;
-        let pixelIsDifferent: boolean = true;
         let pixelsOfDifference: number[] = [];
-        let mapResponse = new Map<string, any>();
 
         if (this.differencesHashmap.has(pixelNumber)) {
             differencesNumber = this.differencesHashmap.get(pixelNumber)!;
 
             if (this.differencesNumberFound.includes(differencesNumber)) {
                 // La différence a déjà été trouvée précédemment
-                pixelIsDifferent = false;
-                mapResponse.set('booleanValue', pixelIsDifferent);
-                mapResponse.set('pixelList', pixelsOfDifference);
+                pixelsOfDifference = [];
             } else {
                 // Nouvelle Différence trouvée
                 this.differencesNumberFound.push(differencesNumber);
                 pixelsOfDifference = this.differencesList[differencesNumber];
-                mapResponse.set('booleanValue', pixelIsDifferent);
-                mapResponse.set('pixelList', pixelsOfDifference);
             }
         } else {
             // Afficher Erreur et suspendre/ignorer les clics pendant 1s
-            pixelIsDifferent = false;
-            mapResponse.set('booleanValue', pixelIsDifferent);
-            mapResponse.set('pixelList', pixelsOfDifference);
+            pixelsOfDifference = [];
         }
 
-        return mapResponse;
+        return pixelsOfDifference;
     }
 }
