@@ -22,7 +22,7 @@ export class MouseHandlerService {
         this.differencesNumberFound = [];
     }
 
-    isValidClick(mousePosition: Position): boolean {
+    isValidClick(mousePosition: Position) {
         return this.validateDifferencesOnClick(mousePosition);
     }
 
@@ -40,25 +40,28 @@ export class MouseHandlerService {
         return (mousePosition.y + 1) * IMAGE_WIDTH + mousePosition.x - IMAGE_WIDTH;
     }
 
-    private validateDifferencesOnClick(mousePosition: Position): boolean {
+    private validateDifferencesOnClick(mousePosition: Position) {
         const pixelNumber = this.convertMousePositionToPixelNumber(mousePosition);
         let differencesNumber: number;
         let pixelIsDifferent: boolean = true;
+        let mapResponse = new Map<string, any>();
 
         if (this.differencesHashmap.has(pixelNumber)) {
             differencesNumber = this.differencesHashmap.get(pixelNumber)!;
 
             if (this.differencesNumberFound.includes(differencesNumber)) {
                 // La différence a déjà été trouvée précédemment
-                return !pixelIsDifferent;
+                pixelIsDifferent = false;
             } else {
                 // Nouvelle Différence trouvée
                 this.differencesNumberFound.push(differencesNumber);
-                return pixelIsDifferent;
             }
         } else {
             // Afficher Erreur et suspendre/ignorer les clics pendant 1s
-            return !pixelIsDifferent;
+            pixelIsDifferent = false;
         }
+        mapResponse.set('booleanValue', pixelIsDifferent);
+        mapResponse.set('pixelList', this.differencesNumberFound);
+        return mapResponse;
     }
 }

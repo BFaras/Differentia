@@ -84,10 +84,13 @@ export class PlayAreaComponent implements OnInit {
     }
 
     configurePlayAreaSocket(): void {
-        this.socketService.on('Valid click', (clickResponse: boolean) => {
-            this.mouseDetection.playSound(clickResponse);
-            this.mouseDetection.clickMessage(clickResponse);
-            this.mouseDetection.incrementNbrDifference(clickResponse);
+        this.socketService.on('Valid click boolean', (booleanResponse: boolean) => {
+            this.mouseDetection.playSound(booleanResponse);
+            this.mouseDetection.clickMessage(booleanResponse);
+            this.mouseDetection.incrementNbrDifference(booleanResponse);
+        });
+        this.socketService.on('Valid click pixelList', (pixeList: number[]) => {
+            console.log(pixeList);
         });
 
         this.socketService.on('End game', () => {
