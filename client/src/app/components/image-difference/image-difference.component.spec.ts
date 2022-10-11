@@ -1,5 +1,6 @@
-import { Renderer2 } from '@angular/core';
+import { Renderer2, ɵunwrapSafeValue as unwrapSafeValue } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { SafeValue } from '@angular/platform-browser';
 import { GameToServerService } from '@app/services/game-to-server.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { ImageToSendToServer } from '@common/imageToSendToServer';
@@ -12,15 +13,18 @@ describe('ImageDifferenceComponent', () => {
     let gameToServerServiceSpy: SpyObj<GameToServerService>;
     let renderer2: Renderer2;
     let mockImage: ImageToSendToServer = {
-        image: 'url',
+        image: 'url' as SafeValue,
         index: 1,
     };
 
     beforeEach(async () => {
+        
         imageToImagesDifferenceServiceSpy = jasmine.createSpyObj('ImageToImageDifferenceService', [
             'waitForImageToLoad',
-            'getDataImageSsendDifferentImagesInformationToServerForGameCreationingle',
+            'sendDifferentImagesInformationToServerForGameCreation',
         ]);
+        imageToImagesDifferenceServiceSpy.sendDifferentImagesInformationToServerForGameCreation.and.returnValue()
+        imageToImagesDifferenceServiceSpy.waitForImageToLoad.and.returnValue(Promise.resolve())
         gameToServerServiceSpy = jasmine.createSpyObj('GameToServerService', [
             'getOriginalImageUploaded',
             'getModifiedImageUploaded',
@@ -29,6 +33,7 @@ describe('ImageDifferenceComponent', () => {
         ]);
         gameToServerServiceSpy.getOriginalImageUploaded.and.returnValue(mockImage);
         gameToServerServiceSpy.getModifiedImageUploaded.and.returnValue(mockImage);
+        
 
         await TestBed.configureTestingModule({
             declarations: [ImageDifferenceComponent],
@@ -36,6 +41,7 @@ describe('ImageDifferenceComponent', () => {
                 Renderer2,
                 { provide: GameToServerService, useValue: gameToServerServiceSpy },
                 { provide: ImageDifferenceComponent, useValue: imageToImagesDifferenceServiceSpy },
+                { provide: unwrapSafeValue, useValue: 'string'},
             ],
         }).compileComponents();
 
@@ -44,6 +50,7 @@ describe('ImageDifferenceComponent', () => {
         spyOn(renderer2, 'createElement').and.callThrough();
         component = fixture.componentInstance;
         fixture.detectChanges();
+        
     });
 
     it('should create', () => {
@@ -53,7 +60,6 @@ describe('ImageDifferenceComponent', () => {
     it('should test load return true with number difference', () => {
         component.finalDifferencesImage.src = 'string';
         component.numberOfDifference = 2;
-
         expect(component.loaded()).toBeTruthy();
     });
 
@@ -61,4 +67,18 @@ describe('ImageDifferenceComponent', () => {
         component.finalDifferencesImage.src = 'string';
         expect(component.loaded()).toBeTruthy();
     });
+    
+    it('should verify we call function to generate differentImageInforamtion was called', async()=>{
+        component.offset = 6;
+        component.ngOnInit()
+        expect(imageToImagesDifferenceServiceSpy.waitForImageToLoad).toHaveBeenCalled()
+
+
+    });
+    
+    afterEach(() => {
+        fixture.destroy();
+      });
+
+
 });
