@@ -18,20 +18,20 @@ export class PopDialogDownloadImagesComponent {
     onClickUploadImage(event:any) {
         let target = event.target as HTMLInputElement
         let file = target.files![0]
+        if (file.type == 'image/bmp'){
         this.verifyImageService.setFile(file)
         let reader = new FileReader();
         reader.readAsArrayBuffer(file)
-        reader.onload = async (e)=>{
+        reader.onload = (e)=>{
         this.verifyImageService.processBuffer(e);
-        await this.verifyImageService.getImage().decode()
+        this.verifyImageService.getImage().onload = ()=>{
         this.warningActivated =  this.verifyImageService.verifyRespectAllContraints(this.imageInfo,file)
-        
-        
-            
         }
-
+    }    
+    }else{
+        this.warningActivated = true
     }
 
-    
+}
 
 }

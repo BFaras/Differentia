@@ -46,10 +46,6 @@ describe('PopDialogValidateGameComponent', () => {
     expect(component.areImageDifferenceAndNumberDifferenceReady).toBeTruthy()
   });
 
-  it('should stay null if value chosen is null', () => {
-    component.startsGeneratingImageDifferenceAndNumberDifference()
-    expect(component.areImageDifferenceAndNumberDifferenceReady).toBeFalsy()
-  });
 
   afterEach(() => {
     fixture.destroy();
