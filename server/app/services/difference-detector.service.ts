@@ -13,7 +13,7 @@ import {
     UP,
 } from '@common/const';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
-import { Service } from 'typedi';
+import Container, { Service } from 'typedi';
 import { HashmapConverterService } from './hashmap-converter.service';
 
 const DEFAULT_NB_OF_DIFFERENCES = 0;
@@ -39,7 +39,7 @@ export class DifferenceDetectorService {
     }
 
     generateDifferencesList(): number[][] {
-        const hashmapConverterService = new HashmapConverterService();
+        const hashmapConverterService = Container.get(HashmapConverterService);
         return hashmapConverterService.convertNumberMapToNumber2DArray(this.pixelsDifferencesNbMap, this.nbOfDifferences);
     }
 
