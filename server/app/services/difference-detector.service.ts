@@ -140,7 +140,7 @@ export class DifferenceDetectorService {
     }
 
     private determinePixelsAround(diffPixelNumber: number, pixelsToVisit: number[]) {
-        if (!this.isPixelVisited(diffPixelNumber)) {
+        if (this.isPixelDifferenceInMap(diffPixelNumber)) {
             const centerPixelLine = Math.floor(diffPixelNumber / this.imageDatasToCompare.imageWidth);
             const centerPixelColumn = diffPixelNumber % this.imageDatasToCompare.imageWidth;
             let offsetCloumnBeginning = this.clampValue(
@@ -175,7 +175,7 @@ export class DifferenceDetectorService {
             const currentVisitingPixelPosition =
                 (line + 1) * this.imageDatasToCompare.imageWidth + currentColumn - this.imageDatasToCompare.imageWidth;
 
-            if (!this.isPixelVisited(currentVisitingPixelPosition)) {
+            if (this.isPixelDifferenceInMap(currentVisitingPixelPosition) && !this.isPixelVisited(currentVisitingPixelPosition)) {
                 this.markPixelDifferenceNb(currentVisitingPixelPosition);
                 pixelsToVisit.push(currentVisitingPixelPosition);
             }
@@ -187,11 +187,15 @@ export class DifferenceDetectorService {
     }
 
     private isPixelVisited(pixelPosition: number): boolean {
-        return this.pixelsDifferencesNbMap.has(pixelPosition) && this.pixelsDifferencesNbMap.get(pixelPosition) != DEFAULT_DIFFERENCE_POSITION;
+        return this.pixelsDifferencesNbMap.get(pixelPosition) != DEFAULT_DIFFERENCE_POSITION;
+    }
+
+    private isPixelDifferenceInMap(pixelPosition: number) {
+        return this.pixelsDifferencesNbMap.has(pixelPosition);
     }
 
     private markPixelDifferenceNb(pixelPosition: number) {
-        if (this.pixelsDifferencesNbMap.has(pixelPosition)) {
+        if (this.isPixelDifferenceInMap(pixelPosition) && !this.isPixelVisited(pixelPosition)) {
             this.pixelsDifferencesNbMap.set(pixelPosition, this.nbOfDifferences);
         }
     }
