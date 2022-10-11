@@ -18,22 +18,16 @@ export class ImageGeneratorService {
         return generatedImageData;
     }
 
-    copyCertainPixelsFromOneImageToACanvas(pixelPositionsArray: number[], canvasToGetImageData: HTMLCanvasElement, canvasToDrawOn: HTMLCanvasElement, imageToCopyFrom: HTMLImageElement)
-    {
+    //To test
+    copyCertainPixelsFromOneImageToACanvas(pixelPositionsArray: number[], canvasToCopyFrom: HTMLCanvasElement, canvasToDrawOn: HTMLCanvasElement) {
         const imageToDrawOnData: ImageData = canvasToDrawOn.getContext('2d')!.getImageData(0, 0, canvasToDrawOn.width, canvasToDrawOn.height);
-        const imageToCopyData: ImageData = this.getImageData(imageToCopyFrom, canvasToGetImageData);
+        const imageToCopyData: ImageData = canvasToCopyFrom.getContext('2d')!.getImageData(0, 0, canvasToCopyFrom.width, canvasToCopyFrom.height);
 
         for (let pixelPosition = 0; pixelPosition < pixelPositionsArray.length; pixelPosition++) {
             this.putPixelFromOneImageToAnother(pixelPosition, imageToDrawOnData, imageToCopyData);
         }
 
         canvasToDrawOn.getContext('2d')!.putImageData(imageToDrawOnData, 0, 0);
-    }
-
-    getImageData(image: HTMLImageElement, canvas: HTMLCanvasElement): ImageData {
-        const imageContext = canvas.getContext('2d');
-        imageContext!.drawImage(image, 0, 0);
-        return imageContext!.getImageData(0, 0, image.width, image.height);
     }
 
     private setupCanvas(canvasToDrawOn: HTMLCanvasElement) {
@@ -43,16 +37,13 @@ export class ImageGeneratorService {
     }
 
     private generateBlackPixel(pixelPositionInImage: number, generatedImageData: ImageData) {
-        for (let currentColor = 0; currentColor <= ALPHA_POS; currentColor++)
-        {
+        for (let currentColor = 0; currentColor <= ALPHA_POS; currentColor++) {
             generatedImageData.data[pixelPositionInImage + currentColor] = BLACK_RGB;
         }
     }
 
-    private putPixelFromOneImageToAnother(pixelPositionInImage: number, imageDataToCopy: ImageData, imageDataToDrawOn: ImageData)
-    {
-        for (let currentRGBIndex = 0; currentRGBIndex <= ALPHA_POS; currentRGBIndex++)
-        {
+    private putPixelFromOneImageToAnother(pixelPositionInImage: number, imageDataToCopy: ImageData, imageDataToDrawOn: ImageData) {
+        for (let currentRGBIndex = 0; currentRGBIndex <= ALPHA_POS; currentRGBIndex++) {
             const positionInDataArray = pixelPositionInImage + currentRGBIndex;
             imageDataToDrawOn.data[positionInDataArray] = imageDataToCopy.data[positionInDataArray];
         }
