@@ -57,17 +57,22 @@ export class MouseHandlerService {
             if (this.differencesNumberFound.includes(differencesNumber)) {
                 // La différence a déjà été trouvée précédemment
                 pixelIsDifferent = false;
+                mapResponse.set('booleanValue', pixelIsDifferent);
+                mapResponse.set('pixelList', pixelsOfDifference);
             } else {
                 // Nouvelle Différence trouvée
                 this.differencesNumberFound.push(differencesNumber);
                 pixelsOfDifference = this.differencesList[differencesNumber];
+                mapResponse.set('booleanValue', pixelIsDifferent);
+                mapResponse.set('pixelList', pixelsOfDifference);
             }
         } else {
             // Afficher Erreur et suspendre/ignorer les clics pendant 1s
             pixelIsDifferent = false;
+            mapResponse.set('booleanValue', pixelIsDifferent);
+            mapResponse.set('pixelList', pixelsOfDifference);
         }
-        mapResponse.set('booleanValue', pixelIsDifferent);
-        mapResponse.set('pixelList', pixelsOfDifference);
+
         return mapResponse;
     }
 }
