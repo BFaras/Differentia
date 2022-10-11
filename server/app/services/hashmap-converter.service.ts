@@ -5,7 +5,6 @@ import { Service } from 'typedi';
 export class HashmapConverterService {
     constructor() {}
 
-    //To test
     convertNumberMapToNumber2DArray(hashmapToConvert: Map<number, number>, nbOfSubArrays: number): number[][] {
         const differencesList: number[][] = [];
 
@@ -20,7 +19,6 @@ export class HashmapConverterService {
         return differencesList;
     }
 
-    //To test
     convertNumber2DArrayToNumberMap(arrayToConvert: number[][]): Map<number, number> {
         const mapGenerated = new Map<number, number>();
 
