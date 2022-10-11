@@ -20,7 +20,7 @@ export class ImageToImageDifferenceService {
     putDifferencesDataInImage(differentPixelsPositionArray: number[], differencesImageToPutDataIn: HTMLImageElement) {
         const canvasResult = this.adaptCanvasSizeToImage(this.mainCanvas, this.originalImage);
         const canvasResultContext: CanvasRenderingContext2D = canvasResult.getContext('2d')!;
-        const resultImageData: ImageData = this.imageGeneratorService.generateImageFromPixelsDataArray(differentPixelsPositionArray, this.mainCanvas);
+        const resultImageData: ImageData = this.imageGeneratorService.generateBlackImageFromPixelsDataArray(differentPixelsPositionArray, this.mainCanvas);
 
         canvasResultContext.putImageData(resultImageData, 0, 0);
         differencesImageToPutDataIn.src = canvasResult.toDataURL();
@@ -32,12 +32,6 @@ export class ImageToImageDifferenceService {
         this.mainCanvas = mainCanvas;
     }
 
-    private getImageData(image: HTMLImageElement, canvas: HTMLCanvasElement): Uint8ClampedArray {
-        const imageContext = canvas.getContext('2d');
-        imageContext!.drawImage(image, 0, 0);
-        return imageContext!.getImageData(0, 0, image.width, image.height).data;
-    }
-
     private adaptCanvasSizeToImage(canvas: HTMLCanvasElement, image: HTMLImageElement): HTMLCanvasElement {
         canvas.width = image.width;
         canvas.height = image.height;
@@ -46,10 +40,10 @@ export class ImageToImageDifferenceService {
     }
 
     private generateImagesDataToCompare(offSet: number): ImageDataToCompare {
-        const canvasOriginal = this.adaptCanvasSizeToImage(this.mainCanvas, this.originalImage);
-        const canvasOriginalData = this.getImageData(this.originalImage, canvasOriginal);
-        const canvasModified = this.adaptCanvasSizeToImage(this.mainCanvas, this.modifiedImage);
-        const canvasModifiedData = this.getImageData(this.modifiedImage, canvasModified);
+        const canvasOriginal : HTMLCanvasElement = this.adaptCanvasSizeToImage(this.mainCanvas, this.originalImage);
+        const canvasOriginalData : Uint8ClampedArray = this.imageGeneratorService.getImageData(this.originalImage, canvasOriginal).data;
+        const canvasModified : HTMLCanvasElement = this.adaptCanvasSizeToImage(this.mainCanvas, this.modifiedImage);
+        const canvasModifiedData : Uint8ClampedArray = this.imageGeneratorService.getImageData(this.modifiedImage, canvasModified).data;
 
         const imagesdata: ImageDataToCompare = {
             originalImageData: canvasOriginalData,
