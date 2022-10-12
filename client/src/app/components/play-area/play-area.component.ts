@@ -18,7 +18,7 @@ export class PlayAreaComponent implements OnInit {
     @ViewChild('modifiedCanvas', { static: false }) private modifiedCanvas!: ElementRef<HTMLCanvasElement>;
     @ViewChild('clickCanvas1', { static: false }) private clickCanvas1!: ElementRef<HTMLCanvasElement>;
     @ViewChild('clickCanvas2', { static: false }) private clickCanvas2!: ElementRef<HTMLCanvasElement>;
-    // @ViewChild('clignotementCanvas', { static: false }) private clignotementCanvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('clignotementCanvas', { static: false }) private clignotementCanvas!: ElementRef<HTMLCanvasElement>;
     @Input() differentImages: HTMLImageElement[];
     @Input() nbDifferencesTotal: number = 0;
     mousePosition: Position = { x: 0, y: 0 };
@@ -90,16 +90,16 @@ export class PlayAreaComponent implements OnInit {
     configurePlayAreaSocket(): void {
         this.socketService.on('Valid click', (response: number[]) => {
             this.pixelList = response;
-            // this.originalCanvas.nativeElement.width = this.width;
+            // this.originalCanvas.nativeElement.width = this.width;  // Ajouter ca dans le constructeur ou le onInit?
             // this.originalCanvas.nativeElement.height = this.height;
             // this.clignotementCanvas.nativeElement.width = this.width;
             // this.clignotementCanvas.nativeElement.height = this.height;
             console.log(this.pixelList);
-            // this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
-            //     pixelList,
-            //     this.originalCanvas.nativeElement,
-            //     this.clignotementCanvas.nativeElement,
-            // );
+            this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
+                this.pixelList,
+                this.originalCanvas.nativeElement,
+                this.clignotementCanvas.nativeElement,
+            );
             let isDifference: boolean = true;
             if (this.pixelList.length == 0) {
                 isDifference = false;
