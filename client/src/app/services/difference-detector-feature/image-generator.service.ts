@@ -18,7 +18,6 @@ export class ImageGeneratorService {
         return generatedImageData;
     }
 
-    //To test
     copyCertainPixelsFromOneImageToACanvas(pixelPositionsArray: number[], canvasToCopyFrom: HTMLCanvasElement, canvasToDrawOn: HTMLCanvasElement) {
         const imageToDrawOnData: ImageData = canvasToDrawOn.getContext('2d')!.getImageData(0, 0, canvasToDrawOn.width, canvasToDrawOn.height);
         const imageToCopyData: ImageData = canvasToCopyFrom.getContext('2d')!.getImageData(0, 0, canvasToCopyFrom.width, canvasToCopyFrom.height);
