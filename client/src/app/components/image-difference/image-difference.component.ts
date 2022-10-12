@@ -40,7 +40,6 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
         this.socketService.disconnect();
     }
 
-    //To test
     loaded() {
         if (this.finalDifferencesImage.src !== '') {
             if (this.numberOfDifferences !== undefined) {
@@ -55,7 +54,6 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
         }
     }
 
-    //To test
     private async loadImages() {
         const unwrapedOriginalModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getOriginalImageUploaded().image as SafeValue);
         const unwrapedModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getModifiedImageUploaded().image as SafeValue);
@@ -67,7 +65,6 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
         await this.imageToImageDifferenceService.waitForImageToLoad(this.modifiedImage);
     }
 
-    //To test
     private configureGameCreationPageSocketFeatures() {
         this.socketService.on('game creation differences informations', (differencesInformations: DifferencesInformations) => {
             const differentPixelsPositionArray = this.linearizeDoubleArray(differencesInformations.differencesList);
@@ -77,7 +74,6 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
         });
     }
 
-    //To test
     private linearizeDoubleArray(doubleArray: number[][]): number[] {
         const linearizedArray: number[] = [];
 
@@ -90,7 +86,6 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
         return linearizedArray;
     }
 
-    //To test
     private setUpSocket() {
         this.socketService.connect();
         this.configureGameCreationPageSocketFeatures();
