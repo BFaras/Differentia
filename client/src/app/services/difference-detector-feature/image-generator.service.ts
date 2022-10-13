@@ -23,12 +23,10 @@ export class ImageGeneratorService {
         const imageToCopyData: ImageData = canvasToCopyFrom.getContext('2d')!.getImageData(0, 0, canvasToCopyFrom.width, canvasToCopyFrom.height);
 
         for (let pixelPosition = 0; pixelPosition < pixelPositionsArray.length; pixelPosition++) {
-            this.putPixelFromOneImageToAnother(pixelPosition, imageToDrawOnData, imageToCopyData);
+            this.putPixelFromOneImageToAnother(pixelPositionsArray[pixelPosition] * NB_BIT_PER_PIXEL, imageToCopyData, imageToDrawOnData);
         }
 
         canvasToDrawOn.getContext('2d')!.putImageData(imageToDrawOnData, 0, 0);
-
-        return canvasToDrawOn;
     }
 
     private setupCanvas(canvasToDrawOn: HTMLCanvasElement) {
@@ -46,6 +44,8 @@ export class ImageGeneratorService {
     private putPixelFromOneImageToAnother(pixelPositionInImage: number, imageDataToCopy: ImageData, imageDataToDrawOn: ImageData) {
         for (let currentRGBIndex = 0; currentRGBIndex <= ALPHA_POS; currentRGBIndex++) {
             const positionInDataArray = pixelPositionInImage + currentRGBIndex;
+            console.log('Image originale : ' + imageDataToCopy.data[positionInDataArray]);
+            console.log('Image modifier : ' + imageDataToDrawOn.data[positionInDataArray]);
             imageDataToDrawOn.data[positionInDataArray] = imageDataToCopy.data[positionInDataArray];
         }
     }

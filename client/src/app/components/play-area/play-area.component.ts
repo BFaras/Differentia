@@ -18,7 +18,7 @@ export class PlayAreaComponent implements OnInit {
     @ViewChild('modifiedCanvas', { static: false }) private modifiedCanvas!: ElementRef<HTMLCanvasElement>;
     @ViewChild('clickCanvas1', { static: false }) private clickCanvas1!: ElementRef<HTMLCanvasElement>;
     @ViewChild('clickCanvas2', { static: false }) private clickCanvas2!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('clignotementCanvas', { static: false }) private clignotementCanvas!: ElementRef<HTMLCanvasElement>;
+    //@ViewChild('clignotementCanvas', { static: false }) private clignotementCanvas!: ElementRef<HTMLCanvasElement>;
     @Input() differentImages: HTMLImageElement[];
     @Input() nbDifferencesTotal: number = 0;
     mousePosition: Position = { x: 0, y: 0 };
@@ -91,11 +91,8 @@ export class PlayAreaComponent implements OnInit {
         this.socketService.on('Valid click', (response: number[]) => {
             this.pixelList = response;
 
-            this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
-                this.pixelList,
-                this.originalCanvas.nativeElement,
-                this.clignotementCanvas.nativeElement,
-            );
+            console.log(this.pixelList);
+
             let isDifference: boolean = true;
             if (this.pixelList.length == 0) {
                 isDifference = false;
@@ -105,11 +102,19 @@ export class PlayAreaComponent implements OnInit {
             this.mouseDetection.incrementNbrDifference(isDifference);
 
             if (isDifference) {
-                this.modifiedCanvas.nativeElement = this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
+                console.log('Appel de copycertain...');
+                this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
                     this.pixelList,
                     this.originalCanvas.nativeElement,
                     this.modifiedCanvas.nativeElement,
                 );
+                /*
+                this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
+                    this.pixelList,
+                    this.originalCanvas.nativeElement,
+                    this.clignotementCanvas.nativeElement,
+                );
+                */
             }
         });
 
