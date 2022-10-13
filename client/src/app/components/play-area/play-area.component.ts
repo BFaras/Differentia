@@ -51,7 +51,6 @@ export class PlayAreaComponent implements OnInit {
     }
 
     displayImages() {
-        // Creer une fonction pour les canvas?
         this.drawService.context1 = this.clickCanvas1.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.drawService.context1.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);
         this.originalCanvas.nativeElement.focus();
@@ -106,7 +105,7 @@ export class PlayAreaComponent implements OnInit {
             this.mouseDetection.incrementNbrDifference(isDifference);
 
             if (isDifference) {
-                this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
+                this.modifiedCanvas.nativeElement = this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
                     this.pixelList,
                     this.originalCanvas.nativeElement,
                     this.modifiedCanvas.nativeElement,
@@ -115,6 +114,7 @@ export class PlayAreaComponent implements OnInit {
         });
 
         this.socketService.on('End game', () => {
+            // Ajouter une fonction pour annuler tous les clics sur les canvas avec pointer-events : none?
             this.openDialog();
         });
     }

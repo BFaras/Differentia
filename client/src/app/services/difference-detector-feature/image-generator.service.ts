@@ -27,6 +27,8 @@ export class ImageGeneratorService {
         }
 
         canvasToDrawOn.getContext('2d')!.putImageData(imageToDrawOnData, 0, 0);
+
+        return canvasToDrawOn;
     }
 
     private setupCanvas(canvasToDrawOn: HTMLCanvasElement) {
