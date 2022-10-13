@@ -51,6 +51,7 @@ export class PlayAreaComponent implements OnInit {
     }
 
     displayImages() {
+        // Creer une fonction pour les canvas?
         this.drawService.context1 = this.clickCanvas1.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.drawService.context1.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);
         this.originalCanvas.nativeElement.focus();
@@ -90,11 +91,7 @@ export class PlayAreaComponent implements OnInit {
     configurePlayAreaSocket(): void {
         this.socketService.on('Valid click', (response: number[]) => {
             this.pixelList = response;
-            // this.originalCanvas.nativeElement.width = this.width;  // Ajouter ca dans le constructeur ou le onInit?
-            // this.originalCanvas.nativeElement.height = this.height;
-            // this.clignotementCanvas.nativeElement.width = this.width;
-            // this.clignotementCanvas.nativeElement.height = this.height;
-            console.log(this.pixelList);
+
             this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
                 this.pixelList,
                 this.originalCanvas.nativeElement,
@@ -104,7 +101,6 @@ export class PlayAreaComponent implements OnInit {
             if (this.pixelList.length == 0) {
                 isDifference = false;
             }
-            console.log(isDifference);
             this.mouseDetection.playSound(isDifference);
             this.mouseDetection.clickMessage(isDifference);
             this.mouseDetection.incrementNbrDifference(isDifference);
