@@ -103,16 +103,15 @@ export class PlayAreaComponent implements OnInit {
 
             if (isDifference) {
                 console.log('Appel de copycertain...');
-                this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
-                    this.pixelList,
-                    this.originalCanvas.nativeElement,
-                    this.modifiedCanvas.nativeElement,
-                );
-                this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
-                    this.pixelList,
-                    this.modifiedCanvas.nativeElement,
-                    this.clignotementCanvas.nativeElement,
-                );
+                setTimeout(() => {
+                    this.drawService.context5 = this.clignotementCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+                    this.drawService.context5.canvas.id = 'blink';
+                    this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
+                        this.pixelList,
+                        this.originalCanvas.nativeElement,
+                        this.clignotementCanvas.nativeElement,
+                    );
+                }, 1000);
             }
         });
 

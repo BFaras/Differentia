@@ -9,6 +9,7 @@ export class DrawService {
     context2: CanvasRenderingContext2D;
     context3: CanvasRenderingContext2D;
     context4: CanvasRenderingContext2D;
+    context5: CanvasRenderingContext2D;
 
     drawWord(word: string, mousePosition: Position, context: CanvasRenderingContext2D) {
         const startPosition: Position = { x: mousePosition.x, y: mousePosition.y };
