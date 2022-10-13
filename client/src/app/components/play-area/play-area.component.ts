@@ -18,7 +18,7 @@ export class PlayAreaComponent implements OnInit {
     @ViewChild('modifiedCanvas', { static: false }) private modifiedCanvas!: ElementRef<HTMLCanvasElement>;
     @ViewChild('clickCanvas1', { static: false }) private clickCanvas1!: ElementRef<HTMLCanvasElement>;
     @ViewChild('clickCanvas2', { static: false }) private clickCanvas2!: ElementRef<HTMLCanvasElement>;
-    //@ViewChild('clignotementCanvas', { static: false }) private clignotementCanvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('clignotementCanvas', { static: false }) private clignotementCanvas!: ElementRef<HTMLCanvasElement>;
     @Input() differentImages: HTMLImageElement[];
     @Input() nbDifferencesTotal: number = 0;
     mousePosition: Position = { x: 0, y: 0 };
@@ -108,18 +108,15 @@ export class PlayAreaComponent implements OnInit {
                     this.originalCanvas.nativeElement,
                     this.modifiedCanvas.nativeElement,
                 );
-                /*
                 this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
                     this.pixelList,
-                    this.originalCanvas.nativeElement,
+                    this.modifiedCanvas.nativeElement,
                     this.clignotementCanvas.nativeElement,
                 );
-                */
             }
         });
 
         this.socketService.on('End game', () => {
-            // Ajouter une fonction pour annuler tous les clics sur les canvas avec pointer-events : none?
             this.openDialog();
         });
     }

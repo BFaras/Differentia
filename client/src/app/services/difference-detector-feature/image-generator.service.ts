@@ -44,8 +44,6 @@ export class ImageGeneratorService {
     private putPixelFromOneImageToAnother(pixelPositionInImage: number, imageDataToCopy: ImageData, imageDataToDrawOn: ImageData) {
         for (let currentRGBIndex = 0; currentRGBIndex <= ALPHA_POS; currentRGBIndex++) {
             const positionInDataArray = pixelPositionInImage + currentRGBIndex;
-            console.log('Image originale : ' + imageDataToCopy.data[positionInDataArray]);
-            console.log('Image modifier : ' + imageDataToDrawOn.data[positionInDataArray]);
             imageDataToDrawOn.data[positionInDataArray] = imageDataToCopy.data[positionInDataArray];
         }
     }
