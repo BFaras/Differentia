@@ -27,11 +27,10 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
 
     async ngOnInit(): Promise<void> {
         const mainCanvas = this.renderer.createElement('canvas');
-
         this.setUpSocket();
         await this.loadImages();
-
-        const imagesData = this.imageToImageDifferenceService.getImagesData(mainCanvas, this.originalImage, this.modifiedImage, this.offset);
+        console.log(typeof this.offset)
+        const imagesData = this.imageToImageDifferenceService.getImagesData(mainCanvas, this.originalImage, this.modifiedImage,Number(this.offset));
 
         this.socketService.send('detect images difference', imagesData);
     }
@@ -41,12 +40,11 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
     }
 
     loaded() {
-        if (this.finalDifferencesImage.src !== '') {
-            if (this.numberOfDifferences !== undefined) {
-                this.gameToServerService.setNumberDifference(this.numberOfDifferences);
-                this.gameToServerService.setUrlImageOfDifference(this.finalDifferencesImage.src);
-                this.gameToServerService.setDifferencesList(this.differencesList);
-            }
+        console.log(this.finalDifferencesImage)
+        if ((this.finalDifferencesImage.src !== '') &&(this.numberOfDifferences !== undefined) ) {
+            this.gameToServerService.setNumberDifference(this.numberOfDifferences);
+            this.gameToServerService.setUrlImageOfDifference(this.finalDifferencesImage.src);
+            this.gameToServerService.setDifferencesList(this.differencesList);
 
             return true;
         } else {
