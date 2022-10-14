@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ALPHA_POS, BLACK_RGB, NB_BIT_PER_PIXEL } from '@common/const';
+import { ALPHA_OPAQUE, ALPHA_POS, BLACK_RGB, NB_BIT_PER_PIXEL } from '@common/const';
 
 @Injectable({
     providedIn: 'root',
@@ -36,9 +36,10 @@ export class ImageGeneratorService {
     }
 
     private generateBlackPixel(pixelPositionInImage: number, generatedImageData: ImageData) {
-        for (let currentColor = 0; currentColor <= ALPHA_POS; currentColor++) {
+        for (let currentColor = 0; currentColor < ALPHA_POS; currentColor++) {
             generatedImageData.data[pixelPositionInImage + currentColor] = BLACK_RGB;
         }
+        generatedImageData.data[pixelPositionInImage + ALPHA_POS] = ALPHA_OPAQUE;
     }
 
     private putPixelFromOneImageToAnother(pixelPositionInImage: number, imageDataToCopy: ImageData, imageDataToDrawOn: ImageData) {
