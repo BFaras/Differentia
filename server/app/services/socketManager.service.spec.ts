@@ -1,5 +1,5 @@
+import { DifferencesInformations } from '@common/differences-informations';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
-import { Position } from '@common/position';
 import { Server } from 'app/server';
 import { assert, expect } from 'chai';
 import * as sinon from 'sinon';
@@ -28,7 +28,7 @@ describe('SocketManager service tests', () => {
         offSet: 0,
     };
     let differenceDetectorService: DifferenceDetectorService = new DifferenceDetectorService(imagesData);
-    let gamesService: GamesService = new GamesService();
+    let gamesService: GamesService = Container.get(GamesService);
     let mouseHandlerService: MouseHandlerService = new MouseHandlerService();
 
     const urlString = 'http://localhost:3000';
@@ -86,23 +86,24 @@ describe('SocketManager service tests', () => {
     });
 
     // pk sa fonctionne pas?
-    it('should handle a verify position event and call clickResponse', (done) => {
-        let positionTest: Position = {
-            x: 0,
-            y: 0
-        };
-        const stub = sinon.stub(mouseHandlerService, 'isValidClick').callsFake((positionTest) => {
-            console.log("salut");
-            return true;
-        });
-        const spy = sinon.spy(service, <any>'clickResponse');
-        clientSocket.emit('Verify position', positionTest);
-        clientSocket.on('Valid click', () => {
-            expect(stub.callsFake);
-            expect(spy.calledOnce);
-            done();
-        })
-    });
+    //TESTER QUAND LA FONCTION DANS MOUSEHANDLERSERVICE SERA TERMINÉE
+    // it('should handle a verify position event and call clickResponse', (done) => {
+    //     let positionTest: Position = {
+    //         x: 0,
+    //         y: 0,
+    //     };
+    //     const stub = sinon.stub(mouseHandlerService, 'isValidClick').callsFake((positionTest) => {
+    //         console.log('salut');
+    //         return true;
+    //     });
+    //     const spy = sinon.spy(service, <any>'clickResponse');
+    //     clientSocket.emit('Verify position', positionTest);
+    //     clientSocket.on('Valid click', () => {
+    //         expect(stub.callsFake);
+    //         expect(spy.calledOnce);
+    //         done();
+    //     });
+    // });
 
     it('should handle a game page event and return the game of the name that was launched', (done) => {
         const gameName = 'Car game';
@@ -111,6 +112,15 @@ describe('SocketManager service tests', () => {
             expect(nameOfGame).to.equal(gameName);
             done();
         });
+    });
+
+    it('should handle a game page event and call generateDifferencesInformations', (done) => {
+        const spy = sinon.spy(mouseHandlerService, 'generateDifferencesInformations');
+        clientSocket.emit('game page', 'new game');
+        setTimeout(() => {
+            expect(spy.calledOnce);
+            done();
+        }, RESPONSE_DELAY * 5); // 1 seconde
     });
 
     it('should call emitTime on game page event', (done) => {
@@ -133,8 +143,17 @@ describe('SocketManager service tests', () => {
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
 
-    it('should handle a detect images difference event and call getDifferentPixelsArrayWithOffset', (done) => {
-        const spy = sinon.spy(differenceDetectorService, 'getDifferentPixelsArrayWithOffset');
+    it('should emit a classic solo images event on game page event', (done) => {
+        const gameName = 'Car game';
+        clientSocket.emit('game page', gameName);
+        clientSocket.on('classic solo images', (imagesDataReceived: string[]) => {
+            expect(imagesDataReceived).to.exist;
+            done();
+        }); // 1 seconde
+    });
+
+    it('should handle a detect images difference event and call generateDifferencesList', (done) => {
+        const spy = sinon.spy(differenceDetectorService, 'generateDifferencesList');
         clientSocket.emit('detect images difference', imagesData);
         setTimeout(() => {
             expect(spy.calledOnce);
@@ -151,13 +170,12 @@ describe('SocketManager service tests', () => {
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
 
-    it('should handle an image data to begin game event and call updateImageData', (done) => {
-        const spy = sinon.spy(mouseHandlerService, 'updateImageData');
-        clientSocket.emit('image data to begin game', imagesData);
-        setTimeout(() => {
-            expect(spy.calledOnce);
+    it('should handle a detect images difference event and emit a game creation differences informations event', (done) => {
+        clientSocket.emit('detect images difference', imagesData);
+        clientSocket.on('game creation differences informations', (differencesInfos: DifferencesInformations) => {
+            expect(differencesInfos).to.exist;
             done();
-        }, RESPONSE_DELAY * 5); // 1 seconde
+        }); // 1 seconde
     });
 
     it('should handle a Verify position should call isValidClick from MouseHandlerService', (done) => {

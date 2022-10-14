@@ -5,10 +5,17 @@ import { VerifyImageService } from '@app/services/verify-image.service';
 import { PopDialogDownloadImagesComponent } from './pop-dialog-download-images.component';
 import SpyObj = jasmine.SpyObj;
 
-const mockEventFile = {
+let mockEventFileRightType = {
     target: {
       files: [
-        new Blob([""], { type: 'text/html' }),
+        new Blob([""], { type: 'image/bmp' }),
+      ],
+    },
+  }
+  let mockEventFileWrongType = {
+    target: {
+      files: [
+        new Blob([""], { type: 'file/text' }),
       ],
     },
   }
@@ -24,8 +31,8 @@ describe('PopDialogDownloadImagesComponent', () => {
         imageToMock.src = "string";
         verifyImageServiceSpy = jasmine.createSpyObj('VerifyImageService', 
         ['setFile','processBuffer', 'getImage', 'verifyRespectAllContraints','getWarningActivated']);
-        verifyImageServiceSpy.verifyRespectAllContraints.and.returnValue(true);
-        verifyImageServiceSpy.processBuffer.and.returnValue();
+        verifyImageServiceSpy.processBuffer.and.returnValue()
+        
         verifyImageServiceSpy.getImage.and.returnValue(imageToMock);
         verifyImageServiceSpy.setFile.and.returnValue();
         await TestBed.configureTestingModule({
@@ -47,20 +54,16 @@ describe('PopDialogDownloadImagesComponent', () => {
     });
 
     it('should give warning',()=>{
-        setTimeout(function() {
-
-        verifyImageServiceSpy.verifyRespectAllContraints.and.returnValue(true);
-        component.onClickUploadImage(mockEventFile)
+        component.onClickUploadImage(mockEventFileWrongType)
         expect(component.warningActivated).toBeTruthy();  
-      
-          }, 300);
 
     })
 
-    it('should not give warning', ()=>{
-        verifyImageServiceSpy.verifyRespectAllContraints.and.returnValue(false);
-        component.onClickUploadImage(mockEventFile)
-        expect(component.warningActivated).toBeFalsy()
+    it('should call function setFile', ()=>{
+
+      component.onClickUploadImage(mockEventFileRightType)
+      expect(verifyImageServiceSpy.setFile).toHaveBeenCalled()
+    
     })
 
     afterEach(() => {

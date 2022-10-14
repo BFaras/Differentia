@@ -1,80 +1,93 @@
-import { StatusCodes } from 'http-status-codes';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { CommunicationService } from '@app/services/communication.service';
 import { Game } from '@common/game';
 import { Message } from '@common/message';
+import { StatusCodes } from 'http-status-codes';
 // import { StatusCodes } from 'http-status-codes';
 
 describe('CommunicationService', () => {
     let httpMock: HttpTestingController;
     let service: CommunicationService;
     let baseUrl: string;
-    let allGames: Game[] = [{   
-        name: "Car game",
-        numberOfDifferences: 4,
-        times: [],
-        images: []
-    },
-    {
-        name: "Bike game",
-        numberOfDifferences: 5,
-        times: [],
-        images: []
-    },
-    {
-        name: "House game",
-        numberOfDifferences: 6,
-        times: [],
-        images: []
-    },
-    {
-        name: "Plane game",
-        numberOfDifferences: 7,
-        times: [],
-        images: []
-    },
-    {
-        name: "TV game",
-        numberOfDifferences: 8,
-        times: [],
-        images: []
-    },
-    {
-        name: "Table game",
-        numberOfDifferences: 9,
-        times: [],
-        images: []
-    },
-    {
-        name: "Chair game",
-        numberOfDifferences: 9,
-        times: [],
-        images: []
-    },
-    {
-        name: "Clown game",
-        numberOfDifferences: 9,
-        times: [],
-        images: []
-    },
-    {
-        name: "Dog game",
-        numberOfDifferences: 9,
-        times: [],
-        images: []
-    }];
+    let allGames: Game[] = [
+        {
+            name: 'Car game',
+            numberOfDifferences: 4,
+            times: [],
+            images: [],
+            differencesList: [],
+        },
+        {
+            name: 'Bike game',
+            numberOfDifferences: 5,
+            times: [],
+            images: [],
+            differencesList: [],
+        },
+        {
+            name: 'House game',
+            numberOfDifferences: 6,
+            times: [],
+            images: [],
+            differencesList: [],
+        },
+        {
+            name: 'Plane game',
+            numberOfDifferences: 7,
+            times: [],
+            images: [],
+            differencesList: [],
+        },
+        {
+            name: 'TV game',
+            numberOfDifferences: 8,
+            times: [],
+            images: [],
+            differencesList: [],
+        },
+        {
+            name: 'Table game',
+            numberOfDifferences: 9,
+            times: [],
+            images: [],
+            differencesList: [],
+        },
+        {
+            name: 'Chair game',
+            numberOfDifferences: 9,
+            times: [],
+            images: [],
+            differencesList: [],
+        },
+        {
+            name: 'Clown game',
+            numberOfDifferences: 9,
+            times: [],
+            images: [],
+            differencesList: [],
+        },
+        {
+            name: 'Dog game',
+            numberOfDifferences: 9,
+            times: [],
+            images: [],
+            differencesList: [],
+        },
+    ];
     let validGameToAdd: Game = {
-        name: "New Game",
+        name: 'New Game',
         numberOfDifferences: 5,
         times: [],
-        images: ["image1", "image2"]
+        images: ['image1', 'image2'],
+        differencesList: [],
     };
     let unvalidGameToAdd: Game = {
-        name: "Car game",
+        name: 'Car game',
         numberOfDifferences: 5,
         times: [],
-        images: ["image3", "image4"]
+        images: ['image3', 'image4'],
+        differencesList: [],
     };
 
     beforeEach(() => {
@@ -184,6 +197,4 @@ describe('CommunicationService', () => {
         expect(req.request.method).toBe('GET');
         req.error(new ProgressEvent('Random error occurred'));
     });
-
-
 });

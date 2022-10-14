@@ -1,5 +1,6 @@
-import { Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ImageGeneratorService } from '@app/services/difference-detector-feature/image-generator.service';
 import { DrawService } from '@app/services/draw.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { MouseDetectionService } from '@app/services/mouse-detection.service';
@@ -17,9 +18,11 @@ export class PlayAreaComponent implements OnInit {
     @ViewChild('modifiedCanvas', { static: false }) private modifiedCanvas!: ElementRef<HTMLCanvasElement>;
     @ViewChild('clickCanvas1', { static: false }) private clickCanvas1!: ElementRef<HTMLCanvasElement>;
     @ViewChild('clickCanvas2', { static: false }) private clickCanvas2!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('blinkCanvas', { static: false }) private blinkCanvas!: ElementRef<HTMLCanvasElement>;
     @Input() differentImages: HTMLImageElement[];
     @Input() nbDifferencesTotal: number = 0;
     mousePosition: Position = { x: 0, y: 0 };
+    pixelList: number[] = [];
 
     private canvasSize = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
     constructor(
@@ -28,7 +31,7 @@ export class PlayAreaComponent implements OnInit {
         private readonly mouseDetection: MouseDetectionService,
         private imageToImageDifferenceService: ImageToImageDifferenceService,
         private dialog: MatDialog,
-        private renderer: Renderer2,
+        private imageGenerator: ImageGeneratorService,
     ) {}
 
     async ngOnInit(): Promise<void> {
@@ -41,7 +44,6 @@ export class PlayAreaComponent implements OnInit {
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[MODIFIED_IMAGE_POSITION]);
 
         this.displayImages();
-        this.sendImagesDataToServer();
     }
 
     ngOnDestroy() {
@@ -66,24 +68,6 @@ export class PlayAreaComponent implements OnInit {
         this.modifiedCanvas.nativeElement.focus();
     }
 
-    sendImagesDataToServer() {
-        if (
-            this.differentImages[ORIGINAL_IMAGE_POSITION] !== new Image(640, 480) &&
-            this.differentImages[MODIFIED_IMAGE_POSITION] !== new Image(640, 480)
-        ) {
-            const mainCanvas = this.renderer.createElement('canvas');
-            this.socketService.send(
-                'image data to begin game',
-                this.imageToImageDifferenceService.getImagesData(
-                    mainCanvas,
-                    this.differentImages[ORIGINAL_IMAGE_POSITION],
-                    this.differentImages[MODIFIED_IMAGE_POSITION],
-                    0,
-                ),
-            );
-        }
-    }
-
     get width(): number {
         return this.canvasSize.x;
     }
@@ -104,10 +88,32 @@ export class PlayAreaComponent implements OnInit {
     }
 
     configurePlayAreaSocket(): void {
-        this.socketService.on('Valid click', (clickResponse: boolean) => {
-            this.mouseDetection.playSound(clickResponse);
-            this.mouseDetection.clickMessage(clickResponse);
-            this.mouseDetection.incrementNbrDifference(clickResponse);
+        this.socketService.on('Valid click', (response: number[]) => {
+            this.pixelList = response;
+
+            console.log(this.pixelList);
+
+            let isDifference: boolean = true;
+            if (this.pixelList.length == 0) {
+                isDifference = false;
+            }
+            this.mouseDetection.playSound(isDifference);
+            this.mouseDetection.clickMessage(isDifference);
+            this.mouseDetection.incrementNbrDifference(isDifference);
+
+            if (isDifference) {
+                console.log('Appel de copycertain...');
+                this.drawService.context5 = this.blinkCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+                this.drawService.context5.canvas.id = 'blink';
+                this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
+                    this.pixelList,
+                    this.originalCanvas.nativeElement,
+                    this.blinkCanvas.nativeElement,
+                );
+                setTimeout(() => {
+                    this.drawService.context5.canvas.id = 'paused';
+                }, 3000);
+            }
         });
 
         this.socketService.on('End game', () => {

@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { RecordTimesBoard } from '@app/classes/record-times-board';
 import { Game } from '@common/game';
-import { Subject } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { CommunicationService } from './communication.service';
-
 @Injectable({
     providedIn: 'root',
 })
@@ -13,17 +12,15 @@ export class FormService {
     listImage: string[] = [];
 
     gameForms: GameFormDescription[] = [];
-    gamesLoadedSubject = new Subject();
 
     constructor(private communicationService: CommunicationService) {
-        this.receiveGameInformations();
     }
 
-    receiveGameInformations() {
-        this.communicationService.getGames().subscribe((gamelist: Game[]) => {
-            this.parseGameList(gamelist);
-            this.gamesLoadedSubject.next(true);
-        });
+    async receiveGameInformations() {
+        this.gameForms = [];
+        await firstValueFrom(this.communicationService.getGames()).then( (gameList)=>{
+            this.parseGameList(gameList);
+        })
     }
 
     parseGameList(gamelist: Game[]) {

@@ -1,20 +1,34 @@
-import { ALPHA_POS, BLUE_POS, DEFAULT_DIFFERENCE_POSITION, DOWN, GREEN_POS, NB_BIT_PER_PIXEL, RADIUS_AROUND_PIXEL, RED_POS, UP } from '@common/const';
+import {
+    ALPHA_POS,
+    BLUE_POS,
+    DEFAULT_DIFFERENCE_POSITION,
+    DOWN,
+    EMPTY_ARRAY_LENGTH,
+    FIRST_ARRAY_POSITION,
+    GREEN_POS,
+    MINIMUM_PIXEL_POSITION,
+    NB_BIT_PER_PIXEL,
+    RADIUS_AROUND_PIXEL,
+    RED_POS,
+    UP,
+} from '@common/const';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
-import { Service } from 'typedi';
+import Container, { Service } from 'typedi';
+import { HashmapConverterService } from './hashmap-converter.service';
+
+const DEFAULT_NB_OF_DIFFERENCES = 0;
+const EMPTY_OFFSET_NB = 0;
 
 @Service()
 export class DifferenceDetectorService {
     private nbOfDifferences: number;
-    private differentPixelsNumbersArrayWithOffset: number[];
     private pixelsDifferencesNbMap: Map<number, number>;
     private offset: number;
-    imagesDataToCompare: ImageDataToCompare
 
     constructor(private imageDatasToCompare: ImageDataToCompare) {
-        this.differentPixelsNumbersArrayWithOffset = [];
         this.offset = imageDatasToCompare.offSet;
         this.pixelsDifferencesNbMap = new Map<number, number>();
-        this.nbOfDifferences = 0;
+        this.nbOfDifferences = DEFAULT_NB_OF_DIFFERENCES;
 
         this.generateDifferencesInformation();
         this.countDifferences();
@@ -24,33 +38,29 @@ export class DifferenceDetectorService {
         return this.nbOfDifferences;
     }
 
-    getDifferentPixelsArrayWithOffset(): number[] {
-        return this.differentPixelsNumbersArrayWithOffset;
-    }
-
-    getPixelsDifferencesNbMap() {
-        return this.pixelsDifferencesNbMap;
+    generateDifferencesList(): number[][] {
+        const hashmapConverterService = Container.get(HashmapConverterService);
+        return hashmapConverterService.convertNumberMapToNumber2DArray(this.pixelsDifferencesNbMap, this.nbOfDifferences);
     }
 
     private generateDifferencesInformation() {
-        let differentPixelsNumbersArray: number[];
+        let differentPixelsNumbersArray: number[] = [];
 
-        this.compareImagesPixels();
-        differentPixelsNumbersArray = [...this.differentPixelsNumbersArrayWithOffset];
+        this.compareImagesPixels(differentPixelsNumbersArray);
 
-        if (this.offset != 0) {
+        if (this.offset != EMPTY_OFFSET_NB) {
             differentPixelsNumbersArray.forEach((diffPixelNumber) => {
                 this.addPixelDifferenceOffset(diffPixelNumber);
             });
         }
     }
 
-    private compareImagesPixels() {
-        for (let i = 0; i < this.imageDatasToCompare.originalImageData.length; i += NB_BIT_PER_PIXEL) {
+    private compareImagesPixels(differentPixelsNumbersArray: number[]) {
+        for (let i = FIRST_ARRAY_POSITION; i < this.imageDatasToCompare.originalImageData.length; i += NB_BIT_PER_PIXEL) {
             if (this.isPixelDifferent(i)) {
                 const pixelPosition = i / NB_BIT_PER_PIXEL;
 
-                this.differentPixelsNumbersArrayWithOffset.push(pixelPosition);
+                differentPixelsNumbersArray.push(pixelPosition);
                 this.pixelsDifferencesNbMap.set(pixelPosition, DEFAULT_DIFFERENCE_POSITION);
             }
         }
@@ -76,7 +86,7 @@ export class DifferenceDetectorService {
         // r = rayon du cercle
         const centerPixelLine = Math.floor(centerPixelPosition / this.imageDatasToCompare.imageWidth);
         const centerPixelColumn = centerPixelPosition % this.imageDatasToCompare.imageWidth;
-        let offsetCloumnBeginning = this.clampValue(centerPixelColumn - this.offset, 0, this.imageDatasToCompare.imageWidth);
+        let offsetCloumnBeginning = this.clampValue(centerPixelColumn - this.offset, MINIMUM_PIXEL_POSITION, this.imageDatasToCompare.imageWidth);
 
         for (let column = offsetCloumnBeginning; column <= centerPixelColumn + this.offset; column++) {
             this.addOffsetPixelToColumnToVisit(column, centerPixelLine, centerPixelColumn);
@@ -104,42 +114,45 @@ export class DifferenceDetectorService {
 
             if (!this.pixelsDifferencesNbMap.has(currentVisitingPixelPosition)) {
                 this.pixelsDifferencesNbMap.set(currentVisitingPixelPosition, DEFAULT_DIFFERENCE_POSITION);
-                this.differentPixelsNumbersArrayWithOffset.push(currentVisitingPixelPosition);
             }
         }
     }
     private countDifferences() {
         this.pixelsDifferencesNbMap.forEach((differenceNb, diffPixelNumber) => {
-            if (differenceNb == 0) {
-                this.nbOfDifferences++;
+            if (differenceNb == DEFAULT_DIFFERENCE_POSITION) {
                 this.visitPixelsInDifference(diffPixelNumber);
+                this.nbOfDifferences++;
             }
         });
     }
 
     private visitPixelsInDifference(initialVisitedDifferentPixelNb: number) {
         let pixelsToVisit: number[] = [initialVisitedDifferentPixelNb];
-        const FIRST_POS_INDEX = 0;
 
-        while (pixelsToVisit.length != 0) {
-            this.markPixelDifferenceNb(pixelsToVisit[FIRST_POS_INDEX]);
-            this.determinePixelsAround(pixelsToVisit[FIRST_POS_INDEX], pixelsToVisit);
+        while (pixelsToVisit.length != EMPTY_ARRAY_LENGTH) {
+            const pixelPositionToVisit = pixelsToVisit[FIRST_ARRAY_POSITION];
+            if (this.isPixelDifferenceInMap(pixelPositionToVisit)) {
+                this.markPixelDifferenceNb(pixelPositionToVisit);
+                this.determinePixelsAround(pixelPositionToVisit, pixelsToVisit);
+            }
 
             pixelsToVisit = pixelsToVisit.filter((value, i, arr) => {
-                return value != pixelsToVisit[FIRST_POS_INDEX];
+                return value != pixelPositionToVisit;
             });
         }
     }
 
     private determinePixelsAround(diffPixelNumber: number, pixelsToVisit: number[]) {
-        if (this.pixelsDifferencesNbMap.has(diffPixelNumber) && this.pixelsDifferencesNbMap.get(diffPixelNumber) != 0) {
-            const centerPixelLine = Math.floor(diffPixelNumber / this.imageDatasToCompare.imageWidth);
-            const centerPixelColumn = diffPixelNumber % this.imageDatasToCompare.imageWidth;
-            let offsetCloumnBeginning = this.clampValue(centerPixelColumn - RADIUS_AROUND_PIXEL, 0, this.imageDatasToCompare.imageWidth);
+        const centerPixelLine = Math.floor(diffPixelNumber / this.imageDatasToCompare.imageWidth);
+        const centerPixelColumn = diffPixelNumber % this.imageDatasToCompare.imageWidth;
+        let offsetCloumnBeginning = this.clampValue(
+            centerPixelColumn - RADIUS_AROUND_PIXEL,
+            MINIMUM_PIXEL_POSITION,
+            this.imageDatasToCompare.imageWidth,
+        );
 
-            for (let column = offsetCloumnBeginning; column <= centerPixelColumn + RADIUS_AROUND_PIXEL; column++) {
-                this.addPixelsToCurrentColumnToVisit(column, centerPixelLine, centerPixelColumn, pixelsToVisit);
-            }
+        for (let column = offsetCloumnBeginning; column <= centerPixelColumn + RADIUS_AROUND_PIXEL; column++) {
+            this.addPixelsToCurrentColumnToVisit(column, centerPixelLine, centerPixelColumn, pixelsToVisit);
         }
     }
 
@@ -163,28 +176,31 @@ export class DifferenceDetectorService {
             const currentVisitingPixelPosition =
                 (line + 1) * this.imageDatasToCompare.imageWidth + currentColumn - this.imageDatasToCompare.imageWidth;
 
-            if (!this.isPixelVisited(currentVisitingPixelPosition)) {
-                this.markPixelDifferenceNb(currentVisitingPixelPosition);
+            if (this.isPixelDifferenceInMap(currentVisitingPixelPosition) && !this.isPixelVisited(currentVisitingPixelPosition)) {
                 pixelsToVisit.push(currentVisitingPixelPosition);
             }
         }
     }
 
-    private isPixelInCircle(currentLine: number, currentColumn: number, centerPixelLine: number, centerPixelColumn: number, offset: number) {
+    private isPixelInCircle(currentLine: number, currentColumn: number, centerPixelLine: number, centerPixelColumn: number, offset: number): boolean {
         return (currentLine - centerPixelLine) ** 2 + (currentColumn - centerPixelColumn) ** 2 <= offset ** 2 + 1;
     }
 
     private isPixelVisited(pixelPosition: number): boolean {
-        return this.pixelsDifferencesNbMap.has(pixelPosition) && this.pixelsDifferencesNbMap.get(pixelPosition) != 0;
+        return this.pixelsDifferencesNbMap.get(pixelPosition) != DEFAULT_DIFFERENCE_POSITION;
+    }
+
+    private isPixelDifferenceInMap(pixelPosition: number) {
+        return this.pixelsDifferencesNbMap.has(pixelPosition);
     }
 
     private markPixelDifferenceNb(pixelPosition: number) {
-        if (this.pixelsDifferencesNbMap.has(pixelPosition)) {
+        if (this.isPixelDifferenceInMap(pixelPosition) && !this.isPixelVisited(pixelPosition)) {
             this.pixelsDifferencesNbMap.set(pixelPosition, this.nbOfDifferences);
         }
     }
 
-    private clampValue(value: number, min: number, max: number) {
+    private clampValue(value: number, min: number, max: number): number {
         if (value < min) {
             value = min;
         } else if (value > max) {

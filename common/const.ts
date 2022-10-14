@@ -22,7 +22,7 @@ export const BLUE_POS = 2;
 export const ALPHA_POS = 3;
 export const BLACK_RGB = 0;
 export const ALPHA_OPAQUE = 255;
-export const DEFAULT_DIFFERENCE_POSITION = 0;
+export const DEFAULT_DIFFERENCE_POSITION = -1;
 export const RADIUS_AROUND_PIXEL = 1;
 export const UP = -1;
 export const DOWN = 1;
@@ -31,6 +31,7 @@ export const DOWN = 1;
 export const IMAGE_WIDTH = 640;
 export const IMAGE_HEIGHT = 480;
 export const DEFAULT_OFFSET = 3;
+export const MINIMUM_PIXEL_POSITION = 0;
 
 //constantes message quand add game
 
@@ -40,3 +41,7 @@ export const MESSAGE_NOMBRE_DIFFERENCE_ERREUR = "Attention!! le nombre de differ
 
 export const ORIGINAL_IMAGE_POSITION = 0;
 export const MODIFIED_IMAGE_POSITION = 1;
+
+//Arrays constants
+export const EMPTY_ARRAY_LENGTH = 0;
+export const FIRST_ARRAY_POSITION = 0;

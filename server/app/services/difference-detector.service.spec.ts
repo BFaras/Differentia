@@ -5,7 +5,9 @@ import * as sinon from 'sinon';
 
 import { DEFAULT_OFFSET, IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
+import Container from 'typedi';
 import { DifferenceDetectorService } from './difference-detector.service';
+import { HashmapConverterService } from './hashmap-converter.service';
 
 //Test positions in images test file
 const SEVEN_DIFFS_WITH_OR_WITHOUT_OFFSET_TEST = 0;
@@ -110,5 +112,14 @@ describe('DifferenceDetectorService', () => {
         const diffDetector = new DifferenceDetectorService(imageDatas);
 
         expect(diffDetector.getNbDifferences()).to.be.equal(NB_OF_DIFFERENCES_IN_TEST);
+    });
+
+    it('should call hashmapConverterService with convertNumberMapToNumber2DArray when generateDifferencesList is called', () => {
+        const diffDetector = new DifferenceDetectorService(DEFAULT_IMAGES_DATA);
+        const hashmapConverterService = Container.get(HashmapConverterService);
+        const spy = sinon.spy(hashmapConverterService, 'convertNumberMapToNumber2DArray');
+
+        diffDetector.generateDifferencesList();
+        expect(spy.calledOnce);
     });
 });

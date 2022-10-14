@@ -7,7 +7,7 @@
     display: inline-block;
     width: 40%;
     height: 550px;
-    padding: 35px 35px;
+    padding: 15px 15px;
 }
 
 .image {
@@ -40,4 +40,32 @@ canvas {
 
 #canvasClick {
     opacity: 0.5;
+}
+
+#paused {
+    opacity: 1;
+    animation-play-state: paused;
+}
+
+#blink {
+    animation: blink 3s infinite;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    25% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+
+    75% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }

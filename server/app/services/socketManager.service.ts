@@ -1,5 +1,6 @@
 import { GamesService } from '@app/services/local.games.service';
 import { MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
+import { DifferencesInformations } from '@common/differences-informations';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
 import * as http from 'http';
@@ -17,7 +18,7 @@ export class SocketManager {
     private timeInterval: NodeJS.Timer;
     private chronometerService: ChronometerService = new ChronometerService();
     private mouseHandlerService = Container.get(MouseHandlerService);
-    private gamesService = new GamesService();
+    private gamesService = Container.get(GamesService);
 
     constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] }, maxHttpBufferSize: 1e7 });
@@ -37,15 +38,16 @@ export class SocketManager {
                 console.log(`Raison de deconnexion : ${reason}`);
             });
 
-            socket.on('game page', async (message: string) => {
-                console.log(message);
+            socket.on('game page', async (gameName: string) => {
+                console.log(gameName);
                 socket.emit('classic mode');
-                socket.emit('The game is', message);
+                socket.emit('The game is', gameName);
                 this.timeInterval = setInterval(() => {
                     this.emitTime(socket);
                 }, 1000);
 
-                await this.sendImagesToClient(message, socket);
+                await this.mouseHandlerService.generateDifferencesInformations(gameName);
+                await this.sendImagesToClient(gameName, socket);
             });
 
             socket.on('username is', (username: string) => {
@@ -58,13 +60,11 @@ export class SocketManager {
 
             socket.on('detect images difference', (imagesData: ImageDataToCompare) => {
                 const differenceDetector = new DifferenceDetectorService(imagesData);
-                socket.emit('game creation difference array', differenceDetector.getDifferentPixelsArrayWithOffset());
-                socket.emit('game creation nb of differences', differenceDetector.getNbDifferences());
-            });
-
-            socket.on('image data to begin game', (imagesData: ImageDataToCompare) => {
-                this.mouseHandlerService.resetData();
-                this.mouseHandlerService.updateImageData(imagesData);
+                const differencesInformations: DifferencesInformations = {
+                    differencesList: differenceDetector.generateDifferencesList(),
+                    nbOfDifferences: differenceDetector.getNbDifferences(),
+                };
+                socket.emit('game creation differences informations', differencesInformations);
             });
 
             socket.on('Verify position', (position: Position) => {

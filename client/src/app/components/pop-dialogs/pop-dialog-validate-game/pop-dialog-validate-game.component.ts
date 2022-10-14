@@ -25,8 +25,6 @@ export class PopDialogValidateGameComponent  {
     startsGeneratingImageDifferenceAndNumberDifference(){
         if(this.valueChosen ){
             this.areImageDifferenceAndNumberDifferenceReady = true;
-        } else {
-        this.areImageDifferenceAndNumberDifferenceReady = false;
         }
     }
 
