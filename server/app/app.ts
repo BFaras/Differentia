@@ -10,6 +10,8 @@ import * as swaggerUi from 'swagger-ui-express';
 import { Service } from 'typedi';
 import { GamesController } from './controllers/games.controller';
 import { ImagesController } from './controllers/images.controller';
+const fileupload = require('express-fileupload')
+
 @Service()
 export class Application {
     app: express.Application;
@@ -57,6 +59,7 @@ export class Application {
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(cookieParser());
         this.app.use(cors({origin: '*'}));
+        this.app.use(fileupload())
     }
 
     private errorHandling(): void {

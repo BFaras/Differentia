@@ -11,6 +11,10 @@ describe('MouseDetectionService', () => {
     let drawServiceSpy: jasmine.SpyObj<DrawService>;
     let message = 'hello world';
     let context: CanvasRenderingContext2D;
+    let context1: CanvasRenderingContext2D;
+    let context2: CanvasRenderingContext2D;
+    let context3: CanvasRenderingContext2D;
+    let context4: CanvasRenderingContext2D;
 
     let position: Position = { x: 0, y: 0 };
 
@@ -23,6 +27,16 @@ describe('MouseDetectionService', () => {
         });
         drawServiceSpy = jasmine.createSpyObj('DrawService', ['drawWord']);
         socketSpy = jasmine.createSpyObj('SocketClientService', ['send']);
+        context = {} as CanvasRenderingContext2D;
+        context1 = {} as CanvasRenderingContext2D;
+        context2 = {} as CanvasRenderingContext2D;
+        context3 = {} as CanvasRenderingContext2D;
+        context4 = {} as CanvasRenderingContext2D;
+        drawServiceSpy.context1 = context1;
+        drawServiceSpy.context2 = context2;
+        drawServiceSpy.context3 = context3;
+        drawServiceSpy.context4 = context4;
+
         socketSpy.send('Verify position', position);
         drawServiceSpy.drawWord(message, position, context);
         service = TestBed.inject(MouseDetectionService);
@@ -32,8 +46,8 @@ describe('MouseDetectionService', () => {
         expect(service).toBeTruthy();
     });
 
-    // it('should call ', () => {
-    //     service.clickMessage(true);
-    //     expect(drawServiceSpy).toHaveBeenCalled();
-    // });
+    it('should call playsound ', () => {
+        service.playSound(true);
+        expect(service).toBeTruthy();
+    });
 });

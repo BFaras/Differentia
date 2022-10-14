@@ -5,6 +5,7 @@ import { TimeService } from '@app/services/time.service';
 import { MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { Game } from '@common/game';
 import { Time } from '@common/time';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
     selector: 'app-game-page',
@@ -59,7 +60,7 @@ export class GamePageComponent {
     }
 
     receiveNumberOfDifferences(nameGame: string): void {
-        this.communicationService.getGames().subscribe((array: Game[]) => {
+        firstValueFrom(this.communicationService.getGames()).then((array: Game[]) => {
             let gameWanted = array.find((x) => x.name === nameGame);
             // gameWanted ne sera jamais undefined car le nom utilisé dans le .find est d'un jeu qui
             // existe forcément (il est dans la page de sélection )

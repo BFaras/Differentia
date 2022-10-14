@@ -16,11 +16,14 @@ export class ListGameFormComponent implements OnInit {
 
     constructor(public formService: FormService) {}
 
-    ngOnInit(): void {
+    async ngOnInit(){
+        await this.formService.receiveGameInformations()
+
         if (this.formService.gameForms.length < Constants.MAX_NB_OF_FORMS_PER_PAGE) {
             this.lastElementIndex = this.formService.gameForms.length - 1;
         }
         this.addCurrentPageGameForms();
+        
     }
 
     nextPageGameForms() {
