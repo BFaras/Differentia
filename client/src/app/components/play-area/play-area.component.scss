@@ -42,10 +42,13 @@ canvas {
     opacity: 0.5;
 }
 
+#paused {
+    opacity: 1;
+    animation-play-state: paused;
+}
+
 #blink {
-    animation: blink 2s linear infinite;
-    animation-delay: 1s;
-    animation-duration: 2s;
+    animation: blink 3s infinite;
 }
 
 @keyframes blink {

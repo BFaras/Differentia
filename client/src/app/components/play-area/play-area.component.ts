@@ -18,7 +18,7 @@ export class PlayAreaComponent implements OnInit {
     @ViewChild('modifiedCanvas', { static: false }) private modifiedCanvas!: ElementRef<HTMLCanvasElement>;
     @ViewChild('clickCanvas1', { static: false }) private clickCanvas1!: ElementRef<HTMLCanvasElement>;
     @ViewChild('clickCanvas2', { static: false }) private clickCanvas2!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('clignotementCanvas', { static: false }) private clignotementCanvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('blinkCanvas', { static: false }) private blinkCanvas!: ElementRef<HTMLCanvasElement>;
     @Input() differentImages: HTMLImageElement[];
     @Input() nbDifferencesTotal: number = 0;
     mousePosition: Position = { x: 0, y: 0 };
@@ -103,15 +103,16 @@ export class PlayAreaComponent implements OnInit {
 
             if (isDifference) {
                 console.log('Appel de copycertain...');
+                this.drawService.context5 = this.blinkCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+                this.drawService.context5.canvas.id = 'blink';
+                this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
+                    this.pixelList,
+                    this.originalCanvas.nativeElement,
+                    this.blinkCanvas.nativeElement,
+                );
                 setTimeout(() => {
-                    this.drawService.context5 = this.clignotementCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-                    this.drawService.context5.canvas.id = 'blink';
-                    this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
-                        this.pixelList,
-                        this.originalCanvas.nativeElement,
-                        this.clignotementCanvas.nativeElement,
-                    );
-                }, 1000);
+                    this.drawService.context5.canvas.id = 'paused';
+                }, 3000);
             }
         });
 

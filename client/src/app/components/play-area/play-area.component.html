@@ -16,7 +16,7 @@
         <span class="image">
             <!--Image de droite-->
             <canvas id="canvas" #modifiedCanvas [attr.width]="width" [attr.height]="height"></canvas>
-            <canvas #clignotementCanvas [attr.width]="width" [attr.height]="height"></canvas>
+            <canvas #blinkCanvas [attr.width]="width" [attr.height]="height"></canvas>
             <canvas id="canvasClick" #clickCanvas2 (click)="detectDifference($event)" [attr.width]="width" [attr.height]="height"></canvas>
             <div id="mouse-position-display">
                 <p>Cliquez sur l'image pour détecter les différences</p>
