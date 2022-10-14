@@ -1,5 +1,6 @@
 import { Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { SafeValue } from '@angular/platform-browser';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { GameToServerService } from '@app/services/game-to-server.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
@@ -15,7 +16,7 @@ describe('ImageDifferenceComponent', () => {
     let socketServiceSpy: SpyObj<SocketClientService>;
     let renderer2: Renderer2;
     let mockImage: ImageToSendToServer = {
-        image: 'url',
+        image: 'url' as SafeValue,
         index: 1,
     };
 
@@ -25,6 +26,7 @@ describe('ImageDifferenceComponent', () => {
             'getImagesData',
             'putDifferencesDataInImage',
         ]);
+        imageToImagesDifferenceServiceSpy.waitForImageToLoad.and.returnValue(Promise.resolve());
         gameToServerServiceSpy = jasmine.createSpyObj('GameToServerService', [
             'getOriginalImageUploaded',
             'getModifiedImageUploaded',

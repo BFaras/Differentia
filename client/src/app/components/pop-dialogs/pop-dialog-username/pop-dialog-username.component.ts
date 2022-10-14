@@ -1,24 +1,25 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { SocketClientService } from '@app/services/socket-client.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { SocketClientService } from '@app/services/socket-client.service';
 
 @Component({
-  selector: 'app-pop-dialog-username',
-  templateUrl: './pop-dialog-username.component.html',
-  styleUrls: ['./pop-dialog-username.component.scss']
+    selector: 'app-pop-dialog-username',
+    templateUrl: './pop-dialog-username.component.html',
+    styleUrls: ['./pop-dialog-username.component.scss'],
 })
 export class PopDialogUsernameComponent implements OnInit {
-  @ViewChild("username") username: ElementRef;
+    @ViewChild('username') username: ElementRef;
 
-  constructor(private socketService: SocketClientService, @Inject(MAT_DIALOG_DATA) private gameInfo: any) { }
+    constructor(private socketService: SocketClientService, @Inject(MAT_DIALOG_DATA) private gameInfo: any) {}
 
-  ngOnInit(): void {
-    this.socketService.connect();
-  }
+    ngOnInit(): void {
+        this.socketService.connect();
+    }
 
-  gamePage() {
-    this.socketService.send('game page', this.gameInfo.nameGame);
-    this.socketService.send('username is', this.username.nativeElement.value); 
-  }
-
+    gamePage() {
+        this.socketService.send('game page', this.gameInfo.nameGame);
+        let username = this.username.nativeElement.value;
+        if (username == '') username = 'anonyme';
+        this.socketService.send('username is', username);
+    }
 }
