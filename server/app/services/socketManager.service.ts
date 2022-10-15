@@ -5,7 +5,6 @@ import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
 import * as http from 'http';
 import * as io from 'socket.io';
-import { clearInterval } from 'timers';
 import Container from 'typedi';
 import { ChronometerService } from './chronometer.service';
 import { DifferenceDetectorService } from './difference-detector.service';
@@ -15,9 +14,9 @@ export class SocketManager {
     private sio: io.Server;
     // private room: string = "serverRoom";
     public socket: io.Socket;
-    private timeInterval: NodeJS.Timer;
-    private chronometerService: ChronometerService = new ChronometerService();
-    private mouseHandlerService = Container.get(MouseHandlerService);
+    readonly timeIntervals: Map<string, NodeJS.Timer> = new Map<string, NodeJS.Timer>();
+    readonly chronometerServices: Map<string, ChronometerService> = new Map<string, ChronometerService>();
+    readonly mouseHandlerServices: Map<string, MouseHandlerService> = new Map<string, MouseHandlerService>();
     private gamesService = Container.get(GamesService);
 
     constructor(server: http.Server) {
@@ -42,20 +41,11 @@ export class SocketManager {
                 console.log(gameName);
                 socket.emit('classic mode');
                 socket.emit('The game is', gameName);
-                this.timeInterval = setInterval(() => {
-                    this.emitTime(socket);
-                }, 1000);
-
-                await this.mouseHandlerService.generateDifferencesInformations(gameName);
-                await this.sendImagesToClient(gameName, socket);
+                await this.beginSoloGame(socket, gameName);
             });
 
             socket.on('username is', (username: string) => {
                 socket.emit('show the username', username);
-            });
-
-            socket.on('kill the timer', () => {
-                this.endTimer();
             });
 
             socket.on('detect images difference', (imagesData: ImageDataToCompare) => {
@@ -72,22 +62,40 @@ export class SocketManager {
             });
 
             socket.on('Check if game is finished', () => {
-                if (this.mouseHandlerService.differencesNumberFound.length === this.mouseHandlerService.nbDifferencesTotal) {
-                    this.mouseHandlerService.resetData();
-                    this.endTimer();
+                const mouseHandler: MouseHandlerService = this.mouseHandlerServices.get(socket.id)!;
+                if (mouseHandler.differencesNumberFound.length === mouseHandler.nbDifferencesTotal) {
+                    mouseHandler.resetData();
+                    this.endGame(socket);
                     socket.emit('End game');
                 }
             });
         });
     }
 
-    private emitTime(socket: io.Socket) {
-        this.chronometerService.increaseTime();
-        socket.emit('time', this.chronometerService.time);
+    private async beginSoloGame(socket: io.Socket, gameName: string) {
+        const mouseHandler: MouseHandlerService = new MouseHandlerService();
+        const chronometerService: ChronometerService = new ChronometerService();
+        this.timeIntervals.set(
+            socket.id,
+            setInterval(() => {
+                this.emitTime(socket, chronometerService);
+            }, 1000),
+        );
+
+        this.chronometerServices.set(socket.id, chronometerService);
+        this.mouseHandlerServices.set(socket.id, mouseHandler);
+
+        await mouseHandler.generateDifferencesInformations(gameName);
+        await this.sendImagesToClient(gameName, socket);
+    }
+
+    private emitTime(socket: io.Socket, chronometerService: ChronometerService) {
+        chronometerService.increaseTime();
+        socket.emit('time', chronometerService.time);
     }
 
     private clickResponse(socket: io.Socket, mousePosition: Position) {
-        const clickAnswer = this.mouseHandlerService.isValidClick(mousePosition);
+        const clickAnswer = this.mouseHandlerServices.get(socket.id)!.isValidClick(mousePosition);
         socket.emit('Valid click', clickAnswer);
     }
 
@@ -97,8 +105,9 @@ export class SocketManager {
         socket.emit('classic solo images', [gameImagesData[ORIGINAL_IMAGE_POSITION], gameImagesData[MODIFIED_IMAGE_POSITION]]);
     }
 
-    private endTimer() {
-        clearInterval(this.timeInterval);
-        this.chronometerService.resetChrono();
+    private endGame(socket: io.Socket) {
+        this.chronometerServices.delete(socket.id);
+        this.mouseHandlerServices.delete(socket.id);
+        this.timeIntervals.delete(socket.id);
     }
 }
