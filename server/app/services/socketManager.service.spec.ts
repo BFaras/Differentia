@@ -1,5 +1,6 @@
 import { DifferencesInformations } from '@common/differences-informations';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
+import { Position } from '@common/position';
 import { Server } from 'app/server';
 import { assert, expect } from 'chai';
 import * as sinon from 'sinon';
@@ -37,6 +38,14 @@ describe('SocketManager service tests', () => {
         server.init();
         service = server['socketManager'];
         clientSocket = ioClient(urlString);
+
+        sinon.stub(SocketManager.prototype, <any>'getSocketChronometerService').callsFake((socket) => {
+            return chronometerService;
+        });
+
+        sinon.stub(SocketManager.prototype, <any>'getSocketMouseHandlerService').callsFake((socket) => {
+            return mouseHandlerService;
+        });
     });
 
     afterEach(() => {
@@ -85,25 +94,22 @@ describe('SocketManager service tests', () => {
         });
     });
 
-    // pk sa fonctionne pas?
-    //TESTER QUAND LA FONCTION DANS MOUSEHANDLERSERVICE SERA TERMINÉE
-    // it('should handle a verify position event and call clickResponse', (done) => {
-    //     let positionTest: Position = {
-    //         x: 0,
-    //         y: 0,
-    //     };
-    //     const stub = sinon.stub(mouseHandlerService, 'isValidClick').callsFake((positionTest) => {
-    //         console.log('salut');
-    //         return true;
-    //     });
-    //     const spy = sinon.spy(service, <any>'clickResponse');
-    //     clientSocket.emit('Verify position', positionTest);
-    //     clientSocket.on('Valid click', () => {
-    //         expect(stub.callsFake);
-    //         expect(spy.calledOnce);
-    //         done();
-    //     });
-    // });
+    it('should handle a verify position event and call clickResponse', (done) => {
+        let positionTest: Position = {
+            x: 0,
+            y: 0,
+        };
+        const stub = sinon.stub(MouseHandlerService.prototype, 'isValidClick').callsFake((positionTest) => {
+            return [];
+        });
+        const spy = sinon.spy(service, <any>'clickResponse');
+        clientSocket.emit('Verify position', positionTest);
+        clientSocket.on('Valid click', () => {
+            expect(stub.callsFake);
+            expect(spy.calledOnce);
+            done();
+        });
+    });
 
     it('should handle a game page event and return the game of the name that was launched', (done) => {
         const gameName = 'Car game';
