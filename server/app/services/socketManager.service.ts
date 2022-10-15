@@ -1,5 +1,5 @@
 import { GamesService } from '@app/services/local.games.service';
-import { GAME_ROOM_GENERAL_ID, MODIFIED_IMAGE_POSITION, NO_OTHER_PLAYER_ROOM, ORIGINAL_IMAGE_POSITION } from '@common/const';
+import { DEFAULT_GAME_ROOM_NAME, GAME_ROOM_GENERAL_ID, MODIFIED_IMAGE_POSITION, NO_OTHER_PLAYER_ROOM, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { DifferencesInformations } from '@common/differences-informations';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
@@ -64,7 +64,7 @@ export class SocketManager {
             });
 
             socket.on('Check if game is finished', () => {
-                const mouseHandler: MouseHandlerService = this.mouseHandlerServices.get(this.findSocketGameRoomName(socket))!;
+                const mouseHandler: MouseHandlerService = this.getSocketMouseHandlerService(socket);
                 if (mouseHandler.differencesNumberFound.length === mouseHandler.nbDifferencesTotal) {
                     mouseHandler.resetData();
                     this.endGame(socket);
@@ -75,23 +75,27 @@ export class SocketManager {
     }
 
     private async beginGame(socket: io.Socket, gameName: string, otherPlayerRoomId: string) {
+        this.setupSocketRoom(socket, otherPlayerRoomId);
+        this.setupNecessaryGameServices(socket);
+
+        await this.getSocketMouseHandlerService(socket).generateDifferencesInformations(gameName);
+        await this.sendImagesToClient(gameName, socket);
+    }
+
+    private setupNecessaryGameServices(socket: io.Socket) {
         const mouseHandler: MouseHandlerService = new MouseHandlerService();
         const chronometerService: ChronometerService = new ChronometerService();
 
-        this.setupSocketRoom(socket, otherPlayerRoomId);
-        this.timeIntervals.set(
-            this.findSocketGameRoomName(socket),
-            setInterval(() => {
-                this.emitTime(socket, chronometerService);
-            }, 1000),
-        );
-
         const gameRoomName = this.findSocketGameRoomName(socket);
+
         this.chronometerServices.set(gameRoomName, chronometerService);
         this.mouseHandlerServices.set(gameRoomName, mouseHandler);
-
-        await mouseHandler.generateDifferencesInformations(gameName);
-        await this.sendImagesToClient(gameName, socket);
+        this.timeIntervals.set(
+            gameRoomName,
+            setInterval(() => {
+                this.emitTime(socket, this.getSocketChronometerService(socket));
+            }, 1000),
+        );
     }
 
     private setupSocketRoom(socket: io.Socket, otherPlayerGameRoomId: string) {
@@ -105,7 +109,7 @@ export class SocketManager {
     }
 
     private findSocketGameRoomName(socket: io.Socket): string {
-        let gameRoomName = '';
+        let gameRoomName = DEFAULT_GAME_ROOM_NAME;
         socket.rooms.forEach((roomName: string) => {
             if (roomName.includes(GAME_ROOM_GENERAL_ID)) {
                 gameRoomName = roomName;
@@ -121,7 +125,7 @@ export class SocketManager {
     }
 
     private clickResponse(socket: io.Socket, mousePosition: Position) {
-        const clickAnswer = this.mouseHandlerServices.get(this.findSocketGameRoomName(socket))!.isValidClick(mousePosition);
+        const clickAnswer = this.getSocketMouseHandlerService(socket).isValidClick(mousePosition);
         socket.emit('Valid click', clickAnswer);
     }
 
@@ -137,5 +141,15 @@ export class SocketManager {
         this.mouseHandlerServices.delete(gameRoomName);
         this.timeIntervals.delete(gameRoomName);
         socket.rooms.delete(gameRoomName);
+    }
+
+    private getSocketChronometerService(socket: io.Socket): ChronometerService {
+        const gameRoomName = this.findSocketGameRoomName(socket);
+        return this.chronometerServices.get(gameRoomName)!;
+    }
+
+    private getSocketMouseHandlerService(socket: io.Socket): MouseHandlerService {
+        const gameRoomName = this.findSocketGameRoomName(socket);
+        return this.mouseHandlerServices.get(gameRoomName)!;
     }
 }

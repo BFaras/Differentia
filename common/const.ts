@@ -49,3 +49,4 @@ export const FIRST_ARRAY_POSITION = 0;
 //Game sockets constantes
 export const GAME_ROOM_GENERAL_ID = 'GameRoom';
 export const NO_OTHER_PLAYER_ROOM = '';
+export const DEFAULT_GAME_ROOM_NAME = GAME_ROOM_GENERAL_ID + 'EASJDS';
