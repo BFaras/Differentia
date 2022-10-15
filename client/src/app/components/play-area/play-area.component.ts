@@ -120,4 +120,8 @@ export class PlayAreaComponent implements OnInit {
             this.openDialog();
         });
     }
+
+    endGame() {
+        this.socketService.send("kill the timer");
+    }
 }

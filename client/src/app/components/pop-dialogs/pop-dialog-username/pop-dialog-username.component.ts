@@ -9,6 +9,7 @@ import { SocketClientService } from '@app/services/socket-client.service';
 })
 export class PopDialogUsernameComponent implements OnInit {
     @ViewChild('username') username: ElementRef;
+    disabledButton: boolean = true;
 
     constructor(private socketService: SocketClientService, @Inject(MAT_DIALOG_DATA) private gameInfo: any) {}
 
@@ -19,7 +20,11 @@ export class PopDialogUsernameComponent implements OnInit {
     gamePage() {
         this.socketService.send('game page', this.gameInfo.nameGame);
         let username = this.username.nativeElement.value;
-        if (username == '') username = 'anonyme';
         this.socketService.send('username is', username);
+        this.disabledButton = true;
+    }
+
+    inputChanged() {
+        this.disabledButton = false;
     }
 }

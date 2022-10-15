@@ -25,7 +25,6 @@ export class GamePageComponent {
     }
 
     ngOnInit() {
-        // this.mainCanvas = this.renderer.createElement('canvas');
         this.socketService.connect();
         this.configureGamePageSocketFeatures();
     }

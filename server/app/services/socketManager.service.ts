@@ -1,3 +1,4 @@
+
 import { GamesService } from '@app/services/local.games.service';
 import { MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { DifferencesInformations } from '@common/differences-informations';
@@ -15,10 +16,12 @@ export class SocketManager {
     private sio: io.Server;
     // private room: string = "serverRoom";
     public socket: io.Socket;
-    private timeInterval: NodeJS.Timer;
+    // private timeInterval: NodeJS.Timer;
     private chronometerService: ChronometerService = new ChronometerService();
     private mouseHandlerService = Container.get(MouseHandlerService);
     private gamesService = Container.get(GamesService);
+    private socketList = new Map<string, io.Socket>;
+    private intervalList = new Map<string, NodeJS.Timer>;
 
     constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] }, maxHttpBufferSize: 1e7 });
@@ -27,6 +30,7 @@ export class SocketManager {
     public handleSockets(): void {
         this.sio.on('connection', (socket) => {
             console.log(`Connexion par l'utilisateur avec id : ${socket.id}`);
+            this.socketList.set(socket.id, socket);
             this.socket = socket;
 
             socket.on('message', (message: string) => {
@@ -39,15 +43,16 @@ export class SocketManager {
             });
 
             socket.on('game page', async (gameName: string) => {
-                console.log(gameName);
                 socket.emit('classic mode');
                 socket.emit('The game is', gameName);
-                this.timeInterval = setInterval(() => {
+                this.chronometerService.startChrono(socket.id);
+                this.intervalList[socket.id] = setInterval(() => {
                     this.emitTime(socket);
                 }, 1000);
 
                 await this.mouseHandlerService.generateDifferencesInformations(gameName);
                 await this.sendImagesToClient(gameName, socket);
+                
             });
 
             socket.on('username is', (username: string) => {
@@ -55,7 +60,7 @@ export class SocketManager {
             });
 
             socket.on('kill the timer', () => {
-                this.endTimer();
+                this.endTimer(socket);
             });
 
             socket.on('detect images difference', (imagesData: ImageDataToCompare) => {
@@ -74,7 +79,7 @@ export class SocketManager {
             socket.on('Check if game is finished', () => {
                 if (this.mouseHandlerService.differencesNumberFound.length === this.mouseHandlerService.nbDifferencesTotal) {
                     this.mouseHandlerService.resetData();
-                    this.endTimer();
+                    this.endTimer(socket);
                     socket.emit('End game');
                 }
             });
@@ -82,8 +87,8 @@ export class SocketManager {
     }
 
     private emitTime(socket: io.Socket) {
-        this.chronometerService.increaseTime();
-        socket.emit('time', this.chronometerService.time);
+        this.chronometerService.increaseTime(socket.id);
+        socket.emit('time', this.chronometerService.listOfChronometers[socket.id]);
     }
 
     private clickResponse(socket: io.Socket, mousePosition: Position) {
@@ -97,8 +102,8 @@ export class SocketManager {
         socket.emit('classic solo images', [gameImagesData[ORIGINAL_IMAGE_POSITION], gameImagesData[MODIFIED_IMAGE_POSITION]]);
     }
 
-    private endTimer() {
-        clearInterval(this.timeInterval);
-        this.chronometerService.resetChrono();
+    private endTimer(socket: io.Socket) {
+        clearInterval(this.intervalList[socket.id]);
+        this.chronometerService.resetChrono(socket.id);
     }
 }
