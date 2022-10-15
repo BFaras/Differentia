@@ -45,3 +45,7 @@ export const MODIFIED_IMAGE_POSITION = 1;
 //Arrays constants
 export const EMPTY_ARRAY_LENGTH = 0;
 export const FIRST_ARRAY_POSITION = 0;
+
+//Game sockets constantes
+export const GAME_ROOM_GENERAL_ID = 'GameRoom';
+export const NO_OTHER_PLAYER_ROOM = '';

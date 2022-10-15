@@ -1,5 +1,5 @@
 import { GamesService } from '@app/services/local.games.service';
-import { MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
+import { GAME_ROOM_GENERAL_ID, MODIFIED_IMAGE_POSITION, NO_OTHER_PLAYER_ROOM, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { DifferencesInformations } from '@common/differences-informations';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
@@ -41,7 +41,9 @@ export class SocketManager {
                 console.log(gameName);
                 socket.emit('classic mode');
                 socket.emit('The game is', gameName);
-                await this.beginSoloGame(socket, gameName);
+                //If no game room to join in multiplayer :
+                await this.beginGame(socket, gameName, NO_OTHER_PLAYER_ROOM);
+                //else we send the room name where a player is waiting to start a multiplayer game
             });
 
             socket.on('username is', (username: string) => {
@@ -62,7 +64,7 @@ export class SocketManager {
             });
 
             socket.on('Check if game is finished', () => {
-                const mouseHandler: MouseHandlerService = this.mouseHandlerServices.get(socket.id)!;
+                const mouseHandler: MouseHandlerService = this.mouseHandlerServices.get(this.findSocketGameRoomName(socket))!;
                 if (mouseHandler.differencesNumberFound.length === mouseHandler.nbDifferencesTotal) {
                     mouseHandler.resetData();
                     this.endGame(socket);
@@ -72,21 +74,45 @@ export class SocketManager {
         });
     }
 
-    private async beginSoloGame(socket: io.Socket, gameName: string) {
+    private async beginGame(socket: io.Socket, gameName: string, otherPlayerRoomId: string) {
         const mouseHandler: MouseHandlerService = new MouseHandlerService();
         const chronometerService: ChronometerService = new ChronometerService();
+
+        this.setupSocketRoom(socket, otherPlayerRoomId);
         this.timeIntervals.set(
-            socket.id,
+            this.findSocketGameRoomName(socket),
             setInterval(() => {
                 this.emitTime(socket, chronometerService);
             }, 1000),
         );
 
-        this.chronometerServices.set(socket.id, chronometerService);
-        this.mouseHandlerServices.set(socket.id, mouseHandler);
+        const gameRoomName = this.findSocketGameRoomName(socket);
+        this.chronometerServices.set(gameRoomName, chronometerService);
+        this.mouseHandlerServices.set(gameRoomName, mouseHandler);
 
         await mouseHandler.generateDifferencesInformations(gameName);
         await this.sendImagesToClient(gameName, socket);
+    }
+
+    private setupSocketRoom(socket: io.Socket, otherPlayerGameRoomId: string) {
+        const playerGameRoomID = socket.id + GAME_ROOM_GENERAL_ID;
+
+        if (otherPlayerGameRoomId === NO_OTHER_PLAYER_ROOM && !socket.rooms.has(playerGameRoomID)) {
+            socket.rooms.add(playerGameRoomID);
+        } else {
+            socket.rooms.add(otherPlayerGameRoomId);
+        }
+    }
+
+    private findSocketGameRoomName(socket: io.Socket): string {
+        let gameRoomName = '';
+        socket.rooms.forEach((roomName: string) => {
+            if (roomName.includes(GAME_ROOM_GENERAL_ID)) {
+                gameRoomName = roomName;
+            }
+        });
+
+        return gameRoomName;
     }
 
     private emitTime(socket: io.Socket, chronometerService: ChronometerService) {
@@ -95,7 +121,7 @@ export class SocketManager {
     }
 
     private clickResponse(socket: io.Socket, mousePosition: Position) {
-        const clickAnswer = this.mouseHandlerServices.get(socket.id)!.isValidClick(mousePosition);
+        const clickAnswer = this.mouseHandlerServices.get(this.findSocketGameRoomName(socket))!.isValidClick(mousePosition);
         socket.emit('Valid click', clickAnswer);
     }
 
@@ -106,8 +132,10 @@ export class SocketManager {
     }
 
     private endGame(socket: io.Socket) {
-        this.chronometerServices.delete(socket.id);
-        this.mouseHandlerServices.delete(socket.id);
-        this.timeIntervals.delete(socket.id);
+        const gameRoomName: string = this.findSocketGameRoomName(socket);
+        this.chronometerServices.delete(gameRoomName);
+        this.mouseHandlerServices.delete(gameRoomName);
+        this.timeIntervals.delete(gameRoomName);
+        socket.rooms.delete(gameRoomName);
     }
 }
