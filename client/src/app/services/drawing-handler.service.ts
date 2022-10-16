@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { fromEvent } from 'rxjs';
-import { Observable } from 'rxjs';
+import { fromEvent, Observable } from 'rxjs';
 import { pairwise, switchMap, takeUntil } from 'rxjs/operators';
 
 @Injectable({

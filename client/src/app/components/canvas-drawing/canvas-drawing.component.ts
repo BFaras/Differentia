@@ -6,6 +6,7 @@ import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
   selector: 'app-canvas-drawing',
   templateUrl: './canvas-drawing.component.html',
   styleUrls: ['./canvas-drawing.component.scss'],
+  providers: [DrawingHandlerService]
 })
 export class CanvasDrawingComponent implements  AfterViewInit {
   @ViewChild('canvas') public canvasDOM: ElementRef<HTMLCanvasElement>;
