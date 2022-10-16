@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatOption } from '@angular/material/core';
+import { BIG, MEDIUM, SMALL, VERY_BIG, VERY_SMALL } from '@common/const';
 
 @Component({
   selector: 'app-tool-setting',
@@ -6,10 +8,26 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./tool-setting.component.scss']
 })
 export class ToolSettingComponent implements OnInit {
-  widths = [1,2,3,4,5]
+  @ViewChild("chosenWidth") chosenWidth:MatOption
+  @ViewChild("writeButton") writeButton:any
+  @ViewChild("eraseButton") eraseButton:any
+  widths:number[] = [VERY_SMALL,SMALL,MEDIUM,BIG,VERY_BIG]
+  color:string;
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  onChangeColor(){
+    console.log( this.color)
+  }
+
+  onChangeWidth(){
+    console.log( this.chosenWidth.value)
+  }
+
+  onChangeModePencil(event:Event){
+    // add method to change mode of pencil service to be reated
   }
 
 }

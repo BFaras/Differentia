@@ -1,15 +1,15 @@
 <div>
     <label>Couleur : </label>
-    <input  type="color" />
+    <input (change) = "onChangeColor()" [(ngModel)]="color" type="color" />
   </div>
 <div class ="group-buttons">
-<button mat-mini-fab >C</button>
-<button mat-mini-fab >E</button>
+<button (click) ="onChangeModePencil($event)" mat-mini-fab  #writeButton>W</button>
+<button (click) ="onChangeModePencil($event)" mat-mini-fab  #eraseButton >E</button>
 </div>
 <mat-form-field appearance="fill">
     <mat-label>Width</mat-label>
     <mat-select>
-      <mat-option *ngFor="let width of widths" [value]="width">
+      <mat-option (click) ="onChangeWidth()"*ngFor="let width of widths" [value]="width" #chosenWidth>
         {{width}}
       </mat-option>
     </mat-select>

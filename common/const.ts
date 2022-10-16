@@ -45,3 +45,10 @@ export const MODIFIED_IMAGE_POSITION = 1;
 //Arrays constants
 export const EMPTY_ARRAY_LENGTH = 0;
 export const FIRST_ARRAY_POSITION = 0;
+//width Pencil constants
+
+export const VERY_SMALL = 1;
+export const SMALL = 2
+export const MEDIUM = 3
+export const BIG = 4
+export const VERY_BIG = 5

@@ -27,6 +27,7 @@ import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
 import { GameSelectionComponent } from './pages/game-selection/game-selection.component';
 import { ToolSettingComponent } from './components/tool-setting/tool-setting.component';
+import { CanvasDrawingComponent } from './components/canvas-drawing/canvas-drawing.component';
 
 /**
  * Main module that is used in main.ts.
@@ -58,6 +59,7 @@ import { ToolSettingComponent } from './components/tool-setting/tool-setting.com
         PopDialogUsernameComponent,
         PopDialogEndgameComponent,
         ToolSettingComponent,
+        CanvasDrawingComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
     providers: [],
