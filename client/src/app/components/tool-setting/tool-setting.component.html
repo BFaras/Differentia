@@ -1,0 +1,16 @@
+<div>
+    <label>Couleur : </label>
+    <input  type="color" />
+  </div>
+<div class ="group-buttons">
+<button mat-mini-fab >C</button>
+<button mat-mini-fab >E</button>
+</div>
+<mat-form-field appearance="fill">
+    <mat-label>Width</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let width of widths" [value]="width">
+        {{width}}
+      </mat-option>
+    </mat-select>
+</mat-form-field>

@@ -1,0 +1,20 @@
+
+.mat-mini-fab{
+    height: 35px;
+    width: 35px;
+    background-color: green;
+}
+
+.mat-form-field{
+    width:80px;
+}
+
+.mat-mini-fab:focus {     
+    background-color:#155724;    
+}
+
+.group-buttons{
+    display:flex;
+    flex-direction:column;
+    gap: 5px;
+}
