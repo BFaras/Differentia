@@ -126,9 +126,36 @@ describe('SocketManager service tests', () => {
         });
     });
 
+    it('should handle a game page event and call beginGame', (done) => {
+        const spy = sinon.spy(service, <any>'beginGame');
+        clientSocket.emit('game page', testGameName);
+        setTimeout(() => {
+            expect(spy.calledOnce);
+            done();
+        }, RESPONSE_DELAY * 5); // 1 seconde
+    });
+
     it('should handle a game page event and call generateDifferencesInformations', (done) => {
         const spy = sinon.spy(mouseHandlerService, 'generateDifferencesInformations');
-        clientSocket.emit('game page', 'new game');
+        clientSocket.emit('game page', testGameName);
+        setTimeout(() => {
+            expect(spy.calledOnce);
+            done();
+        }, RESPONSE_DELAY * 5); // 1 seconde
+    });
+
+    it('should handle a game page event and call setupSocketRoom', (done) => {
+        const spy = sinon.spy(service, <any>'setupSocketRoom');
+        clientSocket.emit('game page', testGameName);
+        setTimeout(() => {
+            expect(spy.calledOnce);
+            done();
+        }, RESPONSE_DELAY * 5); // 1 seconde
+    });
+
+    it('should handle a game page event and call setupNecessaryGameServices', (done) => {
+        const spy = sinon.spy(service, <any>'setupNecessaryGameServices');
+        clientSocket.emit('game page', testGameName);
         setTimeout(() => {
             expect(spy.calledOnce);
             done();
