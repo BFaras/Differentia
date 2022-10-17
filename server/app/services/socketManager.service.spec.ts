@@ -65,17 +65,6 @@ describe('SocketManager service tests', () => {
         }, RESPONSE_DELAY);
     });
 
-    it('should handle a kill the timer event and stop the chronometer', (done) => {
-        const spy = sinon.spy(chronometerService, 'resetChrono');
-        clientSocket.emit('kill the timer');
-        setTimeout(() => {
-            expect(spy.calledOnce);
-            expect(chronometerService.time.minutes).to.equal(0);
-            expect(chronometerService.time.seconds).to.equal(0);
-            done();
-        }, RESPONSE_DELAY);
-    });
-
     it('should handle a game page event and return the game of the name that was launched', (done) => {
         const gameName = 'Car game';
         clientSocket.emit('game page', gameName);
