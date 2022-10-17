@@ -68,7 +68,7 @@ describe('SocketManager service tests', () => {
     it('should handle a game page event and return the game of the name that was launched', (done) => {
         const gameName = 'Car game';
         clientSocket.emit('game page', gameName);
-        clientSocket.on('The game is', (nameOfGame: string) => {
+        clientSocket.once('The game is', (nameOfGame: string) => {
             expect(nameOfGame).to.equal(gameName);
             done();
         });
@@ -77,7 +77,7 @@ describe('SocketManager service tests', () => {
     it('should handle a username is event and emit a show the username event', (done) => {
         const usernameTest = 'Test username';
         clientSocket.emit('username is', usernameTest);
-        clientSocket.on('show the username', (username: string) => {
+        clientSocket.once('show the username', (username: string) => {
             expect(username).to.equal(usernameTest);
             done();
         });
@@ -93,7 +93,7 @@ describe('SocketManager service tests', () => {
         });
         const spy = sinon.spy(service, <any>'clickResponse');
         clientSocket.emit('Verify position', positionTest);
-        clientSocket.on('Valid click', () => {
+        clientSocket.once('Valid click', () => {
             expect(stub.callsFake);
             expect(spy.calledOnce);
             done();
@@ -103,7 +103,7 @@ describe('SocketManager service tests', () => {
     it('should handle a game page event and return the game of the name that was launched', (done) => {
         const gameName = 'Car game';
         clientSocket.emit('game page', gameName);
-        clientSocket.on('The game is', (nameOfGame: string) => {
+        clientSocket.once('The game is', (nameOfGame: string) => {
             expect(nameOfGame).to.equal(gameName);
             done();
         });
@@ -141,7 +141,7 @@ describe('SocketManager service tests', () => {
     it('should emit a classic solo images event on game page event', (done) => {
         const gameName = 'Car game';
         clientSocket.emit('game page', gameName);
-        clientSocket.on('classic solo images', (imagesDataReceived: string[]) => {
+        clientSocket.once('classic solo images', (imagesDataReceived: string[]) => {
             expect(imagesDataReceived).to.exist;
             done();
         }); // 1 seconde
@@ -167,7 +167,7 @@ describe('SocketManager service tests', () => {
 
     it('should handle a detect images difference event and emit a game creation differences informations event', (done) => {
         clientSocket.emit('detect images difference', imagesData);
-        clientSocket.on('game creation differences informations', (differencesInfos: DifferencesInformations) => {
+        clientSocket.once('game creation differences informations', (differencesInfos: DifferencesInformations) => {
             expect(differencesInfos).to.exist;
             done();
         }); // 1 seconde
