@@ -27,6 +27,9 @@ export const RADIUS_AROUND_PIXEL = 1;
 export const UP = -1;
 export const DOWN = 1;
 
+//Differences found constants
+export const NO_DIFFERENCE_FOUND_ARRAY : number[] = [];
+
 //Images constants
 export const IMAGE_WIDTH = 640;
 export const IMAGE_HEIGHT = 480;
