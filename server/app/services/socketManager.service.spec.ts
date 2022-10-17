@@ -16,11 +16,7 @@ import { SocketManager } from './socketManager.service';
 const RESPONSE_DELAY = 200;
 
 describe('SocketManager service tests', () => {
-    let service: SocketManager;
-    let server: Server;
-    let clientSocket: Socket;
-    let chronometerService: ChronometerService = new ChronometerService();
-
+    const testGameName = 'Car game';
     const imagesData: ImageDataToCompare = {
         originalImageData: new Uint8ClampedArray(1),
         modifiedImageData: new Uint8ClampedArray(1),
@@ -28,6 +24,10 @@ describe('SocketManager service tests', () => {
         imageWidth: 1,
         offSet: 0,
     };
+    let service: SocketManager;
+    let server: Server;
+    let clientSocket: Socket;
+    let chronometerService: ChronometerService = new ChronometerService();
     let differenceDetectorService: DifferenceDetectorService = new DifferenceDetectorService(imagesData);
     let gamesService: GamesService = Container.get(GamesService);
     let mouseHandlerService: MouseHandlerService = new MouseHandlerService();
@@ -66,10 +66,9 @@ describe('SocketManager service tests', () => {
     });
 
     it('should handle a game page event and return the game of the name that was launched', (done) => {
-        const gameName = 'Car game';
-        clientSocket.emit('game page', gameName);
+        clientSocket.emit('game page', testGameName);
         clientSocket.once('The game is', (nameOfGame: string) => {
-            expect(nameOfGame).to.equal(gameName);
+            expect(nameOfGame).to.equal(testGameName);
             done();
         });
     });
@@ -101,10 +100,9 @@ describe('SocketManager service tests', () => {
     });
 
     it('should handle a game page event and return the game of the name that was launched', (done) => {
-        const gameName = 'Car game';
-        clientSocket.emit('game page', gameName);
+        clientSocket.emit('game page', testGameName);
         clientSocket.once('The game is', (nameOfGame: string) => {
-            expect(nameOfGame).to.equal(gameName);
+            expect(nameOfGame).to.equal(testGameName);
             done();
         });
     });
@@ -119,9 +117,8 @@ describe('SocketManager service tests', () => {
     });
 
     it('should call emitTime on game page event', (done) => {
-        const gameName = 'Car game';
         const spy = sinon.spy(service, <any>'emitTime');
-        clientSocket.emit('game page', gameName);
+        clientSocket.emit('game page', testGameName);
         setTimeout(() => {
             expect(spy.calledOnce);
             done();
@@ -129,9 +126,8 @@ describe('SocketManager service tests', () => {
     });
 
     it('should call getGameImagesData on game page event', (done) => {
-        const gameName = 'Car game';
         const spy = sinon.spy(gamesService, 'getGameImagesData');
-        clientSocket.emit('game page', gameName);
+        clientSocket.emit('game page', testGameName);
         setTimeout(() => {
             expect(spy.calledOnce);
             done();
@@ -139,8 +135,7 @@ describe('SocketManager service tests', () => {
     });
 
     it('should emit a classic solo images event on game page event', (done) => {
-        const gameName = 'Car game';
-        clientSocket.emit('game page', gameName);
+        clientSocket.emit('game page', testGameName);
         clientSocket.once('classic solo images', (imagesDataReceived: string[]) => {
             expect(imagesDataReceived).to.exist;
             done();
