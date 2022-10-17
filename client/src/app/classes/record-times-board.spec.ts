@@ -1,9 +1,18 @@
+import { TestBed } from '@angular/core/testing';
 import { RecordTime } from './record-time';
 import { RecordTimesBoard } from './record-times-board';
 
 describe('RecordTimesBoard', () => {
     const testTimesBoard = [new RecordTime('02:00', 'Mario'), new RecordTime('02:00', 'Luigi'), new RecordTime('02:00', 'Sonic')];
     let recordTimesBoard: RecordTimesBoard;
+    let recordTimeSpy: jasmine.SpyObj<RecordTime>;
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [{ provide: RecordTime, useValue: recordTimeSpy }],
+        });
+        recordTimeSpy = jasmine.createSpyObj('RecordTime', ['']);
+    });
 
     it('should create an instance', () => {
         recordTimesBoard = new RecordTimesBoard([], []);

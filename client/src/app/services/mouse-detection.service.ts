@@ -12,6 +12,8 @@ export class MouseDetectionService {
     mousePosition: Position = { x: 0, y: 0 };
     nbrDifferencesTotal: number;
     nbrDifferencesFound: number = 0;
+    message: string = '';
+    audio: HTMLAudioElement;
 
     mouseHitDetect(event: MouseEvent) {
         if (event.button === MouseButton.Left) {
@@ -21,25 +23,24 @@ export class MouseDetectionService {
     }
 
     playSound(differenceIsValid: boolean) {
-        let audio = new Audio();
-        if (differenceIsValid) audio.src = '../../assets/sounds/validSound.mp3';
-        else audio.src = '../../assets/sounds/invalidSound.mp3';
-        audio.load();
-        audio.play();
+        this.audio = new Audio();
+        if (differenceIsValid) this.audio.src = '../../assets/sounds/validSound.mp3';
+        else this.audio.src = '../../assets/sounds/invalidSound.mp3';
+        this.audio.load();
+        this.audio.play();
     }
 
     clickMessage(differenceIsValid: boolean) {
-        let message: string = '';
         if (differenceIsValid) {
-            message = 'GOOD JOB';
+            this.message = 'GOOD JOB';
             this.drawService.context1.fillStyle = 'green';
             this.drawService.context2.fillStyle = 'green';
         } else {
-            message = 'ERROR';
+            this.message = 'ERROR';
             this.drawService.context1.fillStyle = 'red';
             this.drawService.context2.fillStyle = 'red';
         }
-        this.drawMessage(message);
+        this.drawMessage(this.message);
     }
 
     incrementNbrDifference(differenceIsValid: boolean) {
