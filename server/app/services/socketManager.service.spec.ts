@@ -1,4 +1,5 @@
 import { DifferencesInformations } from '@common/differences-informations';
+import { Game } from '@common/game';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
 import { Server } from 'app/server';
@@ -16,7 +17,17 @@ import { SocketManager } from './socketManager.service';
 const RESPONSE_DELAY = 200;
 
 describe('SocketManager service tests', () => {
-    const testGameName = 'Car game';
+    const testGameName = 'test12345';
+    const testGame: Game = {
+        name: testGameName,
+        numberOfDifferences: 2,
+        times: [],
+        images: ['image1', 'image2'],
+        differencesList: [
+            [599, 666],
+            [899, 951],
+        ],
+    };
     const imagesData: ImageDataToCompare = {
         originalImageData: new Uint8ClampedArray(1),
         modifiedImageData: new Uint8ClampedArray(1),
@@ -45,6 +56,14 @@ describe('SocketManager service tests', () => {
 
         sinon.stub(SocketManager.prototype, <any>'getSocketMouseHandlerService').callsFake((socket) => {
             return mouseHandlerService;
+        });
+
+        sinon.stub(gamesService, 'getGame').callsFake(async (gameName: string) => {
+            return Promise.resolve(testGame);
+        });
+
+        sinon.stub(gamesService, 'getGameImagesData').callsFake(async (gameName: string) => {
+            return Promise.resolve(["", ""]);
         });
     });
 
@@ -126,7 +145,7 @@ describe('SocketManager service tests', () => {
     });
 
     it('should call getGameImagesData on game page event', (done) => {
-        const spy = sinon.spy(gamesService, 'getGameImagesData');
+        const spy = sinon.spy(GamesService.prototype, 'getGameImagesData');
         clientSocket.emit('game page', testGameName);
         setTimeout(() => {
             expect(spy.calledOnce);
