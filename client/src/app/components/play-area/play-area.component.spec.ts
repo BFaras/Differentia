@@ -13,6 +13,11 @@ describe('PlayAreaComponent', () => {
     let socketServiceSpy: SpyObj<SocketClientService>;
     let mouseServiceSpy: SpyObj<MouseDetectionService>;
 
+    beforeAll(async () => {
+        socketServiceSpy = jasmine.createSpyObj('SocketClientService', ['connect', 'on', 'send']);
+        mouseServiceSpy = jasmine.createSpyObj('MouseDetectionService', ['incrementNbrDifference']);
+    });
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [PlayAreaComponent],
@@ -25,19 +30,12 @@ describe('PlayAreaComponent', () => {
                 { provide: ImageGeneratorService, useValue: [] },
             ],
         }).compileComponents();
-        socketServiceSpy = jasmine.createSpyObj('SocketClientService', ['connect']);
-        mouseServiceSpy = jasmine.createSpyObj('MouseDetectionService', ['incrementNbrDifference']);
     });
 
     beforeEach(() => {
-        socketServiceSpy.connect();
         fixture = TestBed.createComponent(PlayAreaComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-    });
-
-    it('should be created', () => {
-        expect(component).toBeTruthy();
     });
 
     it('should call display ', async () => {
