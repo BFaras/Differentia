@@ -11,40 +11,37 @@ import { Service } from 'typedi';
 
 @Service()
 export class ChronometerService {
-    listOfChronometers = new Map<string, Time>;
+    time: Time = {
+        minutes: 0,
+        seconds: 0,
+    };
+    intervalForTimer: any; // On px mettre quelque chose d'autre que any?
+    intervalToCheckTime: any;
 
     constructor() {}
 
-    increaseSeconds(index: string) {
-        this.listOfChronometers[index].seconds += 1;
+    increaseSeconds() {
+        this.time.seconds += 1;
     }
 
-    increaseMinutes(index: string) {
-        this.listOfChronometers[index].minutes += 1;
+    increaseMinutes() {
+        this.time.minutes += 1;
     }
 
-    resetSeconds(index: string) {
-        this.listOfChronometers[index].seconds = RESET_VALUE;
+    resetSeconds() {
+        this.time.seconds = 0; // Le mettre dans le fichier des constantes?
     }
 
-    increaseTime(index: string) {
-        if (this.listOfChronometers[index].seconds !== MAX_TIME) this.increaseSeconds(index);
+    increaseTime() {
+        if (this.time.seconds !== MAX_TIME) this.increaseSeconds();
         else {
-            this.increaseMinutes(index);
-            this.resetSeconds(index);
+            this.increaseMinutes();
+            this.resetSeconds();
         }
     }
 
-    public resetChrono(index: string) {
-        this.listOfChronometers[index].minutes = RESET_VALUE;
-        this.listOfChronometers[index].seconds = RESET_VALUE;
-    }
-
-    public startChrono(index: string) {
-        let newTime: Time = {
-            minutes: 0,
-            seconds: 0
-        };
-        this.listOfChronometers[index] = newTime;
+    public resetChrono() {
+        this.time.minutes = RESET_VALUE;
+        this.time.seconds = RESET_VALUE;
     }
 }
