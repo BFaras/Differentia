@@ -1,1 +1,15 @@
-<p>chat-section works!</p>
+<div class="chatContainer">
+    <div>
+        <li class="chatMessages">
+            <ng-container *ngFor="let message of messagesSent">
+                <p>{{ message.senderName }} : {{ message.message }}</p>
+            </ng-container>
+        </li>
+    </div>
+    <div class="chatBox">
+        <form>
+            <input type="text" placeholder="Entrez un message" class="chatInput" />
+            <input type="submit" value="Send" class="chatSend" />
+        </form>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+.chatContainer {
+    border: 2px solid black;
+    font-weight: 55;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.chatMessages {
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 80%;
+    justify-content: space-around;
+}
+
+.chatBox {
+    border: 2px solid black;
+    border-radius: 5px;
+    height: 20%;
+}
+
+.form {
+    display: flex;
+    flex-direction: row;
+}
+
+.chatInput {
+    width: 60%;
+}
+
+.chatSend {
+    width: 40%;
+}
+
+::placeholder {
+    color: rgb(78, 78, 78);
+    opacity: 0.9;
+}
