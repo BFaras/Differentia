@@ -63,6 +63,10 @@ export class SocketManager {
                 this.clickResponse(socket, position);
             });
 
+            socket.on('kill the game', () => {
+                this.endGame(socket);
+            });
+
             socket.on('Check if game is finished', () => {
                 const mouseHandler: MouseHandlerService = this.getSocketMouseHandlerService(socket);
                 if (mouseHandler.differencesNumberFound.length === mouseHandler.nbDifferencesTotal) {
@@ -137,6 +141,7 @@ export class SocketManager {
 
     private endGame(socket: io.Socket) {
         const gameRoomName: string = this.findSocketGameRoomName(socket);
+        this.endChrono(socket);
         this.chronometerServices.delete(gameRoomName);
         this.mouseHandlerServices.delete(gameRoomName);
         this.timeIntervals.delete(gameRoomName);
@@ -151,5 +156,15 @@ export class SocketManager {
     private getSocketMouseHandlerService(socket: io.Socket): MouseHandlerService {
         const gameRoomName = this.findSocketGameRoomName(socket);
         return this.mouseHandlerServices.get(gameRoomName)!;
+    }
+
+    private getSocketTimeInterval(socket: io.Socket): NodeJS.Timer {
+        const gameRoomName = this.findSocketGameRoomName(socket);
+        return this.timeIntervals.get(gameRoomName)!;
+    }
+
+    private endChrono(socket: io.Socket) {
+        clearInterval(this.getSocketTimeInterval(socket));
+        this.getSocketChronometerService(socket)?.resetChrono();
     }
 }
