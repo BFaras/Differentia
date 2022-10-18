@@ -42,9 +42,11 @@ describe('SocketManager service tests', () => {
     let differenceDetectorService: DifferenceDetectorService = new DifferenceDetectorService(imagesData);
     let gamesService: GamesService = Container.get(GamesService);
     let mouseHandlerService: MouseHandlerService = new MouseHandlerService();
+    let mouseHandlerIsValidClickStub: sinon.SinonStub<[mousePosition: Position], number[]>;
 
     const urlString = 'http://localhost:3000';
-    beforeEach(async () => {
+
+    before(async () => {
         server = Container.get(Server);
         server.init();
         service = server['socketManager'];
@@ -63,11 +65,15 @@ describe('SocketManager service tests', () => {
         });
 
         sinon.stub(gamesService, 'getGameImagesData').callsFake(async (gameName: string) => {
-            return Promise.resolve(["", ""]);
+            return Promise.resolve(['', '']);
+        });
+
+        mouseHandlerIsValidClickStub = sinon.stub(MouseHandlerService.prototype, 'isValidClick').callsFake((positionTest) => {
+            return [];
         });
     });
 
-    afterEach(() => {
+    after(() => {
         clientSocket.close();
         service['sio'].close();
         sinon.restore();
@@ -106,13 +112,10 @@ describe('SocketManager service tests', () => {
             x: 0,
             y: 0,
         };
-        const stub = sinon.stub(MouseHandlerService.prototype, 'isValidClick').callsFake((positionTest) => {
-            return [];
-        });
         const spy = sinon.spy(service, <any>'clickResponse');
         clientSocket.emit('Verify position', positionTest);
         clientSocket.once('Valid click', () => {
-            expect(stub.callsFake);
+            expect(mouseHandlerIsValidClickStub.callsFake);
             expect(spy.calledOnce);
             done();
         });
@@ -215,11 +218,10 @@ describe('SocketManager service tests', () => {
     });
 
     it('should handle a Verify position should call isValidClick from MouseHandlerService', (done) => {
-        const spy = sinon.spy(mouseHandlerService, 'isValidClick');
         const positionTest = { x: 0, y: 0 };
         clientSocket.emit('Verify position', positionTest);
         setTimeout(() => {
-            expect(spy.calledOnce);
+            expect(mouseHandlerIsValidClickStub.calledOnce);
             done();
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
