@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Coordinate } from '@app/interfaces/coordinate';
 import { fromEvent, Observable } from 'rxjs';
 import { pairwise, switchMap, takeUntil } from 'rxjs/operators';
 
@@ -7,10 +8,10 @@ import { pairwise, switchMap, takeUntil } from 'rxjs/operators';
 })
 export class DrawingHandlerService {
   private canvas: HTMLCanvasElement
-  mouseDownObservable:Observable<any>
-  mouseMoveObservable:Observable<any>
-  mouseUpObservable:Observable<any> 
-  mouseLeaveObservable:Observable<any> 
+  mouseDownObservable:Observable<MouseEvent>
+  mouseMoveObservable:Observable<MouseEvent>
+  mouseUpObservable:Observable<MouseEvent> 
+  mouseLeaveObservable:Observable<MouseEvent> 
   constructor() { }
 
   setCanvas(canvas: HTMLCanvasElement){
@@ -18,44 +19,43 @@ export class DrawingHandlerService {
   }
 
   setAllObservables():void{
-    this.mouseDownObservable = fromEvent( this.getCanvas(),'mousedown');
-    this.mouseMoveObservable = fromEvent( this.getCanvas(),'mousemove');
-    this.mouseUpObservable = fromEvent( this.getCanvas(),'mouseup');
-    this.mouseLeaveObservable = fromEvent( this.getCanvas(),'mouseleave');
+    this.mouseDownObservable = fromEvent( this.getCanvas(),'mousedown') as Observable<MouseEvent> ;
+    this.mouseMoveObservable = fromEvent( this.getCanvas(),'mousemove')  as Observable<MouseEvent>;
+    this.mouseUpObservable = fromEvent( this.getCanvas(),'mouseup')  as Observable<MouseEvent>;
+    this.mouseLeaveObservable = fromEvent( this.getCanvas(),'mouseleave')  as Observable<MouseEvent>;
   }
 
   getCanvas():HTMLCanvasElement{
     return this.canvas;
   }
 
-  stopObservingMousePath(){
+  stopObservingMousePath():Observable<[MouseEvent,MouseEvent]>{
     return this.mouseMoveObservable.pipe(
       takeUntil(this.mouseUpObservable),
       takeUntil(this.mouseLeaveObservable),
       pairwise())
   }
 
-  startObservingMousePath() {
+  startObservingMousePath():Observable<[MouseEvent,MouseEvent]> {
     return this.mouseDownObservable
       .pipe(
-        switchMap((e) => {
+        switchMap(() => {
           return  this.stopObservingMousePath();
         })
       )
   }
 
   drawOnCanvas(
-    prevPos: { x: number; y: number },
-    currentPos: { x: number; y: number },
+    prevCoord: Coordinate,
+    currentCoord: Coordinate,
     cx: CanvasRenderingContext2D 
   ) {
     if (cx != null) {
     cx.beginPath();
-    cx.moveTo(prevPos.x, prevPos.y);
-    cx.lineTo(currentPos.x, currentPos.y);
+    cx.moveTo(prevCoord.x, prevCoord.y);
+    cx.lineTo(currentCoord.x, currentCoord.y);
     cx.stroke();
     }
   }
-
 
 }

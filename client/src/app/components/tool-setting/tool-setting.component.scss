@@ -9,12 +9,8 @@
     width:80px;
 }
 
-.mat-mini-fab:focus {     
-    background-color:#155724;    
-}
-
 .group-buttons{
     display:flex;
-    flex-direction:column;
+    flex-direction:row;
     gap: 5px;
 }

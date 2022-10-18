@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { Coordinate } from '@app/interfaces/coordinate';
 import { DrawingHandlerService } from '@app/services/drawing-handler.service';
+import { PencilService } from '@app/services/pencil.service';
 import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
 @Component({
   selector: 'app-canvas-drawing',
@@ -11,30 +12,34 @@ import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
 export class CanvasDrawingComponent implements  AfterViewInit {
   @ViewChild('canvas') public canvasDOM: ElementRef<HTMLCanvasElement>;
   private canvas: HTMLCanvasElement
-  private cx: CanvasRenderingContext2D | null;
+  private context: CanvasRenderingContext2D | null;
 
-  constructor(private drawingHandlerService:DrawingHandlerService) { }
+  constructor(private drawingHandlerService:DrawingHandlerService,
+    private pencilService:PencilService) { }
 
   public ngAfterViewInit() {
     this.canvas = this.canvasDOM.nativeElement;
-    this.cx = this.canvas.getContext('2d');
+    this.context = this.canvas.getContext('2d');
 
     this.canvas.width = IMAGE_WIDTH;
     this.canvas.height = IMAGE_HEIGHT;
-    if (this.cx != null) {
-      this.cx.lineWidth = 3;
-      this.cx.lineCap = 'round';
-      this.cx.strokeStyle = '#000000';
-      this.drawingHandlerService.setCanvas(this.canvas);
 
+      
+      this.drawingHandlerService.setCanvas(this.canvas);
       this.drawingHandlerService.setAllObservables();
       this.prepareCanvasDrawing();
-    }
+    
   }
 
   prepareCanvasDrawing() {
     this.drawingHandlerService.startObservingMousePath()
-      .subscribe((res: any) => {
+      .subscribe((res:[MouseEvent,MouseEvent]) => {
+        if (this.context != null) {
+
+          this.context.lineWidth = this.pencilService.getWidth();
+          this.context.strokeStyle = this.pencilService.getStateOfPencil(res[0],this.pencilService.getColor());
+        }
+
         const canvas = this.canvas.getBoundingClientRect();
 
         const previousCoordinate:Coordinate= {
@@ -47,7 +52,8 @@ export class CanvasDrawingComponent implements  AfterViewInit {
           y: res[1].clientY - canvas.top,
         };
 
-        this.drawingHandlerService.drawOnCanvas(previousCoordinate, actualCoordinate,this.cx!);
+        this.drawingHandlerService.drawOnCanvas(previousCoordinate, actualCoordinate,this.context!);
       });
   }
+
 }

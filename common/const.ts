@@ -52,3 +52,6 @@ export const SMALL = 2
 export const MEDIUM = 3
 export const BIG = 4
 export const VERY_BIG = 5
+
+//color
+export const BLACK_COLOR = "#000";
