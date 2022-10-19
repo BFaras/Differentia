@@ -10,7 +10,6 @@ import { AppMaterialModule } from '@app/modules/material.module';
 import { AppComponent } from '@app/pages/app/app.component';
 import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
-import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
 import { DialogInputComponent } from './components/dialog-input/dialog-input.component';
 import { GameFormComponent } from './components/forms/game-form/game-form.component';
 import { ListGameFormComponent } from './components/forms/list-game-form/list-game-form.component';
@@ -27,7 +26,6 @@ import { TopbarComponent } from './components/topbar/topbar.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
 import { GameSelectionComponent } from './pages/game-selection/game-selection.component';
-import { TestPageComponent } from './pages/test-page/test-page.component';
 
 /**
  * Main module that is used in main.ts.
@@ -40,7 +38,6 @@ import { TestPageComponent } from './pages/test-page/test-page.component';
         AppComponent,
         GamePageComponent,
         MainPageComponent,
-        MaterialPageComponent,
         PlayAreaComponent,
         SidebarComponent,
         GameCreationPageComponent,
@@ -56,7 +53,6 @@ import { TestPageComponent } from './pages/test-page/test-page.component';
         ListGameFormComponent,
         AdminPageComponent,
         DialogInputComponent,
-        TestPageComponent,
         ImageDifferenceComponent,
         PopDialogUsernameComponent,
         PopDialogEndgameComponent,

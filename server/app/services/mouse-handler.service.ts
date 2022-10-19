@@ -1,4 +1,4 @@
-import { FIRST_ARRAY_POSITION, IMAGE_WIDTH } from '@common/const';
+import { FIRST_ARRAY_POSITION, IMAGE_WIDTH, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
 import { Game } from '@common/game';
 import { Position } from '@common/position';
 import Container, { Service } from 'typedi';
@@ -58,22 +58,16 @@ export class MouseHandlerService {
     private validateDifferencesOnClick(mousePosition: Position) {
         const pixelNumber = this.convertMousePositionToPixelNumber(mousePosition);
         let differencesNumber: number;
-        let pixelsOfDifference: number[] = [];
+        let pixelsOfDifference: number[] = NO_DIFFERENCE_FOUND_ARRAY;
 
         if (this.differencesHashmap.has(pixelNumber)) {
             differencesNumber = this.differencesHashmap.get(pixelNumber)!;
 
-            if (this.differencesNumberFound.includes(differencesNumber)) {
-                // La différence a déjà été trouvée précédemment
-                pixelsOfDifference = [];
-            } else {
+            if (!this.differencesNumberFound.includes(differencesNumber)) {
                 // Nouvelle Différence trouvée
                 this.differencesNumberFound.push(differencesNumber);
                 pixelsOfDifference = this.differencesList[differencesNumber];
             }
-        } else {
-            // Afficher Erreur et suspendre/ignorer les clics pendant 1s
-            pixelsOfDifference = [];
         }
 
         return pixelsOfDifference;

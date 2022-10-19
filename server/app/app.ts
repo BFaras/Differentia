@@ -1,6 +1,5 @@
 import { HttpException } from '@app/classes/http.exception';
 import { DateController } from '@app/controllers/date.controller';
-import { ExampleController } from '@app/controllers/example.controller';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as express from 'express';
@@ -10,7 +9,7 @@ import * as swaggerUi from 'swagger-ui-express';
 import { Service } from 'typedi';
 import { GamesController } from './controllers/games.controller';
 import { ImagesController } from './controllers/images.controller';
-const fileupload = require('express-fileupload')
+const fileupload = require('express-fileupload');
 
 @Service()
 export class Application {
@@ -18,12 +17,12 @@ export class Application {
     private readonly internalError: number = StatusCodes.INTERNAL_SERVER_ERROR;
     private readonly swaggerOptions: swaggerJSDoc.Options;
 
-    constructor(private readonly exampleController: ExampleController, 
+    constructor(
         private readonly dateController: DateController,
         private readonly gamesController: GamesController,
-        private readonly imagesController: ImagesController
+        private readonly imagesController: ImagesController,
     ) {
-        this.app = express();   
+        this.app = express();
 
         this.swaggerOptions = {
             swaggerDefinition: {
@@ -43,8 +42,7 @@ export class Application {
 
     bindRoutes(): void {
         this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(this.swaggerOptions)));
-        this.app.use('/example', this.exampleController.router);
-        this.app.use('/images', this.imagesController.router)
+        this.app.use('/images', this.imagesController.router);
         this.app.use('/date', this.dateController.router);
         this.app.use('/games', this.gamesController.router);
         this.app.use('/', (req, res) => {
@@ -58,8 +56,8 @@ export class Application {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(cookieParser());
-        this.app.use(cors({origin: '*'}));
-        this.app.use(fileupload())
+        this.app.use(cors({ origin: '*' }));
+        this.app.use(fileupload());
     }
 
     private errorHandling(): void {
