@@ -13,10 +13,7 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
     private chatMessagesSubscription: Subscription;
 
     constructor(private chatMessagesService: ChatMessagesService) {
-        this.messagesSent = [
-            { senderName: 'Raphael', message: 'Hello you' },
-            { senderName: 'Someone101', message: 'Hello you too' },
-        ];
+        this.messagesSent = [];
     }
 
     ngOnInit(): void {
