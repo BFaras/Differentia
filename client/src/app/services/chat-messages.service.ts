@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ChatMessage } from '@common/chat-message';
+import { GAME_MESSAGE_SENDER_NAME } from '@common/const';
 import { Observable, Subscriber } from 'rxjs';
 import { SocketClientService } from './socket-client.service';
 
@@ -17,7 +18,7 @@ export class ChatMessagesService {
 
     private configureSocket(observer: Subscriber<ChatMessage>) {
         this.socketService.on('Valid click', (response: number[]) => {
-            observer.next({ senderName: 'Game', message: 'You found a difference!' });
+            observer.next({ senderName: GAME_MESSAGE_SENDER_NAME, message: 'You found a difference!' });
         });
     }
 }

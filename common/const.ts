@@ -56,3 +56,6 @@ export const DEFAULT_GAME_ROOM_NAME = GAME_ROOM_GENERAL_ID + 'EASJDS';
 
 //Player constants
 export const DEFAULT_USERNAME = 'anonyme';
+
+//Messages constants
+export const GAME_MESSAGE_SENDER_NAME = 'Game';

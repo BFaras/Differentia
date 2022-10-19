@@ -2,7 +2,15 @@
     <div>
         <li class="chatMessages">
             <ng-container *ngFor="let message of messagesSent">
-                <p>{{ message.senderName }} : {{ message.message }}</p>
+                <p
+                    [ngClass]="{
+                        localUserMessage: message.senderName === localPlayerUsername,
+                        otherUserMessage: message.senderName !== localPlayerUsername,
+                        gameMessage: message.senderName === game_message_sender_name
+                    }"
+                >
+                    {{ message.senderName }} : {{ message.message }}
+                </p>
             </ng-container>
         </li>
     </div>
