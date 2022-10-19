@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 export class ChatSectionComponent implements OnInit, OnDestroy {
     public messagesSent: ChatMessage[];
     public localPlayerUsername: string = DEFAULT_USERNAME;
-    public readonly game_message_sender_name = GAME_MESSAGE_SENDER_NAME;
+    public readonly gameMessageSenderName = GAME_MESSAGE_SENDER_NAME;
     private chatMessagesSubscription: Subscription;
 
     constructor(private chatMessagesService: ChatMessagesService, private socketService: SocketClientService) {

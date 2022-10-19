@@ -6,7 +6,7 @@
                     [ngClass]="{
                         localUserMessage: message.senderName === localPlayerUsername,
                         otherUserMessage: message.senderName !== localPlayerUsername,
-                        gameMessage: message.senderName === game_message_sender_name
+                        gameMessage: message.senderName === gameMessageSenderName
                     }"
                 >
                     {{ message.senderName }} : {{ message.message }}
