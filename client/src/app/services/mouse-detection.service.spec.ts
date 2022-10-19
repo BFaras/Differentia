@@ -10,6 +10,12 @@ describe('MouseDetectionService', () => {
     let drawServiceSpy: jasmine.SpyObj<DrawService>;
     let mouseEvent: MouseEvent;
     let position: Position = { x: 10, y: 20 };
+    let audio = new Audio();
+
+    beforeAll(async () => {
+        drawServiceSpy = jasmine.createSpyObj('DrawService', ['drawWord']);
+        socketSpy = jasmine.createSpyObj('SocketClientService', ['connect', 'send']);
+    });
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -18,8 +24,6 @@ describe('MouseDetectionService', () => {
                 { provide: DrawService, useValue: drawServiceSpy },
             ],
         });
-        drawServiceSpy = jasmine.createSpyObj('DrawService', ['drawWord']);
-        socketSpy = jasmine.createSpyObj('SocketClientService', ['connect', 'send']);
 
         drawServiceSpy.context1 = {} as CanvasRenderingContext2D;
         drawServiceSpy.context2 = {} as CanvasRenderingContext2D;
@@ -46,10 +50,14 @@ describe('MouseDetectionService', () => {
         expect(service.mousePosition).toEqual(position);
     });
 
-    it('should call playsound', () => {
+    it('should call correct sound', () => {
         service.playSound(true);
-        expect(service.audio.src).toEqual('http://localhost:9876/assets/sounds/validSound.mp3');
-        expect(service.audio.src).not.toEqual('http://localhost:9876/assets/sounds/invalidSound.mp3');
+        expect(service.audio).toEqual(audio);
+    });
+
+    it('should call incorrect sound', () => {
+        service.playSound(false);
+        expect(service.audio).toEqual(audio);
     });
 
     it('should call clickMessage with good position', () => {
