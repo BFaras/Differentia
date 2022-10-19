@@ -28,7 +28,7 @@ export const UP = -1;
 export const DOWN = 1;
 
 //Differences found constants
-export const NO_DIFFERENCE_FOUND_ARRAY : number[] = [];
+export const NO_DIFFERENCE_FOUND_ARRAY: number[] = [];
 
 //Images constants
 export const IMAGE_WIDTH = 640;
@@ -53,3 +53,6 @@ export const FIRST_ARRAY_POSITION = 0;
 export const GAME_ROOM_GENERAL_ID = 'GameRoom';
 export const NO_OTHER_PLAYER_ROOM = '';
 export const DEFAULT_GAME_ROOM_NAME = GAME_ROOM_GENERAL_ID + 'EASJDS';
+
+//Player constants
+export const DEFAULT_USERNAME = 'anonyme';

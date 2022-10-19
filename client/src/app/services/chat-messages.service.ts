@@ -7,7 +7,7 @@ import { SocketClientService } from './socket-client.service';
     providedIn: 'root',
 })
 export class ChatMessagesService {
-    messagesObservable: Observable<ChatMessage>;
+    public messagesObservable: Observable<ChatMessage>;
 
     constructor(private socketService: SocketClientService) {
         this.messagesObservable = new Observable((observer: Subscriber<ChatMessage>) => {

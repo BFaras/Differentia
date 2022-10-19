@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ChatMessagesService } from '@app/services/chat-messages.service';
+import { SocketClientService } from '@app/services/socket-client.service';
 import { ChatMessage } from '@common/chat-message';
+import { DEFAULT_USERNAME } from '@common/const';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -10,13 +12,16 @@ import { Subscription } from 'rxjs';
 })
 export class ChatSectionComponent implements OnInit, OnDestroy {
     public messagesSent: ChatMessage[];
+    public localPlayerUsername: string = DEFAULT_USERNAME;
     private chatMessagesSubscription: Subscription;
 
-    constructor(private chatMessagesService: ChatMessagesService) {
+    constructor(private chatMessagesService: ChatMessagesService, private socketService: SocketClientService) {
         this.messagesSent = [];
     }
 
     ngOnInit(): void {
+        this.socketService.connect();
+        this.configureSocket();
         this.chatMessagesSubscription = this.chatMessagesService.messagesObservable.subscribe({
             next: (message: ChatMessage) => {
                 this.addMessage(message);
@@ -30,5 +35,11 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
 
     private addMessage(messageToAdd: ChatMessage) {
         this.messagesSent.push(messageToAdd);
+    }
+
+    private configureSocket() {
+        this.socketService.on('show the username', (username: string) => {
+            this.localPlayerUsername = username;
+        });
     }
 }
