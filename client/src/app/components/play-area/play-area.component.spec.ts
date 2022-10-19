@@ -12,13 +12,14 @@ describe('PlayAreaComponent', () => {
     let fixture: ComponentFixture<PlayAreaComponent>;
     let socketServiceSpy: SpyObj<SocketClientService>;
     let mouseServiceSpy: SpyObj<MouseDetectionService>;
+    let drawServiceSpy: SpyObj<DrawService>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [PlayAreaComponent],
             providers: [
                 { provide: SocketClientService, useValue: socketServiceSpy },
-                { provide: DrawService, useValue: [] },
+                { provide: DrawService, useValue: drawServiceSpy },
                 { provide: MouseDetectionService, useValue: mouseServiceSpy },
                 { provide: ImageToImageDifferenceService, useValue: [] },
                 { provide: MatDialog, useValue: [] },
