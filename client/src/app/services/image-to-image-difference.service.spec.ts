@@ -31,13 +31,7 @@ describe('ImageToImageDifferenceService', () => {
         const spy = spyOn(socketService.socket, 'on');
 
         socketService.on(event, action);
-        imageToImageDiffService.get(
-            mainCanvas,
-            originalImage,
-            modifiedImage,
-            differencesImageToPutDataIn,
-            DEFAULT_OFFSET,
-        );
+        imageToImageDiffService.getImagesData(mainCanvas, originalImage, modifiedImage, DEFAULT_OFFSET);
         expect(spy).toHaveBeenCalled();
         expect(spy).toHaveBeenCalledWith(event, action);
     });
@@ -46,9 +40,9 @@ describe('ImageToImageDifferenceService', () => {
         let imageHasDifferencesPixelsAtRightPosition = true;
         let differenceImageData: Uint8ClampedArray;
 
-        imageToImageDiffService['setupDataInService'](mainCanvas, originalImage, modifiedImage, differencesImageToPutDataIn);
-        imageToImageDiffService.putDifferencesDataInImage(TEST_DIFFERENCES_ARRAY);
-        differenceImageData = imageToImageDiffService['getImageData'](differencesImageToPutDataIn, mainCanvas);
+        imageToImageDiffService['setupDataInService'](mainCanvas, originalImage, modifiedImage);
+        imageToImageDiffService.putDifferencesDataInImage(TEST_DIFFERENCES_ARRAY, differencesImageToPutDataIn);
+        differenceImageData = imageToImageDiffService['getImageData'](differencesImageToPutDataIn, mainCanvas).data;
 
         TEST_DIFFERENCES_ARRAY.forEach((pixelNb) => {
             for (let i = 0; i < NB_BIT_PER_PIXEL - 1; i++) {
@@ -69,5 +63,11 @@ describe('ImageToImageDifferenceService', () => {
 
         expect(spySetupDataInService).toHaveBeenCalled();
         expect(spyGenerateImagesDataToCompare).toHaveBeenCalled();
+    });
+
+    it('should wait for the image to load in waitForImageToLoad', async () => {
+        imageToImageDiffService['setupDataInService'](mainCanvas, originalImage, modifiedImage);
+        imageToImageDiffService.putDifferencesDataInImage(TEST_DIFFERENCES_ARRAY, differencesImageToPutDataIn);
+        expect(await imageToImageDiffService.waitForImageToLoad(differencesImageToPutDataIn)).not.toThrowError;
     });
 });

@@ -1,3 +1,4 @@
+import { NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
 import { Game } from '@common/game';
 import { Position } from '@common/position';
 import { expect } from 'chai';
@@ -66,18 +67,18 @@ describe('MouseHandlerService', () => {
         expect(spy.called);
     });
 
-    it('should return false if difference is already found ', () => {
+    it('should return an empty array if difference is already found ', () => {
         mouseService.differencesNumberFound = [1];
-        expect(mouseService.isValidClick(position)).to.be.false;
+        expect(mouseService.isValidClick(position)).to.be.deep.equals(NO_DIFFERENCE_FOUND_ARRAY);
     });
 
-    it('should return true if difference is not already found ', () => {
-        expect(mouseService.isValidClick(position)).to.be.true;
+    it('should not return an empty array if difference is not already found ', () => {
+        expect(mouseService.isValidClick(position)).to.not.be.deep.equals(NO_DIFFERENCE_FOUND_ARRAY);
     });
 
-    it('should return false if pixel is not a difference ', () => {
+    it('should return an empty array if pixel is not a difference ', () => {
         position = { x: 2, y: 2 };
-        expect(mouseService.isValidClick(position)).to.be.false;
+        expect(mouseService.isValidClick(position)).to.be.deep.equals(NO_DIFFERENCE_FOUND_ARRAY);
     });
 
     it('should reset differencesHashmap and differencesFound array', () => {

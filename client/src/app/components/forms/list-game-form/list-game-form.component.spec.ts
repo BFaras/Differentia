@@ -20,13 +20,15 @@ describe('ListGameFormComponent', () => {
 
     let listGameFormComp: ListGameFormComponent;
     let fixture: ComponentFixture<ListGameFormComponent>;
+    let formServiceSpy: jasmine.SpyObj<FormService>;
     let formService: FormService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [ListGameFormComponent],
+            providers: [{ provide: FormService, useValue: formServiceSpy }],
         }).compileComponents();
-
+        formServiceSpy = jasmine.createSpyObj('FormService', ['receiveGameInformations']);
         fixture = TestBed.createComponent(ListGameFormComponent);
         listGameFormComp = fixture.componentInstance;
 

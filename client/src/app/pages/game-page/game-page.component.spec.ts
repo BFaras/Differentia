@@ -97,9 +97,9 @@ describe('GamePageComponent', () => {
     });
 
     describe('Emiting events', () => {
-        it('should send a kill the timer event on destroy', () => {
+        it('should send a kill the game event on destroy', () => {
             const spy = spyOn(component.socketService, 'send');
-            const eventName = 'kill the timer';
+            const eventName = 'kill the game';
             component.ngOnDestroy();
             expect(spy).toHaveBeenCalledWith(eventName);
         });

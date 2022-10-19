@@ -31,7 +31,7 @@ export class GamePageComponent {
     }
 
     ngOnDestroy() {
-        this.socketService.send('kill the timer');
+        this.socketService.send('kill the game');
         this.socketService.disconnect();
     }
 
