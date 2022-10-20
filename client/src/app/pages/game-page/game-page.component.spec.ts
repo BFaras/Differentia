@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { PlayAreaComponent } from '@app/components/play-area/play-area.component';
 import { SidebarComponent } from '@app/components/sidebar/sidebar.component';
@@ -11,6 +12,7 @@ import { of } from 'rxjs';
 import { Socket } from 'socket.io-client';
 import { GamePageComponent } from './game-page.component';
 import SpyObj = jasmine.SpyObj;
+
 
 class SocketClientServiceMock extends SocketClientService {
     override connect() {}
@@ -49,6 +51,8 @@ describe('GamePageComponent', () => {
                 { provide: SocketClientService, useValue: socketServiceMock },
                 { provide: TimeService, useValue: timeServiceSpy },
                 { provide: CommunicationService, useValue: communicationServiceSpy },
+                { provide: MatDialog, useValue: {}},
+                { provide: MatDialogRef, useValue: {}}
             ],
         }).compileComponents();
     });
