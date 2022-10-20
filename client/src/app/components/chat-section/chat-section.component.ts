@@ -34,6 +34,12 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
         this.chatMessagesSubscription.unsubscribe();
     }
 
+    handleKeyEvent(event: KeyboardEvent): void {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
+    }
+
     private addMessage(messageToAdd: ChatMessage) {
         this.messagesSent.push(messageToAdd);
     }
