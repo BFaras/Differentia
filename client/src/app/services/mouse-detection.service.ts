@@ -24,10 +24,12 @@ export class MouseDetectionService {
 
     playSound(differenceIsValid: boolean) {
         this.audio = new Audio();
+        this.audio.autoplay;
         if (differenceIsValid) this.audio.src = '../../assets/sounds/validSound.mp3';
         else this.audio.src = '../../assets/sounds/invalidSound.mp3';
         this.audio.load();
         this.audio.play();
+        this.audio.muted;
     }
 
     clickMessage(differenceIsValid: boolean) {
