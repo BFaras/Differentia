@@ -16,7 +16,7 @@ export class GamePageComponent {
     //private mainCanvas: HTMLCanvasElement;
     nbDifferences: number;
     gameName: string;
-    username: string;
+    usernames: string[];
     images: HTMLImageElement[];
     nbDifferrencesFound: number = 0;
 
@@ -47,7 +47,7 @@ export class GamePageComponent {
             this.gameName = message;
         });
         this.socketService.on('show the username', (username: string) => {
-            this.username = username;
+            this.usernames[0] = username;
         });
         this.socketService.on('Name repeated', () => {
             console.log('le nom est répété ');
