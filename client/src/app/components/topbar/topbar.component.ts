@@ -11,7 +11,7 @@ import { TimeService } from '@app/services/time.service';
 })
 export class TopbarComponent implements OnInit {
     @Input() nbrDifferencesFound: number;
-    @Input() username: string;
+    @Input() usernames: string[];
 
     constructor(public readonly timeService: TimeService, public mouseDetection: MouseDetectionService) {}
 
