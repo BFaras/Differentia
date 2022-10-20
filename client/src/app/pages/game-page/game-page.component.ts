@@ -13,10 +13,9 @@ import { firstValueFrom } from 'rxjs';
     styleUrls: ['./game-page.component.scss'],
 })
 export class GamePageComponent {
-    //private mainCanvas: HTMLCanvasElement;
     nbDifferences: number;
     gameName: string;
-    usernames: string[];
+    usernames: string[] = ['test', 'test2'];
     images: HTMLImageElement[];
     nbDifferrencesFound: number = 0;
 
@@ -25,7 +24,6 @@ export class GamePageComponent {
     }
 
     ngOnInit() {
-        // this.mainCanvas = this.renderer.createElement('canvas');
         this.socketService.connect();
         this.configureGamePageSocketFeatures();
     }
