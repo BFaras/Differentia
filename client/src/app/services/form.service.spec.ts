@@ -1,4 +1,5 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { Game } from '@common/game';
 import { firstValueFrom } from 'rxjs';
 import { CommunicationService } from './communication.service';
 import { FormService } from './form.service';
@@ -8,6 +9,7 @@ describe('FormService', () => {
     let communicationSpy: jasmine.SpyObj<CommunicationService>;
     let listName: string[] = [];
     let listImage: string[] = [];
+    let gameList: Game[] = [{ name: 'bike', numberOfDifferences: 2, times: [], images: ['img1'], differencesList: [][0] }];
 
     beforeEach(() => {
         communicationSpy = jasmine.createSpyObj('CommunicationService', ['getGames']);
@@ -28,6 +30,24 @@ describe('FormService', () => {
         tick(1000);
         await service.receiveGameInformations();
         expect(result).toHaveBeenCalled();
+    }));
+
+    it('should not parse game list', fakeAsync(() => {
+        const listGameNameSpy = spyOn(service, 'fillListGameName');
+        const listGameImageSpy = spyOn(service, 'fillListGameImage');
+        tick(2000);
+        service.parseGameList([]);
+        expect(listGameNameSpy).not.toHaveBeenCalled();
+        expect(listGameImageSpy).not.toHaveBeenCalled();
+    }));
+
+    it('should parse game list', fakeAsync(() => {
+        const listGameNameSpy = spyOn(service, 'fillListGameName');
+        const listGameImageSpy = spyOn(service, 'fillListGameImage');
+        tick(2000);
+        service.parseGameList(gameList);
+        expect(listGameNameSpy).not.toHaveBeenCalled();
+        expect(listGameImageSpy).not.toHaveBeenCalled();
     }));
 
     it('should fill game name list', fakeAsync(() => {
