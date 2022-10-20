@@ -27,6 +27,7 @@ import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
 import { GameSelectionComponent } from './pages/game-selection/game-selection.component';
 import { GamePageOnevoneComponent } from './pages/game-page-onevone/game-page-onevone.component';
+import { TopbarOnevoneComponent } from './components/topbar-onevone/topbar-onevone.component';
 
 /**
  * Main module that is used in main.ts.
@@ -58,6 +59,7 @@ import { GamePageOnevoneComponent } from './pages/game-page-onevone/game-page-on
         PopDialogUsernameComponent,
         PopDialogEndgameComponent,
         GamePageOnevoneComponent,
+        TopbarOnevoneComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
     providers: [],
