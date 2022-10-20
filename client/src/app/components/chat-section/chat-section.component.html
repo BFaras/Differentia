@@ -1,23 +1,21 @@
 <div class="chatContainer">
-    <div>
-        <li class="chatMessages">
-            <ng-container *ngFor="let message of messagesSent">
-                <p
-                    [ngClass]="{
-                        localUserMessage: message.senderName === localPlayerUsername,
-                        otherUserMessage: (message.senderName !== localPlayerUsername && message.senderName !== gameMessageSenderName),
-                        gameMessage: message.senderName === gameMessageSenderName
-                    }"
-                >
-                    {{ message.senderName }} : {{ message.message }}
-                </p>
-            </ng-container>
-        </li>
+    <div class=" display">
+        <p
+            id="list-display"
+            *ngFor="let message of messagesSent"
+            [ngClass]="{
+                localUserMessage: message.senderName === localPlayerUsername,
+                otherUserMessage: (message.senderName !== localPlayerUsername && message.senderName !== gameMessageSenderName),
+                gameMessage: message.senderName === gameMessageSenderName
+            }"
+        >
+            {{ message.senderName }} : {{ message.message }}
+        </p>
     </div>
-    <div class="chatBox">
         <form>
-            <input type="text" placeholder="Entrez un message" class="chatInput" />
+            <input type="text" placeholder="Entrez un message" maxlength="200"
+                [(ngModel)]="messagesSent" (keypress)="handleKeyEvent($event)"
+            />
             <input type="submit" value="Send" class="chatSend" />
         </form>
-    </div>
 </div>
