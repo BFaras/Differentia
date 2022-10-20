@@ -6,6 +6,6 @@
         <button mat-raised-button disabled>Indice</button>
     </span>
     <span class="menu-element" *ngFor="let username; in: usernames; index as i">
-        <p>{{ mouseDetection.nbrDifferencesFound }} différences trouvées par {{ usernames[i] }}</p>
+        <p>{{ mouseDetection.nbrDifferencesFound }} différences trouvées par {{ username }}</p>
     </span>
 </div>
