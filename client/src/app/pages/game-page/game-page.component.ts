@@ -15,7 +15,7 @@ import { firstValueFrom } from 'rxjs';
 export class GamePageComponent {
     nbDifferences: number;
     gameName: string;
-    usernames: string[] = ['test', 'test2'];
+    usernames: string[] = ['raf', 'charles'];
     images: HTMLImageElement[];
     nbDifferrencesFound: number = 0;
 
@@ -45,7 +45,7 @@ export class GamePageComponent {
             this.gameName = message;
         });
         this.socketService.on('show the username', (username: string) => {
-            this.usernames[0] = username;
+            this.usernames[0] = username; // Ajouter une constante
         });
         this.socketService.on('Name repeated', () => {
             console.log('le nom est répété ');
