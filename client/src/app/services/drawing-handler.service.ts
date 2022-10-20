@@ -18,6 +18,14 @@ export class DrawingHandlerService {
     this.canvas = canvas
   }
 
+  getCoordinateX(mouseEvent:MouseEvent,canvasReact:DOMRect){
+    return mouseEvent.clientX - canvasReact.left
+  }
+
+  getCoordinateY(mouseEvent:MouseEvent,canvasReact:DOMRect){
+    return mouseEvent.clientY - canvasReact.top
+  }
+
   setAllObservables():void{
     this.mouseDownObservable = fromEvent( this.getCanvas(),'mousedown') as Observable<MouseEvent> ;
     this.mouseMoveObservable = fromEvent( this.getCanvas(),'mousemove')  as Observable<MouseEvent>;
@@ -37,6 +45,7 @@ export class DrawingHandlerService {
   }
 
   startObservingMousePath():Observable<[MouseEvent,MouseEvent]> {
+    console.log(1)
     return this.mouseDownObservable
       .pipe(
         switchMap(() => {

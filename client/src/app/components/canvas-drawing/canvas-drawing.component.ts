@@ -6,8 +6,7 @@ import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
 @Component({
   selector: 'app-canvas-drawing',
   templateUrl: './canvas-drawing.component.html',
-  styleUrls: ['./canvas-drawing.component.scss'],
-  providers: [DrawingHandlerService]
+  styleUrls: ['./canvas-drawing.component.scss']
 })
 export class CanvasDrawingComponent implements  AfterViewInit {
   @ViewChild('canvas') public canvasDOM: ElementRef<HTMLCanvasElement>;
@@ -17,42 +16,44 @@ export class CanvasDrawingComponent implements  AfterViewInit {
   constructor(private drawingHandlerService:DrawingHandlerService,
     private pencilService:PencilService) { }
 
-  public ngAfterViewInit() {
+  public ngAfterViewInit():void {
     this.canvas = this.canvasDOM.nativeElement;
     this.context = this.canvas.getContext('2d');
 
     this.canvas.width = IMAGE_WIDTH;
     this.canvas.height = IMAGE_HEIGHT;
 
-      
-      this.drawingHandlerService.setCanvas(this.canvas);
-      this.drawingHandlerService.setAllObservables();
-      this.prepareCanvasDrawing();
+    
     
   }
 
-  prepareCanvasDrawing() {
-    this.drawingHandlerService.startObservingMousePath()
-      .subscribe((res:[MouseEvent,MouseEvent]) => {
-        if (this.context != null) {
+  useThisCanvas(){
+    this.drawingHandlerService.setCanvas(this.canvas);
+    this.drawingHandlerService.setAllObservables();
+    this.prepareCanvasDrawing();
+  }
 
+  prepareCanvasDrawing():void {
+    this.drawingHandlerService.startObservingMousePath()
+      .subscribe((mouseEvent:[MouseEvent,MouseEvent]) => {
+        if (this.context != null) {
           this.context.lineWidth = this.pencilService.getWidth();
-          this.context.strokeStyle = this.pencilService.getStateOfPencil(res[0],this.pencilService.getColor());
+          this.context.strokeStyle = this.pencilService.getStateOfPencil(mouseEvent[0],this.pencilService.getColor());
         }
 
-        const canvas = this.canvas.getBoundingClientRect();
+        const canvasReact = this.canvas.getBoundingClientRect();
 
-        const previousCoordinate:Coordinate= {
-          x: res[0].clientX - canvas.left,
-          y: res[0].clientY - canvas.top,
+        const previousCoordinate:Coordinate = {
+          x: this.drawingHandlerService.getCoordinateX(mouseEvent[0],canvasReact),
+          y: this.drawingHandlerService.getCoordinateY(mouseEvent[0],canvasReact),
         };
 
         const actualCoordinate:Coordinate =  {
-          x: res[1].clientX - canvas.left,
-          y: res[1].clientY - canvas.top,
+          x: this.drawingHandlerService.getCoordinateX(mouseEvent[1],canvasReact),
+          y: this.drawingHandlerService.getCoordinateY(mouseEvent[1],canvasReact),
         };
-
         this.drawingHandlerService.drawOnCanvas(previousCoordinate, actualCoordinate,this.context!);
+
       });
   }
 

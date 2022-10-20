@@ -55,3 +55,4 @@ export const VERY_BIG = 5
 
 //color
 export const BLACK_COLOR = "#000";
+
