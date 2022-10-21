@@ -59,3 +59,5 @@ export const DEFAULT_USERNAME = 'anonyme';
 
 //Messages constants
 export const GAME_MESSAGE_SENDER_NAME = 'Game';
+export const MESSAGE_ERROR_DIFFERENCE_DEFAULT = 'Error, no difference found!';
+export const MESSAGE_DIFFERENCE_FOUND_DEFAULT = 'You found a difference!';
