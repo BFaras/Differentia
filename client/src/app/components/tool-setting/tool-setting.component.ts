@@ -34,4 +34,8 @@ export class ToolSettingComponent implements OnInit {
   cancelDrawing(){
     this.drawingHistoryService.cancelCanvas();
   }
+
+  cancelDeletedDrawing(){
+    this.drawingHistoryService.cancelDeletedCanvas();
+  }
 }

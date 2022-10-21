@@ -4,7 +4,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class DrawingHistoryService {
-  historyOfDrawing: ImageData[] = [];
+  addedDrawings: ImageData[] = [];
+  deletedDrawings: ImageData[] = [];
   context:CanvasRenderingContext2D;
   index:number;
 
@@ -13,23 +14,31 @@ export class DrawingHistoryService {
   saveCanvas(context:CanvasRenderingContext2D){
     this.context = context
     let imageData = context.getImageData(0,0,640,480);
-    this.historyOfDrawing.push(imageData)
-    console.log(this.historyOfDrawing)
+    this.addedDrawings.push(imageData)
+    console.log("----added_drawing_history-----")
+    console.log(this.addedDrawings)
   }
 
   cancelCanvas(){
-    let imagedataToPop = this.historyOfDrawing.pop() as ImageData
-    this.context.putImageData(imagedataToPop, 0, 0);
+    let imageDataToPop = this.addedDrawings.pop() as ImageData
+    this.context.putImageData(imageDataToPop, 0, 0);
+    this.saveDeletedCanvas(imageDataToPop)
+    
+  }
 
+  saveDeletedCanvas(imageDeleted:ImageData){
+    this.deletedDrawings.push(imageDeleted);
+    console.log("----deleted_drawing_history")
+    console.log(this.deletedDrawings)
 
   }
 
-  saveDrawing(){
-    this.context.save();
+  cancelDeletedCanvas(){
+    let DeletedImageDataToPop = this.deletedDrawings.pop() as ImageData
+    this.context.putImageData(DeletedImageDataToPop, 0, 0);
+    this.addedDrawings.push(DeletedImageDataToPop)
   }
 
-  cancelDrawing(){
-    this.context.restore();
-  }
+
 
 }
