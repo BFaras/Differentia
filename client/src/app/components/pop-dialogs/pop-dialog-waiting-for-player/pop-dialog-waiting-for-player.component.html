@@ -1,0 +1,11 @@
+<div class="container">
+    <mat-dialog-content class="dialog-content">
+        <h2>Vous êtes maintenant en attente d'un autre joueur</h2>
+        <mat-dialog-actions>
+            <ng-container *ngIf="isSomeoneJoining">
+                <button mat-raised-button mat-dialog-close>Ok</button>
+            </ng-container>
+            <button mat-raised-button mat-dialog-close (click)="createGameService.leaveWaitingList(gameInfo.nameGame)">Annuler</button>
+        </mat-dialog-actions>
+    </mat-dialog-content>
+</div>

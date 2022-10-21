@@ -26,6 +26,7 @@ import { TopbarComponent } from './components/topbar/topbar.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
 import { GameSelectionComponent } from './pages/game-selection/game-selection.component';
+import { PopDialogWaitingForPlayerComponent } from './components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
 
 /**
  * Main module that is used in main.ts.
@@ -56,6 +57,7 @@ import { GameSelectionComponent } from './pages/game-selection/game-selection.co
         ImageDifferenceComponent,
         PopDialogUsernameComponent,
         PopDialogEndgameComponent,
+        PopDialogWaitingForPlayerComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
     providers: [],

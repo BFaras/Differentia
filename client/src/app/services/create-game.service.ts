@@ -8,9 +8,16 @@ export class CreateGameService {
 
   constructor(private socketService: SocketClientService) { }
 
-  getStatusOnWaitingPlayer() {
-    this.socketService.send("is there someone waiting");
+  public createGame(gameName: string): void {
+    this.addPlayerOnWaitingList(gameName);
   }
 
+  private addPlayerOnWaitingList(gameName: string): void {
+    this.socketService.send('I am waiting', gameName);
+  }
+
+  public leaveWaitingList(gameName: string): void {
+    this.socketService.send('I left', gameName);
+  }
 
 }

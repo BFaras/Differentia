@@ -23,8 +23,11 @@ export class GameFormComponent {
         
     ngOnInit(): void {
         this.socketService.connect();
-        this.configureGameFormSocketFeatures(); 
-        this.socketService.send('is there someone waiting', this.gameForm.gameName); 
+        this.configureGameFormSocketFeatures();
+        this.socketService.send('is there someone waiting', this.gameForm.gameName);
+    }
+    
+    ngOnAfterInit() : void {
     }
 
     openDialog(multiplayerFlag: boolean) {
@@ -40,9 +43,17 @@ export class GameFormComponent {
     }
 
     configureGameFormSocketFeatures(): void {
-        this.socketService.on('let me tell you if someone is waiting', (response: boolean) => {
+        this.socketService.on(`${this.gameForm.gameName} let me tell you if someone is waiting`, (response: boolean) => {
             this.isPlayerWaiting = response;
         });
+
+        this.socketService.on(`${this.gameForm.gameName} someone is waiting`, () => {
+            this.isPlayerWaiting = true;
+        })
+
+        this.socketService.on(`${this.gameForm.gameName} nobody is waiting no more`, () => {
+            this.isPlayerWaiting = false;
+        })
     }
 
 }

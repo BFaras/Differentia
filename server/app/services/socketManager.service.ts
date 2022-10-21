@@ -39,6 +39,7 @@ export class SocketManager {
             });
 
             socket.on('game page', async (gameName: string) => {
+                console.log("kesspass");
                 socket.emit('classic mode');
                 socket.emit('The game is', gameName);
                 //If no game room to join in multiplayer :
@@ -46,19 +47,28 @@ export class SocketManager {
                 //else we send the room name where a player is waiting to start a multiplayer game
             });
 
-            socket.on('create game', (gameName: string) => {
-                // socket.emit()
-            });
-
             socket.on('is there someone waiting', (gameName: string) => {
-                console.log("1" + gameName);
-                console.log(this.playersWaitingPerGame.get(gameName));
-                socket.emit('let me tell you if someone is waiting', (this.playersWaitingPerGame.get(gameName) != undefined ? true: false))
-            })
+                socket.emit(`${gameName} let me tell you if someone is waiting`, (this.playersWaitingPerGame.get(gameName) !== undefined));
+            });
 
             socket.on('username is', (username: string) => {
                 socket.emit('show the username', username);
             });
+
+            socket.on('I am waiting', (gameName: string) => {
+                this.playersWaitingPerGame.set(gameName, socket.id);
+                this.sio.emit(`${gameName} someone is waiting`);
+            });
+
+            socket.on('I left', (gameName: string) => {
+                this.playersWaitingPerGame.delete(gameName);
+                this.sio.emit(`${gameName} nobody is waiting no more`);
+            })
+            
+            socket.on('I am trying to join', (gameInfo: any) => {
+                const waitingSocketId = this.playersWaitingPerGame.get(gameInfo.gameName) as string;
+                this.sio.to(waitingSocketId).emit(`${gameInfo.gameName} someone is trying to join`)
+            })
 
             socket.on('detect images difference', (imagesData: ImageDataToCompare) => {
                 const differenceDetector = new DifferenceDetectorService(imagesData);

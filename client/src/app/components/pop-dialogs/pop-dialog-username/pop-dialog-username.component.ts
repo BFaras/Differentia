@@ -1,7 +1,8 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
+import { PopDialogWaitingForPlayerComponent } from '../pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
 
 @Component({
     selector: 'app-pop-dialog-username',
@@ -13,8 +14,9 @@ export class PopDialogUsernameComponent implements OnInit {
     disabledButton: boolean = true;
 
     constructor(private socketService: SocketClientService, 
-        @Inject(MAT_DIALOG_DATA) private gameInfo: any,
-        private startUpGameService: StartUpGameService
+        @Inject(MAT_DIALOG_DATA) public gameInfo: any,
+        private startUpGameService: StartUpGameService,
+        private dialog: MatDialog,
         ) {}
 
     ngOnInit(): void {
@@ -22,14 +24,23 @@ export class PopDialogUsernameComponent implements OnInit {
     }
 
     public gamePage(): void {
-        this.startUpGameService.isItMultiplayer(this.gameInfo);
-        
-        this.startUpGameService.sendUsername(this.username.nativeElement.value);
+        this.startUpGameService.startUpGame(this.gameInfo, this.username.nativeElement.value);
     }
 
     public inputChanged(): void{
         if(this.username.nativeElement.value) this.disabledButton = false;
         else this.disabledButton = true;
+    }
+
+    openDialog() {
+        this.gamePage();
+        this.dialog.open(PopDialogWaitingForPlayerComponent, {
+            height: '400px',
+            width: '600px',
+            data: {
+                nameGame: this.gameInfo.nameGame,
+            },
+        });
     }
 
 }

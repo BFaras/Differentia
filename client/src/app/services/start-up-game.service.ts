@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-// import { CreateGameService } from './create-game.service';
-// import { JoinGameService } from './join-game.service';
+import { CreateGameService } from './create-game.service';
+import { JoinGameService } from './join-game.service';
 import { SocketClientService } from './socket-client.service';
 
 @Injectable({
@@ -9,20 +9,30 @@ import { SocketClientService } from './socket-client.service';
 export class StartUpGameService {
 
   constructor(
-    // private createGameService: CreateGameService,
-    // private joinGameService: JoinGameService,
+    private createGameService: CreateGameService,
+    private joinGameService: JoinGameService,
     private socketService: SocketClientService
     ) {}
 
-  public isItMultiplayer(gameInfo: any): void {
-    if(gameInfo.multiFlag) this.socketService.send('game page', gameInfo.namegame);
+  private soloGame(gameName: string): void {
+    this.socketService.send('game page', gameName);
   }
 
-  public sendUsername(username: string): void {
+  private sendUsername(username: string): void {
     this.socketService.send('username is', username);
   }
 
-  public startUpGame(): void {
-
+  public startUpGame(gameInfo: any, username: string): void {
+    if(gameInfo.multiFlag) {
+      this.multiplayerGame(gameInfo);
+    }
+    else this.soloGame(gameInfo.nameGame);
+    this.sendUsername(username);
   }
+
+  private multiplayerGame(gameInfo: any): void {
+    if(gameInfo.isPlayerWaiting) this.joinGameService.joinGame(gameInfo);
+    else this.createGameService.createGame(gameInfo.nameGame);
+  }
+
 }
