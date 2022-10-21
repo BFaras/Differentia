@@ -5,6 +5,7 @@ import {
     MESSAGE_DIFFERENCE_FOUND_DEFAULT,
     MESSAGE_ERROR_DIFFERENCE_DEFAULT,
     NO_DIFFERENCE_FOUND_ARRAY,
+    TWO_DIGIT_TIME_VALUE,
 } from '@common/const';
 import { Observable, Subscriber } from 'rxjs';
 import { SocketClientService } from './socket-client.service';
@@ -25,9 +26,9 @@ export class ChatMessagesService {
 
     public getTimeInCorrectFormat(): string {
         return this.date.toLocaleString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
+            hour: TWO_DIGIT_TIME_VALUE,
+            minute: TWO_DIGIT_TIME_VALUE,
+            second: TWO_DIGIT_TIME_VALUE,
             hour12: false,
         });
     }
