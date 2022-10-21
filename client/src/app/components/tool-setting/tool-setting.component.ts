@@ -20,13 +20,13 @@ export class ToolSettingComponent implements OnInit {
   }
 
   @HostListener('document:keyup.control.z', ['$event'])
-  handleKeyboardEventCancel(event: KeyboardEvent) { 
-    this.cancelDrawing()
+  handleKeyboardToCancelDrawnLine(event: KeyboardEvent) { 
+    this.cancelActionDrawnLine()
   }
 
   @HostListener('document:keyup.control.shift.z', ['$event'])
-  handleKeyboardEventCancelDeletedDrawing(event: KeyboardEvent) { 
-    this.cancelDeletedDrawing()
+  handleKeyboardToCancelDeletedDrawnLine(event: KeyboardEvent) { 
+    this.cancelActionDeletedDrawnLine()
   }
 
   setOriginalSetting(){
@@ -42,11 +42,11 @@ export class ToolSettingComponent implements OnInit {
     this.pencilService.setWidth(width);
   }
 
-  cancelDrawing(){
+  cancelActionDrawnLine(){
     this.drawingHistoryService.cancelCanvas();
   }
 
-  cancelDeletedDrawing(){
+  cancelActionDeletedDrawnLine(){
     this.drawingHistoryService.cancelDeletedCanvas();
   }
 }
