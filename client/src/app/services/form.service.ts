@@ -13,14 +13,13 @@ export class FormService {
 
     gameForms: GameFormDescription[] = [];
 
-    constructor(private communicationService: CommunicationService) {
-    }
+    constructor(private communicationService: CommunicationService) {}
 
     async receiveGameInformations() {
-        this.gameForms = [];
-        await firstValueFrom(this.communicationService.getGames()).then( (gameList)=>{
+        this.resetGameForms();
+        await firstValueFrom(this.communicationService.getGames()).then((gameList) => {
             this.parseGameList(gameList);
-        })
+        });
     }
 
     parseGameList(gamelist: Game[]) {
@@ -41,5 +40,9 @@ export class FormService {
 
     initializeGameForm(index: number) {
         this.gameForms.push(new GameFormDescription(this.listName[index], this.listImage[index], new RecordTimesBoard([], [])));
+    }
+
+    resetGameForms() {
+        this.gameForms = [];
     }
 }

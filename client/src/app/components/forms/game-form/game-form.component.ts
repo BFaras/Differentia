@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
@@ -11,6 +11,7 @@ import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dial
 export class GameFormComponent {
     @Input() gameForm: GameFormDescription;
     @Input() buttonPage: string;
+    @Output() newItemEvent = new EventEmitter<string>();
     adminGameFormsButton = ['Supprimer', 'Réinitialiser'];
     selectionGameFormsButton = ['Créer', 'Jouer'];
     constructor(private dialog: MatDialog) {}
@@ -23,5 +24,9 @@ export class GameFormComponent {
                 nameGame: this.gameForm.gameName,
             },
         });
+    }
+
+    deleteGameForm(value: string) {
+        this.newItemEvent.emit(value);
     }
 }

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GameFormDescription } from '@app/classes/game-form-description';
+import { CommunicationService } from '@app/services/communication.service';
 import { FormService } from '@app/services/form.service';
 import { Constants } from '@common/config';
 
@@ -14,16 +15,15 @@ export class ListGameFormComponent implements OnInit {
     currentPageGameFormList: GameFormDescription[];
     @Input() page: string;
 
-    constructor(public formService: FormService) {}
+    constructor(public formService: FormService, private communicationService: CommunicationService) {}
 
-    async ngOnInit(){
-        await this.formService.receiveGameInformations()
+    async ngOnInit() {
+        await this.formService.receiveGameInformations();
 
         if (this.formService.gameForms.length < Constants.MAX_NB_OF_FORMS_PER_PAGE) {
             this.lastElementIndex = this.formService.gameForms.length - 1;
         }
         this.addCurrentPageGameForms();
-        
     }
 
     nextPageGameForms() {
@@ -56,5 +56,15 @@ export class ListGameFormComponent implements OnInit {
         for (let index: number = 0; index < this.currentPageGameFormList.length; index++) {
             this.currentPageGameFormList[index] = this.formService.gameForms[index + this.firstElementIndex];
         }
+    }
+
+    getGameName(gameName: string) {
+        this.communicationService.deleteGame(gameName).subscribe(async (games) => {
+            this.formService.resetGameForms();
+            this.formService.parseGameList(games);
+            await this.ngOnInit();
+            location.reload();
+            console.log(this.formService.gameForms);
+        });
     }
 }

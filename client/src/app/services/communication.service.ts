@@ -39,6 +39,10 @@ export class CommunicationService {
             .pipe(catchError(this.handleError<HttpResponse<any>>('addGame')));
     }
 
+    deleteGame(gameName: string): Observable<Array<Game>> {
+        return this.http.delete<Array<Game>>(`${this.baseUrl}/games/${gameName}`).pipe(catchError(this.handleError<Array<Game>>('deleteGame')));
+    }
+
     uploadFiles(formData: FormData): Observable<Object> {
         return this.http.post(`${this.baseUrl}/images`, formData).pipe(catchError(this.handleError<Object>('uploadFiles')));
     }

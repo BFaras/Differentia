@@ -16,12 +16,12 @@
 
     <div class="button-group">
         <ng-container *ngIf="buttonPage == 'Admin'">
-            <button mat-raised-button>{{ adminGameFormsButton[0] }}</button>
-            <button mat-stroked-button>{{ adminGameFormsButton[1] }}</button>
+            <button mat-raised-button (click)="deleteGameForm(gameForm.gameName)">{{ adminGameFormsButton[0] }}</button>
+            <button mat-raised-button>{{ adminGameFormsButton[1] }}</button>
         </ng-container>
         <ng-container *ngIf="buttonPage == 'GameSelection'">
             <button mat-raised-button>{{ selectionGameFormsButton[0] }}</button>
-            <button mat-stroked-button (click)="openDialog()">{{ selectionGameFormsButton[1] }}</button>
+            <button mat-raised-button (click)="openDialog()">{{ selectionGameFormsButton[1] }}</button>
         </ng-container>
     </div>
 </body>
