@@ -44,7 +44,6 @@ export class DrawingHandlerService {
   }
 
   stopObservingMousePath():Observable<[MouseEvent,MouseEvent]>{
-    this.drawingHistoryService.saveCanvas(this.context!);
     return this.mouseMoveObservable.pipe(
       takeUntil(this.mouseUpObservable),
       takeUntil(this.mouseLeaveObservable),
@@ -52,10 +51,10 @@ export class DrawingHandlerService {
   }
 
   startObservingMousePath():Observable<[MouseEvent,MouseEvent]> {
-    
     return this.mouseDownObservable
       .pipe(
         switchMap(() => {
+          this.drawingHistoryService.saveCanvas(this.context!);
           return  this.stopObservingMousePath();
         })
       )
@@ -66,13 +65,15 @@ export class DrawingHandlerService {
     currentCoord: Coordinate,
     cx: CanvasRenderingContext2D 
   ) {
-    
-    if (cx != null) {
-    cx.beginPath();
-    cx.moveTo(prevCoord.x, prevCoord.y);
-    cx.lineTo(currentCoord.x, currentCoord.y);
-    cx.stroke();
-    }
+    setTimeout(() => {
+      if (cx != null) {
+        cx.beginPath();
+        cx.moveTo(prevCoord.x, prevCoord.y);
+        cx.lineTo(currentCoord.x, currentCoord.y);
+        cx.stroke();
+        }
+    }, );
+
   }
 
 }

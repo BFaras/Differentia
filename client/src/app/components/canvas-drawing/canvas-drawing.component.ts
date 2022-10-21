@@ -22,13 +22,20 @@ export class CanvasDrawingComponent implements  AfterViewInit {
 
     this.canvas.width = IMAGE_WIDTH;
     this.canvas.height = IMAGE_HEIGHT;
+
+    this.useCanvasFocusedOn();
+    this.prepareCanvasDrawing();
+    
   }
 
-  useThisCanvas(){
+  allowToDrawOnCanvas(){
+    this.useCanvasFocusedOn()
+  }
+
+  useCanvasFocusedOn(){
     this.drawingHandlerService.setCanvas(this.canvas);
     this.drawingHandlerService.setContext(this.context!)
     this.drawingHandlerService.setAllObservables();
-    this.prepareCanvasDrawing();
   }
 
   prepareCanvasDrawing():void {
