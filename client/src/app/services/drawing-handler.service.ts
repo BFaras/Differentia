@@ -2,20 +2,26 @@ import { Injectable } from '@angular/core';
 import { Coordinate } from '@app/interfaces/coordinate';
 import { fromEvent, Observable } from 'rxjs';
 import { pairwise, switchMap, takeUntil } from 'rxjs/operators';
+import { DrawingHistoryService } from './drawing-history.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DrawingHandlerService {
   private canvas: HTMLCanvasElement
+  private context:CanvasRenderingContext2D;
   mouseDownObservable:Observable<MouseEvent>
   mouseMoveObservable:Observable<MouseEvent>
   mouseUpObservable:Observable<MouseEvent> 
   mouseLeaveObservable:Observable<MouseEvent> 
-  constructor() { }
+  constructor( private drawingHistoryService: DrawingHistoryService) { }
 
   setCanvas(canvas: HTMLCanvasElement){
     this.canvas = canvas
+  }
+
+  setContext(context:CanvasRenderingContext2D){
+    this.context = context
   }
 
   getCoordinateX(mouseEvent:MouseEvent,canvasReact:DOMRect){
@@ -38,6 +44,7 @@ export class DrawingHandlerService {
   }
 
   stopObservingMousePath():Observable<[MouseEvent,MouseEvent]>{
+    this.drawingHistoryService.saveCanvas(this.context!);
     return this.mouseMoveObservable.pipe(
       takeUntil(this.mouseUpObservable),
       takeUntil(this.mouseLeaveObservable),
@@ -45,7 +52,7 @@ export class DrawingHandlerService {
   }
 
   startObservingMousePath():Observable<[MouseEvent,MouseEvent]> {
-    console.log(1)
+    
     return this.mouseDownObservable
       .pipe(
         switchMap(() => {
@@ -59,6 +66,7 @@ export class DrawingHandlerService {
     currentCoord: Coordinate,
     cx: CanvasRenderingContext2D 
   ) {
+    
     if (cx != null) {
     cx.beginPath();
     cx.moveTo(prevCoord.x, prevCoord.y);

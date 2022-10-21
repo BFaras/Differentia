@@ -11,11 +11,12 @@ export class DrawingHistoryService {
   constructor() { }
 
   saveCanvas(context:CanvasRenderingContext2D){
+    this.context = context
     this.imageData = context.getImageData(0,0,640,480);
   }
 
-  cancelCanvas(context:CanvasRenderingContext2D){
-    context.putImageData(this.imageData, 0, 0);
+  cancelCanvas(){
+    this.context.putImageData(this.imageData, 0, 0);
 
   }
 

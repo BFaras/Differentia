@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { Coordinate } from '@app/interfaces/coordinate';
 import { DrawingHandlerService } from '@app/services/drawing-handler.service';
-import { DrawingHistoryService } from '@app/services/drawing-history.service';
 import { PencilService } from '@app/services/pencil.service';
 import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
 @Component({
@@ -15,8 +14,7 @@ export class CanvasDrawingComponent implements  AfterViewInit {
   private context: CanvasRenderingContext2D | null;
 
   constructor(private drawingHandlerService:DrawingHandlerService,
-    private pencilService:PencilService,
-    private drawingHistoryService: DrawingHistoryService) { }
+    private pencilService:PencilService) { }
 
   public ngAfterViewInit():void {
     this.canvas = this.canvasDOM.nativeElement;
@@ -28,6 +26,7 @@ export class CanvasDrawingComponent implements  AfterViewInit {
 
   useThisCanvas(){
     this.drawingHandlerService.setCanvas(this.canvas);
+    this.drawingHandlerService.setContext(this.context!)
     this.drawingHandlerService.setAllObservables();
     this.prepareCanvasDrawing();
   }
@@ -51,7 +50,7 @@ export class CanvasDrawingComponent implements  AfterViewInit {
           x: this.drawingHandlerService.getCoordinateX(mouseEvent[1],canvasReact),
           y: this.drawingHandlerService.getCoordinateY(mouseEvent[1],canvasReact),
         };
-        this.drawingHistoryService.saveCanvas(this.context!);
+        
         this.drawingHandlerService.drawOnCanvas(previousCoordinate, actualCoordinate,this.context!);
       });
   }
