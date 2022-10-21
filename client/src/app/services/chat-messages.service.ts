@@ -23,17 +23,26 @@ export class ChatMessagesService {
         });
     }
 
+    public getTimeInCorrectFormat(): string {
+        return this.date.toLocaleString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false,
+        });
+    }
+
     private configureSocket(observer: Subscriber<ChatMessage>) {
         this.socketService.on('Valid click', (response: number[]) => {
             if (response === NO_DIFFERENCE_FOUND_ARRAY) {
                 observer.next({
-                    timeMessageSent: this.date.getTime().toString(),
+                    timeMessageSent: this.getTimeInCorrectFormat(),
                     senderName: GAME_MESSAGE_SENDER_NAME,
                     message: MESSAGE_ERROR_DIFFERENCE_DEFAULT,
                 });
             } else {
                 observer.next({
-                    timeMessageSent: this.date.getTime().toString(),
+                    timeMessageSent: this.getTimeInCorrectFormat(),
                     senderName: GAME_MESSAGE_SENDER_NAME,
                     message: MESSAGE_DIFFERENCE_FOUND_DEFAULT,
                 });

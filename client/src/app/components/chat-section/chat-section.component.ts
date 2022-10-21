@@ -41,6 +41,7 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
     }
 
     private addMessage(messageToAdd: ChatMessage) {
+        console.log(messageToAdd.timeMessageSent);
         this.messagesSent.push(messageToAdd);
     }
 
