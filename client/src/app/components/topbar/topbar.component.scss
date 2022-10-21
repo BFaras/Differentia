@@ -8,4 +8,12 @@
 .menu-element {
     height: 40px;
     padding: 14px 148px;
+    align-self: center;
+}
+
+.username-element {
+    display: grid;
+    grid-template-rows: auto;
+    align-items: center;
+    align-self: center;
 }

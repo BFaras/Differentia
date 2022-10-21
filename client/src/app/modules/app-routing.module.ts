@@ -6,16 +6,14 @@ import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { GameSelectionComponent } from '@app/pages/game-selection/game-selection.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 
-
-
 const routes: Routes = [
-
     { path: '', redirectTo: '/home', pathMatch: 'full' },
     { path: 'home', component: MainPageComponent },
     { path: 'game', component: GamePageComponent },
     { path: 'gameCreation', component: GameCreationPageComponent },
     { path: 'gameSelection', component: GameSelectionComponent },
     { path: 'admin', component: AdminPageComponent },
+    { path: 'game1v1', component: GamePageComponent },
     { path: '**', redirectTo: '/home' },
 ];
 
