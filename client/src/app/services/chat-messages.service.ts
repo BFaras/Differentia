@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ChatMessage } from '@common/chat-message';
-import { GAME_MESSAGE_SENDER_NAME } from '@common/const';
+import { GAME_MESSAGE_SENDER_NAME, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
 import { Observable, Subscriber } from 'rxjs';
 import { SocketClientService } from './socket-client.service';
 
@@ -18,7 +18,11 @@ export class ChatMessagesService {
 
     private configureSocket(observer: Subscriber<ChatMessage>) {
         this.socketService.on('Valid click', (response: number[]) => {
-            observer.next({ senderName: GAME_MESSAGE_SENDER_NAME, message: 'You found a difference!' });
+            if (response === NO_DIFFERENCE_FOUND_ARRAY) {
+                observer.next({ senderName: GAME_MESSAGE_SENDER_NAME, message: 'Error, no difference found!' });
+            } else {
+                observer.next({ senderName: GAME_MESSAGE_SENDER_NAME, message: 'You found a difference!' });
+            }
         });
     }
 }
