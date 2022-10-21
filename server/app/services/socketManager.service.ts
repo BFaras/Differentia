@@ -17,6 +17,7 @@ export class SocketManager {
     readonly timeIntervals: Map<string, NodeJS.Timer> = new Map<string, NodeJS.Timer>();
     readonly chronometerServices: Map<string, ChronometerService> = new Map<string, ChronometerService>();
     readonly mouseHandlerServices: Map<string, MouseHandlerService> = new Map<string, MouseHandlerService>();
+    private playersWaitingPerGame: Map<string, string> = new Map<string, string>;
     private gamesService = Container.get(GamesService);
 
     constructor(server: http.Server) {
@@ -38,13 +39,22 @@ export class SocketManager {
             });
 
             socket.on('game page', async (gameName: string) => {
-                console.log(gameName);
                 socket.emit('classic mode');
                 socket.emit('The game is', gameName);
                 //If no game room to join in multiplayer :
                 await this.beginGame(socket, gameName, NO_OTHER_PLAYER_ROOM);
                 //else we send the room name where a player is waiting to start a multiplayer game
             });
+
+            socket.on('create game', (gameName: string) => {
+                // socket.emit()
+            });
+
+            socket.on('is there someone waiting', (gameName: string) => {
+                console.log("1" + gameName);
+                console.log(this.playersWaitingPerGame.get(gameName));
+                socket.emit('let me tell you if someone is waiting', (this.playersWaitingPerGame.get(gameName) != undefined ? true: false))
+            })
 
             socket.on('username is', (username: string) => {
                 socket.emit('show the username', username);

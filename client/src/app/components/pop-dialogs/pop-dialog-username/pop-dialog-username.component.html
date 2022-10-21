@@ -9,11 +9,11 @@
         <div class="form-radius-container">
             <mat-form-field>
                 <label for="username">Nom d'utilisateur: </label>
-                <input #username matInput name="username" required />
+                <input #username matInput name="username" (change)="inputChanged()" type="text" />
             </mat-form-field>
         </div>
         <mat-dialog-actions>
-            <button mat-raised-button mat-dialog-close (click)="gamePage()" routerLink="/game">Ok</button>
+            <button mat-raised-button mat-dialog-close [disabled]="disabledButton" (click)="gamePage()" routerLink="/game">Ok</button>
         </mat-dialog-actions>
     </mat-dialog-content>
 </div>

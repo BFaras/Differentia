@@ -2,6 +2,8 @@ import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
+import { SocketClientService } from '@app/services/socket-client.service';
+// import { CreateGameService } from '@app/services/create-game.service';
 
 @Component({
     selector: 'app-game-form',
@@ -12,16 +14,35 @@ export class GameFormComponent {
     @Input() gameForm: GameFormDescription;
     @Input() buttonPage: string;
     adminGameFormsButton = ['Supprimer', 'Réinitialiser'];
-    selectionGameFormsButton = ['Créer', 'Jouer'];
-    constructor(private dialog: MatDialog) {}
+    selectionGameFormsButton = ['Créer', 'Jouer', 'Joindre'];
+    isPlayerWaiting: boolean = false;
+    constructor(private dialog: MatDialog,
+        // private createGameService : CreateGameService,
+        private socketService: SocketClientService
+        ) {}
+        
+    ngOnInit(): void {
+        this.socketService.connect();
+        this.configureGameFormSocketFeatures(); 
+        this.socketService.send('is there someone waiting', this.gameForm.gameName); 
+    }
 
-    openDialog() {
+    openDialog(multiplayerFlag: boolean) {
         this.dialog.open(PopDialogUsernameComponent, {
             height: '400px',
             width: '600px',
             data: {
                 nameGame: this.gameForm.gameName,
+                multiFlag: multiplayerFlag,
+                isPlayerWaiting: this.isPlayerWaiting,
             },
         });
     }
+
+    configureGameFormSocketFeatures(): void {
+        this.socketService.on('let me tell you if someone is waiting', (response: boolean) => {
+            this.isPlayerWaiting = response;
+        });
+    }
+
 }
