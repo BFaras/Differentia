@@ -14,8 +14,10 @@ import { SocketClientService } from './socket-client.service';
 })
 export class ChatMessagesService {
     public messagesObservable: Observable<ChatMessage>;
+    private date: Date;
 
     constructor(private socketService: SocketClientService) {
+        this.date = new Date();
         this.messagesObservable = new Observable((observer: Subscriber<ChatMessage>) => {
             this.configureSocket(observer);
         });
@@ -24,9 +26,17 @@ export class ChatMessagesService {
     private configureSocket(observer: Subscriber<ChatMessage>) {
         this.socketService.on('Valid click', (response: number[]) => {
             if (response === NO_DIFFERENCE_FOUND_ARRAY) {
-                observer.next({ senderName: GAME_MESSAGE_SENDER_NAME, message: MESSAGE_ERROR_DIFFERENCE_DEFAULT });
+                observer.next({
+                    timeMessageSent: this.date.getTime().toString(),
+                    senderName: GAME_MESSAGE_SENDER_NAME,
+                    message: MESSAGE_ERROR_DIFFERENCE_DEFAULT,
+                });
             } else {
-                observer.next({ senderName: GAME_MESSAGE_SENDER_NAME, message: MESSAGE_DIFFERENCE_FOUND_DEFAULT });
+                observer.next({
+                    timeMessageSent: this.date.getTime().toString(),
+                    senderName: GAME_MESSAGE_SENDER_NAME,
+                    message: MESSAGE_DIFFERENCE_FOUND_DEFAULT,
+                });
             }
         });
     }

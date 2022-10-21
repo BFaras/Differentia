@@ -9,7 +9,7 @@ import { Socket } from 'socket.io-client';
 import { ChatSectionComponent } from './chat-section.component';
 
 describe('ChatSectionComponent', () => {
-    const testMessage: ChatMessage = { senderName: 'Player1', message: 'Hi' };
+    const testMessage: ChatMessage = { timeMessageSent: '00:00:00', senderName: 'Player1', message: 'Hi' };
     const testUsername = 'PlayerTest1';
     let chatSectionComponent: ChatSectionComponent;
     let fixture: ComponentFixture<ChatSectionComponent>;
