@@ -3,7 +3,9 @@
         <h2>Vous êtes maintenant en attente d'un autre joueur</h2>
         <mat-dialog-actions>
             <ng-container *ngIf="isSomeoneJoining">
-                <button mat-raised-button mat-dialog-close>Ok</button>
+                <h3>{{ playerTryingToJoin }} is trying to join</h3>
+                <button mat-raised-button mat-dialog-close>Let him/her join</button>
+                <button mat-stroked-button mat-dialog-close>Don't let him/her join</button>
             </ng-container>
             <button mat-raised-button mat-dialog-close (click)="createGameService.leaveWaitingList(gameInfo.nameGame)">Annuler</button>
         </mat-dialog-actions>

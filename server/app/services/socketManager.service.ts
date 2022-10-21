@@ -57,17 +57,21 @@ export class SocketManager {
 
             socket.on('I am waiting', (gameName: string) => {
                 this.playersWaitingPerGame.set(gameName, socket.id);
+                console.log(gameName + "  " + this.playersWaitingPerGame.get(gameName));
                 this.sio.emit(`${gameName} someone is waiting`);
             });
 
             socket.on('I left', (gameName: string) => {
                 this.playersWaitingPerGame.delete(gameName);
                 this.sio.emit(`${gameName} nobody is waiting no more`);
-            })
+            });
             
-            socket.on('I am trying to join', (gameInfo: any) => {
-                const waitingSocketId = this.playersWaitingPerGame.get(gameInfo.gameName) as string;
-                this.sio.to(waitingSocketId).emit(`${gameInfo.gameName} someone is trying to join`)
+            socket.on('I am trying to join', (gameInfoAndUsername: string[]) => {
+                console.log("dans socket manager i am trying to join");
+                const waitingSocketId = this.playersWaitingPerGame.get(gameInfoAndUsername[0]) as string;
+                console.log(gameInfoAndUsername[0] + "  " + waitingSocketId);
+                console.log(gameInfoAndUsername[1]);
+                this.sio.to(waitingSocketId).emit(`${gameInfoAndUsername[0]} someone is trying to join`, gameInfoAndUsername[1]);
             })
 
             socket.on('detect images difference', (imagesData: ImageDataToCompare) => {

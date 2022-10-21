@@ -23,15 +23,16 @@ export class StartUpGameService {
   }
 
   public startUpGame(gameInfo: any, username: string): void {
+    console.log("username " + gameInfo.username);
     if(gameInfo.multiFlag) {
-      this.multiplayerGame(gameInfo);
+      this.multiplayerGame(gameInfo, username);
     }
     else this.soloGame(gameInfo.nameGame);
     this.sendUsername(username);
   }
 
-  private multiplayerGame(gameInfo: any): void {
-    if(gameInfo.isPlayerWaiting) this.joinGameService.joinGame(gameInfo);
+  private multiplayerGame(gameInfo: any, username: string): void {
+    if(gameInfo.isPlayerWaiting) this.joinGameService.joinGame(gameInfo, username);
     else this.createGameService.createGame(gameInfo.nameGame);
   }
 

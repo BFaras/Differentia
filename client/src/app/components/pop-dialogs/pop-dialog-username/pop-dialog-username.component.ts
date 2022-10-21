@@ -34,6 +34,7 @@ export class PopDialogUsernameComponent implements OnInit {
 
     openDialog() {
         this.gamePage();
+        console.log(this.username.nativeElement.value);
         this.dialog.open(PopDialogWaitingForPlayerComponent, {
             height: '400px',
             width: '600px',

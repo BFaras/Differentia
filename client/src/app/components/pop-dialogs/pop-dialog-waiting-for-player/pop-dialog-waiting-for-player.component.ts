@@ -10,7 +10,7 @@ import { SocketClientService } from '@app/services/socket-client.service';
 })
 export class PopDialogWaitingForPlayerComponent implements OnInit {
   isSomeoneJoining: boolean = false;
-  playerTryingToJoin: string;
+  playerTryingToJoin: string = "";
   constructor(private socketService: SocketClientService, public createGameService: CreateGameService, @Inject(MAT_DIALOG_DATA) public gameInfo: any) { }
 
   ngOnInit(): void {
@@ -18,10 +18,12 @@ export class PopDialogWaitingForPlayerComponent implements OnInit {
   }
 
   private configureWaitingPopUpSocketFeatures(): void {
-    this.socketService.on('someone is trying to join', (username: string) => {
+    this.socketService.on(`${this.gameInfo.nameGame} someone is trying to join`, (username: string) => {
+      console.log("salut");
       this.isSomeoneJoining = true;
       this.playerTryingToJoin = username;
-    })
+      console.log(username);
+    });
   }
 
 }
