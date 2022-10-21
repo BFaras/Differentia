@@ -44,6 +44,7 @@ export class CanvasDrawingComponent implements  AfterViewInit {
         if (this.context != null) {
           this.context.lineWidth = this.pencilService.getWidth();
           this.context.strokeStyle = this.pencilService.getStateOfPencil(mouseEvent[0],this.pencilService.getColor());
+          this.context.lineCap = this.pencilService.assignRightLineCap(mouseEvent[0])!;
         }
 
         const canvasReact = this.canvas.getBoundingClientRect();

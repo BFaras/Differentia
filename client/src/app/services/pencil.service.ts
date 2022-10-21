@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+const ROUND_LINE_CAP:CanvasLineCap = "round";
+const SQUARE_LINE_CAP:CanvasLineCap = "square"
 @Injectable({
   providedIn: 'root'
 })
@@ -22,6 +24,17 @@ export class PencilService {
 
   getWidth():number{
     return this.width
+  }
+
+  assignRightLineCap(mouseClick:MouseEvent){
+    if(mouseClick.which === 1){
+      return ROUND_LINE_CAP
+    }
+
+    if(mouseClick.which === 3){
+      return SQUARE_LINE_CAP
+    }
+    return
   }
 
   getStateOfPencil(mouseClick:MouseEvent,formerStyle:string):string{
