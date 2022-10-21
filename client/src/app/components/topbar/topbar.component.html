@@ -5,7 +5,9 @@
     <span class="menu-element">
         <button mat-raised-button disabled>Indice</button>
     </span>
-    <span class="menu-element">
-        <p>{{ mouseDetection.nbrDifferencesFound }} différences trouvées par {{ username }}</p>
+    <span class="username-element">
+        <div *ngFor="let username of playerNames">
+            <div>{{ nbrDifferencesFound }} différences trouvées par {{ username }}</div>
+        </div>
     </span>
 </div>

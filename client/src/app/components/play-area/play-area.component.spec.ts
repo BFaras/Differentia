@@ -12,32 +12,31 @@ describe('PlayAreaComponent', () => {
     let fixture: ComponentFixture<PlayAreaComponent>;
     let socketServiceSpy: SpyObj<SocketClientService>;
     let mouseServiceSpy: SpyObj<MouseDetectionService>;
+    let drawServiceSpy: SpyObj<DrawService>;
+
+    beforeAll(async () => {
+        socketServiceSpy = jasmine.createSpyObj('SocketClientService', ['connect', 'on', 'send']);
+        mouseServiceSpy = jasmine.createSpyObj('MouseDetectionService', ['incrementNbrDifference']);
+    });
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [PlayAreaComponent],
             providers: [
                 { provide: SocketClientService, useValue: socketServiceSpy },
-                { provide: DrawService, useValue: [] },
+                { provide: DrawService, useValue: drawServiceSpy },
                 { provide: MouseDetectionService, useValue: mouseServiceSpy },
                 { provide: ImageToImageDifferenceService, useValue: [] },
                 { provide: MatDialog, useValue: [] },
                 { provide: ImageGeneratorService, useValue: [] },
             ],
         }).compileComponents();
-        socketServiceSpy = jasmine.createSpyObj('SocketClientService', ['connect']);
-        mouseServiceSpy = jasmine.createSpyObj('MouseDetectionService', ['incrementNbrDifference']);
     });
 
     beforeEach(() => {
-        socketServiceSpy.connect();
         fixture = TestBed.createComponent(PlayAreaComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-    });
-
-    it('should be created', () => {
-        expect(component).toBeTruthy();
     });
 
     it('should call display ', async () => {

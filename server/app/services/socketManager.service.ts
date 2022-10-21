@@ -38,7 +38,6 @@ export class SocketManager {
             });
 
             socket.on('game page', async (gameName: string) => {
-                console.log(gameName);
                 socket.emit('classic mode');
                 socket.emit('The game is', gameName);
                 //If no game room to join in multiplayer :

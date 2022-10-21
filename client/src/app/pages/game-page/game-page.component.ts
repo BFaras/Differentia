@@ -13,10 +13,9 @@ import { firstValueFrom } from 'rxjs';
     styleUrls: ['./game-page.component.scss'],
 })
 export class GamePageComponent {
-    //private mainCanvas: HTMLCanvasElement;
     nbDifferences: number;
     gameName: string;
-    username: string;
+    usernames: string[] = ['raf', 'charles'];
     images: HTMLImageElement[];
     nbDifferrencesFound: number = 0;
 
@@ -25,7 +24,6 @@ export class GamePageComponent {
     }
 
     ngOnInit() {
-        // this.mainCanvas = this.renderer.createElement('canvas');
         this.socketService.connect();
         this.configureGamePageSocketFeatures();
     }
@@ -47,7 +45,7 @@ export class GamePageComponent {
             this.gameName = message;
         });
         this.socketService.on('show the username', (username: string) => {
-            this.username = username;
+            this.usernames[0] = username; // Ajouter une constante
         });
         this.socketService.on('Name repeated', () => {
             console.log('le nom est répété ');
