@@ -1,4 +1,4 @@
-<div>
+<div >
     <label>Couleur : </label>
     <input (change) = "onChangeColor()" [(ngModel)]="color" type="color" />
   </div>
@@ -11,6 +11,6 @@
     </mat-select>
 </mat-form-field>
 <div class ="group-buttons">
-  <button mat-mini-fab  (click) = "cancelDrawing()"><--</button>
+  <button mat-mini-fab (click) = "cancelDrawing()"><--</button>
   <button mat-mini-fab (click) = "cancelDeletedDrawing()" #eraseButton >--></button>
 </div>

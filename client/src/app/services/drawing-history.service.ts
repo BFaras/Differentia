@@ -4,8 +4,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class DrawingHistoryService {
-  addedDrawings: ImageData[] = [];
-  deletedDrawings: ImageData[] = [];
+  firstCanvasHistory:ImageData[][] = [[],[]]
+  secondCanvasHistory:ImageData[][] = [[],[]]
   context:CanvasRenderingContext2D;
   index:number;
 
@@ -14,29 +14,30 @@ export class DrawingHistoryService {
   saveCanvas(context:CanvasRenderingContext2D){
     this.context = context
     let imageData = context.getImageData(0,0,640,480);
-    this.addedDrawings.push(imageData)
-    console.log("----added_drawing_history-----")
-    console.log(this.addedDrawings)
+    this.firstCanvasHistory[0].push(imageData)
+    console.log(this.firstCanvasHistory[0])
   }
 
   cancelCanvas(){
-    let imageDataToPop = this.addedDrawings.pop() as ImageData
+    if(this.firstCanvasHistory[0].length!= 0){
+    let imageDataToPop = this.firstCanvasHistory[0].pop() as ImageData
     this.context.putImageData(imageDataToPop, 0, 0);
     this.saveDeletedCanvas(imageDataToPop)
-    
+    }
   }
 
   saveDeletedCanvas(imageDeleted:ImageData){
-    this.deletedDrawings.push(imageDeleted);
-    console.log("----deleted_drawing_history")
-    console.log(this.deletedDrawings)
+    this.firstCanvasHistory[1].push(imageDeleted);
+
 
   }
 
   cancelDeletedCanvas(){
-    let DeletedImageDataToPop = this.deletedDrawings.pop() as ImageData
+    if(this.firstCanvasHistory[1].length != 0 ){
+    let DeletedImageDataToPop = this.firstCanvasHistory[1].pop() as ImageData
     this.context.putImageData(DeletedImageDataToPop, 0, 0);
-    this.addedDrawings.push(DeletedImageDataToPop)
+    this.firstCanvasHistory[0].push(DeletedImageDataToPop)
+    }
   }
 
 

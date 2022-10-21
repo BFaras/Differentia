@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { Coordinate } from '@app/interfaces/coordinate';
 import { DrawingHandlerService } from '@app/services/drawing-handler.service';
+import { DrawingHistoryService } from '@app/services/drawing-history.service';
 import { PencilService } from '@app/services/pencil.service';
 import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
 @Component({
@@ -14,7 +15,7 @@ export class CanvasDrawingComponent implements  AfterViewInit {
   private context: CanvasRenderingContext2D | null;
 
   constructor(private drawingHandlerService:DrawingHandlerService,
-    private pencilService:PencilService) { }
+    private pencilService:PencilService,private drawingHistoryService:DrawingHistoryService) { }
 
   public ngAfterViewInit():void {
     this.canvas = this.canvasDOM.nativeElement;
@@ -22,9 +23,12 @@ export class CanvasDrawingComponent implements  AfterViewInit {
 
     this.canvas.width = IMAGE_WIDTH;
     this.canvas.height = IMAGE_HEIGHT;
-
     this.useCanvasFocusedOn();
     this.prepareCanvasDrawing();
+
+    if(this.drawingHistoryService.firstCanvasHistory[0].length == 0){
+      this.drawingHistoryService.saveCanvas(this.context!)
+    }
     
   }
 
@@ -34,11 +38,15 @@ export class CanvasDrawingComponent implements  AfterViewInit {
 
   useCanvasFocusedOn(){
     this.drawingHandlerService.setCanvas(this.canvas);
-    this.drawingHandlerService.setContext(this.context!)
     this.drawingHandlerService.setAllObservables();
   }
 
   prepareCanvasDrawing():void {
+    this.drawingHandlerService.mouseUpObservable.subscribe((e)=>{
+        this.drawingHistoryService.saveCanvas(this.context!);
+
+    });
+
     this.drawingHandlerService.startObservingMousePath()
       .subscribe((mouseEvent:[MouseEvent,MouseEvent]) => {
         if (this.context != null) {
@@ -60,6 +68,7 @@ export class CanvasDrawingComponent implements  AfterViewInit {
         };
         
         this.drawingHandlerService.drawOnCanvas(previousCoordinate, actualCoordinate,this.context!);
+        
       });
   }
 

@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { DrawingHistoryService } from '@app/services/drawing-history.service';
 import { PencilService } from '@app/services/pencil.service';
 import { BIG, BLACK_COLOR, MEDIUM, SMALL, VERY_BIG, VERY_SMALL } from '@common/const';
-
 @Component({
   selector: 'app-tool-setting',
   templateUrl: './tool-setting.component.html',
@@ -12,10 +11,22 @@ export class ToolSettingComponent implements OnInit {
   widths:number[] = [VERY_SMALL,SMALL,MEDIUM,BIG,VERY_BIG]
   color:string;
   constructor(private pencilService:PencilService,
-    private drawingHistoryService: DrawingHistoryService) { }
+    private drawingHistoryService: DrawingHistoryService,
+    ) { }
+
 
   ngOnInit(): void {
     this.setOriginalSetting()
+  }
+
+  @HostListener('document:keyup.control.z', ['$event'])
+  handleKeyboardEventCancel(event: KeyboardEvent) { 
+    this.cancelDrawing()
+  }
+
+  @HostListener('document:keyup.control.shift.z', ['$event'])
+  handleKeyboardEventCancelDeletedDrawing(event: KeyboardEvent) { 
+    this.cancelDeletedDrawing()
   }
 
   setOriginalSetting(){
