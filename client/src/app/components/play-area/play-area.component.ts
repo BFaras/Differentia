@@ -6,6 +6,7 @@ import { ImageToImageDifferenceService } from '@app/services/image-to-image-diff
 import { MouseDetectionService } from '@app/services/mouse-detection.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { DEFAULT_HEIGHT_CANVAS, DEFAULT_WIDTH_CANVAs, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
+import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
 import { PopDialogEndgameComponent } from '../pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
 @Component({
@@ -88,15 +89,10 @@ export class PlayAreaComponent implements OnInit {
     }
 
     configurePlayAreaSocket(): void {
-        this.socketService.on('Valid click', (response: number[]) => {
-            this.pixelList = response;
+        this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {
+            this.pixelList = differencesInfo.differencePixelsNumbers;
 
-            console.log(this.pixelList);
-
-            let isDifference: boolean = true;
-            if (this.pixelList.length == 0) {
-                isDifference = false;
-            }
+            let isDifference: boolean = differencesInfo.isValidDifference;
             this.mouseDetection.playSound(isDifference);
             this.mouseDetection.clickMessage(isDifference);
             this.mouseDetection.incrementNbrDifference(isDifference);

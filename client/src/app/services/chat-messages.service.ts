@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ChatMessage } from '@common/chat-message';
-import { GAME_MESSAGE_SENDER_NAME } from '@common/const';
+import { GAME_MESSAGE_SENDER_NAME, MESSAGE_DIFFERENCE_FOUND_DEFAULT, MESSAGE_ERROR_DIFFERENCE_DEFAULT, TWO_DIGIT_TIME_VALUE } from '@common/const';
+import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Observable, Subscriber } from 'rxjs';
 import { SocketClientService } from './socket-client.service';
 
@@ -9,18 +10,39 @@ import { SocketClientService } from './socket-client.service';
 })
 export class ChatMessagesService {
     public messagesObservable: Observable<ChatMessage>;
+    private date: Date;
 
-    //To test
     constructor(private socketService: SocketClientService) {
+        this.date = new Date();
         this.messagesObservable = new Observable((observer: Subscriber<ChatMessage>) => {
             this.configureSocket(observer);
         });
     }
 
-    //To test
+    public getTimeInCorrectFormat(): string {
+        return this.date.toLocaleString('en-US', {
+            hour: TWO_DIGIT_TIME_VALUE,
+            minute: TWO_DIGIT_TIME_VALUE,
+            second: TWO_DIGIT_TIME_VALUE,
+            hour12: false,
+        });
+    }
+
     private configureSocket(observer: Subscriber<ChatMessage>) {
-        this.socketService.on('Valid click', (response: number[]) => {
-            observer.next({ senderName: GAME_MESSAGE_SENDER_NAME, message: 'You found a difference!' });
+        this.socketService.on('Valid click', (differenceInfos: GameplayDifferenceInformations) => {
+            if (differenceInfos.isValidDifference) {
+                observer.next({
+                    timeMessageSent: this.getTimeInCorrectFormat(),
+                    senderName: GAME_MESSAGE_SENDER_NAME,
+                    message: MESSAGE_DIFFERENCE_FOUND_DEFAULT,
+                });
+            } else {
+                observer.next({
+                    timeMessageSent: this.getTimeInCorrectFormat(),
+                    senderName: GAME_MESSAGE_SENDER_NAME,
+                    message: MESSAGE_ERROR_DIFFERENCE_DEFAULT,
+                });
+            }
         });
     }
 }

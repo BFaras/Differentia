@@ -20,7 +20,6 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
         this.messagesSent = [];
     }
 
-    //To test
     ngOnInit(): void {
         this.socketService.connect();
         this.configureSocket();
@@ -31,7 +30,6 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
         });
     }
 
-    //To test
     ngOnDestroy(): void {
         this.chatMessagesSubscription.unsubscribe();
     }
@@ -43,10 +41,10 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
     }
 
     private addMessage(messageToAdd: ChatMessage) {
+        console.log(messageToAdd.timeMessageSent);
         this.messagesSent.push(messageToAdd);
     }
 
-    //To test
     private configureSocket() {
         this.socketService.on('show the username', (username: string) => {
             this.localPlayerUsername = username;

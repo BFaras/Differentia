@@ -1,7 +1,8 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SocketClientService } from '@app/services/socket-client.service';
-import { DEFAULT_USERNAME } from '@common/const';
+import { StartUpGameService } from '@app/services/start-up-game.service';
+import { PopDialogWaitingForPlayerComponent } from '../pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
 
 @Component({
     selector: 'app-pop-dialog-username',
@@ -10,17 +11,37 @@ import { DEFAULT_USERNAME } from '@common/const';
 })
 export class PopDialogUsernameComponent implements OnInit {
     @ViewChild('username') username: ElementRef;
+    disabledButton: boolean = true;
 
-    constructor(private socketService: SocketClientService, @Inject(MAT_DIALOG_DATA) private gameInfo: any) {}
+    constructor(
+        private socketService: SocketClientService,
+        @Inject(MAT_DIALOG_DATA) public gameInfo: any,
+        private startUpGameService: StartUpGameService,
+        private dialog: MatDialog,
+    ) {}
 
     ngOnInit(): void {
         this.socketService.connect();
     }
 
-    gamePage() {
-        this.socketService.send('game page', this.gameInfo.nameGame);
-        let username = this.username.nativeElement.value;
-        if (username == '') username = DEFAULT_USERNAME;
-        this.socketService.send('username is', username);
+    public gamePage(): void {
+        this.startUpGameService.startUpGame(this.gameInfo, this.username.nativeElement.value);
+    }
+
+    public inputChanged(): void {
+        if (this.username.nativeElement.value) this.disabledButton = false;
+        else this.disabledButton = true;
+    }
+
+    openDialog() {
+        this.gamePage();
+        console.log(this.username.nativeElement.value);
+        this.dialog.open(PopDialogWaitingForPlayerComponent, {
+            height: '400px',
+            width: '600px',
+            data: {
+                nameGame: this.gameInfo.nameGame,
+            },
+        });
     }
 }
