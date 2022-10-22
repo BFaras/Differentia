@@ -21,18 +21,24 @@ export class PopDialogUsernameComponent implements OnInit {
 
     ngOnInit(): void {
         this.socketService.connect();
+        console.log("gameinfo: " + this.gameInfo);
+        console.log("gameInfo.nameGame : " + this.gameInfo.nameGame);
+        console.log("gameInfo.multiFlag : " + this.gameInfo.multiFlag);
+        console.log("gameInfo.createFlag : " + this.gameInfo.createFlag);
+        console.log("gameInfo.isPlayerWaiting : " + this.gameInfo.isPlayerWaiting);
+        console.log("gameInfo.joinFlag : " + this.gameInfo.joinFlag);
     }
 
     public gamePage(): void {
         this.startUpGameService.startUpGame(this.gameInfo, this.username.nativeElement.value);
     }
 
-    public inputChanged(): void{
+    public inputChanged(): void {
         if(this.username.nativeElement.value) this.disabledButton = false;
         else this.disabledButton = true;
     }
 
-    openDialog() {
+    public openDialog(): void {
         this.gamePage();
         console.log(this.username.nativeElement.value);
         this.dialog.open(PopDialogWaitingForPlayerComponent, {
@@ -40,8 +46,10 @@ export class PopDialogUsernameComponent implements OnInit {
             width: '600px',
             data: {
                 nameGame: this.gameInfo.nameGame,
+                joinFlag: this.gameInfo.joinFlag,
+                createFlag: this.gameInfo.createFlag,
+                username: this.username.nativeElement.value,
             },
         });
     }
-
 }

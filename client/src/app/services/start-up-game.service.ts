@@ -23,7 +23,6 @@ export class StartUpGameService {
   }
 
   public startUpGame(gameInfo: any, username: string): void {
-    console.log("username " + gameInfo.username);
     if(gameInfo.multiFlag) {
       this.multiplayerGame(gameInfo, username);
     }

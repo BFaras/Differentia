@@ -9,7 +9,6 @@ export class JoinGameService {
   constructor(private socketService: SocketClientService) { }
 
   public joinGame(gameInfo: any, username: string) {
-    console.log("trying to join");
     this.socketService.send("I am trying to join", [gameInfo.nameGame, username]);
   }
 

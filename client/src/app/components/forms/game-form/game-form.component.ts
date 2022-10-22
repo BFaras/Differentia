@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
 import { SocketClientService } from '@app/services/socket-client.service';
-// import { CreateGameService } from '@app/services/create-game.service';
 
 @Component({
     selector: 'app-game-form',
@@ -16,8 +15,9 @@ export class GameFormComponent {
     adminGameFormsButton = ['Supprimer', 'Réinitialiser'];
     selectionGameFormsButton = ['Créer', 'Jouer', 'Joindre'];
     isPlayerWaiting: boolean = false;
+    joinFLag: boolean = false;
+    createFlag: boolean = false;
     constructor(private dialog: MatDialog,
-        // private createGameService : CreateGameService,
         private socketService: SocketClientService
         ) {}
         
@@ -30,16 +30,35 @@ export class GameFormComponent {
     ngOnAfterInit() : void {
     }
 
-    openDialog(multiplayerFlag: boolean) {
+    public openDialog(multiplayerFlag: boolean): void {
+        console.log("noinFlag dans form component : " + this.joinFLag);
         this.dialog.open(PopDialogUsernameComponent, {
             height: '400px',
             width: '600px',
             data: {
                 nameGame: this.gameForm.gameName,
                 multiFlag: multiplayerFlag,
+                joinFlag: this.joinFLag,
+                createFlag: this.createFlag,
                 isPlayerWaiting: this.isPlayerWaiting,
             },
         });
+        console.log("noinFlag dans form component 2 : " + this.joinFLag);
+    }
+
+    public setJoinFlagAndOpenDialog(): void {
+        this.joinFLag = true;
+        this.openDialog(true);
+    }
+
+    public setCreateFlagAndOpenDialog(): void {
+        this.createFlag = true;
+        this.openDialog(true);
+    }
+
+    private resetFlags(): void {
+        this.createFlag = false;
+        this.joinFLag = false;
     }
 
     configureGameFormSocketFeatures(): void {
@@ -49,11 +68,13 @@ export class GameFormComponent {
 
         this.socketService.on(`${this.gameForm.gameName} someone is waiting`, () => {
             this.isPlayerWaiting = true;
-        })
+            this.resetFlags();
+        });
 
         this.socketService.on(`${this.gameForm.gameName} nobody is waiting no more`, () => {
             this.isPlayerWaiting = false;
-        })
+            this.resetFlags();
+        });
     }
 
 }

@@ -21,10 +21,10 @@
         </ng-container>
         <ng-container *ngIf="buttonPage == 'GameSelection'">
             <ng-container *ngIf="isPlayerWaiting; else noOneIsWaiting">
-                <button mat-stroked-button (click)="openDialog(true)">{{ selectionGameFormsButton[2] }}</button>
+                <button mat-stroked-button (click)="setJoinFlagAndOpenDialog()">{{ selectionGameFormsButton[2] }}</button>
             </ng-container>
             <ng-template #noOneIsWaiting>
-                <button mat-stroked-button (click)="openDialog(true)">{{ selectionGameFormsButton[0] }}</button>
+                <button mat-stroked-button (click)="setCreateFlagAndOpenDialog()">{{ selectionGameFormsButton[0] }}</button>
             </ng-template>
             <button mat-stroked-button (click)="openDialog(false)">{{ selectionGameFormsButton[1] }}</button>
         </ng-container>
