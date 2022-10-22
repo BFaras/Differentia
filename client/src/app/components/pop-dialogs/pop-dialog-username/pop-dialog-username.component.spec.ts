@@ -17,9 +17,6 @@ describe('PopDialogUsernameComponent', () => {
                 { provide: MAT_DIALOG_DATA, useValue: {} },
             ],
         }).compileComponents();
-
-        socketSpy = jasmine.createSpyObj('SocketClientService', ['send']);
-        socketSpy.send('game page');
         fixture = TestBed.createComponent(PopDialogUsernameComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
@@ -30,6 +27,15 @@ describe('PopDialogUsernameComponent', () => {
     });
 
     it('should send info to server', () => {
+        socketSpy = jasmine.createSpyObj('SocketClientService', ['send']);
         component.gamePage();
+        expect(socketSpy).toHaveBeenCalled;
+    });
+
+    it('the button should not be disabled if the input value is not undefined', () => {
+        component.disabledButton = true;
+        component.username.nativeElement.value = 'test';
+        component.inputChanged();
+        expect(component.disabledButton).toBeFalsy();
     });
 });

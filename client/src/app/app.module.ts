@@ -10,6 +10,7 @@ import { AppMaterialModule } from '@app/modules/material.module';
 import { AppComponent } from '@app/pages/app/app.component';
 import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
+import { ChatSectionComponent } from './components/chat-section/chat-section.component';
 import { DialogInputComponent } from './components/dialog-input/dialog-input.component';
 import { GameFormComponent } from './components/forms/game-form/game-form.component';
 import { ListGameFormComponent } from './components/forms/list-game-form/list-game-form.component';
@@ -22,6 +23,7 @@ import { PopDialogDownloadImagesComponent } from './components/pop-dialogs/pop-d
 import { PopDialogEndgameComponent } from './components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
 import { PopDialogUsernameComponent } from './components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
 import { PopDialogValidateGameComponent } from './components/pop-dialogs/pop-dialog-validate-game/pop-dialog-validate-game.component';
+import { PopDialogWaitingForPlayerComponent } from './components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
 import { TopbarComponent } from './components/topbar/topbar.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
@@ -56,6 +58,8 @@ import { GameSelectionComponent } from './pages/game-selection/game-selection.co
         ImageDifferenceComponent,
         PopDialogUsernameComponent,
         PopDialogEndgameComponent,
+        ChatSectionComponent,
+        PopDialogWaitingForPlayerComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
     providers: [],

@@ -9,11 +9,16 @@
         <div class="form-radius-container">
             <mat-form-field>
                 <label for="username">Nom d'utilisateur: </label>
-                <input #username matInput name="username" required />
+                <input #username matInput name="username" (change)="inputChanged()" type="text" />
             </mat-form-field>
         </div>
         <mat-dialog-actions>
-            <button mat-raised-button mat-dialog-close (click)="gamePage()" routerLink="/game">Ok</button>
+            <ng-container *ngIf="gameInfo.multiFlag; else soloGame">
+                <button mat-raised-button mat-dialog-close [disabled]="disabledButton" (click)="openDialog()">Ok</button>
+            </ng-container>
+            <ng-template #soloGame>
+                <button mat-raised-button mat-dialog-close [disabled]="disabledButton" (click)="gamePage()" routerLink="/game">Ok</button>
+            </ng-template>
         </mat-dialog-actions>
     </mat-dialog-content>
 </div>
