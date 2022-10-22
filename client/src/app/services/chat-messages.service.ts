@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ChatMessage } from '@common/chat-message';
-import {
-    GAME_MESSAGE_SENDER_NAME,
-    MESSAGE_DIFFERENCE_FOUND_DEFAULT,
-    MESSAGE_ERROR_DIFFERENCE_DEFAULT,
-    NO_DIFFERENCE_FOUND_ARRAY,
-    TWO_DIGIT_TIME_VALUE,
-} from '@common/const';
+import { GAME_MESSAGE_SENDER_NAME, MESSAGE_DIFFERENCE_FOUND_DEFAULT, MESSAGE_ERROR_DIFFERENCE_DEFAULT, TWO_DIGIT_TIME_VALUE } from '@common/const';
+import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Observable, Subscriber } from 'rxjs';
 import { SocketClientService } from './socket-client.service';
 
@@ -34,18 +29,18 @@ export class ChatMessagesService {
     }
 
     private configureSocket(observer: Subscriber<ChatMessage>) {
-        this.socketService.on('Valid click', (response: number[]) => {
-            if (response === NO_DIFFERENCE_FOUND_ARRAY) {
+        this.socketService.on('Valid click', (differenceInfos: GameplayDifferenceInformations) => {
+            if (differenceInfos.isValidDifference) {
                 observer.next({
                     timeMessageSent: this.getTimeInCorrectFormat(),
                     senderName: GAME_MESSAGE_SENDER_NAME,
-                    message: MESSAGE_ERROR_DIFFERENCE_DEFAULT,
+                    message: MESSAGE_DIFFERENCE_FOUND_DEFAULT,
                 });
             } else {
                 observer.next({
                     timeMessageSent: this.getTimeInCorrectFormat(),
                     senderName: GAME_MESSAGE_SENDER_NAME,
-                    message: MESSAGE_DIFFERENCE_FOUND_DEFAULT,
+                    message: MESSAGE_ERROR_DIFFERENCE_DEFAULT,
                 });
             }
         });
