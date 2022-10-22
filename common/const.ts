@@ -59,8 +59,10 @@ export const DEFAULT_USERNAME = 'anonyme';
 
 //Messages constants
 export const GAME_MESSAGE_SENDER_NAME = 'Game';
-export const MESSAGE_ERROR_DIFFERENCE_DEFAULT = 'Error, no difference found!';
-export const MESSAGE_DIFFERENCE_FOUND_DEFAULT = 'You found a difference!';
+export const MESSAGE_ERROR_DIFFERENCE_SOLO = 'Erreur, aucune nouvelle différence trouvée!';
+export const MESSAGE_DIFFERENCE_FOUND_SOLO = 'Vous avez trouver une différence!';
+export const MESSAGE_DIFFERENCE_FOUND_MULTI = 'Différence trouvée par ';
+export const MESSAGE_ERROR_DIFFERENCE_MULTI = 'Erreur par ';
 export const TWO_DIGIT_TIME_VALUE = '2-digit';
 
 // Chat size constant

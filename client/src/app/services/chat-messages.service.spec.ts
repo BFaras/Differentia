@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { ChatMessage } from '@common/chat-message';
-import { DEFAULT_USERNAME, MESSAGE_DIFFERENCE_FOUND_DEFAULT, MESSAGE_ERROR_DIFFERENCE_DEFAULT, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
+import { DEFAULT_USERNAME, MESSAGE_DIFFERENCE_FOUND_SOLO, MESSAGE_ERROR_DIFFERENCE_SOLO, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Subscription } from 'rxjs';
 
@@ -52,7 +52,7 @@ describe('ChatMessagesService', () => {
         observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
         socketTestHelper.peerSideEmit('Valid click', notValidClickInfo);
         await setTimeout(() => {
-            expect(messageReceivedFromObservable.message).toEqual(MESSAGE_ERROR_DIFFERENCE_DEFAULT);
+            expect(messageReceivedFromObservable.message).toEqual(MESSAGE_ERROR_DIFFERENCE_SOLO);
         });
     });
 
@@ -60,7 +60,7 @@ describe('ChatMessagesService', () => {
         observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
         socketTestHelper.peerSideEmit('Valid click', differencesFoundInfo);
         await setTimeout(() => {
-            expect(messageReceivedFromObservable.message).toEqual(MESSAGE_DIFFERENCE_FOUND_DEFAULT);
+            expect(messageReceivedFromObservable.message).toEqual(MESSAGE_DIFFERENCE_FOUND_SOLO);
         });
     });
 });
