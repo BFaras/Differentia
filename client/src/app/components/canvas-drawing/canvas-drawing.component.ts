@@ -39,7 +39,7 @@ export class CanvasDrawingComponent implements  AfterViewInit {
     this.drawingHandlerService.setAllObservables();
   }
 
-  isCanvasBlank() {
+  isCanvasNotBlank() {
     return this.context!.getImageData(0, 0, this.canvas.width, this.canvas.height).data
       .some(channel => channel !== 0);
   }
@@ -47,9 +47,7 @@ export class CanvasDrawingComponent implements  AfterViewInit {
   prepareCanvasDrawing():void {
 
     this.drawingHandlerService.mouseDownObservable.subscribe((e)=>{
-      if(!this.isCanvasBlank()){
         this.drawingHistoryService.saveCanvas(this.context!);
-      }
       if(this.drawingHistoryService.firstCanvasHistory[1].length != 0){
         this.drawingHistoryService.firstCanvasHistory[1] = [];
       }
@@ -57,8 +55,6 @@ export class CanvasDrawingComponent implements  AfterViewInit {
 
     this.drawingHandlerService.mouseUpObservable.subscribe((e)=>{
         this.drawingHistoryService.saveCanvas(this.context!);
-        // this.extraImage = true;
-
 
     });
 

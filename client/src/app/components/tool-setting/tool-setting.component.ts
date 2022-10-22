@@ -46,22 +46,15 @@ export class ToolSettingComponent implements OnInit {
   }
 
   cancelActionDrawnLine(){
-    if(this.checkIfThereAreSavedDeletedDrawnLines() == true)
-    {
       this.drawingHistoryService.cancelCanvas();
       this.drawingHistoryService.cancelCanvas();
-    }else{
-      this.drawingHistoryService.cancelCanvas();
-    }
+
   }
 
   cancelActionDeletedDrawnLine(){
-    if(this.checkIfThereAreSavedDrawnLines() == true){
-    this.drawingHistoryService.cancelDeletedCanvas();
-    this.drawingHistoryService.cancelDeletedCanvas();
-    }else{
       this.drawingHistoryService.cancelDeletedCanvas();
-    }
+      this.drawingHistoryService.cancelDeletedCanvas();
+
   }
 
   setOriginalSetting(){

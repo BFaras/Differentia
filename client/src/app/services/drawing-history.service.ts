@@ -19,13 +19,12 @@ export class DrawingHistoryService {
   }
 
   cancelCanvas(){
-
     if(this.firstCanvasHistory[0].length!= 0){
     let imageDataToPop = this.firstCanvasHistory[0].pop() as ImageData
     this.context.putImageData(imageDataToPop, 0, 0);
     this.saveDeletedCanvas(imageDataToPop)
-    console.log(this.firstCanvasHistory[0])
     }
+    console.log(this.firstCanvasHistory[0])
   }
 
   saveDeletedCanvas(imageDeleted:ImageData){
@@ -40,6 +39,8 @@ export class DrawingHistoryService {
     this.context.putImageData(DeletedImageDataToPop, 0, 0);
     this.firstCanvasHistory[0].push(DeletedImageDataToPop)
     }
+    console.log(this.firstCanvasHistory[0])
+
   }
 
 
