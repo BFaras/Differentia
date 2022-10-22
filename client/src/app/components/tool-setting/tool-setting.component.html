@@ -11,6 +11,6 @@
     </mat-select>
 </mat-form-field>
 <div class ="group-buttons">
-  <button mat-mini-fab (click) = "cancelActionDrawnLine()"><--</button>
-  <button mat-mini-fab (click) = "cancelActionDeletedDrawnLine()" >--></button>
+  <button mat-mini-fab [disabled]="checkIfThereAreSavedDrawnLines()" (click) = "cancelActionDrawnLine()"><--</button>
+  <button mat-mini-fab [disabled]="checkIfThereAreSavedDeletedDrawnLines()" (click) = "cancelActionDeletedDrawnLine()" >--></button>
 </div>

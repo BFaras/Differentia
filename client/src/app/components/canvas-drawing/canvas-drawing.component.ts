@@ -13,6 +13,8 @@ export class CanvasDrawingComponent implements  AfterViewInit {
   @ViewChild('canvas') public canvasDOM: ElementRef<HTMLCanvasElement>;
   private canvas: HTMLCanvasElement
   private context: CanvasRenderingContext2D | null;
+  // extraImage:boolean = false;
+  // isReadyChangeSaveMethod :boolean = false;
 
   constructor(private drawingHandlerService:DrawingHandlerService,
     private pencilService:PencilService,private drawingHistoryService:DrawingHistoryService) { }
@@ -26,10 +28,6 @@ export class CanvasDrawingComponent implements  AfterViewInit {
     this.useCanvasFocusedOn();
     this.prepareCanvasDrawing();
 
-    if(this.drawingHistoryService.firstCanvasHistory[0].length == 0){
-      this.drawingHistoryService.saveCanvas(this.context!)
-    }
-    
   }
 
   allowToDrawOnCanvas(){
@@ -42,10 +40,21 @@ export class CanvasDrawingComponent implements  AfterViewInit {
   }
 
   prepareCanvasDrawing():void {
+
+    const downMouseEvent = this.drawingHandlerService.mouseDownObservable.subscribe((e)=>{
+      this.drawingHistoryService.saveCanvas(this.context!);
+      downMouseEvent.unsubscribe()
+  });
+
     this.drawingHandlerService.mouseUpObservable.subscribe((e)=>{
+
         this.drawingHistoryService.saveCanvas(this.context!);
+        // this.extraImage = true;
+
 
     });
+
+
 
     this.drawingHandlerService.startObservingMousePath()
       .subscribe((mouseEvent:[MouseEvent,MouseEvent]) => {

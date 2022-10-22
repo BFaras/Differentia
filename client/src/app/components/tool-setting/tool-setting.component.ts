@@ -29,6 +29,41 @@ export class ToolSettingComponent implements OnInit {
     this.cancelActionDeletedDrawnLine()
   }
 
+  checkIfThereAreSavedDrawnLines(){
+    if (this.drawingHistoryService.firstCanvasHistory[0].length != 0){
+      return false
+    } else{
+      return true;
+    }
+  }
+
+  checkIfThereAreSavedDeletedDrawnLines(){
+    if (this.drawingHistoryService.firstCanvasHistory[1].length != 0){
+      return false
+    } else{
+      return true;
+    }
+  }
+
+  cancelActionDrawnLine(){
+    if(this.checkIfThereAreSavedDeletedDrawnLines() == true)
+    {
+      this.drawingHistoryService.cancelCanvas();
+      this.drawingHistoryService.cancelCanvas();
+    }else{
+      this.drawingHistoryService.cancelCanvas();
+    }
+  }
+
+  cancelActionDeletedDrawnLine(){
+    if(this.checkIfThereAreSavedDrawnLines() == true){
+    this.drawingHistoryService.cancelDeletedCanvas();
+    this.drawingHistoryService.cancelDeletedCanvas();
+    }else{
+      this.drawingHistoryService.cancelDeletedCanvas();
+    }
+  }
+
   setOriginalSetting(){
     this.pencilService.setWidth(VERY_SMALL);
     this.pencilService.setColor(BLACK_COLOR);
@@ -40,13 +75,5 @@ export class ToolSettingComponent implements OnInit {
 
   onChangeWidth(width: number):void{
     this.pencilService.setWidth(width);
-  }
-
-  cancelActionDrawnLine(){
-    this.drawingHistoryService.cancelCanvas();
-  }
-
-  cancelActionDeletedDrawnLine(){
-    this.drawingHistoryService.cancelDeletedCanvas();
   }
 }
