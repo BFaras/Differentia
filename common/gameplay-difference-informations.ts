@@ -1,5 +1,5 @@
 export interface GameplayDifferenceInformations {
     differencePixelsNumbers: number[];
-    isDifferenceFound: boolean;
+    isValidDifference: boolean;
     playerName: string;
 }

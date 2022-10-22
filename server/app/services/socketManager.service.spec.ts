@@ -73,7 +73,7 @@ describe('SocketManager service tests', () => {
         mouseHandlerIsValidClickStub = sinon.stub(MouseHandlerService.prototype, 'isValidClick').callsFake((positionTest) => {
             return {
                 differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
-                isDifferenceFound: false,
+                isValidDifference: false,
                 //To modify with a constant (constant is in feature/ChatGameView)
                 playerName: '',
             };

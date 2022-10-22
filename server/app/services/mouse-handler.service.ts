@@ -26,7 +26,7 @@ export class MouseHandlerService {
         this.differencesList = [];
     }
 
-    isValidClick(mousePosition: Position) {
+    isValidClick(mousePosition: Position): GameplayDifferenceInformations {
         return this.validateDifferencesOnClick(mousePosition);
     }
 
@@ -60,7 +60,7 @@ export class MouseHandlerService {
         const pixelNumber = this.convertMousePositionToPixelNumber(mousePosition);
         let differenceInformation: GameplayDifferenceInformations = {
             differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
-            isDifferenceFound: false,
+            isValidDifference: false,
             //To modify with a constant (constant is in feature/ChatGameView)
             playerName: '',
         };
@@ -72,7 +72,7 @@ export class MouseHandlerService {
                 // Nouvelle Différence trouvée
                 this.differencesNumberFound.push(differencesNumber);
                 differenceInformation.differencePixelsNumbers = this.differencesList[differencesNumber];
-                differenceInformation.isDifferenceFound = true;
+                differenceInformation.isValidDifference = true;
             }
         }
 
