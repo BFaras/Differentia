@@ -11,12 +11,19 @@ import { SocketClientService } from './socket-client.service';
 export class ChatMessagesService {
     public messagesObservable: Observable<ChatMessage>;
     private date: Date;
+    //message: ChatMessage;
+    displayMessage: () => void;
 
     constructor(private socketService: SocketClientService) {
         this.date = new Date();
+      //  this.message.message = '';
         this.messagesObservable = new Observable((observer: Subscriber<ChatMessage>) => {
             this.configureSocket(observer);
         });
+    }
+
+    displayBound(fn: () => void) {
+        this.displayMessage = fn;
     }
 
     public getTimeInCorrectFormat(): string {
