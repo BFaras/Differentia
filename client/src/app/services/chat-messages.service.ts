@@ -10,6 +10,7 @@ import { SocketClientService } from './socket-client.service';
 })
 export class ChatMessagesService {
     public messagesObservable: Observable<ChatMessage>;
+    private isMultiplayerGame = false;
     private date: Date;
 
     constructor(private socketService: SocketClientService) {
@@ -31,18 +32,18 @@ export class ChatMessagesService {
     private configureSocket(observer: Subscriber<ChatMessage>) {
         this.socketService.on('Valid click', (differenceInfos: GameplayDifferenceInformations) => {
             if (differenceInfos.isValidDifference) {
-                observer.next({
-                    timeMessageSent: this.getTimeInCorrectFormat(),
-                    senderName: GAME_MESSAGE_SENDER_NAME,
-                    message: MESSAGE_DIFFERENCE_FOUND_DEFAULT,
-                });
+                observer.next(this.generateChatMessage(this.getTimeInCorrectFormat(), GAME_MESSAGE_SENDER_NAME, MESSAGE_DIFFERENCE_FOUND_DEFAULT));
             } else {
-                observer.next({
-                    timeMessageSent: this.getTimeInCorrectFormat(),
-                    senderName: GAME_MESSAGE_SENDER_NAME,
-                    message: MESSAGE_ERROR_DIFFERENCE_DEFAULT,
-                });
+                observer.next(this.generateChatMessage(this.getTimeInCorrectFormat(), GAME_MESSAGE_SENDER_NAME, MESSAGE_ERROR_DIFFERENCE_DEFAULT));
             }
         });
+    }
+
+    private generateChatMessage(timeMessageSent: string, senderName: string, message: string): ChatMessage {
+        return {
+            timeMessageSent: timeMessageSent,
+            senderName: senderName,
+            message: message,
+        };
     }
 }
