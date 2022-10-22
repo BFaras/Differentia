@@ -1,6 +1,7 @@
 import { GamesService } from '@app/services/local.games.service';
 import { DEFAULT_GAME_ROOM_NAME, GAME_ROOM_GENERAL_ID, MODIFIED_IMAGE_POSITION, NO_OTHER_PLAYER_ROOM, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { DifferencesInformations } from '@common/differences-informations';
+import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
 import * as http from 'http';
@@ -17,7 +18,7 @@ export class SocketManager {
     readonly timeIntervals: Map<string, NodeJS.Timer> = new Map<string, NodeJS.Timer>();
     readonly chronometerServices: Map<string, ChronometerService> = new Map<string, ChronometerService>();
     readonly mouseHandlerServices: Map<string, MouseHandlerService> = new Map<string, MouseHandlerService>();
-    private playersWaitingPerGame: Map<string, string> = new Map<string, string>;
+    private playersWaitingPerGame: Map<string, string> = new Map<string, string>();
     private gamesService = Container.get(GamesService);
 
     constructor(server: http.Server) {
@@ -39,7 +40,7 @@ export class SocketManager {
             });
 
             socket.on('game page', async (gameName: string) => {
-                console.log("kesspass");
+                console.log('kesspass');
                 socket.emit('classic mode');
                 socket.emit('The game is', gameName);
                 //If no game room to join in multiplayer :
@@ -48,16 +49,17 @@ export class SocketManager {
             });
 
             socket.on('is there someone waiting', (gameName: string) => {
-                socket.emit(`${gameName} let me tell you if someone is waiting`, (this.playersWaitingPerGame.get(gameName) !== undefined));
+                socket.emit(`${gameName} let me tell you if someone is waiting`, this.playersWaitingPerGame.get(gameName) !== undefined);
             });
 
             socket.on('username is', (username: string) => {
+                socket.data.username = username;
                 socket.emit('show the username', username);
             });
 
             socket.on('I am waiting', (gameName: string) => {
                 this.playersWaitingPerGame.set(gameName, socket.id);
-                console.log(gameName + "  " + this.playersWaitingPerGame.get(gameName));
+                console.log(gameName + '  ' + this.playersWaitingPerGame.get(gameName));
                 this.sio.emit(`${gameName} someone is waiting`);
             });
 
@@ -65,14 +67,14 @@ export class SocketManager {
                 this.playersWaitingPerGame.delete(gameName);
                 this.sio.emit(`${gameName} nobody is waiting no more`);
             });
-            
+
             socket.on('I am trying to join', (gameInfoAndUsername: string[]) => {
-                console.log("dans socket manager i am trying to join");
+                console.log('dans socket manager i am trying to join');
                 const waitingSocketId = this.playersWaitingPerGame.get(gameInfoAndUsername[0]) as string;
-                console.log(gameInfoAndUsername[0] + "  " + waitingSocketId);
+                console.log(gameInfoAndUsername[0] + '  ' + waitingSocketId);
                 console.log(gameInfoAndUsername[1]);
                 this.sio.to(waitingSocketId).emit(`${gameInfoAndUsername[0]} someone is trying to join`, gameInfoAndUsername[1]);
-            })
+            });
 
             socket.on('detect images difference', (imagesData: ImageDataToCompare) => {
                 const differenceDetector = new DifferenceDetectorService(imagesData);
@@ -153,8 +155,8 @@ export class SocketManager {
     }
 
     private clickResponse(socket: io.Socket, mousePosition: Position) {
-        const clickAnswer = this.getSocketMouseHandlerService(socket).isValidClick(mousePosition);
-        socket.emit('Valid click', clickAnswer);
+        const differencesInfo: GameplayDifferenceInformations = this.getSocketMouseHandlerService(socket).isValidClick(mousePosition);
+        socket.emit('Valid click', differencesInfo);
     }
 
     private async sendImagesToClient(gameName: string, socket: io.Socket) {
