@@ -27,6 +27,7 @@ export class PencilService {
   }
 
   assignRightLineCap(mouseClick:MouseEvent){
+    console.log(mouseClick.which)
     if(mouseClick.which === 1){
       return ROUND_LINE_CAP
     }
