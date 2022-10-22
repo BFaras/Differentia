@@ -1,18 +1,4 @@
 <div class="chatContainer">
-<<<<<<< HEAD
-    <div class=" display">
-        <p
-            id="list-display"
-            *ngFor="let message of messagesSent"
-            [ngClass]="{
-                localUserMessage: message.senderName === localPlayerUsername,
-                otherUserMessage: (message.senderName !== localPlayerUsername && message.senderName !== gameMessageSenderName),
-                gameMessage: message.senderName === gameMessageSenderName
-            }"
-        >
-            {{ message.senderName }} : {{ message.message }}
-        </p>
-=======
     <div>
         <li class="chatMessages">
             <ng-container *ngFor="let message of messagesSent">
@@ -28,7 +14,6 @@
                 </div>
             </ng-container>
         </li>
->>>>>>> d10b21cc01de3307e0522001c405548fd88435e3
     </div>
         <form>
             <input type="text" placeholder="Entrez un message" maxlength="200"
