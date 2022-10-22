@@ -30,7 +30,7 @@ export class PopDialogUsernameComponent implements OnInit {
     }
 
     public gamePage(): void {
-        this.startUpGameService.startUpGame(this.gameInfo, this.username.nativeElement.value);
+        this.startUpGameService.startUpWaitingLine(this.gameInfo, this.username.nativeElement.value);
     }
 
     public inputChanged(): void {
@@ -40,7 +40,6 @@ export class PopDialogUsernameComponent implements OnInit {
 
     public openDialog(): void {
         this.gamePage();
-        console.log(this.username.nativeElement.value);
         this.dialog.open(PopDialogWaitingForPlayerComponent, {
             height: '400px',
             width: '600px',

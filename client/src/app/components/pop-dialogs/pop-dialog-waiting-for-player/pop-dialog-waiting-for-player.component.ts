@@ -20,6 +20,7 @@ export class PopDialogWaitingForPlayerComponent implements OnInit {
 
   ngOnInit(): void {
     this.configureWaitingPopUpSocketFeatures();
+    this.socketService.send('my username is', this.gameInfo.username);
     this.socketService.send(`Is the host still there`, this.gameInfo.nameGame);
   }
 

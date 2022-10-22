@@ -14,6 +14,11 @@ export class StartUpGameService {
     private socketService: SocketClientService
     ) {}
 
+  private multiplayerGame(gameInfo: any, username: string): void {
+    if(gameInfo.isPlayerWaiting) this.joinGameService.joinGame(gameInfo, username);
+    else this.createGameService.createGame(gameInfo.nameGame);
+  }
+
   private soloGame(gameName: string): void {
     this.socketService.send('game page', gameName);
   }
@@ -22,17 +27,22 @@ export class StartUpGameService {
     this.socketService.send('username is', username);
   }
 
-  public startUpGame(gameInfo: any, username: string): void {
+  public startUpWaitingLine(gameInfo: any, username: string): void {
     if(gameInfo.multiFlag) {
       this.multiplayerGame(gameInfo, username);
     }
-    else this.soloGame(gameInfo.nameGame);
-    this.sendUsername(username);
+    else {
+      this.soloGame(gameInfo.nameGame);
+      this.sendUsername(username);
+    }
   }
 
-  private multiplayerGame(gameInfo: any, username: string): void {
-    if(gameInfo.isPlayerWaiting) this.joinGameService.joinGame(gameInfo, username);
-    else this.createGameService.createGame(gameInfo.nameGame);
+  public startMatch(gameName: string) {
+    this.socketService.send('launch multiplayer match', gameName);
+  }
+
+  public declineAdversary() {
+    this.socketService.send('I refuse this adversary');
   }
 
 }

@@ -15,8 +15,8 @@
             </ng-template>
             <ng-container *ngIf="isSomeoneJoining">
                 <h3>{{ playerTryingToJoin }} is trying to join</h3>
-                <button mat-raised-button mat-dialog-close>Let him/her join</button>
-                <button mat-raised-button mat-dialog-close>Don't let him/her join</button>
+                <button mat-raised-button mat-dialog-close (click)="startUpGameService.startMatch(gameInfo.nameGame)">Let him/her join</button>
+                <button mat-raised-button mat-dialog-close (click)="startUpGameService.declineAdversary()">Don't let him/her join</button>
             </ng-container>
         </mat-dialog-actions>
     </mat-dialog-content>
