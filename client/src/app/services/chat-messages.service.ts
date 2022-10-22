@@ -24,7 +24,7 @@ export class ChatMessagesService {
 
     constructor(private socketService: SocketClientService) {
         this.date = new Date();
-      //  this.message.message = '';
+        //  this.message.message = '';
         this.messagesObservable = new Observable((observer: Subscriber<ChatMessage>) => {
             this.configureSocket(observer);
         });
@@ -55,7 +55,7 @@ export class ChatMessagesService {
                 observer.next(
                     this.generateChatMessageFromGame(this.getTimeInCorrectFormat(), MESSAGE_ERROR_DIFFERENCE_MULTI + differenceInfos.playerName),
                 );
-            } else if (!differenceInfos.isValidDifference && this.isMultiplayerGame) {
+            } else if (!differenceInfos.isValidDifference && !this.isMultiplayerGame) {
                 observer.next(this.generateChatMessageFromGame(this.getTimeInCorrectFormat(), MESSAGE_ERROR_DIFFERENCE_SOLO));
             }
         });
