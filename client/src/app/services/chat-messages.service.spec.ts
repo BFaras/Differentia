@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { ChatMessage } from '@common/chat-message';
-import { MESSAGE_DIFFERENCE_FOUND_DEFAULT, MESSAGE_ERROR_DIFFERENCE_DEFAULT, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
+import { DEFAULT_USERNAME, MESSAGE_DIFFERENCE_FOUND_DEFAULT, MESSAGE_ERROR_DIFFERENCE_DEFAULT, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
+import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Subscription } from 'rxjs';
 
 import { Socket } from 'socket.io-client';
@@ -13,7 +14,16 @@ describe('ChatMessagesService', () => {
     const putResponseInVariableCallback = (message: ChatMessage) => {
         messageReceivedFromObservable = message;
     };
-    const arrayWithDifferenceFound = [1];
+    const notValidClickInfo: GameplayDifferenceInformations = {
+        differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
+        isValidDifference: false,
+        playerName: DEFAULT_USERNAME,
+    };
+    const differencesFoundInfo: GameplayDifferenceInformations = {
+        differencePixelsNumbers: [0],
+        isValidDifference: true,
+        playerName: DEFAULT_USERNAME,
+    };
     let chatMessagesService: ChatMessagesService;
     let socketService: SocketClientService;
     let observer: Subscription;
@@ -40,7 +50,7 @@ describe('ChatMessagesService', () => {
 
     it('should send the error message when a Valid click event is sent and there is no difference found', async () => {
         observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
-        socketTestHelper.peerSideEmit('Valid click', NO_DIFFERENCE_FOUND_ARRAY);
+        socketTestHelper.peerSideEmit('Valid click', notValidClickInfo);
         await setTimeout(() => {
             expect(messageReceivedFromObservable.message).toEqual(MESSAGE_ERROR_DIFFERENCE_DEFAULT);
         });
@@ -48,7 +58,7 @@ describe('ChatMessagesService', () => {
 
     it('should send the error message when a Valid click event is sent and there is no difference found', async () => {
         observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
-        socketTestHelper.peerSideEmit('Valid click', arrayWithDifferenceFound);
+        socketTestHelper.peerSideEmit('Valid click', differencesFoundInfo);
         await setTimeout(() => {
             expect(messageReceivedFromObservable.message).toEqual(MESSAGE_DIFFERENCE_FOUND_DEFAULT);
         });
