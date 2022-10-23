@@ -152,7 +152,7 @@ export class SocketManager {
     }
 
     private async beginGame(socket: io.Socket, gameName: string, otherPlayerRoomId: string) {
-        this.setupSocketRoom(socket, otherPlayerRoomId);
+        this.setupSocketGameRoom(socket, otherPlayerRoomId);
         this.setupNecessaryGameServices(socket);
 
         await this.getSocketMouseHandlerService(socket).generateDifferencesInformations(gameName);
@@ -165,7 +165,7 @@ export class SocketManager {
 
         const adversarySocket = this.getSocketByID(adversarySocketId);
         const gameRoomName = this.findSocketGameRoomName(socket);
-        this.setupSocketRoom(adversarySocket, gameRoomName);
+        this.setupSocketGameRoom(adversarySocket, gameRoomName);
 
         adversarySocket.emit(`${gameName} you have been accepted`);
         socket.emit('The adversary username is', adversarySocket.data.username);
@@ -191,7 +191,7 @@ export class SocketManager {
         );
     }
 
-    private setupSocketRoom(socket: io.Socket, otherPlayerGameRoomId: string) {
+    private setupSocketGameRoom(socket: io.Socket, otherPlayerGameRoomId: string) {
         const playerGameRoomID = socket.id + GAME_ROOM_GENERAL_ID;
 
         if (otherPlayerGameRoomId === NO_OTHER_PLAYER_ROOM && !socket.rooms.has(playerGameRoomID)) {
