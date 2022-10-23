@@ -45,9 +45,7 @@ export class SocketManager {
                 socket.emit('The game is', gameName);
                 const username = this.getUsernamePlayer(socket.id);
                 socket.emit('show the username', username);
-                //If no game room to join in multiplayer :
-                await this.beginGame(socket, gameName, NO_OTHER_PLAYER_ROOM);
-                //else we send the room name where a player is waiting to start a multiplayer game
+                await this.beginGame(socket, gameName);
             });
 
             socket.on('is there someone waiting', (gameName: string) => {
@@ -151,8 +149,8 @@ export class SocketManager {
         });
     }
 
-    private async beginGame(socket: io.Socket, gameName: string, otherPlayerRoomId: string) {
-        this.setupSocketGameRoom(socket, otherPlayerRoomId);
+    private async beginGame(socket: io.Socket, gameName: string) {
+        this.setupSocketGameRoom(socket, NO_OTHER_PLAYER_ROOM);
         this.setupNecessaryGameServices(socket);
 
         await this.getSocketMouseHandlerService(socket).generateDifferencesInformations(gameName);
@@ -161,7 +159,7 @@ export class SocketManager {
 
     //To test
     private async startMultiplayerMatch(socket: io.Socket, adversarySocketId: string, gameName: string) {
-        await this.beginGame(socket, gameName, NO_OTHER_PLAYER_ROOM);
+        await this.beginGame(socket, gameName);
 
         const adversarySocket = this.getSocketByID(adversarySocketId);
         const gameRoomName = this.findSocketGameRoomName(socket);
