@@ -186,7 +186,7 @@ export class SocketManager {
         this.timeIntervals.set(
             gameRoomName,
             setInterval(() => {
-                this.emitTime(socket, this.getSocketChronometerService(socket));
+                this.emitTime(socket, this.getSocketChronometerService(socket), gameRoomName);
             }, 1000),
         );
     }
@@ -212,21 +212,23 @@ export class SocketManager {
         return gameRoomName;
     }
 
-    private emitTime(socket: io.Socket, chronometerService: ChronometerService) {
+    private emitTime(socket: io.Socket, chronometerService: ChronometerService, gameRoomName: string) {
         chronometerService.increaseTime();
-        socket.emit('time', chronometerService.time);
+        socket.to(gameRoomName).emit('time', chronometerService.time);
     }
 
     private clickResponse(socket: io.Socket, mousePosition: Position) {
         const differencesInfo: GameplayDifferenceInformations = this.getSocketMouseHandlerService(socket).isValidClick(mousePosition);
         differencesInfo.playerName = socket.data.username;
-        socket.emit('Valid click', differencesInfo);
+        socket.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
     }
 
     private async sendImagesToClient(gameName: string, socket: io.Socket) {
         const gameImagesData: string[] = await this.gamesService.getGameImagesData(gameName);
 
-        socket.emit('classic solo images', [gameImagesData[ORIGINAL_IMAGE_POSITION], gameImagesData[MODIFIED_IMAGE_POSITION]]);
+        socket
+            .to(this.findSocketGameRoomName(socket))
+            .emit('classic solo images', [gameImagesData[ORIGINAL_IMAGE_POSITION], gameImagesData[MODIFIED_IMAGE_POSITION]]);
     }
 
     private endGame(socket: io.Socket) {
