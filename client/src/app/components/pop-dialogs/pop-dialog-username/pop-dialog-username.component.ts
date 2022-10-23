@@ -1,5 +1,5 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
 import { PopDialogWaitingForPlayerComponent } from '../pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
@@ -12,18 +12,21 @@ import { PopDialogWaitingForPlayerComponent } from '../pop-dialog-waiting-for-pl
 export class PopDialogUsernameComponent implements OnInit {
     @ViewChild('userName') username: ElementRef;
     disabledButton: boolean = true;
+    usernameNotValid: boolean = false;
 
     constructor(private socketService: SocketClientService, 
         @Inject(MAT_DIALOG_DATA) public gameInfo: any,
         public startUpGameService: StartUpGameService,
         private dialog: MatDialog,
+        private dialogRef: MatDialogRef<PopDialogUsernameComponent>
         ) {}
 
     ngOnInit(): void {
         this.socketService.connect();
+        this.configureUsernamePopUpSocketFeatures();
     }
 
-    public startWaitingLine(): void {
+    private startWaitingLine(): void {
         this.startUpGameService.startUpWaitingLine(this.gameInfo, this.username.nativeElement.value);
     }
 
@@ -32,7 +35,7 @@ export class PopDialogUsernameComponent implements OnInit {
         else this.disabledButton = true;
     }
 
-    public openDialog(): void {
+    private openDialog(): void {
         this.dialog.open(PopDialogWaitingForPlayerComponent, {
             height: '400px',
             width: '600px',
@@ -43,6 +46,18 @@ export class PopDialogUsernameComponent implements OnInit {
                 createFlag: this.gameInfo.createFlag,
                 username: this.username.nativeElement.value,
             },
+        });
+    }
+
+    private configureUsernamePopUpSocketFeatures(): void {
+        this.socketService.on('username valid', () => {
+            if(this.gameInfo.multiFlag) this.openDialog();
+            this.startWaitingLine();
+            this.dialogRef.close();
+        });
+
+        this.socketService.on('username not valid', () => {
+            this.usernameNotValid = true;
         });
     }
 }

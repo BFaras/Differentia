@@ -14,6 +14,7 @@ export class JoinGameService {
 
   public leaveJoiningProcess(gameName: string) {
     this.socketService.send('I dont want to join anymore', gameName);
+    window.location.reload();
   }
 
 }

@@ -28,7 +28,6 @@ export class StartUpGameService {
   // }
 
   public startUpWaitingLine(gameInfo: any, username: string): void {
-    this.sendUsername(username);
     if(gameInfo.multiFlag) {
       this.multiplayerGame(gameInfo, username);
     }

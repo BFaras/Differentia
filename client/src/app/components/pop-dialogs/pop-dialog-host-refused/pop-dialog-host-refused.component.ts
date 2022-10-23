@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { SocketClientService } from '@app/services/socket-client.service';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-pop-dialog-host-refused',
@@ -7,9 +9,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PopDialogHostRefusedComponent implements OnInit {
 
-  constructor() { }
+  constructor(private socketService: SocketClientService, @Inject(MAT_DIALOG_DATA) public gameInfo: any) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  ngOnDestroy(): void {
+    this.socketService.send('need reconnection');
   }
-
 }

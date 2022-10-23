@@ -20,15 +20,19 @@ export class PopDialogWaitingForPlayerComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public gameInfo: any) { }
 
   ngOnInit(): void {
+    this.socketService.connect();
     this.configureWaitingPopUpSocketFeatures();
     this.socketService.send(`Is the host still there`, this.gameInfo.nameGame);
   }
 
-  private openRefusedDialog() {
+  private openRefusedDialog(didHostChoseAnother: boolean): void {
     this.dialog.open(PopDialogHostRefusedComponent, {
       height: '400px',
       width: '600px',
       disableClose: true,
+      data: {
+        didHostChoseAnotherFlag: didHostChoseAnother,
+      },
     });
   }
 
@@ -45,11 +49,12 @@ export class PopDialogWaitingForPlayerComponent implements OnInit {
 
     this.socketService.on(`${this.gameInfo.nameGame} response on host presence`, (response: boolean) => {
       this.isHostPresent = response;
+      // window.location.reload();
     });
 
-    this.socketService.on(`${this.gameInfo.nameGame} you have been declined`, () => {
+    this.socketService.on(`${this.gameInfo.nameGame} you have been declined`, (didHostChoseAnother: boolean) => {
       this.dialogRef.close();
-      this.openRefusedDialog();
+      this.openRefusedDialog(didHostChoseAnother);
     });
 
     this.socketService.on(`${this.gameInfo.nameGame} you have been accepted`, () => {

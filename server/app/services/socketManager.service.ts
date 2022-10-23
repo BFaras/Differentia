@@ -53,7 +53,11 @@ export class SocketManager {
             });
 
             socket.on('my username is', (username: string) => {
-                this.setUsernamePlayer(socket.id, username);
+                if(username.charAt(0) !== " ") {
+                    this.setUsernamePlayer(socket.id, username);
+                    this.sio.to(socket.id).emit('username valid');
+                }
+                else this.sio.to(socket.id).emit('username not valid');
             });
 
             socket.on('I am waiting', (gameName: string) => {
@@ -74,13 +78,19 @@ export class SocketManager {
                 this.sio.emit(`${gameName} nobody is waiting no more`);
             });
 
+            socket.on('need reconnection', () => {
+                console.log("dans manager");
+                this.sio.to(socket.id).emit('reconnect');
+            });
+
             socket.on(`Is the host still there`, (gameName: string) => {
-                //Utiliser la constante que j'ai dit dans la ligne 74 ici
+                //Utiliser la constante que j'ai dit dans la ligne 71 ici
                 if (this.playersCreatingAGame.get(gameName)?.length) this.sio.to(socket.id).emit(`${gameName} response on host presence`, true);
                 else this.sio.to(socket.id).emit(`${gameName} response on host presence`, false);
             });
 
             socket.on('I am trying to join', (gameInfoAndUsername: string[]) => {
+                console.log("i am trying to join " + socket.id);
                 this.addJoiningPlayer(socket.id, gameInfoAndUsername);
                 const waitingSocketId = this.playersCreatingAGame.get(gameInfoAndUsername[0]) as string;
                 this.sio
@@ -105,7 +115,8 @@ export class SocketManager {
                 if (this.playersJoiningAGame.get(gameName)?.length) {
                     const playersWaiting = this.playersJoiningAGame.get(gameName) as string[];
                     for (const player of playersWaiting) {
-                        this.sio.to(player).emit(`${gameName} you have been declined`);
+                        //Mettre cette valeur dans une constante appellée CHOSE_ANOTHER
+                        this.sio.to(player).emit(`${gameName} you have been declined`, true);
                     }
                 }
                 await this.startMultiplayerMatch(socket, adversarySocketId, gameName);
@@ -115,7 +126,8 @@ export class SocketManager {
             socket.on('I refuse this adversary', (gameName: string) => {
                 const waitingSocketId = this.getIDFirstPlayerWaiting(gameName);
                 this.deleteJoiningPlayer(waitingSocketId, gameName);
-                this.sio.to(waitingSocketId).emit(`${gameName} you have been declined`);
+                //voir commentaire ligne 114
+                this.sio.to(waitingSocketId).emit(`${gameName} you have been declined`, false);
                 if (this.playersJoiningAGame.get(gameName)?.length)
                     this.sio.to(socket.id).emit(`${gameName} someone is trying to join`, this.getUsernameFirstPlayerWaiting(gameName));
                 else this.sio.to(socket.id).emit(`${gameName} the player trying to join left`);
@@ -161,6 +173,8 @@ export class SocketManager {
     //To test
     private async startMultiplayerMatch(socket: io.Socket, adversarySocketId: string, gameName: string) {
         await this.beginGame(socket, gameName);
+
+        console.log("combien de fois je rentre dans cette merde zbi");
 
         const adversarySocket = this.getSocketByID(adversarySocketId);
         const gameRoomName = this.findSocketGameRoomName(socket);
@@ -283,9 +297,10 @@ export class SocketManager {
 
     private deleteJoiningPlayerId(socketId: string, gameName: string) {
         let playersTryingToJoin = this.playersJoiningAGame.get(gameName) as string[];
-        playersTryingToJoin = playersTryingToJoin?.filter((id) => id !== socketId);
+        playersTryingToJoin = playersTryingToJoin?.filter(id => id !== socketId);
         this.playersJoiningAGame.delete(gameName);
         this.playersJoiningAGame.set(gameName, playersTryingToJoin);
+        // console.log("après filtre : " + playersTryingToJoin);
     }
 
     private getIDFirstPlayerWaiting(gameName: string) {

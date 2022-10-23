@@ -57,6 +57,12 @@ export class GameFormComponent {
         this.joinFLag = false;
     }
 
+    // resetSocket(): void {
+    //     this.socketService.disconnect();
+    //     this.socketService.connect();
+    //     this.configureGameFormSocketFeatures();
+    // }
+
     configureGameFormSocketFeatures(): void {
         this.socketService.on(`${this.gameForm.gameName} let me tell you if someone is waiting`, (response: boolean) => {
             this.isPlayerWaiting = response;
@@ -71,6 +77,19 @@ export class GameFormComponent {
             this.isPlayerWaiting = false;
             this.resetFlags();
         });
+
+        // this.socketService.on("reconnect", () => {
+        //     console.log("1");
+        //     this.resetSocket();
+        // });
+
+
+        
+        // this.socketService.on(`${this.gameForm.gameName} reconnect`, () => {
+        //     this.socketService.disconnect();
+        //     this.socketService.connect();
+        //     this.configureGameFormSocketFeatures();
+        // })
     }
 
 }

@@ -12,5 +12,12 @@ export class GameSelectionComponent {
 
     ngOnInit(): void {
         this.socketService.connect();
+        this.configureGameSelectionSocketFeatures();
+    }
+
+    configureGameSelectionSocketFeatures(): void {
+        this.socketService.on('reconnect', () => {
+            window.location.reload();
+        });
     }
 }
