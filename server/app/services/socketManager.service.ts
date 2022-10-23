@@ -56,10 +56,11 @@ export class SocketManager {
             });
 
             socket.on('my username is', (username: string) => {
-                console.log("my user is" + username);
-                console.log("my user is ID " + socket.id);
+                console.log('my user is' + username);
+                console.log('my user is ID ' + socket.id);
                 this.usernamePlayers.set(socket.id, username);
-                console.log("my user is get " +  this.usernamePlayers.get(socket.id));
+                console.log('my user is get ' + this.usernamePlayers.get(socket.id));
+                socket.data.username = username;
             });
 
             socket.on('I am waiting', (gameName: string) => {
@@ -82,14 +83,16 @@ export class SocketManager {
 
             socket.on(`Is the host still there`, (gameName: string) => {
                 //Utiliser la constante que j'ai dit dans la ligne 74 ici
-                if(this.playersCreatingAGame.get(gameName)?.length) this.sio.to(socket.id).emit(`${gameName} response on host presence`, true);
+                if (this.playersCreatingAGame.get(gameName)?.length) this.sio.to(socket.id).emit(`${gameName} response on host presence`, true);
                 else this.sio.to(socket.id).emit(`${gameName} response on host presence`, false);
             });
 
             socket.on('I am trying to join', (gameInfoAndUsername: string[]) => {
                 this.addJoiningPlayer(socket.id, gameInfoAndUsername);
                 const waitingSocketId = this.playersCreatingAGame.get(gameInfoAndUsername[0]) as string;
-                this.sio.to(waitingSocketId).emit(`${gameInfoAndUsername[0]} someone is trying to join`, this.getUsernameFirstPlayerWaiting(gameInfoAndUsername[0]));
+                this.sio
+                    .to(waitingSocketId)
+                    .emit(`${gameInfoAndUsername[0]} someone is trying to join`, this.getUsernameFirstPlayerWaiting(gameInfoAndUsername[0]));
             });
 
             socket.on('I dont want to join anymore', (gameName: string) => {
@@ -97,21 +100,16 @@ export class SocketManager {
                 const waitingSocketId = this.playersCreatingAGame.get(gameName) as string;
                 this.sio.to(waitingSocketId).emit(`${gameName} the player trying to join left`);
                 // Les deux prochaines lignes sont réutilisées aux lignes  ==> pt les mettre dans un service
-                if(this.playersJoiningAGame.get(gameName)?.length) 
+                if (this.playersJoiningAGame.get(gameName)?.length)
                     this.sio.to(waitingSocketId).emit(`${gameName} someone is trying to join`, this.getUsernameFirstPlayerWaiting(gameName));
             });
 
             socket.on('launch classic mode multiplayer match', async (gameName: string) => {
-                socket.emit('classic mode');
-                socket.emit('The game is', gameName);
                 const creatorUsername = this.getUsernamePlayer(socket.id);
                 const adversarySocketId = this.getIDFirstPlayerWaiting(gameName);
                 const adversaryUsername = this.getUsernameFirstPlayerWaiting(gameName);
                 this.deleteJoiningPlayer(adversarySocketId, gameName);
                 this.deleteCreatorOfGame(gameName);
-                this.sio.to(socket.id).emit('The adversary username is', adversaryUsername);
-                this.sio.to(adversarySocketId).emit(`${gameName} you have been accepted`)
-                this.sio.to(adversarySocketId).emit('The adversary username is', creatorUsername);
                 //Mettre cette boucle for dans un service
                 if (this.playersJoiningAGame.get(gameName)?.length) {
                     const playersWaiting = this.playersJoiningAGame.get(gameName) as string[];
@@ -119,15 +117,15 @@ export class SocketManager {
                         this.sio.to(player).emit(`${gameName} you have been declined`);
                     }
                 }
+                await this.startMultiplayerMatch(socket, adversarySocketId, gameName);
                 this.sio.emit(`${gameName} nobody is waiting no more`);
-                await this.beginGame(socket, gameName, adversarySocketId);
             });
 
             socket.on('I refuse this adversary', (gameName: string) => {
                 const waitingSocketId = this.getIDFirstPlayerWaiting(gameName);
                 this.deleteJoiningPlayer(waitingSocketId, gameName);
                 this.sio.to(waitingSocketId).emit(`${gameName} you have been declined`);
-                if(this.playersJoiningAGame.get(gameName)?.length) 
+                if (this.playersJoiningAGame.get(gameName)?.length)
                     this.sio.to(socket.id).emit(`${gameName} someone is trying to join`, this.getUsernameFirstPlayerWaiting(gameName));
                 else this.sio.to(socket.id).emit(`${gameName} the player trying to join left`);
             });
@@ -166,6 +164,21 @@ export class SocketManager {
 
         await this.getSocketMouseHandlerService(socket).generateDifferencesInformations(gameName);
         await this.sendImagesToClient(gameName, socket);
+    }
+
+    private async startMultiplayerMatch(socket: io.Socket, adversarySocketId: string, gameName: string) {
+        await this.beginGame(socket, gameName, NO_OTHER_PLAYER_ROOM);
+
+        const adversarySocket = this.getSocketByID(adversarySocketId);
+        const gameRoomName = this.findSocketGameRoomName(socket);
+        this.setupSocketRoom(adversarySocket, gameRoomName);
+
+        adversarySocket.emit(`${gameName} you have been accepted`);
+        socket.emit('The adversary username is', adversarySocket.data.username);
+        adversarySocket.emit('The adversary username is', socket.data.username);
+
+        socket.to(gameRoomName).emit('classic mode');
+        socket.to(gameRoomName).emit('The game is', gameName);
     }
 
     private setupNecessaryGameServices(socket: io.Socket) {
@@ -259,12 +272,11 @@ export class SocketManager {
 
     private addJoiningPlayerId(socketId: string, gameName: string) {
         let playersTryingToJoin: string[] = [];
-        if(this.playersJoiningAGame.get(gameName)) {
+        if (this.playersJoiningAGame.get(gameName)) {
             playersTryingToJoin = this.playersJoiningAGame.get(gameName) as string[];
             playersTryingToJoin.push(socketId);
             this.playersJoiningAGame.delete(gameName);
-        }
-        else {
+        } else {
             playersTryingToJoin.push(socketId);
         }
         this.playersJoiningAGame.set(gameName, playersTryingToJoin);
@@ -285,7 +297,7 @@ export class SocketManager {
 
     private deleteJoiningPlayerId(socketId: string, gameName: string) {
         let playersTryingToJoin = this.playersJoiningAGame.get(gameName) as string[];
-        playersTryingToJoin = playersTryingToJoin?.filter(id => id !== socketId);
+        playersTryingToJoin = playersTryingToJoin?.filter((id) => id !== socketId);
         this.playersJoiningAGame.delete(gameName);
         this.playersJoiningAGame.set(gameName, playersTryingToJoin);
     }
@@ -294,7 +306,7 @@ export class SocketManager {
         let playersWaiting = this.playersJoiningAGame.get(gameName) as string[];
         let idWanted = playersWaiting.shift() as string;
         playersWaiting.unshift(idWanted);
-        return idWanted;      
+        return idWanted;
     }
 
     private getUsernameFirstPlayerWaiting(gameName: string) {
@@ -307,5 +319,9 @@ export class SocketManager {
 
     private getUsernamePlayer(socketId: string) {
         return this.usernamePlayers.get(socketId);
+    }
+
+    private getSocketByID(socketID: string): io.Socket {
+        return this.sio.sockets.sockets.get(socketID)!;
     }
 }
