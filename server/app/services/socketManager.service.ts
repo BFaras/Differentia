@@ -20,7 +20,6 @@ export class SocketManager {
     readonly mouseHandlerServices: Map<string, MouseHandlerService> = new Map<string, MouseHandlerService>();
     private playersCreatingAGame: Map<string, string> = new Map<string, string>();
     private playersJoiningAGame: Map<string, string[]> = new Map<string, string[]>();
-    private usernamePlayers: Map<string, string> = new Map<string, string>();
     private gamesService = Container.get(GamesService);
 
     constructor(server: http.Server) {
@@ -56,8 +55,7 @@ export class SocketManager {
             });
 
             socket.on('my username is', (username: string) => {
-                this.usernamePlayers.set(socket.id, username);
-                socket.data.username = username;
+                this.setUsernamePlayer(socket.id, username);
             });
 
             socket.on('I am waiting', (gameName: string) => {
@@ -263,7 +261,6 @@ export class SocketManager {
     // Cette méthode devrait-elle être dans un service?
     private addJoiningPlayer(socketId: string, gameInfo: string[]) {
         this.addJoiningPlayerId(socketId, gameInfo[0]);
-        this.addJoiningPlayerUsername(socketId, gameInfo[1]);
     }
 
     private addJoiningPlayerId(socketId: string, gameName: string) {
@@ -278,17 +275,8 @@ export class SocketManager {
         this.playersJoiningAGame.set(gameName, playersTryingToJoin);
     }
 
-    private addJoiningPlayerUsername(socketId: string, username: string) {
-        this.usernamePlayers.set(socketId, username);
-    }
-
     private deleteJoiningPlayer(socketId: string, gameName: string) {
-        this.deleteJoiningPlayerUsername(socketId);
         this.deleteJoiningPlayerId(socketId, gameName);
-    }
-
-    private deleteJoiningPlayerUsername(socketId: string) {
-        this.usernamePlayers.delete(socketId);
     }
 
     private deleteJoiningPlayerId(socketId: string, gameName: string) {
@@ -314,7 +302,11 @@ export class SocketManager {
     }
 
     private getUsernamePlayer(socketId: string) {
-        return this.usernamePlayers.get(socketId);
+        return this.getSocketByID(socketId).data.username;
+    }
+
+    private setUsernamePlayer(socketId: string, username: string) {
+        this.getSocketByID(socketId).data.username = username;
     }
 
     private getSocketByID(socketID: string): io.Socket {
