@@ -97,8 +97,8 @@ describe('SocketManager service tests', () => {
         }, RESPONSE_DELAY);
     });
 
-    it('should handle a game page event and return the game of the name that was launched', (done) => {
-        clientSocket.emit('game page', testGameName);
+    it('should handle a solo classic mode event and return the game of the name that was launched', (done) => {
+        clientSocket.emit('solo classic mode', testGameName);
         clientSocket.once('The game is', (nameOfGame: string) => {
             expect(nameOfGame).to.equal(testGameName);
             done();
@@ -128,70 +128,70 @@ describe('SocketManager service tests', () => {
         });
     });
 
-    it('should handle a game page event and return the game of the name that was launched', (done) => {
-        clientSocket.emit('game page', testGameName);
+    it('should handle a solo classic mode event and return the game of the name that was launched', (done) => {
+        clientSocket.emit('solo classic mode', testGameName);
         clientSocket.once('The game is', (nameOfGame: string) => {
             expect(nameOfGame).to.equal(testGameName);
             done();
         });
     });
 
-    it('should handle a game page event and call beginGame', (done) => {
+    it('should handle a solo classic mode event and call beginGame', (done) => {
         const spy = sinon.spy(service, <any>'beginGame');
-        clientSocket.emit('game page', testGameName);
+        clientSocket.emit('solo classic mode', testGameName);
         setTimeout(() => {
             expect(spy.calledOnce);
             done();
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
 
-    it('should handle a game page event and call generateDifferencesInformations', (done) => {
+    it('should handle a solo classic mode event and call generateDifferencesInformations', (done) => {
         const spy = sinon.spy(mouseHandlerService, 'generateDifferencesInformations');
-        clientSocket.emit('game page', testGameName);
+        clientSocket.emit('solo classic mode', testGameName);
         setTimeout(() => {
             expect(spy.calledOnce);
             done();
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
 
-    it('should handle a game page event and call setupSocketRoom', (done) => {
-        const spy = sinon.spy(service, <any>'setupSocketRoom');
-        clientSocket.emit('game page', testGameName);
+    it('should handle a solo classic mode event and call setupSocketGameRoom', (done) => {
+        const spy = sinon.spy(service, <any>'setupSocketGameRoom');
+        clientSocket.emit('solo classic mode', testGameName);
         setTimeout(() => {
             expect(spy.calledOnce);
             done();
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
 
-    it('should handle a game page event and call setupNecessaryGameServices', (done) => {
+    it('should handle a solo classic mode event and call setupNecessaryGameServices', (done) => {
         const spy = sinon.spy(service, <any>'setupNecessaryGameServices');
-        clientSocket.emit('game page', testGameName);
+        clientSocket.emit('solo classic mode', testGameName);
         setTimeout(() => {
             expect(spy.calledOnce);
             done();
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
 
-    it('should call emitTime on game page event', (done) => {
+    it('should call emitTime on solo classic mode event', (done) => {
         const spy = sinon.spy(service, <any>'emitTime');
-        clientSocket.emit('game page', testGameName);
+        clientSocket.emit('solo classic mode', testGameName);
         setTimeout(() => {
             expect(spy.calledOnce);
             done();
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
 
-    it('should call getGameImagesData on game page event', (done) => {
+    it('should call getGameImagesData on solo classic mode event', (done) => {
         const spy = sinon.spy(GamesService.prototype, 'getGameImagesData');
-        clientSocket.emit('game page', testGameName);
+        clientSocket.emit('solo classic mode', testGameName);
         setTimeout(() => {
             expect(spy.calledOnce);
             done();
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
 
-    it('should emit a classic solo images event on game page event', (done) => {
-        clientSocket.emit('game page', testGameName);
+    it('should emit a classic solo images event on solo classic mode event', (done) => {
+        clientSocket.emit('solo classic mode', testGameName);
         clientSocket.once('classic solo images', (imagesDataReceived: string[]) => {
             expect(imagesDataReceived).to.exist;
             done();
@@ -235,6 +235,7 @@ describe('SocketManager service tests', () => {
 
     it('should handle a Check if game is finished on finished game and call resetData', (done) => {
         const spy = sinon.spy(mouseHandlerService, 'resetData');
+        mouseHandlerService.addPlayerToGame(clientSocket.id);
         clientSocket.emit('Check if game is finished');
         setTimeout(() => {
             expect(spy.calledOnce);
