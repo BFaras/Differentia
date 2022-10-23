@@ -140,7 +140,7 @@ export class SocketManager {
 
             socket.on('Check if game is finished', () => {
                 const mouseHandler: MouseHandlerService = this.getSocketMouseHandlerService(socket);
-                if (mouseHandler.differencesNumberFound.length === mouseHandler.nbDifferencesTotal) {
+                if (mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === mouseHandler.nbDifferencesTotal) {
                     mouseHandler.resetData();
                     this.endGame(socket);
                     socket.emit('End game');
@@ -154,6 +154,7 @@ export class SocketManager {
         this.setupNecessaryGameServices(socket);
 
         await this.getSocketMouseHandlerService(socket).generateDifferencesInformations(gameName);
+        this.getSocketMouseHandlerService(socket).addPlayerToGame(socket.id);
         await this.sendImagesToClient(gameName, socket);
     }
 
@@ -164,6 +165,7 @@ export class SocketManager {
         const adversarySocket = this.getSocketByID(adversarySocketId);
         const gameRoomName = this.findSocketGameRoomName(socket);
         this.setupSocketGameRoom(adversarySocket, gameRoomName);
+        this.getSocketMouseHandlerService(adversarySocket).addPlayerToGame(adversarySocketId);
 
         adversarySocket.emit(`${gameName} you have been accepted`);
         socket.emit('The adversary username is', adversarySocket.data.username);
@@ -216,7 +218,7 @@ export class SocketManager {
     }
 
     private clickResponse(socket: io.Socket, mousePosition: Position) {
-        const differencesInfo: GameplayDifferenceInformations = this.getSocketMouseHandlerService(socket).isValidClick(mousePosition);
+        const differencesInfo: GameplayDifferenceInformations = this.getSocketMouseHandlerService(socket).isValidClick(mousePosition, socket.id);
         differencesInfo.playerName = socket.data.username;
         this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
     }

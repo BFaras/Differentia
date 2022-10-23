@@ -26,8 +26,14 @@ export class MouseHandlerService {
         this.differencesList = [];
     }
 
+    //To test
     addPlayerToGame(plrSocketID: string) {
         this.differencesNbFoundByPlayer.set(plrSocketID, []);
+    }
+
+    //To test
+    getNumberOfDifferencesFoundByPlayer(plrSocketId: string): number {
+        return this.differencesNbFoundByPlayer.get(plrSocketId)!.length;
     }
 
     isValidClick(mousePosition: Position, plrSocketID: string): GameplayDifferenceInformations {
