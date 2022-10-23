@@ -171,8 +171,8 @@ export class SocketManager {
         socket.emit('The adversary username is', adversarySocket.data.username);
         adversarySocket.emit('The adversary username is', socket.data.username);
 
-        socket.to(gameRoomName).emit('classic mode');
-        socket.to(gameRoomName).emit('The game is', gameName);
+        this.sio.to(gameRoomName).emit('classic mode');
+        this.sio.to(gameRoomName).emit('The game is', gameName);
     }
 
     private setupNecessaryGameServices(socket: io.Socket) {
@@ -195,9 +195,9 @@ export class SocketManager {
         const playerGameRoomID = socket.id + GAME_ROOM_GENERAL_ID;
 
         if (otherPlayerGameRoomId === NO_OTHER_PLAYER_ROOM && !socket.rooms.has(playerGameRoomID)) {
-            socket.rooms.add(playerGameRoomID);
+            socket.join(playerGameRoomID);
         } else {
-            socket.rooms.add(otherPlayerGameRoomId);
+            socket.join(otherPlayerGameRoomId);
         }
     }
 
@@ -214,19 +214,19 @@ export class SocketManager {
 
     private emitTime(socket: io.Socket, chronometerService: ChronometerService, gameRoomName: string) {
         chronometerService.increaseTime();
-        socket.to(gameRoomName).emit('time', chronometerService.time);
+        this.sio.to(gameRoomName).emit('time', chronometerService.time);
     }
 
     private clickResponse(socket: io.Socket, mousePosition: Position) {
         const differencesInfo: GameplayDifferenceInformations = this.getSocketMouseHandlerService(socket).isValidClick(mousePosition);
         differencesInfo.playerName = socket.data.username;
-        socket.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
+        this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
     }
 
     private async sendImagesToClient(gameName: string, socket: io.Socket) {
         const gameImagesData: string[] = await this.gamesService.getGameImagesData(gameName);
 
-        socket
+        this.sio
             .to(this.findSocketGameRoomName(socket))
             .emit('classic solo images', [gameImagesData[ORIGINAL_IMAGE_POSITION], gameImagesData[MODIFIED_IMAGE_POSITION]]);
     }
