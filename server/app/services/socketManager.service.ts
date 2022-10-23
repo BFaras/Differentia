@@ -56,10 +56,7 @@ export class SocketManager {
             });
 
             socket.on('my username is', (username: string) => {
-                console.log('my user is' + username);
-                console.log('my user is ID ' + socket.id);
                 this.usernamePlayers.set(socket.id, username);
-                console.log('my user is get ' + this.usernamePlayers.get(socket.id));
                 socket.data.username = username;
             });
 
@@ -105,9 +102,7 @@ export class SocketManager {
             });
 
             socket.on('launch classic mode multiplayer match', async (gameName: string) => {
-                const creatorUsername = this.getUsernamePlayer(socket.id);
                 const adversarySocketId = this.getIDFirstPlayerWaiting(gameName);
-                const adversaryUsername = this.getUsernameFirstPlayerWaiting(gameName);
                 this.deleteJoiningPlayer(adversarySocketId, gameName);
                 this.deleteCreatorOfGame(gameName);
                 //Mettre cette boucle for dans un service
@@ -166,6 +161,7 @@ export class SocketManager {
         await this.sendImagesToClient(gameName, socket);
     }
 
+    //To test
     private async startMultiplayerMatch(socket: io.Socket, adversarySocketId: string, gameName: string) {
         await this.beginGame(socket, gameName, NO_OTHER_PLAYER_ROOM);
 
