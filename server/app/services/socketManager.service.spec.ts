@@ -44,7 +44,7 @@ describe('SocketManager service tests', () => {
     let differenceDetectorService: DifferenceDetectorService = new DifferenceDetectorService(imagesData);
     let gamesService: GamesService = Container.get(GamesService);
     let mouseHandlerService: MouseHandlerService = new MouseHandlerService();
-    let mouseHandlerIsValidClickStub: sinon.SinonStub<[mousePosition: Position], GameplayDifferenceInformations>;
+    let mouseHandlerIsValidClickStub: sinon.SinonStub<[mousePosition: Position, plrSocketId: string], GameplayDifferenceInformations>;
 
     const urlString = 'http://localhost:3000';
 
@@ -70,7 +70,7 @@ describe('SocketManager service tests', () => {
             return Promise.resolve(['', '']);
         });
 
-        mouseHandlerIsValidClickStub = sinon.stub(MouseHandlerService.prototype, 'isValidClick').callsFake((positionTest) => {
+        mouseHandlerIsValidClickStub = sinon.stub(MouseHandlerService.prototype, 'isValidClick').callsFake(() => {
             return {
                 differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
                 isValidDifference: false,
