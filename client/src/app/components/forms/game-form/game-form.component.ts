@@ -22,7 +22,6 @@ export class GameFormComponent {
         ) {}
         
     ngOnInit(): void {
-        this.socketService.connect();
         this.configureGameFormSocketFeatures();
         this.socketService.send('is there someone waiting', this.gameForm.gameName);
     }
@@ -31,10 +30,10 @@ export class GameFormComponent {
     }
 
     public openDialog(multiplayerFlag: boolean): void {
-        console.log("noinFlag dans form component : " + this.joinFLag);
         this.dialog.open(PopDialogUsernameComponent, {
             height: '400px',
             width: '600px',
+            disableClose: true,
             data: {
                 nameGame: this.gameForm.gameName,
                 multiFlag: multiplayerFlag,
@@ -43,17 +42,14 @@ export class GameFormComponent {
                 isPlayerWaiting: this.isPlayerWaiting,
             },
         });
-        console.log("noinFlag dans form component 2 : " + this.joinFLag);
     }
 
-    public setJoinFlagAndOpenDialog(): void {
+    public setJoinFlag(): void {
         this.joinFLag = true;
-        this.openDialog(true);
     }
 
-    public setCreateFlagAndOpenDialog(): void {
+    public setCreateFlag(): void {
         this.createFlag = true;
-        this.openDialog(true);
     }
 
     private resetFlags(): void {

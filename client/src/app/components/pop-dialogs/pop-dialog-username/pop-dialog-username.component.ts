@@ -10,26 +10,20 @@ import { PopDialogWaitingForPlayerComponent } from '../pop-dialog-waiting-for-pl
     styleUrls: ['./pop-dialog-username.component.scss'],
 })
 export class PopDialogUsernameComponent implements OnInit {
-    @ViewChild('username') username: ElementRef;
+    @ViewChild('userName') username: ElementRef;
     disabledButton: boolean = true;
 
     constructor(private socketService: SocketClientService, 
         @Inject(MAT_DIALOG_DATA) public gameInfo: any,
-        private startUpGameService: StartUpGameService,
+        public startUpGameService: StartUpGameService,
         private dialog: MatDialog,
         ) {}
 
     ngOnInit(): void {
         this.socketService.connect();
-        console.log("gameinfo: " + this.gameInfo);
-        console.log("gameInfo.nameGame : " + this.gameInfo.nameGame);
-        console.log("gameInfo.multiFlag : " + this.gameInfo.multiFlag);
-        console.log("gameInfo.createFlag : " + this.gameInfo.createFlag);
-        console.log("gameInfo.isPlayerWaiting : " + this.gameInfo.isPlayerWaiting);
-        console.log("gameInfo.joinFlag : " + this.gameInfo.joinFlag);
     }
 
-    public gamePage(): void {
+    public startWaitingLine(): void {
         this.startUpGameService.startUpWaitingLine(this.gameInfo, this.username.nativeElement.value);
     }
 
@@ -39,10 +33,10 @@ export class PopDialogUsernameComponent implements OnInit {
     }
 
     public openDialog(): void {
-        this.gamePage();
         this.dialog.open(PopDialogWaitingForPlayerComponent, {
             height: '400px',
             width: '600px',
+            disableClose: true,
             data: {
                 nameGame: this.gameInfo.nameGame,
                 joinFlag: this.gameInfo.joinFlag,

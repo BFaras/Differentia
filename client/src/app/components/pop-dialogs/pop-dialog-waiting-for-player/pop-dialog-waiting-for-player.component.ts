@@ -1,9 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { CreateGameService } from '@app/services/create-game.service';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { JoinGameService } from '@app/services/join-game.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
+import { PopDialogHostRefusedComponent } from '../pop-dialog-host-refused/pop-dialog-host-refused.component';
 
 @Component({
   selector: 'app-pop-dialog-waiting-for-player',
@@ -15,18 +16,24 @@ export class PopDialogWaitingForPlayerComponent implements OnInit {
   playerTryingToJoin: string = "";
   isHostPresent: boolean = true;
   constructor(private socketService: SocketClientService, public createGameService: CreateGameService, public joinGameService: JoinGameService,
-    public startUpGameService: StartUpGameService,
+    public startUpGameService: StartUpGameService, private dialogRef: MatDialogRef<PopDialogWaitingForPlayerComponent>, private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public gameInfo: any) { }
 
   ngOnInit(): void {
     this.configureWaitingPopUpSocketFeatures();
-    this.socketService.send('my username is', this.gameInfo.username);
     this.socketService.send(`Is the host still there`, this.gameInfo.nameGame);
+  }
+
+  private openRefusedDialog() {
+    this.dialog.open(PopDialogHostRefusedComponent, {
+      height: '400px',
+      width: '600px',
+      disableClose: true,
+    });
   }
 
   private configureWaitingPopUpSocketFeatures(): void {
     this.socketService.on(`${this.gameInfo.nameGame} someone is trying to join`, (username: string) => {
-      console.log(username);
       this.isSomeoneJoining = true;
       this.playerTryingToJoin = username;
     });
@@ -37,9 +44,24 @@ export class PopDialogWaitingForPlayerComponent implements OnInit {
     });
 
     this.socketService.on(`${this.gameInfo.nameGame} response on host presence`, (response: boolean) => {
-      if(response) this.isHostPresent = true;
-      else this.isHostPresent = false;
-    })
+      this.isHostPresent = response;
+    });
+
+    this.socketService.on(`${this.gameInfo.nameGame} you have been declined`, () => {
+      this.dialogRef.close();
+      this.openRefusedDialog();
+    });
+
+    this.socketService.on(`${this.gameInfo.nameGame} you have been accepted`, () => {
+      this.dialogRef.close();
+      //Changer la page vers la page de jeu
+    });
+
+    // Pt mettre ce on dans la page de jeu directement
+    this.socketService.on('The adversary username is', (username: string) => {
+      //enlever le console.log et l'utiliser pour faire quoi que ce soit dans la vue du jeu multijoueur
+      console.log(username);
+    });
   }
 
 }

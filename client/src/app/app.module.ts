@@ -27,6 +27,7 @@ import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
 import { GameSelectionComponent } from './pages/game-selection/game-selection.component';
 import { PopDialogWaitingForPlayerComponent } from './components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
+import { PopDialogHostRefusedComponent } from './components/pop-dialogs/pop-dialog-host-refused/pop-dialog-host-refused.component';
 
 /**
  * Main module that is used in main.ts.
@@ -58,6 +59,7 @@ import { PopDialogWaitingForPlayerComponent } from './components/pop-dialogs/pop
         PopDialogUsernameComponent,
         PopDialogEndgameComponent,
         PopDialogWaitingForPlayerComponent,
+        PopDialogHostRefusedComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
     providers: [],
