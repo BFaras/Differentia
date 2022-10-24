@@ -14,8 +14,11 @@ import { SocketClientService } from '@app/services/socket-client.service';
 export class GameFormComponent {
     @Input() gameForm: GameFormDescription;
     @Input() buttonPage: string;
+    //mettre les 3 prochaines valeurs dans un fichier constantes
     adminGameFormsButton = ['Supprimer', 'Réinitialiser'];
     selectionGameFormsButton = ['Créer', 'Jouer', 'Joindre'];
+    multiplayerFlag: boolean = true;
+    // ---------------------------------------------------------
     isPlayerWaiting: boolean = false;
     joinFLag: boolean = false;
     createFlag: boolean = false;
