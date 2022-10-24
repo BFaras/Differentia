@@ -28,7 +28,7 @@ describe('ListGameFormComponent', () => {
             declarations: [ListGameFormComponent],
             providers: [{ provide: FormService, useValue: formServiceSpy }],
         }).compileComponents();
-        formServiceSpy = jasmine.createSpyObj('FormService', ['receiveGameInformations']);
+        formServiceSpy = jasmine.createSpyObj('FormService', ['receiveGameInformations', 'deleteGameForm']);
         fixture = TestBed.createComponent(ListGameFormComponent);
         listGameFormComp = fixture.componentInstance;
 
@@ -78,5 +78,12 @@ describe('ListGameFormComponent', () => {
         listGameFormComp.previousPageGameForms();
         expect(listGameFormComp.firstElementIndex).toEqual(INITIAL_FIRST_ELEMENT_INDEX);
         expect(listGameFormComp.lastElementIndex).toEqual(Constants.MAX_NB_OF_FORMS_PER_PAGE - 1);
+    });
+
+    it('should be able to delete a gameForm', () => {
+        formService.gameForms = gameFormsInTestFormService;
+        listGameFormComp.deleteGameForm('Dog game');
+        expect(formServiceSpy.deleteGameForm).toHaveBeenCalled();
+        expect(formService.gameToDelete).toEqual('Dog game');
     });
 });

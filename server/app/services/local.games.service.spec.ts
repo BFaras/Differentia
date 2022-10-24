@@ -13,39 +13,40 @@ describe('Games service', () => {
     let allGamesTest: Game[];
     let validGameToAdd: Game;
     let invalidGameToAdd: Game;
+    let carGame: Game;
+    let bikeGame: Game;
     let newTime: Time;
 
     beforeEach(async () => {
         gamesService = new GamesService();
         gamesService.gamesFilePath = 'testGames.json';
-        allGamesTest = [
-            {
-                name: 'Car game',
-                numberOfDifferences: 4,
-                times: [],
-                images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
-                differencesList: [],
-            },
-            {
-                name: 'Bike game',
-                numberOfDifferences: 5,
-                times: [],
-                images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
-                differencesList: [],
-            },
-        ];
+        carGame = {
+            name: 'Car game',
+            numberOfDifferences: 4,
+            times: [],
+            images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
+            differencesList: [],
+        };
+        bikeGame = {
+            name: 'Bike game',
+            numberOfDifferences: 5,
+            times: [],
+            images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
+            differencesList: [],
+        };
+        allGamesTest = [carGame, bikeGame];
         validGameToAdd = {
             name: 'New Game',
             numberOfDifferences: 5,
             times: [],
-            images: ['image1', 'image2'],
+            images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
             differencesList: [],
         };
         invalidGameToAdd = {
             name: 'Car game',
             numberOfDifferences: 5,
             times: [],
-            images: ['image1', 'image2'],
+            images: ['image_7_diff.bmp', 'ImageBlanche.bmp'],
             differencesList: [],
         };
         newTime = {
@@ -56,6 +57,8 @@ describe('Games service', () => {
 
     afterEach(async () => {
         sinon.restore();
+        await gamesService.addGame(carGame);
+        await gamesService.addGame(bikeGame);
     });
 
     it('should input all the games in the "games" attribute when the JSON file is read', async () => {
@@ -143,6 +146,11 @@ describe('Games service', () => {
             expect(gamesService['getGameImageData'](testImageName)).to.eventually.be.rejectedWith(Error);
             expect(stub.callsFake);
             expect(spy.calledOnce);
+        });
+
+        it('should delete a specific game when calling deleteGame', async () => {
+            expect(await gamesService.deleteGame('Car game')).to.deep.equals([allGamesTest[1]]);
+            expect(await gamesService.deleteGame('Bike game')).to.deep.equals([]);
         });
     });
 });

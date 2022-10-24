@@ -1,6 +1,7 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { GameFormDescription } from '@app/classes/game-form-description';
+import { RecordTimesBoard } from '@app/classes/record-times-board';
 import { Game } from '@common/game';
-import { firstValueFrom } from 'rxjs';
 import { CommunicationService } from './communication.service';
 import { FormService } from './form.service';
 
@@ -12,7 +13,7 @@ describe('FormService', () => {
     let gameList: Game[] = [{ name: 'bike', numberOfDifferences: 2, times: [], images: ['img1'], differencesList: [][0] }];
 
     beforeEach(() => {
-        communicationSpy = jasmine.createSpyObj('CommunicationService', ['getGames']);
+        communicationSpy = jasmine.createSpyObj('CommunicationService', ['getGames', 'deleteGame']);
         TestBed.configureTestingModule({
             providers: [{ provide: CommunicationService, useValue: communicationSpy }],
         });
@@ -26,9 +27,16 @@ describe('FormService', () => {
     });
 
     it('should receive info', fakeAsync(async () => {
-        const result = await firstValueFrom(communicationSpy.getGames());
+        const result = communicationSpy.getGames();
         tick(1000);
         await service.receiveGameInformations();
+        expect(result).toHaveBeenCalled();
+    }));
+
+    it('should delete info', fakeAsync(async () => {
+        const result = communicationSpy.deleteGame('Game');
+        tick(1000);
+        await service.deleteGameForm();
         expect(result).toHaveBeenCalled();
     }));
 
@@ -36,7 +44,8 @@ describe('FormService', () => {
         const listGameNameSpy = spyOn(service, 'fillListGameName');
         const listGameImageSpy = spyOn(service, 'fillListGameImage');
         tick(2000);
-        service.parseGameList([]);
+        service.gamelist = [];
+        service.parseGameList();
         expect(listGameNameSpy).not.toHaveBeenCalled();
         expect(listGameImageSpy).not.toHaveBeenCalled();
     }));
@@ -45,7 +54,8 @@ describe('FormService', () => {
         const listGameNameSpy = spyOn(service, 'fillListGameName');
         const listGameImageSpy = spyOn(service, 'fillListGameImage');
         tick(2000);
-        service.parseGameList(gameList);
+        service.gamelist = gameList;
+        service.parseGameList();
         expect(listGameNameSpy).not.toHaveBeenCalled();
         expect(listGameImageSpy).not.toHaveBeenCalled();
     }));
@@ -81,5 +91,23 @@ describe('FormService', () => {
         service.fillListGameName('im1', listImage);
         service.fillListGameName('im2', listImage);
         expect(service.listImage).toEqual(['im1', 'im2']);
+    });
+
+    it('should reset the game form', () => {
+        const gameList: GameFormDescription = new GameFormDescription('Bike Game', 'img1', new RecordTimesBoard([], []));
+        service.gameForms.push(gameList);
+        service.resetGameForms();
+        expect(service.gameForms).toEqual([]);
+        expect(service.gamelist).toEqual([]);
+        expect(service.listImage).toEqual([]);
+        expect(service.listName).toEqual([]);
+    });
+
+    it('should delete the game form', () => {
+        const gameList: GameFormDescription = new GameFormDescription('Bike Game', 'img1', new RecordTimesBoard([], []));
+        service.gameForms.push(gameList);
+        service.gameToDelete = 'Bike Game';
+        service.deleteGameForm();
+        expect(service.gameForms).toEqual([]);
     });
 });

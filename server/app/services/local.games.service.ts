@@ -90,6 +90,13 @@ export class GamesService {
     async deleteGame(nameOfGameToDelete: string) {
         await this.asyncReadGamesFile();
         const newGames = this.games.filter((game: Game) => {
+            // if (game.name === nameOfGameToDelete) {
+            //     const pathImage1 = game.images[0];
+            //     fs.rm(pathImage1, (err) => {
+            //         if (err) throw err;
+            //         console.log('path/file.txt was deleted');
+            //     });
+            // }
             return game.name !== nameOfGameToDelete;
         });
         this.games = newGames;

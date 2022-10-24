@@ -10,22 +10,24 @@ import { CommunicationService } from './communication.service';
 export class FormService {
     listName: string[] = [];
     listImage: string[] = [];
-
+    gamelist: Game[] = [];
     gameForms: GameFormDescription[] = [];
+    gameToDelete: string = '';
 
     constructor(private communicationService: CommunicationService) {}
 
     async receiveGameInformations() {
         this.resetGameForms();
-        await firstValueFrom(this.communicationService.getGames()).then((gameList) => {
-            this.parseGameList(gameList);
+        await firstValueFrom(this.communicationService.getGames()).then((games) => {
+            this.gamelist = games;
+            this.parseGameList();
         });
     }
 
-    parseGameList(gamelist: Game[]) {
-        for (let index = 0; index < gamelist.length; index++) {
-            this.fillListGameName(gamelist[index].name, this.listName);
-            this.fillListGameImage(gamelist[index].images[0], this.listImage);
+    parseGameList() {
+        for (let index = 0; index < this.gamelist.length; index++) {
+            this.fillListGameName(this.gamelist[index].name, this.listName);
+            this.fillListGameImage(this.gamelist[index].images[0], this.listImage);
             this.initializeGameForm(index);
         }
     }
@@ -44,5 +46,15 @@ export class FormService {
 
     resetGameForms() {
         this.gameForms = [];
+        this.gamelist = [];
+        this.listImage = [];
+        this.listName = [];
+    }
+
+    deleteGameForm() {
+        this.communicationService.deleteGame(this.gameToDelete).subscribe(async (games) => {
+            this.gamelist = games;
+        });
+        location.reload();
     }
 }

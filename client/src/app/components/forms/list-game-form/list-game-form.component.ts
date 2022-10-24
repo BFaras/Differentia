@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GameFormDescription } from '@app/classes/game-form-description';
-import { CommunicationService } from '@app/services/communication.service';
 import { FormService } from '@app/services/form.service';
 import { Constants } from '@common/config';
 
@@ -15,7 +14,7 @@ export class ListGameFormComponent implements OnInit {
     currentPageGameFormList: GameFormDescription[];
     @Input() page: string;
 
-    constructor(public formService: FormService, private communicationService: CommunicationService) {}
+    constructor(public formService: FormService) {}
 
     async ngOnInit() {
         await this.formService.receiveGameInformations();
@@ -58,13 +57,8 @@ export class ListGameFormComponent implements OnInit {
         }
     }
 
-    getGameName(gameName: string) {
-        this.communicationService.deleteGame(gameName).subscribe(async (games) => {
-            this.formService.resetGameForms();
-            this.formService.parseGameList(games);
-            await this.ngOnInit();
-            location.reload();
-            console.log(this.formService.gameForms);
-        });
+    deleteGameForm(gameName: string) {
+        this.formService.gameToDelete = gameName;
+        this.formService.deleteGameForm();
     }
 }

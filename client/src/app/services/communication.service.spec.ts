@@ -184,17 +184,18 @@ describe('CommunicationService', () => {
         req.flush(sentMessage);
     });
 
-    // peut-être changer avec une requête HTTP qu'on connait
-    it('should handle http error safely', () => {
-        service.basicGet().subscribe({
-            next: (response: Message) => {
-                expect(response).toBeUndefined();
+    it('should return the games without the deleted game', () => {
+        const games = allGames.slice(0, -2);
+        const gameToDelete = 'Dog game';
+        service.deleteGame(gameToDelete).subscribe({
+            next: (response: Game[]) => {
+                expect(response).toEqual(games);
             },
             error: fail,
         });
 
-        const req = httpMock.expectOne(`${baseUrl}/example`);
-        expect(req.request.method).toBe('GET');
-        req.error(new ProgressEvent('Random error occurred'));
+        const req = httpMock.expectOne(`${baseUrl}/games/${gameToDelete}`);
+        expect(req.request.method).toBe('DELETE');
+        req.flush(games);
     });
 });
