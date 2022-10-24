@@ -23,10 +23,6 @@ export class StartUpGameService {
     this.socketService.send('solo classic mode', gameName);
   }
 
-  // private sendUsername(username: string): void {
-  //   this.socketService.send('username is', username);
-  // }
-
   public startUpWaitingLine(gameInfo: any, username: string): void {
     if(gameInfo.multiFlag) {
       this.multiplayerGame(gameInfo, username);
@@ -45,7 +41,6 @@ export class StartUpGameService {
   }
 
   public sendUsername(username: string): void {
-    console.log("send username");
     this.socketService.send('my username is', username);
   }
 

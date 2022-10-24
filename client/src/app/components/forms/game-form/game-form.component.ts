@@ -3,9 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
 import { SocketClientService } from '@app/services/socket-client.service';
-
-// Comment je fait pour avoir accès à cette constante dans le fichier html
-// const MULTI_FLAG = true;
+// import { ADMIN_GAME_FORMS_BUTTON, SELECTION_GAME_FORMS_BUTTON, MULTIPLAYER_MODE } from '@app/client-consts';
+// Comment je fait pour avoir accès à ces constante dans le fichier html
 
 @Component({
     selector: 'app-game-form',
@@ -75,5 +74,9 @@ export class GameFormComponent {
             this.isPlayerWaiting = false;
             this.resetFlags();
         });
+
+        this.socketService.on('reconnect', () => {
+            this.ngOnInit();
+        })
     }
 }
