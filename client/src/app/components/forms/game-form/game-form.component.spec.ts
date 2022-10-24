@@ -42,7 +42,7 @@ describe('GameFormComponent', () => {
 
     it('should open dialog', () => {
         const dialogSpy = spyOn(gameFormComp['dialog'], 'open').and.callThrough();
-        gameFormComp.openDialog();
+        gameFormComp.openDialog(true);
         expect(dialogSpy).toHaveBeenCalled();
     });
 });
