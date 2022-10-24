@@ -49,7 +49,6 @@ export class PopDialogWaitingForPlayerComponent implements OnInit {
 
     this.socketService.on(`${this.gameInfo.nameGame} response on host presence`, (response: boolean) => {
       this.isHostPresent = response;
-      // window.location.reload();
     });
 
     this.socketService.on(`${this.gameInfo.nameGame} you have been declined`, (didHostChoseAnother: boolean) => {

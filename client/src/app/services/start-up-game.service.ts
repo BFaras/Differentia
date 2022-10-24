@@ -45,6 +45,7 @@ export class StartUpGameService {
   }
 
   public sendUsername(username: string): void {
+    console.log("send username");
     this.socketService.send('my username is', username);
   }
 

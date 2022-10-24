@@ -4,6 +4,9 @@ import { GameFormDescription } from '@app/classes/game-form-description';
 import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
 import { SocketClientService } from '@app/services/socket-client.service';
 
+// Comment je fait pour avoir accès à cette constante dans le fichier html
+// const MULTI_FLAG = true;
+
 @Component({
     selector: 'app-game-form',
     templateUrl: './game-form.component.html',
@@ -57,18 +60,13 @@ export class GameFormComponent {
         this.joinFLag = false;
     }
 
-    // resetSocket(): void {
-    //     this.socketService.disconnect();
-    //     this.socketService.connect();
-    //     this.configureGameFormSocketFeatures();
-    // }
-
     configureGameFormSocketFeatures(): void {
         this.socketService.on(`${this.gameForm.gameName} let me tell you if someone is waiting`, (response: boolean) => {
             this.isPlayerWaiting = response;
         });
 
         this.socketService.on(`${this.gameForm.gameName} someone is waiting`, () => {
+            console.log("salut");
             this.isPlayerWaiting = true;
             this.resetFlags();
         });
@@ -77,19 +75,5 @@ export class GameFormComponent {
             this.isPlayerWaiting = false;
             this.resetFlags();
         });
-
-        // this.socketService.on("reconnect", () => {
-        //     console.log("1");
-        //     this.resetSocket();
-        // });
-
-
-        
-        // this.socketService.on(`${this.gameForm.gameName} reconnect`, () => {
-        //     this.socketService.disconnect();
-        //     this.socketService.connect();
-        //     this.configureGameFormSocketFeatures();
-        // })
     }
-
 }
