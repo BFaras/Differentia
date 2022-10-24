@@ -21,6 +21,7 @@ import { ListImagesRenderedComponent } from './components/list-images-rendered/l
 import { PopDialogCreateGameComponent } from './components/pop-dialogs/pop-dialog-create-game/pop-dialog-create-game.component';
 import { PopDialogDownloadImagesComponent } from './components/pop-dialogs/pop-dialog-download-images/pop-dialog-download-images.component';
 import { PopDialogEndgameComponent } from './components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
+import { PopDialogHostRefusedComponent } from './components/pop-dialogs/pop-dialog-host-refused/pop-dialog-host-refused.component';
 import { PopDialogUsernameComponent } from './components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
 import { PopDialogValidateGameComponent } from './components/pop-dialogs/pop-dialog-validate-game/pop-dialog-validate-game.component';
 import { PopDialogWaitingForPlayerComponent } from './components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
@@ -60,6 +61,7 @@ import { GameSelectionComponent } from './pages/game-selection/game-selection.co
         PopDialogEndgameComponent,
         ChatSectionComponent,
         PopDialogWaitingForPlayerComponent,
+        PopDialogHostRefusedComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
     providers: [],

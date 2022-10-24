@@ -9,12 +9,12 @@ export class JoinGameService {
   constructor(private socketService: SocketClientService) { }
 
   public joinGame(gameInfo: any, username: string) {
-    console.log("trying to join");
     this.socketService.send("I am trying to join", [gameInfo.nameGame, username]);
   }
 
   public leaveJoiningProcess(gameName: string) {
     this.socketService.send('I dont want to join anymore', gameName);
+    this.socketService.send('need reconnection');
   }
 
 }

@@ -54,7 +54,7 @@ export class FormService {
     deleteGameForm() {
         this.communicationService.deleteGame(this.gameToDelete).subscribe(async (games) => {
             this.gamelist = games;
+            location.reload();
         });
-        location.reload();
     }
 }

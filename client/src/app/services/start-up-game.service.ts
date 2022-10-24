@@ -14,26 +14,34 @@ export class StartUpGameService {
     private socketService: SocketClientService
     ) {}
 
-  private soloGame(gameName: string): void {
-    this.socketService.send('game page', gameName);
-  }
-
-  private sendUsername(username: string): void {
-    this.socketService.send('username is', username);
-  }
-
-  public startUpGame(gameInfo: any, username: string): void {
-    console.log("username " + gameInfo.username);
-    if(gameInfo.multiFlag) {
-      this.multiplayerGame(gameInfo, username);
-    }
-    else this.soloGame(gameInfo.nameGame);
-    this.sendUsername(username);
-  }
-
   private multiplayerGame(gameInfo: any, username: string): void {
     if(gameInfo.isPlayerWaiting) this.joinGameService.joinGame(gameInfo, username);
     else this.createGameService.createGame(gameInfo.nameGame);
+  }
+
+  private soloGame(gameName: string): void {
+    this.socketService.send('solo classic mode', gameName);
+  }
+
+  public startUpWaitingLine(gameInfo: any, username: string): void {
+    if(gameInfo.multiFlag) {
+      this.multiplayerGame(gameInfo, username);
+    }
+    else {
+      this.soloGame(gameInfo.nameGame);
+    }
+  }
+
+  public startMatch(gameName: string) {
+    this.socketService.send('launch classic mode multiplayer match', gameName);
+  }
+
+  public declineAdversary(gameName: string) {
+    this.socketService.send('I refuse this adversary', gameName);
+  }
+
+  public sendUsername(username: string): void {
+    this.socketService.send('my username is', username);
   }
 
 }

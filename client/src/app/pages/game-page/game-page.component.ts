@@ -47,10 +47,6 @@ export class GamePageComponent {
         this.socketService.on('show the username', (username: string) => {
             this.usernames[0] = username; // Ajouter une constante
         });
-        this.socketService.on('Name repeated', () => {
-            console.log('le nom est répété ');
-        });
-
         this.socketService.on('classic solo images', (imagesData: string[]) => {
             this.images[ORIGINAL_IMAGE_POSITION].src = imagesData[ORIGINAL_IMAGE_POSITION];
             this.images[MODIFIED_IMAGE_POSITION].src = imagesData[MODIFIED_IMAGE_POSITION];

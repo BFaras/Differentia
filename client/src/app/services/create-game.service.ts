@@ -18,6 +18,7 @@ export class CreateGameService {
 
   public leaveWaitingList(gameName: string): void {
     this.socketService.send('I left', gameName);
+    this.socketService.send('need reconnection');
   }
 
 }

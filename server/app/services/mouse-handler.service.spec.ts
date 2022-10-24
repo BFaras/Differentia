@@ -11,6 +11,7 @@ import { MouseHandlerService } from './mouse-handler.service';
 
 describe('MouseHandlerService', () => {
     const testGameName = 'name';
+    const testSocketID = 'socket1';
     const testGame: Game = {
         name: testGameName,
         numberOfDifferences: 2,
@@ -39,6 +40,7 @@ describe('MouseHandlerService', () => {
         mouseService = new MouseHandlerService();
         mouseService.differencesHashmap.set(0, 0);
         mouseService.differencesList = testDifferencesList;
+        mouseService.addPlayerToGame(testSocketID);
         position = { x: 0, y: 0 };
     });
 
@@ -69,32 +71,32 @@ describe('MouseHandlerService', () => {
     });
 
     it('should return an empty array if difference is already found and return false for isValidDifferenceFound', () => {
-        mouseService.differencesNumberFound = [FIRST_ARRAY_POSITION];
-        const differencesInfo: GameplayDifferenceInformations = mouseService.isValidClick(position);
+        mouseService.differencesNbFoundByPlayer.set(testSocketID, [FIRST_ARRAY_POSITION]);
+        const differencesInfo: GameplayDifferenceInformations = mouseService.isValidClick(position, testSocketID);
         expect(differencesInfo.differencePixelsNumbers).to.be.deep.equals(NO_DIFFERENCE_FOUND_ARRAY);
         expect(differencesInfo.isValidDifference).to.equal(false);
     });
 
     it('should not return an empty array if difference is not already found and return true for isValidDifferenceFound', () => {
-        const differencesInfo: GameplayDifferenceInformations = mouseService.isValidClick(position);
+        const differencesInfo: GameplayDifferenceInformations = mouseService.isValidClick(position, testSocketID);
         expect(differencesInfo.differencePixelsNumbers).to.not.be.deep.equals(NO_DIFFERENCE_FOUND_ARRAY);
         expect(differencesInfo.isValidDifference).to.equal(true);
     });
 
     it('should return an empty array if pixel is not a difference and return false for isValidDifferenceFound', () => {
         position = { x: 2, y: 2 };
-        const differencesInfo: GameplayDifferenceInformations = mouseService.isValidClick(position);
+        const differencesInfo: GameplayDifferenceInformations = mouseService.isValidClick(position, testSocketID);
         expect(differencesInfo.differencePixelsNumbers).to.be.deep.equals(NO_DIFFERENCE_FOUND_ARRAY);
         expect(differencesInfo.isValidDifference).to.equal(false);
     });
 
     it('should reset differencesHashmap and differencesFound array on resetData() call', () => {
         let differencesHashmapTest: Map<number, number> = new Map<number, number>();
-        let differencesNumberFoundTest: number[] = [];
+        let differencesNbFoundByPlayerTest: Map<string, number> = new Map<string, number>();
 
-        mouseService.differencesNumberFound = [1, 2, 3];
+        mouseService.differencesNbFoundByPlayer.set(testSocketID, [1, 2, 3]);
         mouseService.resetData();
         expect(mouseService.differencesHashmap).to.deep.equals(differencesHashmapTest);
-        expect(mouseService.differencesNumberFound).to.deep.equals(differencesNumberFoundTest);
+        expect(mouseService.differencesNbFoundByPlayer).to.deep.equals(differencesNbFoundByPlayerTest);
     });
 });
