@@ -1,5 +1,7 @@
+import { NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
 import { DifferencesInformations } from '@common/differences-informations';
 import { Game } from '@common/game';
+import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
 import { Server } from 'app/server';
@@ -42,7 +44,7 @@ describe('SocketManager service tests', () => {
     let differenceDetectorService: DifferenceDetectorService = new DifferenceDetectorService(imagesData);
     let gamesService: GamesService = Container.get(GamesService);
     let mouseHandlerService: MouseHandlerService = new MouseHandlerService();
-    let mouseHandlerIsValidClickStub: sinon.SinonStub<[mousePosition: Position], number[]>;
+    let mouseHandlerIsValidClickStub: sinon.SinonStub<[mousePosition: Position], GameplayDifferenceInformations>;
 
     const urlString = 'http://localhost:3000';
 
@@ -69,7 +71,12 @@ describe('SocketManager service tests', () => {
         });
 
         mouseHandlerIsValidClickStub = sinon.stub(MouseHandlerService.prototype, 'isValidClick').callsFake((positionTest) => {
-            return [];
+            return {
+                differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
+                isValidDifference: false,
+                //To modify with a constant (constant is in feature/ChatGameView)
+                playerName: '',
+            };
         });
     });
 

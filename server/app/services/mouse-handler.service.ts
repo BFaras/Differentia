@@ -1,5 +1,6 @@
 import { FIRST_ARRAY_POSITION, IMAGE_WIDTH, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
 import { Game } from '@common/game';
+import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
 import Container, { Service } from 'typedi';
 import { HashmapConverterService } from './hashmap-converter.service';
@@ -25,7 +26,7 @@ export class MouseHandlerService {
         this.differencesList = [];
     }
 
-    isValidClick(mousePosition: Position) {
+    isValidClick(mousePosition: Position): GameplayDifferenceInformations {
         return this.validateDifferencesOnClick(mousePosition);
     }
 
@@ -55,21 +56,26 @@ export class MouseHandlerService {
         return (mousePosition.y + 1) * IMAGE_WIDTH + mousePosition.x - IMAGE_WIDTH;
     }
 
-    private validateDifferencesOnClick(mousePosition: Position) {
+    private validateDifferencesOnClick(mousePosition: Position): GameplayDifferenceInformations {
         const pixelNumber = this.convertMousePositionToPixelNumber(mousePosition);
-        let differencesNumber: number;
-        let pixelsOfDifference: number[] = NO_DIFFERENCE_FOUND_ARRAY;
+        let differenceInformation: GameplayDifferenceInformations = {
+            differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
+            isValidDifference: false,
+            //To modify with a constant (constant is in feature/ChatGameView)
+            playerName: '',
+        };
 
         if (this.differencesHashmap.has(pixelNumber)) {
-            differencesNumber = this.differencesHashmap.get(pixelNumber)!;
+            let differencesNumber = this.differencesHashmap.get(pixelNumber)!;
 
             if (!this.differencesNumberFound.includes(differencesNumber)) {
                 // Nouvelle Différence trouvée
                 this.differencesNumberFound.push(differencesNumber);
-                pixelsOfDifference = this.differencesList[differencesNumber];
+                differenceInformation.differencePixelsNumbers = this.differencesList[differencesNumber];
+                differenceInformation.isValidDifference = true;
             }
         }
 
-        return pixelsOfDifference;
+        return differenceInformation;
     }
 }

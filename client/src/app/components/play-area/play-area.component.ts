@@ -6,6 +6,7 @@ import { ImageToImageDifferenceService } from '@app/services/image-to-image-diff
 import { MouseDetectionService } from '@app/services/mouse-detection.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { DEFAULT_HEIGHT_CANVAS, DEFAULT_WIDTH_CANVAs, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
+import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
 import { PopDialogEndgameComponent } from '../pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
 @Component({
@@ -14,11 +15,11 @@ import { PopDialogEndgameComponent } from '../pop-dialogs/pop-dialog-endgame/pop
     styleUrls: ['./play-area.component.scss'],
 })
 export class PlayAreaComponent implements OnInit {
-    @ViewChild('originalCanvas', { static: false }) private originalCanvas!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('modifiedCanvas', { static: false }) private modifiedCanvas!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('clickCanvas1', { static: false }) private clickCanvas1!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('clickCanvas2', { static: false }) private clickCanvas2!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('blinkCanvas', { static: false }) private blinkCanvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('originalCanvas', { static: false }) originalCanvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('modifiedCanvas', { static: false }) modifiedCanvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('clickCanvas1', { static: false }) clickCanvas1!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('clickCanvas2', { static: false }) clickCanvas2!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('blinkCanvas', { static: false }) blinkCanvas!: ElementRef<HTMLCanvasElement>;
     @Input() differentImages: HTMLImageElement[];
     @Input() nbDifferencesTotal: number = 0;
     mousePosition: Position = { x: 0, y: 0 };
@@ -88,15 +89,10 @@ export class PlayAreaComponent implements OnInit {
     }
 
     configurePlayAreaSocket(): void {
-        this.socketService.on('Valid click', (response: number[]) => {
-            this.pixelList = response;
+        this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {
+            this.pixelList = differencesInfo.differencePixelsNumbers;
 
-            console.log(this.pixelList);
-
-            let isDifference: boolean = true;
-            if (this.pixelList.length == 0) {
-                isDifference = false;
-            }
+            let isDifference: boolean = differencesInfo.isValidDifference;
             this.mouseDetection.playSound(isDifference);
             this.mouseDetection.clickMessage(isDifference);
             this.mouseDetection.incrementNbrDifference(isDifference);
