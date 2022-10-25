@@ -1,3 +1,4 @@
+import { HOST_CHOSE_ANOTHER, HOST_PRESENT } from '@app/server-consts';
 import { GamesService } from '@app/services/local.games.service';
 import { DEFAULT_GAME_ROOM_NAME, GAME_ROOM_GENERAL_ID, MODIFIED_IMAGE_POSITION, NO_OTHER_PLAYER_ROOM, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { DifferencesInformations } from '@common/differences-informations';
@@ -11,7 +12,6 @@ import { ChronometerService } from './chronometer.service';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { MouseHandlerService } from './mouse-handler.service';
 import { WaitingLineHandlerService } from './waitingLineHandler.service';
-import { HOST_PRESENT, HOST_CHOSE_ANOTHER } from '@app/server-consts';
 
 export class SocketManager {
     private sio: io.Server;
@@ -50,26 +50,32 @@ export class SocketManager {
             });
 
             socket.on('is there someone waiting', (gameName: string) => {
-                socket.emit(`${gameName} let me tell you if someone is waiting`, this.waitingLineHandlerService.getCreatorPlayer(gameName) !== undefined);
+                socket.emit(
+                    `${gameName} let me tell you if someone is waiting`,
+                    this.waitingLineHandlerService.getCreatorPlayer(gameName) !== undefined,
+                );
             });
 
             socket.on('my username is', (username: string) => {
-                if(username.charAt(0) !== " ") {
+                if (username.charAt(0) !== ' ') {
                     this.waitingLineHandlerService.setUsernamePlayer(socket.id, username, this.sio);
                     this.sio.to(socket.id).emit('username valid');
-                }
-                else this.sio.to(socket.id).emit('username not valid');
+                } else this.sio.to(socket.id).emit('username not valid');
             });
 
             socket.on('I am waiting', (gameName: string) => {
-                console.log("creation createur");
+                console.log('creation createur');
                 this.waitingLineHandlerService.addCreatingPlayer(gameName, socket.id);
                 this.sio.emit(`${gameName} someone is waiting`);
             });
 
+            socket.on('Reload game selection page', (msg) => {
+                this.sio.emit('Page reloaded', msg);
+            });
+
             socket.on('I left', (gameName: string) => {
                 this.waitingLineHandlerService.deleteCreatorOfGame(gameName);
-                this.waitingLineHandlerService.sendEventToAllJoiningPlayers(this.sio, gameName, 'response on host presence')
+                this.waitingLineHandlerService.sendEventToAllJoiningPlayers(this.sio, gameName, 'response on host presence');
                 this.sio.emit(`${gameName} nobody is waiting no more`);
             });
 
@@ -78,7 +84,8 @@ export class SocketManager {
             });
 
             socket.on(`Is the host still there`, (gameName: string) => {
-                if (this.waitingLineHandlerService.getCreatorPlayer(gameName)) this.sio.to(socket.id).emit(`${gameName} response on host presence`, HOST_PRESENT);
+                if (this.waitingLineHandlerService.getCreatorPlayer(gameName))
+                    this.sio.to(socket.id).emit(`${gameName} response on host presence`, HOST_PRESENT);
                 else this.sio.to(socket.id).emit(`${gameName} response on host presence`, !HOST_PRESENT);
             });
 
@@ -87,14 +94,17 @@ export class SocketManager {
                 const waitingSocketId = this.waitingLineHandlerService.getCreatorPlayer(gameInfoAndUsername[0]) as string;
                 this.sio
                     .to(waitingSocketId)
-                    .emit(`${gameInfoAndUsername[0]} someone is trying to join`, this.waitingLineHandlerService.getUsernameFirstPlayerWaiting(gameInfoAndUsername[0], this.sio));
+                    .emit(
+                        `${gameInfoAndUsername[0]} someone is trying to join`,
+                        this.waitingLineHandlerService.getUsernameFirstPlayerWaiting(gameInfoAndUsername[0], this.sio),
+                    );
             });
 
             socket.on('I dont want to join anymore', (gameName: string) => {
                 this.waitingLineHandlerService.deleteJoiningPlayer(socket.id, gameName);
                 const waitingSocketId = this.waitingLineHandlerService.getCreatorPlayer(gameName) as string;
                 this.sio.to(waitingSocketId).emit(`${gameName} the player trying to join left`);
-                if(this.waitingLineHandlerService.getPresenceOfJoiningPlayers(gameName))
+                if (this.waitingLineHandlerService.getPresenceOfJoiningPlayers(gameName))
                     this.waitingLineHandlerService.updateJoiningPlayer(this.sio, gameName, 'someone is trying to join');
             });
 
@@ -111,7 +121,7 @@ export class SocketManager {
                 const waitingSocketId = this.waitingLineHandlerService.getIDFirstPlayerWaiting(gameName);
                 this.waitingLineHandlerService.deleteJoiningPlayer(waitingSocketId, gameName);
                 this.sio.to(waitingSocketId).emit(`${gameName} you have been declined`, !HOST_CHOSE_ANOTHER);
-                if(this.waitingLineHandlerService.getPresenceOfJoiningPlayers(gameName))
+                if (this.waitingLineHandlerService.getPresenceOfJoiningPlayers(gameName))
                     this.waitingLineHandlerService.updateJoiningPlayer(this.sio, gameName, 'someone is trying to join');
                 else this.sio.to(socket.id).emit(`${gameName} the player trying to join left`);
             });

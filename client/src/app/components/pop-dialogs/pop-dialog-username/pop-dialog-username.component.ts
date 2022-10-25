@@ -50,7 +50,7 @@ export class PopDialogUsernameComponent implements OnInit {
         });
     }
 
-    private configureUsernamePopUpSocketFeatures(): void {
+    configureUsernamePopUpSocketFeatures(): void {
         this.socketService.on('username valid', () => {
             console.log('warafak ma dude');
             if (this.gameInfo.multiFlag) this.openDialog();
