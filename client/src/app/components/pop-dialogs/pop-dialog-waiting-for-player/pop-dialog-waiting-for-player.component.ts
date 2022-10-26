@@ -67,6 +67,7 @@ export class PopDialogWaitingForPlayerComponent implements OnInit {
         this.socketService.on(`${this.gameInfo.nameGame} you have been accepted`, () => {
             this.dialogRef.close();
             this.router.navigate(['/game']);
+            // envoyer les infos de la game?
         });
 
         // Pt mettre ce on dans la page de jeu directement

@@ -1,5 +1,5 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
 import { PopDialogWaitingForPlayerComponent } from '../pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
@@ -14,12 +14,13 @@ export class PopDialogUsernameComponent implements OnInit {
     disabledButton: boolean = true;
     usernameNotValid: boolean = false;
 
-    constructor(private socketService: SocketClientService, 
+    constructor(
+        private socketService: SocketClientService,
         @Inject(MAT_DIALOG_DATA) public gameInfo: any,
         public startUpGameService: StartUpGameService,
         private dialog: MatDialog,
-        private dialogRef: MatDialogRef<PopDialogUsernameComponent>
-        ) {}
+        private dialogRef: MatDialogRef<PopDialogUsernameComponent>,
+    ) {}
 
     ngOnInit(): void {
         this.socketService.connect();
@@ -31,7 +32,7 @@ export class PopDialogUsernameComponent implements OnInit {
     }
 
     public inputChanged(): void {
-        if(this.username.nativeElement.value) this.disabledButton = false;
+        if (this.username.nativeElement.value) this.disabledButton = false;
         else this.disabledButton = true;
     }
 
@@ -51,8 +52,7 @@ export class PopDialogUsernameComponent implements OnInit {
 
     private configureUsernamePopUpSocketFeatures(): void {
         this.socketService.on('username valid', () => {
-            console.log("warafak ma dude");
-            if(this.gameInfo.multiFlag) this.openDialog();
+            if (this.gameInfo.multiFlag) this.openDialog();
             this.startWaitingLine();
             this.dialogRef.close();
         });
