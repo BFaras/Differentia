@@ -21,7 +21,6 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
 
     constructor(private chatMessagesService: ChatMessagesService, private socketService: SocketClientService) {
         this.messagesSent = [];
-        //this.message.message = '';
     }
 
     ngOnInit(): void {
@@ -32,7 +31,6 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
                 this.addMessage(message);
             },
         });
-        //this.chatMessagesService.displayBound(this.displayMessage.bind(this));
         this.initializeChatHeight();
     }
 
@@ -45,12 +43,6 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
             event.preventDefault();
             // Call the sendMessageToPlayer method 
         }
-    }
-
-    displayMessage(messageToDisplay: ChatMessage): void {
-        this.addMessage(messageToDisplay);
-        this.message.message  = '';
-        this.scrollToBottom();
     }
 
     initializeChatHeight(): void {
