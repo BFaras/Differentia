@@ -1,4 +1,5 @@
 import { HOST_CHOSE_ANOTHER, HOST_PRESENT } from '@app/server-consts';
+import { ChatMessage } from '@common/chat-message';
 import { DifferencesInformations } from '@common/differences-informations';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
@@ -144,6 +145,12 @@ export class SocketManager {
                     this.gameManagerService.endGame(socket);
                     socket.emit('End game');
                 }
+            });
+
+            socket.on('playerMessage', (msg: ChatMessage) => {
+                console.log(msg);
+                //Change socket.id by gameroom name
+                this.sio.to(socket.id).emit('Send message to opponent', msg);
             });
         });
     }
