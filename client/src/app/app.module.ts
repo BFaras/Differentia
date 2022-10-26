@@ -10,6 +10,7 @@ import { AppMaterialModule } from '@app/modules/material.module';
 import { AppComponent } from '@app/pages/app/app.component';
 import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
+import { CanvasDrawingComponent } from './components/canvas-drawing/canvas-drawing.component';
 import { DialogInputComponent } from './components/dialog-input/dialog-input.component';
 import { GameFormComponent } from './components/forms/game-form/game-form.component';
 import { ListGameFormComponent } from './components/forms/list-game-form/list-game-form.component';
@@ -20,14 +21,15 @@ import { ListImagesRenderedComponent } from './components/list-images-rendered/l
 import { PopDialogCreateGameComponent } from './components/pop-dialogs/pop-dialog-create-game/pop-dialog-create-game.component';
 import { PopDialogDownloadImagesComponent } from './components/pop-dialogs/pop-dialog-download-images/pop-dialog-download-images.component';
 import { PopDialogEndgameComponent } from './components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
+import { PopDialogHostRefusedComponent } from './components/pop-dialogs/pop-dialog-host-refused/pop-dialog-host-refused.component';
 import { PopDialogUsernameComponent } from './components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
 import { PopDialogValidateGameComponent } from './components/pop-dialogs/pop-dialog-validate-game/pop-dialog-validate-game.component';
+import { PopDialogWaitingForPlayerComponent } from './components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
+import { ToolSettingComponent } from './components/tool-setting/tool-setting.component';
 import { TopbarComponent } from './components/topbar/topbar.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
 import { GameSelectionComponent } from './pages/game-selection/game-selection.component';
-import { PopDialogWaitingForPlayerComponent } from './components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
-import { PopDialogHostRefusedComponent } from './components/pop-dialogs/pop-dialog-host-refused/pop-dialog-host-refused.component';
 
 /**
  * Main module that is used in main.ts.
@@ -60,6 +62,8 @@ import { PopDialogHostRefusedComponent } from './components/pop-dialogs/pop-dial
         PopDialogEndgameComponent,
         PopDialogWaitingForPlayerComponent,
         PopDialogHostRefusedComponent,
+        ToolSettingComponent,
+        CanvasDrawingComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
     providers: [],

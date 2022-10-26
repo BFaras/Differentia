@@ -1,7 +1,7 @@
 <div class="container">
     <app-sidebar [numberOfDifferences]="nbDifferences" [gameName]="gameName"></app-sidebar>
     <section class="play-area-container">
-        <app-topbar [nbrDifferencesFound]="nbDifferrencesFound" [username]="username"></app-topbar>
+        <app-topbar class="sidebar-container" [nbrDifferencesFound]="nbDifferrencesFound" [playerNames]="usernames"></app-topbar>
         <app-play-area [differentImages]="images" [nbDifferencesTotal]="nbDifferences"></app-play-area>
     </section>
 </div>
