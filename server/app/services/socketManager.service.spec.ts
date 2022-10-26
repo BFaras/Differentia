@@ -38,6 +38,10 @@ describe('SocketManager service tests', () => {
         service = server['socketManager'];
         clientSocket = ioClient(urlString);
         gameManagerService = new GameManagerService(service['sio']);
+
+        sinon.stub(GameManagerService.prototype, <any>'getSocketMouseHandlerService').callsFake((socket) => {
+            return mouseHandlerService;
+        });
     });
 
     after(() => {
