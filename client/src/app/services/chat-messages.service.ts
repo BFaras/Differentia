@@ -19,19 +19,16 @@ export class ChatMessagesService {
     public messagesObservable: Observable<ChatMessage>;
     private isMultiplayerGame = false;
     private date: Date;
-    //message: ChatMessage;
-    displayMessage: () => void;
 
     constructor(private socketService: SocketClientService) {
         this.date = new Date();
-        //  this.message.message = '';
         this.messagesObservable = new Observable((observer: Subscriber<ChatMessage>) => {
             this.configureSocket(observer);
         });
     }
 
-    displayBound(fn: () => void) {
-        this.displayMessage = fn;
+    sendMessage(senderName: string, message:string){
+        this.socketService.send('playerMessage', this.generateChatMessage(this.getTimeInCorrectFormat(), senderName, message));
     }
 
     public getTimeInCorrectFormat(): string {
@@ -59,7 +56,13 @@ export class ChatMessagesService {
                 observer.next(this.generateChatMessageFromGame(this.getTimeInCorrectFormat(), MESSAGE_ERROR_DIFFERENCE_SOLO));
             }
         });
+        this.socketService.on('Send message to opponent', (message:ChatMessage) => {
+            observer.next(message);
+            console.log(message);
+        });
     }
+
+
 
     private generateChatMessageFromGame(timeMessageSent: string, message: string) {
         return this.generateChatMessage(timeMessageSent, GAME_MESSAGE_SENDER_NAME, message);

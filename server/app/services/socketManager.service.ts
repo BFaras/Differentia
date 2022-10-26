@@ -10,6 +10,7 @@ import Container from 'typedi';
 import { ChronometerService } from './chronometer.service';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { MouseHandlerService } from './mouse-handler.service';
+import{ChatMessage} from '@common/chat-message';
 
 export class SocketManager {
     private sio: io.Server;
@@ -100,6 +101,12 @@ export class SocketManager {
                     this.endGame(socket);
                     socket.emit('End game');
                 }
+            });
+
+            socket.on('playerMessage', (msg:ChatMessage)=>{
+                console.log(msg);
+                //Change socket.id by gameroom name
+                this.sio.to(socket.id).emit('Send message to opponent', msg);
             });
         });
     }
