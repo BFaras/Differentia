@@ -1,5 +1,4 @@
 import { DifferencesInformations } from '@common/differences-informations';
-import { Game } from '@common/game';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
 import { Server } from 'app/server';
@@ -17,16 +16,6 @@ const RESPONSE_DELAY = 200;
 
 describe('SocketManager service tests', () => {
     const testGameName = 'test12345';
-    const testGame: Game = {
-        name: testGameName,
-        numberOfDifferences: 2,
-        times: [],
-        images: ['image1', 'image2'],
-        differencesList: [
-            [599, 666],
-            [899, 951],
-        ],
-    };
     const imagesData: ImageDataToCompare = {
         originalImageData: new Uint8ClampedArray(1),
         modifiedImageData: new Uint8ClampedArray(1),
