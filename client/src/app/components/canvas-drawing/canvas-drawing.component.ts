@@ -13,8 +13,6 @@ export class CanvasDrawingComponent implements  AfterViewInit {
   @ViewChild('canvas') public canvasDOM: ElementRef<HTMLCanvasElement>;
   private canvas: HTMLCanvasElement
   private context: CanvasRenderingContext2D | null;
-  // extraImage:boolean = false;
-  // isReadyChangeSaveMethod :boolean = false;
 
   constructor(private drawingHandlerService:DrawingHandlerService,
     private pencilService:PencilService,private drawingHistoryService:DrawingHistoryService) { }
