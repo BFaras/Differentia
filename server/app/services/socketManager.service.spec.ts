@@ -4,6 +4,7 @@ import { Position } from '@common/position';
 import { Server } from 'app/server';
 import { assert, expect } from 'chai';
 import * as sinon from 'sinon';
+import * as io from 'socket.io';
 import { io as ioClient, Socket } from 'socket.io-client';
 import { Container } from 'typedi';
 import { DifferenceDetectorService } from './difference-detector.service';
@@ -28,7 +29,8 @@ describe('SocketManager service tests', () => {
     let clientSocket: Socket;
     let differenceDetectorService: DifferenceDetectorService = new DifferenceDetectorService(imagesData);
     let mouseHandlerService: MouseHandlerService = new MouseHandlerService();
-    let gameManagerService: GameManagerService;
+    let gameManagerServiceBeginGameStub: sinon.SinonStub<[socket: io.Socket, gameName: string], Promise<void>>;
+    let gameManagerServiceClickResponseStub: sinon.SinonStub<[socket: io.Socket, mousePos: Position], void>;
 
     const urlString = 'http://localhost:3000';
 
@@ -37,11 +39,19 @@ describe('SocketManager service tests', () => {
         server.init();
         service = server['socketManager'];
         clientSocket = ioClient(urlString);
-        gameManagerService = new GameManagerService(service['sio']);
+    });
 
+    beforeEach(() => {
         sinon.stub(GameManagerService.prototype, <any>'getSocketMouseHandlerService').callsFake((socket) => {
             return mouseHandlerService;
         });
+        gameManagerServiceBeginGameStub = sinon.stub(GameManagerService.prototype, 'beginGame').callsFake(async () => {});
+        sinon.stub(GameManagerService.prototype, 'endGame').callsFake(() => {});
+        gameManagerServiceClickResponseStub = sinon.stub(GameManagerService.prototype, 'clickResponse').callsFake(() => {});
+    });
+
+    afterEach(() => {
+        sinon.restore();
     });
 
     after(() => {
@@ -83,10 +93,9 @@ describe('SocketManager service tests', () => {
             x: 0,
             y: 0,
         };
-        const spy = sinon.spy(gameManagerService, 'clickResponse');
         clientSocket.emit('Verify position', positionTest);
         clientSocket.once('Valid click', () => {
-            expect(spy.calledOnce);
+            expect(gameManagerServiceClickResponseStub.calledOnce);
             done();
         });
     });
@@ -100,10 +109,9 @@ describe('SocketManager service tests', () => {
     });
 
     it('should handle a solo classic mode event and call beginGame', (done) => {
-        const spy = sinon.spy(gameManagerService, 'beginGame');
         clientSocket.emit('solo classic mode', testGameName);
         setTimeout(() => {
-            expect(spy.calledOnce);
+            expect(gameManagerServiceBeginGameStub.calledOnce);
             done();
         }, RESPONSE_DELAY * 5); // 1 seconde
     });

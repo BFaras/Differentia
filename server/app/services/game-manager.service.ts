@@ -25,7 +25,6 @@ export class GameManagerService {
         await this.sendImagesToClient(gameName, socket);
     }
 
-    //To test
     async startMultiplayerMatch(socket: io.Socket, adversarySocket: io.Socket, gameName: string) {
         await this.beginGame(socket, gameName);
 
