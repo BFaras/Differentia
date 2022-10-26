@@ -41,6 +41,21 @@ export class GameManagerService {
         this.sio.to(gameRoomName).emit('The game is', gameName);
     }
 
+    endGame(socket: io.Socket) {
+        const gameRoomName: string = this.findSocketGameRoomName(socket);
+        this.endChrono(socket);
+        this.chronometerServices.delete(gameRoomName);
+        this.mouseHandlerServices.delete(gameRoomName);
+        this.timeIntervals.delete(gameRoomName);
+        socket.rooms.delete(gameRoomName);
+    }
+
+    clickResponse(socket: io.Socket, mousePosition: Position) {
+        const differencesInfo: GameplayDifferenceInformations = this.getSocketMouseHandlerService(socket).isValidClick(mousePosition, socket.id);
+        differencesInfo.playerName = socket.data.username;
+        this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
+    }
+
     private setupNecessaryGameServices(socket: io.Socket) {
         const mouseHandler: MouseHandlerService = new MouseHandlerService();
         const chronometerService: ChronometerService = new ChronometerService();
@@ -83,27 +98,12 @@ export class GameManagerService {
         this.sio.to(gameRoomName).emit('time', chronometerService.time);
     }
 
-    clickResponse(socket: io.Socket, mousePosition: Position) {
-        const differencesInfo: GameplayDifferenceInformations = this.getSocketMouseHandlerService(socket).isValidClick(mousePosition, socket.id);
-        differencesInfo.playerName = socket.data.username;
-        this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
-    }
-
     private async sendImagesToClient(gameName: string, socket: io.Socket) {
         const gameImagesData: string[] = await this.gamesService.getGameImagesData(gameName);
 
         this.sio
             .to(this.findSocketGameRoomName(socket))
             .emit('classic solo images', [gameImagesData[ORIGINAL_IMAGE_POSITION], gameImagesData[MODIFIED_IMAGE_POSITION]]);
-    }
-
-    endGame(socket: io.Socket) {
-        const gameRoomName: string = this.findSocketGameRoomName(socket);
-        this.endChrono(socket);
-        this.chronometerServices.delete(gameRoomName);
-        this.mouseHandlerServices.delete(gameRoomName);
-        this.timeIntervals.delete(gameRoomName);
-        socket.rooms.delete(gameRoomName);
     }
 
     private getSocketChronometerService(socket: io.Socket): ChronometerService {
