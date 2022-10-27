@@ -21,8 +21,8 @@ export class ListGameFormComponent implements OnInit {
     async ngOnInit() {
         this.config(this.messageForUpdate);
         await this.formService.receiveGameInformations();
-        if (this.formService.gameForms.length < Constants.MAX_NB_OF_FORMS_PER_PAGE) {
-            this.lastElementIndex = this.formService.gameForms.length - 1;
+        if (this.formService.gameForms?.length < Constants.MAX_NB_OF_FORMS_PER_PAGE) {
+            this.lastElementIndex = this.formService.gameForms?.length - 1;
         }
         this.addCurrentPageGameForms();
     }
