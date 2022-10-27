@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ChatMessagesService } from '@app/services/chat-messages.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { ChatMessage } from '@common/chat-message';
-import { DEFAULT_USERNAME, GAME_MESSAGE_SENDER_NAME, CHAT_HEIGHT } from '@common/const';
+import { CHAT_HEIGHT, DEFAULT_USERNAME, GAME_MESSAGE_SENDER_NAME } from '@common/const';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -25,9 +25,10 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
     }
 
     sendMessage(): void {
-        this.chatMessagesService.sendMessage(this.localPlayerUsername,this.playerMsg.nativeElement.value);
-        this.playerMsg.nativeElement.value = "";
-    };
+        this.chatMessagesService.sendMessage(this.localPlayerUsername, this.playerMsg.nativeElement.value);
+        this.playerMsg.nativeElement.value = '';
+        this.scrollToBottom();
+    }
 
     ngOnInit(): void {
         this.socketService.connect();
@@ -38,6 +39,7 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
             },
         });
         this.initializeChatHeight();
+        this.scrollToBottom();
     }
 
     ngOnDestroy(): void {
