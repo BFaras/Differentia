@@ -126,39 +126,4 @@ describe('GameManagerService tests', () => {
         gameManagerService.endGame(serverSocket);
         expect(spy.calledOnce);
     });
-
-    // it('should handle a solo classic mode event and call setupNecessaryGameServices', (done) => {
-    //     const spy = sinon.spy(socketManager, <any>'setupNecessaryGameServices');
-    //     clientSocket.emit('solo classic mode', testGameName);
-    //     setTimeout(() => {
-    //         expect(spy.calledOnce);
-    //         done();
-    //     }, RESPONSE_DELAY * 5); // 1 seconde
-    // });
-
-    // it('should call emitTime on solo classic mode event', (done) => {
-    //     const spy = sinon.spy(socketManager, <any>'emitTime');
-    //     clientSocket.emit('solo classic mode', testGameName);
-    //     setTimeout(() => {
-    //         expect(spy.calledOnce);
-    //         done();
-    //     }, RESPONSE_DELAY * 5); // 1 seconde
-    // });
-
-    // it('should call getGameImagesData on solo classic mode event', (done) => {
-    //     const spy = sinon.spy(GamesService.prototype, 'getGameImagesData');
-    //     clientSocket.emit('solo classic mode', testGameName);
-    //     setTimeout(() => {
-    //         expect(spy.calledOnce);
-    //         done();
-    //     }, RESPONSE_DELAY * 5); // 1 seconde
-    // });
-
-    // it('should emit a classic solo images event on solo classic mode event', (done) => {
-    //     clientSocket.emit('solo classic mode', testGameName);
-    //     clientSocket.once('classic solo images', (imagesDataReceived: string[]) => {
-    //         expect(imagesDataReceived).to.exist;
-    //         done();
-    //     }); // 1 seconde
-    // });
 });
