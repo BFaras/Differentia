@@ -18,15 +18,17 @@ export class FormService {
 
     async receiveGameInformations() {
         this.resetGameForms();
-        await firstValueFrom(this.communicationService.getGames()).then((games) => {
-            this.gamelist = games;
-            this.parseGameList();
-        });
+        await firstValueFrom(this.communicationService.getGames())
+            .then((games) => {
+                this.gamelist = games;
+                this.parseGameList();
+            })
+            .catch((error: Error) => console.log(error));
         console.log('apres receive');
     }
 
     parseGameList() {
-        for (let index = 0; index < this.gamelist.length; index++) {
+        for (let index = 0; index < this.gamelist?.length; index++) {
             this.fillListGameName(this.gamelist[index].name, this.listName);
             this.fillListGameImage(this.gamelist[index].images[0], this.listImage);
             this.initializeGameForm(index);
