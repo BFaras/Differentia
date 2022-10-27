@@ -22,6 +22,7 @@ export class FormService {
             this.gamelist = games;
             this.parseGameList();
         });
+        console.log('apres receive');
     }
 
     parseGameList() {

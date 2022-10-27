@@ -30,6 +30,7 @@ export class CommunicationService {
     }
 
     getGames(): Observable<Array<Game>> {
+        console.log('avant le get');
         return this.http.get<Array<Game>>(`${this.baseUrl}/games`).pipe(catchError(this.handleError<Array<Game>>('getGames')));
     }
 
