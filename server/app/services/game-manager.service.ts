@@ -16,26 +16,30 @@ export class GameManagerService {
 
     constructor(private sio: io.Server) {}
 
-    async beginGame(socket: io.Socket, gameName: string) {
+    async beginGame(socket: io.Socket, gameName: string, adversarySocket? : io.Socket) {
         this.setupSocketGameRoom(socket, NO_OTHER_PLAYER_ROOM);
         this.setupNecessaryGameServices(socket);
 
         await this.getSocketMouseHandlerService(socket).generateDifferencesInformations(gameName);
         this.getSocketMouseHandlerService(socket).addPlayerToGame(socket.id);
+
+        if (adversarySocket)
+        {
+            this.setupSocketGameRoom(adversarySocket, this.findSocketGameRoomName(socket));
+            this.getSocketMouseHandlerService(adversarySocket).addPlayerToGame(adversarySocket.id);
+        }
+
         await this.sendImagesToClient(gameName, socket);
     }
 
     async startMultiplayerMatch(socket: io.Socket, adversarySocket: io.Socket, gameName: string) {
-        await this.beginGame(socket, gameName);
-
-        const gameRoomName = this.findSocketGameRoomName(socket);
-        this.setupSocketGameRoom(adversarySocket, gameRoomName);
-        this.getSocketMouseHandlerService(adversarySocket).addPlayerToGame(adversarySocket.id);
-
         adversarySocket.emit(`${gameName} you have been accepted`);
+        await this.beginGame(socket, gameName, adversarySocket);
+        
         socket.emit('The adversary username is', this.getSocketUsername(adversarySocket));
         adversarySocket.emit('The adversary username is', this.getSocketUsername(socket));
 
+        const gameRoomName = this.findSocketGameRoomName(socket);
         this.sio.to(gameRoomName).emit('classic mode');
         this.sio.to(gameRoomName).emit('The game is', gameName);
     }
