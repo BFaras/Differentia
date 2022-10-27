@@ -62,7 +62,7 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
         setTimeout(() => {
             // Timeout is used to update the scroll after the last element added
             this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-        }, 1);
+        }, 2);
     }
 
     private addMessage(messageToAdd: ChatMessage) {
