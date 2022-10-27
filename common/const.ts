@@ -64,3 +64,7 @@ export const BLACK_COLOR = "#000";
 export const GAME_ROOM_GENERAL_ID = 'GameRoom';
 export const NO_OTHER_PLAYER_ROOM = '';
 export const DEFAULT_GAME_ROOM_NAME = GAME_ROOM_GENERAL_ID + 'EASJDS';
+
+//Player usernames constants
+export const LOCAL_PLR_USERNAME_POS = 0;
+export const ADVERSARY_PLR_USERNAME_POS = 1;

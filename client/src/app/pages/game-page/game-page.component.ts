@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommunicationService } from '@app/services/communication.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
-import { MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
+import { ADVERSARY_PLR_USERNAME_POS, LOCAL_PLR_USERNAME_POS, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { Game } from '@common/game';
 import { Time } from '@common/time';
 import { firstValueFrom } from 'rxjs';
@@ -15,7 +15,7 @@ import { firstValueFrom } from 'rxjs';
 export class GamePageComponent {
     nbDifferences: number;
     gameName: string;
-    usernames: string[] = ['raf', 'charles'];
+    usernames: string[] = [];
     images: HTMLImageElement[];
     nbDifferrencesFound: number = 0;
 
@@ -45,8 +45,13 @@ export class GamePageComponent {
             this.gameName = message;
         });
         this.socketService.on('show the username', (username: string) => {
-            this.usernames[0] = username; // Ajouter une constante
+            this.usernames[LOCAL_PLR_USERNAME_POS] = username;
         });
+
+        this.socketService.on('The adversary username is', (advesaryUsername: string) => {
+            this.usernames[ADVERSARY_PLR_USERNAME_POS] = advesaryUsername;
+        });
+
         this.socketService.on('classic solo images', (imagesData: string[]) => {
             this.images[ORIGINAL_IMAGE_POSITION].src = imagesData[ORIGINAL_IMAGE_POSITION];
             this.images[MODIFIED_IMAGE_POSITION].src = imagesData[MODIFIED_IMAGE_POSITION];

@@ -36,6 +36,8 @@ export class GameManagerService {
         adversarySocket.emit(`${gameName} you have been accepted`);
         await this.beginGame(socket, gameName, adversarySocket);
         
+        socket.emit('show the username', this.getSocketUsername(socket));
+        adversarySocket.emit('show the username', this.getSocketUsername(adversarySocket));
         socket.emit('The adversary username is', this.getSocketUsername(adversarySocket));
         adversarySocket.emit('The adversary username is', this.getSocketUsername(socket));
 
