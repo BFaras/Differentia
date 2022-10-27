@@ -12,8 +12,9 @@ import { Subscription } from 'rxjs';
 })
 export class ChatSectionComponent implements OnInit, OnDestroy {
     @ViewChild('scrollMe') private myScrollContainer: ElementRef;
+    @ViewChild('playerMsg') playerMsg: ElementRef;
 
-    message: ChatMessage;
+    message: string;
     public messagesSent: ChatMessage[];
     public localPlayerUsername: string = DEFAULT_USERNAME;
     public readonly gameMessageSenderName = GAME_MESSAGE_SENDER_NAME;
@@ -21,8 +22,12 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
 
     constructor(private chatMessagesService: ChatMessagesService, private socketService: SocketClientService) {
         this.messagesSent = [];
-        //this.message.message = '';
     }
+
+    sendMessage(): void {
+        this.chatMessagesService.sendMessage(this.localPlayerUsername,this.playerMsg.nativeElement.value);
+        this.playerMsg.nativeElement.value = "";
+    };
 
     ngOnInit(): void {
         this.socketService.connect();
@@ -32,7 +37,6 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
                 this.addMessage(message);
             },
         });
-        //this.chatMessagesService.displayBound(this.displayMessage.bind(this));
         this.initializeChatHeight();
     }
 
@@ -40,18 +44,12 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
         this.chatMessagesSubscription.unsubscribe();
     }
 
-    handleKeyEvent(event: KeyboardEvent): void {
+    /*handleKeyEvent(event: KeyboardEvent): void {
         if (event.key === 'Enter') {
             event.preventDefault();
-            // Call the sendMessageToPlayer method 
+            this.sendMessage();
         }
-    }
-
-    displayMessage(messageToDisplay: ChatMessage): void {
-        this.addMessage(messageToDisplay);
-        this.message.message  = '';
-        this.scrollToBottom();
-    }
+    }*/
 
     initializeChatHeight(): void {
         const chatBox = document.getElementById('chat-container');

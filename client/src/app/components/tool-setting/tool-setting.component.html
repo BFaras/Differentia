@@ -1,0 +1,16 @@
+<div >
+    <label>Couleur : </label>
+    <input (change) = "onChangeColor()" [(ngModel)]="color" type="color" />
+  </div>
+<mat-form-field appearance="fill">
+    <mat-label>Width</mat-label>
+    <mat-select [(value)] ="widths[0]" >
+      <mat-option *ngFor="let width of widths"  (click) ="onChangeWidth(width)" [value]="width" #chosenWidth>
+        {{width}}
+      </mat-option>
+    </mat-select>
+</mat-form-field>
+<div class ="group-buttons">
+  <button mat-mini-fab [disabled]="checkIfThereAreSavedDrawnLines()" (click) = "cancelActionDrawnLine()"><--</button>
+  <button mat-mini-fab [disabled]="checkIfThereAreSavedDeletedDrawnLines()" (click) = "cancelActionDeletedDrawnLine()" >--></button>
+</div>
