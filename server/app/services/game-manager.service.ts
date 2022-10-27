@@ -33,8 +33,8 @@ export class GameManagerService {
         this.getSocketMouseHandlerService(adversarySocket).addPlayerToGame(adversarySocket.id);
 
         adversarySocket.emit(`${gameName} you have been accepted`);
-        socket.emit('The adversary username is', adversarySocket.data.username);
-        adversarySocket.emit('The adversary username is', socket.data.username);
+        socket.emit('The adversary username is', this.getSocketUsername(adversarySocket));
+        adversarySocket.emit('The adversary username is', this.getSocketUsername(socket));
 
         this.sio.to(gameRoomName).emit('classic mode');
         this.sio.to(gameRoomName).emit('The game is', gameName);
@@ -51,7 +51,7 @@ export class GameManagerService {
 
     clickResponse(socket: io.Socket, mousePosition: Position) {
         const differencesInfo: GameplayDifferenceInformations = this.getSocketMouseHandlerService(socket).isValidClick(mousePosition, socket.id);
-        differencesInfo.playerName = socket.data.username;
+        differencesInfo.playerName = this.getSocketUsername(socket);
         this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
     }
 
@@ -123,5 +123,10 @@ export class GameManagerService {
     private endChrono(socket: io.Socket) {
         clearInterval(this.getSocketTimeInterval(socket));
         this.getSocketChronometerService(socket)?.resetChrono();
+    }
+
+    private getSocketUsername(socket : io.Socket)
+    {
+        return socket.data.username;
     }
 }
