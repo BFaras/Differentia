@@ -58,15 +58,23 @@ export class SocketManager {
             });
 
             socket.on('I am waiting', (gameName: string) => {
+<<<<<<< Updated upstream
                 console.log('creation createur');
+=======
+>>>>>>> Stashed changes
                 this.waitingLineHandlerService.addCreatingPlayer(gameName, socket.id);
-                this.sio.emit(`${gameName} someone is waiting`);
+                this.sio.emit(`${gameName} let me tell you if someone is waiting`, true);
             });
 
             socket.on('I left', (gameName: string) => {
                 this.waitingLineHandlerService.deleteCreatorOfGame(gameName);
+<<<<<<< Updated upstream
                 this.waitingLineHandlerService.sendEventToAllJoiningPlayers(this.sio, gameName, 'response on host presence');
                 this.sio.emit(`${gameName} nobody is waiting no more`);
+=======
+                this.waitingLineHandlerService.sendEventToAllJoiningPlayers(this.sio, gameName, 'response on host presence')
+                this.sio.emit(`${gameName} let me tell you if someone is waiting`, false);
+>>>>>>> Stashed changes
             });
 
             socket.on('need reconnection', () => {
@@ -147,4 +155,119 @@ export class SocketManager {
             });
         });
     }
+<<<<<<< Updated upstream
 }
+=======
+
+    private async beginGame(socket: io.Socket, gameName: string) {
+        this.setupSocketGameRoom(socket, NO_OTHER_PLAYER_ROOM);
+        this.setupNecessaryGameServices(socket);
+
+        await this.getSocketMouseHandlerService(socket).generateDifferencesInformations(gameName);
+        this.getSocketMouseHandlerService(socket).addPlayerToGame(socket.id);
+        await this.sendImagesToClient(gameName, socket);
+    }
+
+    //To test
+    private async startMultiplayerMatch(socket: io.Socket, adversarySocketId: string, gameName: string) {
+        await this.beginGame(socket, gameName);
+
+        const adversarySocket = this.waitingLineHandlerService.getSocketByID(adversarySocketId, this.sio);
+        const gameRoomName = this.findSocketGameRoomName(socket);
+        this.setupSocketGameRoom(adversarySocket, gameRoomName);
+        this.getSocketMouseHandlerService(adversarySocket).addPlayerToGame(adversarySocketId);
+
+        adversarySocket.emit(`${gameName} you have been accepted`);
+        socket.emit('The adversary username is', adversarySocket.data.username);
+        adversarySocket.emit('The adversary username is', socket.data.username);
+
+        this.sio.to(gameRoomName).emit('classic mode');
+        this.sio.to(gameRoomName).emit('The game is', gameName);
+    }
+
+    private setupNecessaryGameServices(socket: io.Socket) {
+        const mouseHandler: MouseHandlerService = new MouseHandlerService();
+        const chronometerService: ChronometerService = new ChronometerService();
+
+        const gameRoomName = this.findSocketGameRoomName(socket);
+
+        this.chronometerServices.set(gameRoomName, chronometerService);
+        this.mouseHandlerServices.set(gameRoomName, mouseHandler);
+        this.timeIntervals.set(
+            gameRoomName,
+            setInterval(() => {
+                this.emitTime(this.getSocketChronometerService(socket), gameRoomName);
+            }, 1000),
+        );
+    }
+
+    private setupSocketGameRoom(socket: io.Socket, otherPlayerGameRoomId: string) {
+        const playerGameRoomID = socket.id + GAME_ROOM_GENERAL_ID;
+
+        if (otherPlayerGameRoomId === NO_OTHER_PLAYER_ROOM && !socket.rooms.has(playerGameRoomID)) {
+            socket.join(playerGameRoomID);
+        } else {
+            socket.join(otherPlayerGameRoomId);
+        }
+    }
+
+    private findSocketGameRoomName(socket: io.Socket): string {
+        let gameRoomName = DEFAULT_GAME_ROOM_NAME;
+        socket.rooms.forEach((roomName: string) => {
+            if (roomName.includes(GAME_ROOM_GENERAL_ID)) {
+                gameRoomName = roomName;
+            }
+        });
+
+        return gameRoomName;
+    }
+
+    private emitTime(chronometerService: ChronometerService, gameRoomName: string) {
+        chronometerService.increaseTime();
+        this.sio.to(gameRoomName).emit('time', chronometerService.time);
+    }
+
+    private clickResponse(socket: io.Socket, mousePosition: Position) {
+        const differencesInfo: GameplayDifferenceInformations = this.getSocketMouseHandlerService(socket).isValidClick(mousePosition, socket.id);
+        differencesInfo.playerName = socket.data.username;
+        this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
+    }
+
+    private async sendImagesToClient(gameName: string, socket: io.Socket) {
+        const gameImagesData: string[] = await this.gamesService.getGameImagesData(gameName);
+
+        this.sio
+            .to(this.findSocketGameRoomName(socket))
+            .emit('classic solo images', [gameImagesData[ORIGINAL_IMAGE_POSITION], gameImagesData[MODIFIED_IMAGE_POSITION]]);
+    }
+
+    private endGame(socket: io.Socket) {
+        const gameRoomName: string = this.findSocketGameRoomName(socket);
+        this.endChrono(socket);
+        this.chronometerServices.delete(gameRoomName);
+        this.mouseHandlerServices.delete(gameRoomName);
+        this.timeIntervals.delete(gameRoomName);
+        socket.rooms.delete(gameRoomName);
+    }
+
+    private getSocketChronometerService(socket: io.Socket): ChronometerService {
+        const gameRoomName = this.findSocketGameRoomName(socket);
+        return this.chronometerServices.get(gameRoomName) as ChronometerService;
+    }
+
+    private getSocketMouseHandlerService(socket: io.Socket): MouseHandlerService {
+        const gameRoomName = this.findSocketGameRoomName(socket);
+        return this.mouseHandlerServices.get(gameRoomName)!;
+    }
+
+    private getSocketTimeInterval(socket: io.Socket): NodeJS.Timer {
+        const gameRoomName = this.findSocketGameRoomName(socket);
+        return this.timeIntervals.get(gameRoomName)!;
+    }
+
+    private endChrono(socket: io.Socket) {
+        clearInterval(this.getSocketTimeInterval(socket));
+        this.getSocketChronometerService(socket)?.resetChrono();
+    }
+}
+>>>>>>> Stashed changes
