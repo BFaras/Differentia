@@ -1,0 +1,77 @@
+.chatContainer {
+    border-radius: 6px;
+    background-image: linear-gradient(0deg, #000000 25%, #023600 25%, #023600 50%, #000000 50%, #000000 75%, #023600 75%, #023600 100%);
+    background-size: 4px 4px;
+    color: white;
+    font: 1.3rem Inconsolata, monospace;
+    text-shadow: 0 0 5px #c8c8c8;
+    display: flex;
+    flex-direction: column;
+}
+
+.chatMessages {
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 80%;
+    justify-content: space-around;
+}
+
+.chatBox {
+    border: 2px solid black;
+    border-radius: 5px;
+    height: 20%;
+}
+
+.form {
+    display: flex;
+    flex-direction: row;
+}
+
+.chatInput {
+    width: 60%;
+}
+
+.chatSend {
+    width: 40%;
+}
+
+::placeholder {
+    color: rgb(78, 78, 78);
+    opacity: 0.9;
+}
+
+.localUserMessage {
+    color: rgb(7, 68, 199);
+}
+
+.otherUserMessage {
+    color: rgb(255, 123, 0);
+}
+
+.gameMessage {
+    color: rgb(13, 119, 133);
+}
+
+.timeInMessage {
+    color: rgb(234, 223, 223);
+    font-size: xx-small;
+    margin-right: 0.05cm;
+}
+
+#list-display {
+    margin-left: 10px;
+    line-height: 1.6;
+    white-space: pre-line;
+}
+
+.display {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    white-space: normal;
+    font-size: 16px;
+    flex-grow: 1;
+    max-width: 100%;
+    word-break: break-word;
+}

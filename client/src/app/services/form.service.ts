@@ -10,23 +10,27 @@ import { CommunicationService } from './communication.service';
 export class FormService {
     listName: string[] = [];
     listImage: string[] = [];
-
+    gamelist: Game[] = [];
     gameForms: GameFormDescription[] = [];
+    gameToDelete: string = '';
 
-    constructor(private communicationService: CommunicationService) {
-    }
+    constructor(private communicationService: CommunicationService) {}
 
     async receiveGameInformations() {
-        this.gameForms = [];
-        await firstValueFrom(this.communicationService.getGames()).then( (gameList)=>{
-            this.parseGameList(gameList);
-        })
+        this.resetGameForms();
+        await firstValueFrom(this.communicationService.getGames())
+            .then((games) => {
+                this.gamelist = games;
+                this.parseGameList();
+            })
+            .catch((error: Error) => console.log(error));
+        console.log('apres receive');
     }
 
-    parseGameList(gamelist: Game[]) {
-        for (let index = 0; index < gamelist.length; index++) {
-            this.fillListGameName(gamelist[index].name, this.listName);
-            this.fillListGameImage(gamelist[index].images[0], this.listImage);
+    parseGameList() {
+        for (let index = 0; index < this.gamelist?.length; index++) {
+            this.fillListGameName(this.gamelist[index].name, this.listName);
+            this.fillListGameImage(this.gamelist[index].images[0], this.listImage);
             this.initializeGameForm(index);
         }
     }
@@ -41,5 +45,19 @@ export class FormService {
 
     initializeGameForm(index: number) {
         this.gameForms.push(new GameFormDescription(this.listName[index], this.listImage[index], new RecordTimesBoard([], [])));
+    }
+
+    resetGameForms() {
+        this.gameForms = [];
+        this.gamelist = [];
+        this.listImage = [];
+        this.listName = [];
+    }
+
+    deleteGameForm() {
+        this.communicationService.deleteGame(this.gameToDelete).subscribe(async (games) => {
+            this.gamelist = games;
+            location.reload();
+        });
     }
 }

@@ -87,16 +87,23 @@ export class GamesService {
         this.asyncWriteInGamesFile();
     }
 
-    // Est ce que delete est nécessaire pour le sprint 1???
-
-    // async deleteGame(nameOfGameToDelete: string) {
-    //     await this.asyncReadFile();
-    //     const newGames = this.games.filter((x: Game) => {
-    //         return x.name !== nameOfGameToDelete
-    //     })
-    //     this.games = newGames;
-    //     await this.asyncWriteFile();
-    // }
+    async deleteGame(nameOfGameToDelete: string) {
+        await this.asyncReadGamesFile();
+        const newGames = this.games.filter((game: Game) => {
+            if (game.name === nameOfGameToDelete) {
+                fs.rm(IMAGES_PATH + game.images[0], (err) => {
+                    if (err) throw err;
+                });
+                fs.rm(IMAGES_PATH + game.images[1], (err) => {
+                    if (err) throw err;
+                });
+            }
+            return game.name !== nameOfGameToDelete;
+        });
+        this.games = newGames;
+        await this.asyncWriteInGamesFile();
+        return this.games;
+    }
 
     async asyncWriteInGamesFile() {
         try {

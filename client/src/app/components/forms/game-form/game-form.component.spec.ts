@@ -39,4 +39,10 @@ describe('GameFormComponent', () => {
         expect(gameFormComp.gameForm.gameImage).toEqual(gameImage);
         expect(gameFormComp.gameForm.recordTimesBoard).toEqual(recordTimesBoard);
     });
+
+    it('should open dialog', () => {
+        const dialogSpy = spyOn(gameFormComp['dialog'], 'open').and.callThrough();
+        gameFormComp.openDialog(true);
+        expect(dialogSpy).toHaveBeenCalled();
+    });
 });

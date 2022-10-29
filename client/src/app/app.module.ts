@@ -11,6 +11,7 @@ import { AppComponent } from '@app/pages/app/app.component';
 import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { CanvasDrawingComponent } from './components/canvas-drawing/canvas-drawing.component';
+import { ChatSectionComponent } from './components/chat-section/chat-section.component';
 import { DialogInputComponent } from './components/dialog-input/dialog-input.component';
 import { GameFormComponent } from './components/forms/game-form/game-form.component';
 import { ListGameFormComponent } from './components/forms/list-game-form/list-game-form.component';
@@ -60,6 +61,7 @@ import { GameSelectionComponent } from './pages/game-selection/game-selection.co
         ImageDifferenceComponent,
         PopDialogUsernameComponent,
         PopDialogEndgameComponent,
+        ChatSectionComponent,
         PopDialogWaitingForPlayerComponent,
         PopDialogHostRefusedComponent,
         ToolSettingComponent,

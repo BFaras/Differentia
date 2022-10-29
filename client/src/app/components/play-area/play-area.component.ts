@@ -15,11 +15,11 @@ import { PopDialogEndgameComponent } from '../pop-dialogs/pop-dialog-endgame/pop
     styleUrls: ['./play-area.component.scss'],
 })
 export class PlayAreaComponent implements OnInit {
-    @ViewChild('originalCanvas', { static: false }) private originalCanvas!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('modifiedCanvas', { static: false }) private modifiedCanvas!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('clickCanvas1', { static: false }) private clickCanvas1!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('clickCanvas2', { static: false }) private clickCanvas2!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('blinkCanvas', { static: false }) private blinkCanvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('originalCanvas', { static: false }) originalCanvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('modifiedCanvas', { static: false }) modifiedCanvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('clickCanvas1', { static: false }) clickCanvas1!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('clickCanvas2', { static: false }) clickCanvas2!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('blinkCanvas', { static: false }) blinkCanvas!: ElementRef<HTMLCanvasElement>;
     @Input() differentImages: HTMLImageElement[];
     @Input() nbDifferencesTotal: number = 0;
     mousePosition: Position = { x: 0, y: 0 };

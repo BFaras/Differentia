@@ -62,5 +62,9 @@ export class GamesController {
                 res.sendStatus(StatusCodes.BAD_REQUEST);
             }
         });
+
+        this.router.delete(`/:gameName`, async (req: Request, res: Response) => {
+            res.json(await this.gamesService.deleteGame(req.params.gameName));
+        });
     }
 }

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { FormService } from '@app/services/form.service';
+import { SocketClientService } from '@app/services/socket-client.service';
 import { Constants } from '@common/config';
 
 @Component({
@@ -12,18 +13,18 @@ export class ListGameFormComponent implements OnInit {
     firstElementIndex: number = 0;
     lastElementIndex: number = 3;
     currentPageGameFormList: GameFormDescription[];
+    messageForUpdate: string = '';
     @Input() page: string;
 
-    constructor(public formService: FormService) {}
+    constructor(public formService: FormService, private socketService: SocketClientService) {}
 
-    async ngOnInit(){
-        await this.formService.receiveGameInformations()
-
-        if (this.formService.gameForms.length < Constants.MAX_NB_OF_FORMS_PER_PAGE) {
-            this.lastElementIndex = this.formService.gameForms.length - 1;
+    async ngOnInit() {
+        this.config(this.messageForUpdate);
+        await this.formService.receiveGameInformations();
+        if (this.formService.gameForms?.length < Constants.MAX_NB_OF_FORMS_PER_PAGE) {
+            this.lastElementIndex = this.formService.gameForms?.length - 1;
         }
         this.addCurrentPageGameForms();
-        
     }
 
     nextPageGameForms() {
@@ -56,5 +57,23 @@ export class ListGameFormComponent implements OnInit {
         for (let index: number = 0; index < this.currentPageGameFormList.length; index++) {
             this.currentPageGameFormList[index] = this.formService.gameForms[index + this.firstElementIndex];
         }
+    }
+    config(gameName: string) {
+        this.socketService.connect();
+        this.socketService.send('Reload game selection page', gameName);
+
+        this.socketService.on('Page reloaded', (message) => {
+            if (message) this.messageForUpdate = 'Reload';
+            if (this.messageForUpdate) {
+                alert('Le jeu ' + message + ' a été supprimé :(');
+                location.reload();
+            }
+        });
+    }
+
+    deleteGameForm(gameName: string) {
+        this.formService.gameToDelete = gameName;
+        this.formService.deleteGameForm();
+        this.config(gameName);
     }
 }

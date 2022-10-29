@@ -28,7 +28,7 @@ describe('PopDialogUsernameComponent', () => {
 
     it('should send info to server', () => {
         socketSpy = jasmine.createSpyObj('SocketClientService', ['send']);
-        component.gamePage();
+        component.configureUsernamePopUpSocketFeatures();
         expect(socketSpy).toHaveBeenCalled;
     });
 

@@ -26,10 +26,12 @@ export class CommunicationService {
     }
 
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {
+        console.log(result);
         return () => of(result as T);
     }
 
     getGames(): Observable<Array<Game>> {
+        console.log('avant le get');
         return this.http.get<Array<Game>>(`${this.baseUrl}/games`).pipe(catchError(this.handleError<Array<Game>>('getGames')));
     }
 
@@ -37,6 +39,10 @@ export class CommunicationService {
         return this.http
             .post(`${this.baseUrl}/games/newGame`, game, { observe: 'response', responseType: 'text' })
             .pipe(catchError(this.handleError<HttpResponse<any>>('addGame')));
+    }
+
+    deleteGame(gameName: string): Observable<Array<Game>> {
+        return this.http.delete<Array<Game>>(`${this.baseUrl}/games/${gameName}`).pipe(catchError(this.handleError<Array<Game>>('deleteGame')));
     }
 
     uploadFiles(formData: FormData): Observable<Object> {

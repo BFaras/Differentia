@@ -55,7 +55,7 @@ export class PopDialogUsernameComponent implements OnInit {
         });
     }
 
-    private configureUsernamePopUpSocketFeatures(): void {
+    configureUsernamePopUpSocketFeatures(): void {
         this.socketService.on('username valid', () => {
             this.startWaitingLine();
             this.dialogRef.close();
