@@ -21,6 +21,7 @@ export class PlayAreaComponent implements OnInit {
     @ViewChild('clickCanvas2', { static: false }) clickCanvas2!: ElementRef<HTMLCanvasElement>;
     @ViewChild('blinkCanvas', { static: false }) blinkCanvas!: ElementRef<HTMLCanvasElement>;
     @Input() differentImages: HTMLImageElement[];
+    @Input() localPlayerUsername: string;
     mousePosition: Position = { x: 0, y: 0 };
     pixelList: number[] = [];
 
@@ -83,11 +84,12 @@ export class PlayAreaComponent implements OnInit {
 
     configurePlayAreaSocket(): void {
         this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {
+            const isLocalPlayer = differencesInfo.playerName == this.localPlayerUsername;
             this.pixelList = differencesInfo.differencePixelsNumbers;
 
             let isDifference: boolean = differencesInfo.isValidDifference;
-            this.mouseDetection.playSound(isDifference);
-            this.mouseDetection.clickMessage(isDifference);
+            this.mouseDetection.playSound(isDifference, isLocalPlayer);
+            this.mouseDetection.clickMessage(isDifference, isLocalPlayer);
             this.mouseDetection.verifyGameFinished(isDifference);
 
             if (isDifference) {

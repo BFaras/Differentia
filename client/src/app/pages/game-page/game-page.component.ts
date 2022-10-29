@@ -14,6 +14,7 @@ import { firstValueFrom } from 'rxjs';
     styleUrls: ['./game-page.component.scss'],
 })
 export class GamePageComponent {
+    readonly localPlrUseranmePos = LOCAL_PLR_USERNAME_POS;
     nbDifferences: number;
     gameName: string;
     usernames: string[] = [];

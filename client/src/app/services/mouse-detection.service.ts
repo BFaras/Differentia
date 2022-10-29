@@ -20,27 +20,25 @@ export class MouseDetectionService {
         }
     }
 
-    playSound(differenceIsValid: boolean) {
-        this.audio = new Audio();
-        this.audio.autoplay;
-        if (differenceIsValid) this.audio.src = '../../assets/sounds/validSound.mp3';
-        else this.audio.src = '../../assets/sounds/invalidSound.mp3';
-        this.audio.load();
-        this.audio.play();
-        this.audio.muted;
+    //To test
+    playSound(differenceIsValid: boolean, isLocalPlayer: boolean) {
+        if (differenceIsValid) this.playAudio('../../assets/sounds/validSound.mp3');
+        else if (isLocalPlayer) this.playAudio('../../assets/sounds/invalidSound.mp3');
     }
 
-    clickMessage(differenceIsValid: boolean) {
+    //To test
+    clickMessage(differenceIsValid: boolean, isLocalPlayer: boolean) {
         if (differenceIsValid) {
             this.message = 'BON TRAVAIL';
             this.drawService.context1.fillStyle = 'green';
             this.drawService.context2.fillStyle = 'green';
-        } else {
+            this.drawMessage(this.message);
+        } else if (isLocalPlayer) {
             this.message = 'ERREUR';
             this.drawService.context1.fillStyle = 'red';
             this.drawService.context2.fillStyle = 'red';
+            this.drawMessage(this.message);
         }
-        this.drawMessage(this.message);
     }
 
     verifyGameFinished(differenceIsValid: boolean) {
@@ -52,5 +50,14 @@ export class MouseDetectionService {
     drawMessage(message: string) {
         this.drawService.drawWord(message, this.mousePosition, this.drawService.context1);
         this.drawService.drawWord(message, this.mousePosition, this.drawService.context2);
+    }
+
+    private playAudio(audioSource: string) {
+        this.audio = new Audio();
+        this.audio.autoplay;
+        this.audio.src = audioSource;
+        this.audio.load();
+        this.audio.play();
+        this.audio.muted;
     }
 }
