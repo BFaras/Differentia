@@ -10,7 +10,6 @@ import { SocketClientService } from './socket-client.service';
 export class MouseDetectionService {
     constructor(public socketService: SocketClientService, private drawService: DrawService) {}
     mousePosition: Position = { x: 0, y: 0 };
-    nbrDifferencesTotal: number;
     nbrDifferencesFound: number = 0;
     message: string = '';
     audio: HTMLAudioElement;

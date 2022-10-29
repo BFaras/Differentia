@@ -21,7 +21,6 @@ export class PlayAreaComponent implements OnInit {
     @ViewChild('clickCanvas2', { static: false }) clickCanvas2!: ElementRef<HTMLCanvasElement>;
     @ViewChild('blinkCanvas', { static: false }) blinkCanvas!: ElementRef<HTMLCanvasElement>;
     @Input() differentImages: HTMLImageElement[];
-    @Input() nbDifferencesTotal: number = 0;
     mousePosition: Position = { x: 0, y: 0 };
     pixelList: number[] = [];
 
@@ -38,8 +37,6 @@ export class PlayAreaComponent implements OnInit {
     async ngOnInit(): Promise<void> {
         this.socketService.connect();
         this.configurePlayAreaSocket();
-
-        this.mouseDetection.nbrDifferencesTotal = this.nbDifferencesTotal;
 
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[ORIGINAL_IMAGE_POSITION]);
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[MODIFIED_IMAGE_POSITION]);
