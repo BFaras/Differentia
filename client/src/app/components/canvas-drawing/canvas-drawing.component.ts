@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Coordinate } from '@app/interfaces/coordinate';
 import { DrawingHandlerService } from '@app/services/drawing-handler.service';
 import { DrawingHistoryService } from '@app/services/drawing-history.service';
@@ -10,6 +10,7 @@ import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
   styleUrls: ['./canvas-drawing.component.scss']
 })
 export class CanvasDrawingComponent implements  AfterViewInit {
+  @Input('idFromParent') indexOfCanvas: any
   @ViewChild('canvas') public canvasDOM: ElementRef<HTMLCanvasElement>;
   private canvas: HTMLCanvasElement
   private context: CanvasRenderingContext2D | null;
@@ -29,6 +30,7 @@ export class CanvasDrawingComponent implements  AfterViewInit {
   }
 
   allowToDrawOnCanvas(){
+    this.drawingHistoryService.setCanvasIndex(this.indexOfCanvas);
     this.useCanvasFocusedOn()
   }
 
@@ -46,8 +48,8 @@ export class CanvasDrawingComponent implements  AfterViewInit {
 
     this.drawingHandlerService.mouseDownObservable.subscribe((e)=>{
         this.drawingHistoryService.saveCanvas(this.context!);
-      if(this.drawingHistoryService.firstCanvasHistory[1].length != 0){
-        this.drawingHistoryService.firstCanvasHistory[1] = [];
+      if(this.drawingHistoryService.cancelDrawingHistory[1].length != 0){
+        this.drawingHistoryService.cancelDrawingHistory[1] = [];
       }
   });
 
