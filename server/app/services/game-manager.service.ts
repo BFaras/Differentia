@@ -87,6 +87,16 @@ export class GameManagerService {
         socket.broadcast.to(this.findSocketGameRoomName(socket)).emit('End game', endGameInfos);
     }
 
+    //To test
+    handleAbandonEmit(socket: io.Socket) {
+        let endGameInfos: EndGameInformations = {
+            isMultiplayer: true,
+            isAbandon: true,
+            isGameWon: true,
+        };
+        socket.broadcast.to(this.findSocketGameRoomName(socket)).emit('End game', endGameInfos);
+    }
+
     private setupNecessaryGameServices(socket: io.Socket) {
         const mouseHandler: MouseHandlerService = new MouseHandlerService();
         const chronometerService: ChronometerService = new ChronometerService();
