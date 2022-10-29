@@ -32,11 +32,11 @@ export class MouseDetectionService {
 
     clickMessage(differenceIsValid: boolean) {
         if (differenceIsValid) {
-            this.message = 'GOOD JOB';
+            this.message = 'BON TRAVAIL';
             this.drawService.context1.fillStyle = 'green';
             this.drawService.context2.fillStyle = 'green';
         } else {
-            this.message = 'ERROR';
+            this.message = 'ERREUR';
             this.drawService.context1.fillStyle = 'red';
             this.drawService.context2.fillStyle = 'red';
         }
