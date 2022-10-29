@@ -5,10 +5,20 @@ import { DrawService } from '@app/services/draw.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { MouseDetectionService } from '@app/services/mouse-detection.service';
 import { SocketClientService } from '@app/services/socket-client.service';
-import { DEFAULT_HEIGHT_CANVAS, DEFAULT_WIDTH_CANVAs, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
+import {
+    CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE,
+    CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE,
+    CLASSIC_SOLO_END_GAME_MESSAGE,
+    DEFAULT_HEIGHT_CANVAS,
+    DEFAULT_WIDTH_CANVAs,
+    MODIFIED_IMAGE_POSITION,
+    ORIGINAL_IMAGE_POSITION,
+} from '@common/const';
+import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
 import { PopDialogEndgameComponent } from '../pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
+
 @Component({
     selector: 'app-play-area',
     templateUrl: './play-area.component.html',
@@ -75,10 +85,11 @@ export class PlayAreaComponent implements OnInit {
         this.mouseDetection.mouseHitDetect(event);
     }
 
-    openDialog() {
+    openEndGameDialog(messageToDisplay: string) {
         this.dialog.open(PopDialogEndgameComponent, {
             height: '400px',
             width: '600px',
+            data: messageToDisplay,
         });
     }
 
@@ -107,8 +118,15 @@ export class PlayAreaComponent implements OnInit {
             }
         });
 
-        this.socketService.on('End game', () => {
-            this.openDialog();
+        //To test
+        this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
+            let endGameMessage = CLASSIC_SOLO_END_GAME_MESSAGE;
+            if (endGameInfos.isMultiplayer && !endGameInfos.isAbandon) {
+                endGameMessage = CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE;
+            } else if (endGameInfos.isMultiplayer && endGameInfos.isAbandon) {
+                endGameMessage = CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE;
+            }
+            this.openEndGameDialog(endGameMessage);
         });
     }
 }
