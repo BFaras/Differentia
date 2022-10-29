@@ -30,7 +30,7 @@ export class ToolSettingComponent implements OnInit {
   }
 
   checkIfThereAreSavedDrawnLines(){
-    if (this.drawingHistoryService.cancelDrawingHistory[0].length != 0){
+    if (this.drawingHistoryService.cancelDrawingHistory[this.drawingHistoryService.index].length != 0){
       return false
     } else{
       return true;
@@ -38,7 +38,7 @@ export class ToolSettingComponent implements OnInit {
   }
 
   checkIfThereAreSavedDeletedDrawnLines(){
-    if (this.drawingHistoryService.cancelDrawingHistory[1].length != 0){
+    if (this.drawingHistoryService.undoCancelDrawingHistory[this.drawingHistoryService.index].length != 0){
       return false
     } else{
       return true;

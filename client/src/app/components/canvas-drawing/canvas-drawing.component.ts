@@ -48,8 +48,8 @@ export class CanvasDrawingComponent implements  AfterViewInit {
 
     this.drawingHandlerService.mouseDownObservable.subscribe((e)=>{
         this.drawingHistoryService.saveCanvas(this.context!);
-      if(this.drawingHistoryService.cancelDrawingHistory[1].length != 0){
-        this.drawingHistoryService.cancelDrawingHistory[1] = [];
+      if(this.drawingHistoryService.undoCancelDrawingHistory[0].length != 0){
+        this.drawingHistoryService.undoCancelDrawingHistory[0] = [];
       }
   });
 
