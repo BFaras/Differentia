@@ -44,10 +44,6 @@ export class PlayAreaComponent implements OnInit {
         this.displayImages();
     }
 
-    ngOnDestroy() {
-        this.mouseDetection.nbrDifferencesFound = 0;
-    }
-
     displayImages() {
         this.drawService.context1 = this.clickCanvas1.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.drawService.context1.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);
@@ -92,7 +88,7 @@ export class PlayAreaComponent implements OnInit {
             let isDifference: boolean = differencesInfo.isValidDifference;
             this.mouseDetection.playSound(isDifference);
             this.mouseDetection.clickMessage(isDifference);
-            this.mouseDetection.incrementNbrDifference(isDifference);
+            this.mouseDetection.verifyGameFinished(isDifference);
 
             if (isDifference) {
                 console.log('Appel de copycertain...');

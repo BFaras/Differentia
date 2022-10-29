@@ -10,7 +10,6 @@ import { SocketClientService } from './socket-client.service';
 export class MouseDetectionService {
     constructor(public socketService: SocketClientService, private drawService: DrawService) {}
     mousePosition: Position = { x: 0, y: 0 };
-    nbrDifferencesFound: number = 0;
     message: string = '';
     audio: HTMLAudioElement;
 
@@ -44,9 +43,8 @@ export class MouseDetectionService {
         this.drawMessage(this.message);
     }
 
-    incrementNbrDifference(differenceIsValid: boolean) {
+    verifyGameFinished(differenceIsValid: boolean) {
         if (differenceIsValid) {
-            this.nbrDifferencesFound += 1;
             this.socketService.send('Check if game is finished');
         }
     }
