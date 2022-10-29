@@ -138,7 +138,9 @@ export class SocketManager {
                 this.gameManagerService.clickResponse(socket, position);
             });
 
+            //To test
             socket.on('kill the game', () => {
+                //To test qu'on appelle la fonction ci-dessous
                 this.gameManagerService.handleAbandonEmit(socket);
                 this.gameManagerService.endGame(socket);
             });
