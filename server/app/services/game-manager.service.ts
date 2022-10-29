@@ -58,7 +58,7 @@ export class GameManagerService {
 
     clickResponse(socket: io.Socket, mousePosition: Position) {
         const differencesInfo: GameplayDifferenceInformations = this.getSocketMouseHandlerService(socket).isValidClick(mousePosition, socket.id);
-        differencesInfo.playerName = this.getSocketUsername(socket);
+        differencesInfo.socketId = socket.id;
         this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
     }
 

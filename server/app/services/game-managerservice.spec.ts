@@ -15,7 +15,7 @@ import { MouseHandlerService } from './mouse-handler.service';
 
 describe('GameManagerService tests', () => {
     const testGameName = 'test12345';
-    const testUsername = "myName15";
+    const testUsername = 'myName15';
     const testGame: Game = {
         name: testGameName,
         numberOfDifferences: 2,
@@ -28,16 +28,16 @@ describe('GameManagerService tests', () => {
     };
 
     let gameManagerService: GameManagerService;
-    let serverSocket : io.Socket;
-    let serverSocket2 : io.Socket;
+    let serverSocket: io.Socket;
+    let serverSocket2: io.Socket;
     let chronometerService: ChronometerService = new ChronometerService();
     let gamesService: GamesService = Container.get(GamesService);
     let mouseHandlerService: MouseHandlerService = new MouseHandlerService();
     let mouseHandlerIsValidClickStub: sinon.SinonStub<[mousePosition: Position, plrSocketId: string], GameplayDifferenceInformations>;
 
     beforeEach(async () => {
-        serverSocket = new ServerSocketTestHelper("JKHSDA125") as unknown as io.Socket;
-        serverSocket2 = new ServerSocketTestHelper("IIUUYSD5896") as unknown as io.Socket;
+        serverSocket = new ServerSocketTestHelper('JKHSDA125') as unknown as io.Socket;
+        serverSocket2 = new ServerSocketTestHelper('IIUUYSD5896') as unknown as io.Socket;
         gameManagerService = new GameManagerService(new ServerIOTestHelper() as unknown as io.Server);
 
         sinon.stub(GameManagerService.prototype, <any>'getSocketChronometerService').callsFake((socket) => {
@@ -64,7 +64,7 @@ describe('GameManagerService tests', () => {
             return {
                 differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
                 isValidDifference: false,
-                playerName: testUsername,
+                socketId: testUsername,
             };
         });
     });

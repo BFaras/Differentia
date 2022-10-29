@@ -27,7 +27,7 @@ export class ChatMessagesService {
         });
     }
 
-    sendMessage(senderName: string, message:string){
+    sendMessage(senderName: string, message: string) {
         this.socketService.send('playerMessage', this.generateChatMessage(this.getTimeInCorrectFormat(), senderName, message));
     }
 
@@ -44,25 +44,23 @@ export class ChatMessagesService {
         this.socketService.on('Valid click', (differenceInfos: GameplayDifferenceInformations) => {
             if (differenceInfos.isValidDifference && this.isMultiplayerGame) {
                 observer.next(
-                    this.generateChatMessageFromGame(this.getTimeInCorrectFormat(), MESSAGE_DIFFERENCE_FOUND_MULTI + differenceInfos.playerName),
+                    this.generateChatMessageFromGame(this.getTimeInCorrectFormat(), MESSAGE_DIFFERENCE_FOUND_MULTI + differenceInfos.socketId),
                 );
             } else if (differenceInfos.isValidDifference && !this.isMultiplayerGame) {
                 observer.next(this.generateChatMessageFromGame(this.getTimeInCorrectFormat(), MESSAGE_DIFFERENCE_FOUND_SOLO));
             } else if (!differenceInfos.isValidDifference && this.isMultiplayerGame) {
                 observer.next(
-                    this.generateChatMessageFromGame(this.getTimeInCorrectFormat(), MESSAGE_ERROR_DIFFERENCE_MULTI + differenceInfos.playerName),
+                    this.generateChatMessageFromGame(this.getTimeInCorrectFormat(), MESSAGE_ERROR_DIFFERENCE_MULTI + differenceInfos.socketId),
                 );
             } else if (!differenceInfos.isValidDifference && !this.isMultiplayerGame) {
                 observer.next(this.generateChatMessageFromGame(this.getTimeInCorrectFormat(), MESSAGE_ERROR_DIFFERENCE_SOLO));
             }
         });
-        this.socketService.on('Send message to opponent', (message:ChatMessage) => {
+        this.socketService.on('Send message to opponent', (message: ChatMessage) => {
             observer.next(message);
             console.log(message);
         });
     }
-
-
 
     private generateChatMessageFromGame(timeMessageSent: string, message: string) {
         return this.generateChatMessage(timeMessageSent, GAME_MESSAGE_SENDER_NAME, message);

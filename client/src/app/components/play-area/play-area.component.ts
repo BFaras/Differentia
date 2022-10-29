@@ -97,7 +97,8 @@ export class PlayAreaComponent implements OnInit {
 
     configurePlayAreaSocket(): void {
         this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {
-            const isLocalPlayer = differencesInfo.playerName == this.localPlayerUsername;
+            const isLocalPlayer = differencesInfo.socketId == this.socketService.socket.id;
+            console.log(isLocalPlayer);
             this.pixelList = differencesInfo.differencePixelsNumbers;
 
             let isDifference: boolean = differencesInfo.isValidDifference;

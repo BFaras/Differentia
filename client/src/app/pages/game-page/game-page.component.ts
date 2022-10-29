@@ -57,7 +57,7 @@ export class GamePageComponent {
         //To test
         this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {
             if (differencesInfo.isValidDifference) {
-                this.incrementPlayerNbOfDifferencesFound(differencesInfo.playerName);
+                this.incrementPlayerNbOfDifferencesFound(differencesInfo.socketId);
             }
         });
 
@@ -67,8 +67,8 @@ export class GamePageComponent {
         });
     }
 
-    private incrementPlayerNbOfDifferencesFound(plrUsername: string) {
-        if (plrUsername == this.usernames[LOCAL_PLR_USERNAME_POS]) {
+    private incrementPlayerNbOfDifferencesFound(socketId: string) {
+        if (socketId == this.socketService.socket.id) {
             this.nbDifferrencesFound[LOCAL_PLR_USERNAME_POS] += 1;
         } else {
             this.nbDifferrencesFound[ADVERSARY_PLR_USERNAME_POS] += 1;
