@@ -46,13 +46,14 @@ export class GameManagerService {
         this.sio.to(gameRoomName).emit('The game is', gameName);
     }
 
-    endGame(socket: io.Socket) {
+    async endGame(socket: io.Socket) {
         const gameRoomName: string = this.findSocketGameRoomName(socket);
         this.endChrono(socket);
         this.chronometerServices.delete(gameRoomName);
         this.mouseHandlerServices.delete(gameRoomName);
         this.timeIntervals.delete(gameRoomName);
-        socket.rooms.delete(gameRoomName);
+
+        this.sio.in(gameRoomName).socketsLeave(gameRoomName);
     }
 
     clickResponse(socket: io.Socket, mousePosition: Position) {
