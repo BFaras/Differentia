@@ -103,7 +103,7 @@ export class PlayAreaComponent implements OnInit {
             let isDifference: boolean = differencesInfo.isValidDifference;
             this.mouseDetection.playSound(isDifference, isLocalPlayer);
             this.mouseDetection.clickMessage(isDifference, isLocalPlayer);
-            this.mouseDetection.verifyGameFinished(isDifference, this.isMultiplayer);
+            this.mouseDetection.verifyGameFinished(isDifference, this.isMultiplayer, isLocalPlayer);
 
             if (isDifference) {
                 console.log('Appel de copycertain...');
