@@ -7,6 +7,7 @@ import { MouseDetectionService } from '@app/services/mouse-detection.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import {
     CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE,
+    CLASSIC_MULTIPLAYER_LOST_MESSAGE,
     CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE,
     CLASSIC_SOLO_END_GAME_MESSAGE,
     DEFAULT_HEIGHT_CANVAS,
@@ -121,10 +122,12 @@ export class PlayAreaComponent implements OnInit {
         //To test
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
             let endGameMessage = CLASSIC_SOLO_END_GAME_MESSAGE;
-            if (endGameInfos.isMultiplayer && !endGameInfos.isAbandon) {
+            if (endGameInfos.isMultiplayer && endGameInfos.isGameWon && !endGameInfos.isAbandon) {
                 endGameMessage = CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE;
             } else if (endGameInfos.isMultiplayer && endGameInfos.isAbandon) {
                 endGameMessage = CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE;
+            } else if (!endGameInfos.isGameWon) {
+                endGameMessage = CLASSIC_MULTIPLAYER_LOST_MESSAGE;
             }
             this.openEndGameDialog(endGameMessage);
         });
