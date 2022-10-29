@@ -52,7 +52,7 @@ export class GamePageComponent {
             this.usernames[ADVERSARY_PLR_USERNAME_POS] = advesaryUsername;
         });
 
-        this.socketService.on('classic solo images', (imagesData: string[]) => {
+        this.socketService.on('game images', (imagesData: string[]) => {
             this.images[ORIGINAL_IMAGE_POSITION].src = imagesData[ORIGINAL_IMAGE_POSITION];
             this.images[MODIFIED_IMAGE_POSITION].src = imagesData[MODIFIED_IMAGE_POSITION];
         });

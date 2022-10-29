@@ -16,15 +16,14 @@ export class GameManagerService {
 
     constructor(private sio: io.Server) {}
 
-    async beginGame(socket: io.Socket, gameName: string, adversarySocket? : io.Socket) {
+    async beginGame(socket: io.Socket, gameName: string, adversarySocket?: io.Socket) {
         this.setupSocketGameRoom(socket, NO_OTHER_PLAYER_ROOM);
         this.setupNecessaryGameServices(socket);
 
         await this.getSocketMouseHandlerService(socket).generateDifferencesInformations(gameName);
         this.getSocketMouseHandlerService(socket).addPlayerToGame(socket.id);
 
-        if (adversarySocket)
-        {
+        if (adversarySocket) {
             this.setupSocketGameRoom(adversarySocket, this.findSocketGameRoomName(socket));
             this.getSocketMouseHandlerService(adversarySocket).addPlayerToGame(adversarySocket.id);
         }
@@ -35,7 +34,7 @@ export class GameManagerService {
     async startMultiplayerMatch(socket: io.Socket, adversarySocket: io.Socket, gameName: string) {
         adversarySocket.emit(`${gameName} you have been accepted`);
         await this.beginGame(socket, gameName, adversarySocket);
-        
+
         socket.emit('show the username', this.getSocketUsername(socket));
         adversarySocket.emit('show the username', this.getSocketUsername(adversarySocket));
         socket.emit('The adversary username is', this.getSocketUsername(adversarySocket));
@@ -108,7 +107,7 @@ export class GameManagerService {
 
         this.sio
             .to(this.findSocketGameRoomName(socket))
-            .emit('classic solo images', [gameImagesData[ORIGINAL_IMAGE_POSITION], gameImagesData[MODIFIED_IMAGE_POSITION]]);
+            .emit('game images', [gameImagesData[ORIGINAL_IMAGE_POSITION], gameImagesData[MODIFIED_IMAGE_POSITION]]);
     }
 
     private getSocketChronometerService(socket: io.Socket): ChronometerService {
@@ -131,8 +130,7 @@ export class GameManagerService {
         this.getSocketChronometerService(socket)?.resetChrono();
     }
 
-    private getSocketUsername(socket : io.Socket)
-    {
+    private getSocketUsername(socket: io.Socket) {
         return socket.data.username;
     }
 }
