@@ -141,13 +141,19 @@ export class SocketManager {
             socket.on('kill the game', () => {
                 this.gameManagerService.endGame(socket);
             });
-
-            socket.on('Check if game is finished', () => {
+            socket.on('Check if game is finished', (isMultiplayer: boolean) => {
                 const mouseHandler: MouseHandlerService = this.gameManagerService.getSocketMouseHandlerService(socket);
-                if (mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === mouseHandler.nbDifferencesTotal) {
+                let isGameFinished = this.gameManagerService.isGameFinishedSolo(socket);
+
+                //To test
+                if (isMultiplayer) {
+                    isGameFinished = this.gameManagerService.isGameFinishedMulti(socket);
+                }
+
+                if (isGameFinished) {
                     mouseHandler.resetData();
+                    this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
                     this.gameManagerService.endGame(socket);
-                    socket.emit('End game');
                 }
             });
 

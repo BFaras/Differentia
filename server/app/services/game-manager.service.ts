@@ -1,4 +1,5 @@
 import { DEFAULT_GAME_ROOM_NAME, GAME_ROOM_GENERAL_ID, MODIFIED_IMAGE_POSITION, NO_OTHER_PLAYER_ROOM, ORIGINAL_IMAGE_POSITION } from '@common/const';
+import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
 import * as io from 'socket.io';
@@ -58,6 +59,31 @@ export class GameManagerService {
         const differencesInfo: GameplayDifferenceInformations = this.getSocketMouseHandlerService(socket).isValidClick(mousePosition, socket.id);
         differencesInfo.playerName = this.getSocketUsername(socket);
         this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
+    }
+
+    //To test
+    isGameFinishedSolo(socket: io.Socket) {
+        const mouseHandler = this.getSocketMouseHandlerService(socket);
+        return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === mouseHandler.nbDifferencesTotal;
+    }
+
+    //To test
+    isGameFinishedMulti(socket: io.Socket) {
+        const mouseHandler = this.getSocketMouseHandlerService(socket);
+        return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === Math.floor(mouseHandler.nbDifferencesTotal / 2) + 1;
+    }
+
+    //To test
+    handleEndGameEmits(socket: io.Socket, isMultiplayer: boolean) {
+        let endGameInfos: EndGameInformations = {
+            isMultiplayer: isMultiplayer,
+            isAbandon: false,
+            isGameWon: true,
+        };
+        socket.emit('End game', endGameInfos);
+
+        endGameInfos.isGameWon = false;
+        socket.broadcast.to(this.findSocketGameRoomName(socket)).emit('End game', endGameInfos);
     }
 
     private setupNecessaryGameServices(socket: io.Socket) {

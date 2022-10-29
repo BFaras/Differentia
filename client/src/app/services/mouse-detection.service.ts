@@ -41,9 +41,10 @@ export class MouseDetectionService {
         }
     }
 
-    verifyGameFinished(differenceIsValid: boolean) {
+    //To correct test
+    verifyGameFinished(differenceIsValid: boolean, isMultiplayer: boolean) {
         if (differenceIsValid) {
-            this.socketService.send('Check if game is finished');
+            this.socketService.send('Check if game is finished', isMultiplayer);
         }
     }
 

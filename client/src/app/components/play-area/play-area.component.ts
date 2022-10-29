@@ -33,6 +33,7 @@ export class PlayAreaComponent implements OnInit {
     @ViewChild('blinkCanvas', { static: false }) blinkCanvas!: ElementRef<HTMLCanvasElement>;
     @Input() differentImages: HTMLImageElement[];
     @Input() localPlayerUsername: string;
+    @Input() isMultiplayer: boolean;
     mousePosition: Position = { x: 0, y: 0 };
     pixelList: number[] = [];
 
@@ -102,7 +103,7 @@ export class PlayAreaComponent implements OnInit {
             let isDifference: boolean = differencesInfo.isValidDifference;
             this.mouseDetection.playSound(isDifference, isLocalPlayer);
             this.mouseDetection.clickMessage(isDifference, isLocalPlayer);
-            this.mouseDetection.verifyGameFinished(isDifference);
+            this.mouseDetection.verifyGameFinished(isDifference, this.isMultiplayer);
 
             if (isDifference) {
                 console.log('Appel de copycertain...');
