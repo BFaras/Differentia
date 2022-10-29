@@ -4,6 +4,7 @@ import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
 import { ADVERSARY_PLR_USERNAME_POS, LOCAL_PLR_USERNAME_POS, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { Game } from '@common/game';
+import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Time } from '@common/time';
 import { firstValueFrom } from 'rxjs';
 
@@ -17,7 +18,7 @@ export class GamePageComponent {
     gameName: string;
     usernames: string[] = [];
     images: HTMLImageElement[];
-    nbDifferrencesFound: number = 0;
+    nbDifferrencesFound: number[] = [0, 0];
 
     constructor(public socketService: SocketClientService, private timeService: TimeService, private communicationService: CommunicationService) {
         this.images = [new Image(640, 480), new Image(640, 480)];
@@ -52,13 +53,28 @@ export class GamePageComponent {
             this.usernames[ADVERSARY_PLR_USERNAME_POS] = advesaryUsername;
         });
 
+        //To test
+        this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {
+            if (differencesInfo.isValidDifference) {
+                this.incrementPlayerNbOfDifferencesFound(differencesInfo.playerName);
+            }
+        });
+
         this.socketService.on('game images', (imagesData: string[]) => {
             this.images[ORIGINAL_IMAGE_POSITION].src = imagesData[ORIGINAL_IMAGE_POSITION];
             this.images[MODIFIED_IMAGE_POSITION].src = imagesData[MODIFIED_IMAGE_POSITION];
         });
     }
 
-    receiveNumberOfDifferences(nameGame: string): void {
+    private incrementPlayerNbOfDifferencesFound(plrUsername: string) {
+        if (plrUsername == this.usernames[LOCAL_PLR_USERNAME_POS]) {
+            this.nbDifferrencesFound[LOCAL_PLR_USERNAME_POS] += 1;
+        } else {
+            this.nbDifferrencesFound[ADVERSARY_PLR_USERNAME_POS] += 1;
+        }
+    }
+
+    private receiveNumberOfDifferences(nameGame: string): void {
         firstValueFrom(this.communicationService.getGames()).then((array: Game[]) => {
             let gameWanted = array.find((x) => x.name === nameGame);
             // gameWanted ne sera jamais undefined car le nom utilisé dans le .find est d'un jeu qui
