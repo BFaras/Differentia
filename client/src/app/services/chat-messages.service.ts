@@ -31,6 +31,7 @@ export class ChatMessagesService {
         this.socketService.send('playerMessage', this.generateChatMessage(senderName, message));
     }
 
+    //To test
     resetIsMultiplayer() {
         this.isMultiplayerGame = false;
     }
@@ -47,11 +48,11 @@ export class ChatMessagesService {
     private configureSocket(observer: Subscriber<ChatMessage>) {
         this.socketService.on('Valid click', (differenceInfos: GameplayDifferenceInformations) => {
             if (differenceInfos.isValidDifference && this.isMultiplayerGame) {
-                observer.next(this.generateChatMessageFromGame(MESSAGE_DIFFERENCE_FOUND_MULTI + differenceInfos.socketId));
+                observer.next(this.generateChatMessageFromGame(MESSAGE_DIFFERENCE_FOUND_MULTI + differenceInfos.playerUsername));
             } else if (differenceInfos.isValidDifference && !this.isMultiplayerGame) {
                 observer.next(this.generateChatMessageFromGame(MESSAGE_DIFFERENCE_FOUND_SOLO));
             } else if (!differenceInfos.isValidDifference && this.isMultiplayerGame) {
-                observer.next(this.generateChatMessageFromGame(MESSAGE_ERROR_DIFFERENCE_MULTI + differenceInfos.socketId));
+                observer.next(this.generateChatMessageFromGame(MESSAGE_ERROR_DIFFERENCE_MULTI + differenceInfos.playerUsername));
             } else if (!differenceInfos.isValidDifference && !this.isMultiplayerGame) {
                 observer.next(this.generateChatMessageFromGame(MESSAGE_ERROR_DIFFERENCE_SOLO));
             }
@@ -59,6 +60,8 @@ export class ChatMessagesService {
         this.socketService.on('Send message to opponent', (message: ChatMessage) => {
             observer.next(message);
         });
+
+        //To test
         this.socketService.on('The adversary username is', () => {
             this.isMultiplayerGame = true;
         });
