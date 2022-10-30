@@ -83,6 +83,7 @@ export const CLASSIC_SOLO_END_GAME_MESSAGE = 'Vous avez trouvé toutes les diff�
 export const CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE = 'Vous avez gagnez contre votre adversaire!';
 export const CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE = 'Votre adversaire a abandonné, donc vous avez gagner!';
 export const CLASSIC_MULTIPLAYER_LOST_MESSAGE = 'Vous avez perdu contre votre adversaire :(';
+export const ABANDON_MESSAGE = ' a abandonné la partie';
 
 // Chat size constant
 export const CHAT_HEIGHT = 30;

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ChatMessage } from '@common/chat-message';
 import {
+    ABANDON_MESSAGE,
     GAME_MESSAGE_SENDER_NAME,
     MESSAGE_DIFFERENCE_FOUND_MULTI,
     MESSAGE_DIFFERENCE_FOUND_SOLO,
@@ -8,6 +9,7 @@ import {
     MESSAGE_ERROR_DIFFERENCE_SOLO,
     TWO_DIGIT_TIME_VALUE,
 } from '@common/const';
+import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Observable, Subscriber } from 'rxjs';
 import { SocketClientService } from './socket-client.service';
@@ -17,11 +19,13 @@ import { SocketClientService } from './socket-client.service';
 })
 export class ChatMessagesService {
     public messagesObservable: Observable<ChatMessage>;
-    private isMultiplayerGame = false;
+    private adversaryUsername: string;
+    private isMultiplayerGame;
     private date: Date;
 
     constructor(private socketService: SocketClientService) {
         this.date = new Date();
+        this.isMultiplayerGame = false;
         this.messagesObservable = new Observable((observer: Subscriber<ChatMessage>) => {
             this.configureSocket(observer);
         });
@@ -62,8 +66,15 @@ export class ChatMessagesService {
         });
 
         //To test
-        this.socketService.on('The adversary username is', () => {
+        this.socketService.on('The adversary username is', (adversaryName: string) => {
             this.isMultiplayerGame = true;
+            this.adversaryUsername = adversaryName;
+        });
+
+        this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
+            if (endGameInfos.isMultiplayer && endGameInfos.isAbandon) {
+                observer.next(this.generateChatMessageFromGame(this.adversaryUsername + ABANDON_MESSAGE));
+            }
         });
     }
 
