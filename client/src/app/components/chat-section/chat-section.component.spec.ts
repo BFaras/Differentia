@@ -60,6 +60,12 @@ describe('ChatSectionComponent', () => {
         expect(chatSectionComponent.messagesSent).not.toEqual([testMessage, testMessage]);
     });
 
+    it('should ngOnDestroy() call resetresetIsMultiplayer() of ChatMessageService', () => {
+        const spy = spyOn(chatMessagesService, 'resetIsMultiplayer');
+        chatSectionComponent.ngOnDestroy();
+        expect(spy).toHaveBeenCalled;
+    });
+
     it('should handle a show the username event and change the local player username', () => {
         socketTestHelper.peerSideEmit('show the username', testUsername);
         expect(chatSectionComponent.localPlayerUsername).toEqual(testUsername);
