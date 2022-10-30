@@ -35,7 +35,6 @@ export class ChatMessagesService {
         this.socketService.send('playerMessage', this.generateChatMessage(senderName, message));
     }
 
-    //To test
     resetIsMultiplayer() {
         this.isMultiplayerGame = false;
     }
