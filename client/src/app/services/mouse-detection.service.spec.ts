@@ -62,12 +62,12 @@ describe('MouseDetectionService', () => {
     // });
 
     it('should call clickMessage with good position', () => {
-        service.clickMessage(true);
+        service.clickMessage(true, true);
         expect(service.message).toEqual('GOOD JOB');
     });
 
     it('should call clickMessage with wrong position', () => {
-        service.clickMessage(false);
+        service.clickMessage(false, true);
         expect(service.message).toEqual('ERROR');
     });
 });
