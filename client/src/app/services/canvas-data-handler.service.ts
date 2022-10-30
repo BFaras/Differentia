@@ -22,10 +22,12 @@ export class CanvasDataHandlerService {
     this.drawingHistoryService.saveCanvas(this.context[indexContext],indexContext)
     if (indexContext == 0){
       const canvasOfContext = this.context[1].canvas;
+      this.context[0].clearRect(0,0,IMAGE_WIDTH,IMAGE_HEIGHT)
       this.context[0].drawImage(canvasOfContext,0,0);
     } else 
     if (indexContext == 1){
       const canvasOfContext = this.context[0].canvas;
+      this.context[1].clearRect(0,0,IMAGE_WIDTH,IMAGE_HEIGHT)
       this.context[1].drawImage(canvasOfContext,0,0);
     }
 
@@ -35,11 +37,13 @@ export class CanvasDataHandlerService {
     if (indexContext == 0){
       const canvasOfContext = this.context[0].canvas;
       this.drawingHistoryService.saveCanvas(this.context[1],1)
+      this.context[1].clearRect(0,0,IMAGE_WIDTH,IMAGE_HEIGHT)
       this.context[1].drawImage(canvasOfContext,0,0);
     } else 
     if (indexContext == 1){
       const canvasOfContext = this.context[1].canvas;
       this.drawingHistoryService.saveCanvas(this.context[0],0)
+      this.context[0].clearRect(0,0,IMAGE_WIDTH,IMAGE_HEIGHT)
       this.context[0].drawImage(canvasOfContext,0,0);
     }
   }
