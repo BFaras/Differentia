@@ -67,10 +67,10 @@ describe('PlayAreaComponent', () => {
         expect(drawServiceSpy).toHaveBeenCalled();
     });
 
-    // it('should open dialog', () => {
-    //     component.openEndGameDialog();
-    //     expect(matDialogSpy).toBeTruthy();
-    // });
+    it('should open dialog', () => {
+        component.openEndGameDialog();
+        expect(matDialogSpy).toBeTruthy();
+    });
 
     it('should detect mouseEvent  ', () => {
         mouseEvent = {

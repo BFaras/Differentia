@@ -61,13 +61,13 @@ describe('MouseDetectionService', () => {
     //     expect(playSoundSpy).toHaveBeenCalled();
     // });
 
-    // it('should call clickMessage with good position', () => {
-    //     service.clickMessage(true);
-    //     expect(service.message).toEqual('GOOD JOB');
-    // });
+    it('should call clickMessage with good position', () => {
+        service.clickMessage(true);
+        expect(service.message).toEqual('GOOD JOB');
+    });
 
-    // it('should call clickMessage with wrong position', () => {
-    //     service.clickMessage(false);
-    //     expect(service.message).toEqual('ERROR');
-    // });
+    it('should call clickMessage with wrong position', () => {
+        service.clickMessage(false);
+        expect(service.message).toEqual('ERROR');
+    });
 });
