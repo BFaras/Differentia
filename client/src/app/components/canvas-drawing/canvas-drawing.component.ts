@@ -35,7 +35,6 @@ export class CanvasDrawingComponent implements  AfterViewInit {
   }
 
   allowToDrawOnCanvas(){
-    this.drawingHistoryService.setCanvasIndex(this.indexOfCanvas);
     this.useCanvasFocusedOn()
   }
 
@@ -52,14 +51,14 @@ export class CanvasDrawingComponent implements  AfterViewInit {
   prepareCanvasDrawing():void {
 
     this.drawingHandlerService.mouseDownObservable.subscribe((e)=>{
-        this.drawingHistoryService.saveCanvas(this.context!);
+        this.drawingHistoryService.saveCanvas(this.context!,this.indexOfCanvas);
       if(this.drawingHistoryService.undoCancelDrawingHistory[this.indexOfCanvas].length != 0){
         this.drawingHistoryService.undoCancelDrawingHistory[this.indexOfCanvas] = [];
       }
   });
 
     this.drawingHandlerService.mouseUpObservable.subscribe((e)=>{
-        this.drawingHistoryService.saveCanvas(this.context!);
+        this.drawingHistoryService.saveCanvas(this.context!,this.indexOfCanvas);
 
     });
 
@@ -92,11 +91,9 @@ export class CanvasDrawingComponent implements  AfterViewInit {
 
   prepareCanvasMerging(){
     if (this.indexOfCanvas == 0){
-      console.log(this.indexOfCanvas)
     this.mergeImageCanvasService.setLeftContextAndCanvas(this.context!,this.canvas);
   }
   else if (this.indexOfCanvas == 1){
-    console.log(this.indexOfCanvas)
     this.mergeImageCanvasService.setRightContextAndCanvas(this.context!,this.canvas);
   }
 }

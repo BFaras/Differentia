@@ -6,39 +6,29 @@ import { Injectable } from '@angular/core';
 export class DrawingHistoryService {
   cancelDrawingHistory:ImageData[][] = [[],[]]
   undoCancelDrawingHistory:ImageData[][] = [[],[]]
-  context:CanvasRenderingContext2D;
-  index:number;
+  context:CanvasRenderingContext2D[] = [];
 
   constructor() { }
 
-  setCanvasIndex(index:number){
-    this.index = index;
-  }
-  saveCanvas(context:CanvasRenderingContext2D){
-    this.context = context
-    let imageData = context.getImageData(0,0,640,480);
-    this.cancelDrawingHistory[this.index].push(imageData)
+  saveCanvas(context:CanvasRenderingContext2D,index:number){
+    this.context[index] = context
+    let imageData = this.context[index].getImageData(0,0,640,480);
+    this.cancelDrawingHistory[index].push(imageData)
   }
 
-  cancelCanvas(){
-    if(this.cancelDrawingHistory[this.index].length!= 0){
-    let imageDataToPop = this.cancelDrawingHistory[this.index].pop() as ImageData
-    this.context.putImageData(imageDataToPop, 0, 0);
-    this.saveDeletedCanvas(imageDataToPop)
+  cancelCanvas(index:number){
+    if(this.cancelDrawingHistory[index].length!= 0){
+    let imageDataToPop = this.cancelDrawingHistory[index].pop() as ImageData
+    this.context[index].putImageData(imageDataToPop, 0, 0);
+    this.undoCancelDrawingHistory[index].push(imageDataToPop)
     }
   }
 
-  saveDeletedCanvas(imageDeleted:ImageData){
-    this.undoCancelDrawingHistory[this.index].push(imageDeleted);
-
-
-  }
-
-  cancelDeletedCanvas(){
-    if(this.undoCancelDrawingHistory[this.index].length != 0 ){
-    let DeletedImageDataToPop = this.undoCancelDrawingHistory[this.index].pop() as ImageData
-    this.context.putImageData(DeletedImageDataToPop, 0, 0);
-    this.cancelDrawingHistory[this.index].push(DeletedImageDataToPop)
+  cancelDeletedCanvas(index:number){
+    if(this.undoCancelDrawingHistory[index].length != 0 ){
+    let DeletedImageDataToPop = this.undoCancelDrawingHistory[index].pop() as ImageData
+    this.context[index].putImageData(DeletedImageDataToPop, 0, 0);
+    this.cancelDrawingHistory[index].push(DeletedImageDataToPop)
     }
 
   }

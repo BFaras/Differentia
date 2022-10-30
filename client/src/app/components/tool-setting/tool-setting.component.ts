@@ -31,7 +31,7 @@ export class ToolSettingComponent implements OnInit {
   }
 
   checkIfThereAreSavedDrawnLines(){
-    if (this.drawingHistoryService.cancelDrawingHistory[this.drawingHistoryService.index].length != 0){
+    if (this.drawingHistoryService.cancelDrawingHistory[this.indexTool].length != 0){
       return false
     } else{
       return true;
@@ -39,7 +39,7 @@ export class ToolSettingComponent implements OnInit {
   }
 
   checkIfThereAreSavedDeletedDrawnLines(){
-    if (this.drawingHistoryService.undoCancelDrawingHistory[this.drawingHistoryService.index].length != 0){
+    if (this.drawingHistoryService.undoCancelDrawingHistory[this.indexTool].length != 0){
       return false
     } else{
       return true;
@@ -47,14 +47,14 @@ export class ToolSettingComponent implements OnInit {
   }
 
   cancelActionDrawnLine(){
-      this.drawingHistoryService.cancelCanvas();
-      this.drawingHistoryService.cancelCanvas();
+      this.drawingHistoryService.cancelCanvas(this.indexTool);
+      this.drawingHistoryService.cancelCanvas(this.indexTool);
 
   }
 
   cancelActionDeletedDrawnLine(){
-      this.drawingHistoryService.cancelDeletedCanvas();
-      this.drawingHistoryService.cancelDeletedCanvas();
+      this.drawingHistoryService.cancelDeletedCanvas(this.indexTool);
+      this.drawingHistoryService.cancelDeletedCanvas(this.indexTool);
 
   }
 
