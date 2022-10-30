@@ -44,6 +44,7 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.chatMessagesSubscription.unsubscribe();
+        this.chatMessagesService.resetIsMultiplayer();
     }
 
     /*handleKeyEvent(event: KeyboardEvent): void {

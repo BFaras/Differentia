@@ -28,10 +28,14 @@ export class ChatMessagesService {
     }
 
     sendMessage(senderName: string, message: string) {
-        this.socketService.send('playerMessage', this.generateChatMessage(this.getTimeInCorrectFormat(), senderName, message));
+        this.socketService.send('playerMessage', this.generateChatMessage(senderName, message));
     }
 
-    public getTimeInCorrectFormat(): string {
+    resetIsMultiplayer() {
+        this.isMultiplayerGame = false;
+    }
+
+    private getTimeInCorrectFormat(): string {
         return this.date.toLocaleString('en-US', {
             hour: TWO_DIGIT_TIME_VALUE,
             minute: TWO_DIGIT_TIME_VALUE,
@@ -43,32 +47,30 @@ export class ChatMessagesService {
     private configureSocket(observer: Subscriber<ChatMessage>) {
         this.socketService.on('Valid click', (differenceInfos: GameplayDifferenceInformations) => {
             if (differenceInfos.isValidDifference && this.isMultiplayerGame) {
-                observer.next(
-                    this.generateChatMessageFromGame(this.getTimeInCorrectFormat(), MESSAGE_DIFFERENCE_FOUND_MULTI + differenceInfos.socketId),
-                );
+                observer.next(this.generateChatMessageFromGame(MESSAGE_DIFFERENCE_FOUND_MULTI + differenceInfos.socketId));
             } else if (differenceInfos.isValidDifference && !this.isMultiplayerGame) {
-                observer.next(this.generateChatMessageFromGame(this.getTimeInCorrectFormat(), MESSAGE_DIFFERENCE_FOUND_SOLO));
+                observer.next(this.generateChatMessageFromGame(MESSAGE_DIFFERENCE_FOUND_SOLO));
             } else if (!differenceInfos.isValidDifference && this.isMultiplayerGame) {
-                observer.next(
-                    this.generateChatMessageFromGame(this.getTimeInCorrectFormat(), MESSAGE_ERROR_DIFFERENCE_MULTI + differenceInfos.socketId),
-                );
+                observer.next(this.generateChatMessageFromGame(MESSAGE_ERROR_DIFFERENCE_MULTI + differenceInfos.socketId));
             } else if (!differenceInfos.isValidDifference && !this.isMultiplayerGame) {
-                observer.next(this.generateChatMessageFromGame(this.getTimeInCorrectFormat(), MESSAGE_ERROR_DIFFERENCE_SOLO));
+                observer.next(this.generateChatMessageFromGame(MESSAGE_ERROR_DIFFERENCE_SOLO));
             }
         });
         this.socketService.on('Send message to opponent', (message: ChatMessage) => {
             observer.next(message);
-            console.log(message);
+        });
+        this.socketService.on('The adversary username is', () => {
+            this.isMultiplayerGame = true;
         });
     }
 
-    private generateChatMessageFromGame(timeMessageSent: string, message: string) {
-        return this.generateChatMessage(timeMessageSent, GAME_MESSAGE_SENDER_NAME, message);
+    private generateChatMessageFromGame(message: string) {
+        return this.generateChatMessage(GAME_MESSAGE_SENDER_NAME, message);
     }
 
-    private generateChatMessage(timeMessageSent: string, senderName: string, message: string): ChatMessage {
+    private generateChatMessage(senderName: string, message: string): ChatMessage {
         return {
-            timeMessageSent: timeMessageSent,
+            timeMessageSent: this.getTimeInCorrectFormat(),
             senderName: senderName,
             message: message,
         };
