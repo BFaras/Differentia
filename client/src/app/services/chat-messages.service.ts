@@ -20,7 +20,7 @@ import { SocketClientService } from './socket-client.service';
 export class ChatMessagesService {
     public messagesObservable: Observable<ChatMessage>;
     private adversaryUsername: string;
-    private isMultiplayerGame;
+    private isMultiplayerGame: boolean;
     private date: Date;
 
     constructor(private socketService: SocketClientService) {
@@ -41,6 +41,7 @@ export class ChatMessagesService {
     }
 
     private getTimeInCorrectFormat(): string {
+        this.date = new Date();
         return this.date.toLocaleString('en-US', {
             hour: TWO_DIGIT_TIME_VALUE,
             minute: TWO_DIGIT_TIME_VALUE,
