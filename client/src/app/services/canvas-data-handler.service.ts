@@ -32,7 +32,7 @@ export class CanvasDataHandlerService {
     }
 
   }
-
+  
   shareDataWithOtherCanvas(indexContext:number){
     if (indexContext == 0){
       const canvasOfContext = this.context[0].canvas;

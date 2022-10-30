@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class DrawingHistoryService {
 
   saveCanvas(context:CanvasRenderingContext2D,index:number){
     this.context[index] = context
-    let imageData = this.context[index].getImageData(0,0,640,480);
+    let imageData = this.context[index].getImageData(0,0,IMAGE_WIDTH,IMAGE_HEIGHT);
     this.cancelDrawingHistory[index].push(imageData)
   }
 
