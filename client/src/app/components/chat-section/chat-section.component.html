@@ -1,4 +1,4 @@
-<div id = "chat-container" class="chatContainer">
+<div *ngIf = "isMultiplayerGame" id = "chat-container" class="chatContainer">
     <div class ="display" #scrollMe>
         <p  id="list-display"
             *ngFor="let message of messagesSent"

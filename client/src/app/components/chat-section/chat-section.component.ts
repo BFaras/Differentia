@@ -19,6 +19,7 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
     public localPlayerUsername: string = DEFAULT_USERNAME;
     public readonly gameMessageSenderName = GAME_MESSAGE_SENDER_NAME;
     private chatMessagesSubscription: Subscription;
+    public isMultiplayerGame: boolean;
 
     constructor(private chatMessagesService: ChatMessagesService, private socketService: SocketClientService) {
         this.messagesSent = [];
@@ -74,6 +75,9 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
     private configureSocket() {
         this.socketService.on('show the username', (username: string) => {
             this.localPlayerUsername = username;
+        });
+        this.socketService.on('The adversary username is', (adversaryName: string) => {
+            this.isMultiplayerGame = true;
         });
     }
 }
