@@ -35,8 +35,9 @@ export class MergeImageCanvasHandlerService {
 }
 
   drawImageOnCanvas(index:number){
-    this.context![index].globalAlpha = 0.50;
+    this.context![index].globalAlpha = 0.00;
     this.context![index].drawImage(this.imageDownloaded[index], 0, 0);
+    this.context![index].globalAlpha = 1.00;
   }
 
 
