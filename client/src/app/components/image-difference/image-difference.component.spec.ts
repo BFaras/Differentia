@@ -1,7 +1,7 @@
 import { Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SafeValue } from '@angular/platform-browser';
-import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
+import { Renderer2TestHelper } from '@app/classes/renderer2-test-helper';
 import { GameToServerService } from '@app/services/game-to-server.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { SocketClientService } from '@app/services/socket-client.service';
@@ -14,7 +14,7 @@ describe('ImageDifferenceComponent', () => {
     let imageToImagesDifferenceServiceSpy: SpyObj<ImageToImageDifferenceService>;
     let gameToServerServiceSpy: SpyObj<GameToServerService>;
     let socketServiceSpy: SpyObj<SocketClientService>;
-    let renderer2: Renderer2;
+    let renderer: Renderer2;
     let mockImage: ImageToSendToServer = {
         image: 'url' as SafeValue,
         index: 1,
@@ -41,22 +41,21 @@ describe('ImageDifferenceComponent', () => {
     });
 
     beforeEach(async () => {
+        renderer = new Renderer2TestHelper() as unknown as Renderer2;
+
         await TestBed.configureTestingModule({
             declarations: [ImageDifferenceComponent],
             providers: [
                 { provide: GameToServerService, useValue: gameToServerServiceSpy },
                 { provide: ImageDifferenceComponent, useValue: imageToImagesDifferenceServiceSpy },
                 { provide: SocketClientService, useValue: socketServiceSpy },
+                { provide: Renderer2, useValue: renderer },
             ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ImageDifferenceComponent);
-        renderer2 = fixture.componentRef.injector.get<Renderer2>(Renderer2);
-        spyOn(renderer2, 'createElement').and.callFake((componentToCreate: string) => {
-            return CanvasTestHelper.createCanvas(1, 1);
-        });
-        component = fixture.componentInstance;
         fixture.detectChanges();
+        component = fixture.componentInstance;
     });
 
     it('should test load return true with number difference', async () => {
