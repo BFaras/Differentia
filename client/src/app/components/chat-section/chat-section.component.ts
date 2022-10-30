@@ -37,10 +37,10 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
         this.chatMessagesSubscription = this.chatMessagesService.messagesObservable.subscribe({
             next: (message: ChatMessage) => {
                 this.addMessage(message);
+                this.scrollToBottom();
             },
         });
         this.initializeChatHeight();
-        this.scrollToBottom();
     }
 
     ngOnDestroy(): void {
