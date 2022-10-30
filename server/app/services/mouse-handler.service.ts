@@ -1,4 +1,4 @@
-import { FIRST_ARRAY_POSITION, IMAGE_WIDTH, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
+import { DEFAULT_USERNAME, FIRST_ARRAY_POSITION, IMAGE_WIDTH, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
 import { Game } from '@common/game';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
@@ -81,7 +81,8 @@ export class MouseHandlerService {
             differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
             isValidDifference: false,
             //To modify with a constant (constant is in feature/ChatGameView)
-            socketId: '',
+            socketId: plrSocketID,
+            playerUsername: DEFAULT_USERNAME,
         };
 
         if (this.differencesHashmap.has(pixelNumber)) {

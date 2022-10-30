@@ -124,7 +124,7 @@ export class GameManagerService {
         }
     }
 
-    private findSocketGameRoomName(socket: io.Socket): string {
+    findSocketGameRoomName(socket: io.Socket): string {
         let gameRoomName = DEFAULT_GAME_ROOM_NAME;
         socket.rooms.forEach((roomName: string) => {
             if (roomName.includes(GAME_ROOM_GENERAL_ID)) {

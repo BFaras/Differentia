@@ -163,7 +163,7 @@ export class SocketManager {
             socket.on('playerMessage', (msg: ChatMessage) => {
                 console.log(msg);
                 //Change socket.id by gameroom name
-                this.sio.to(socket.id).emit('Send message to opponent', msg);
+                this.sio.to(this.gameManagerService.findSocketGameRoomName(socket)).emit('Send message to opponent', msg);
             });
         });
     }
