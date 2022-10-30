@@ -38,7 +38,6 @@ export class DrawingHandlerService {
   }
 
   stopObservingMousePath():Observable<[MouseEvent,MouseEvent]>{
-    // this.drawingHistoryService.saveCanvas(this.context!);
     return this.mouseMoveObservable.pipe(
       takeUntil(this.mouseUpObservable),
       takeUntil(this.mouseLeaveObservable),

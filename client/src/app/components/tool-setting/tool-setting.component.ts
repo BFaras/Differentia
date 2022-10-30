@@ -1,4 +1,5 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { CanvasDataHandlerService } from '@app/services/canvas-data-handler.service';
 import { DrawingHistoryService } from '@app/services/drawing-history.service';
 import { PencilService } from '@app/services/pencil.service';
 import { BIG, BLACK_COLOR, MEDIUM, SMALL, VERY_BIG, VERY_SMALL } from '@common/const';
@@ -13,6 +14,7 @@ export class ToolSettingComponent implements OnInit {
   @Input() indexTool:number;
   constructor(private pencilService:PencilService,
     private drawingHistoryService: DrawingHistoryService,
+    private canvasDataHandle:CanvasDataHandlerService
     ) { }
 
 
@@ -69,5 +71,17 @@ export class ToolSettingComponent implements OnInit {
 
   onChangeWidth(width: number):void{
     this.pencilService.setWidth(width,this.indexTool);
+  }
+
+  clearCanvas(){
+    this.canvasDataHandle.clearCanvas(this.indexTool);
+  }
+
+  copyOtherCanvas(){
+    this.canvasDataHandle.copyOtherCanvas(this.indexTool);
+  }
+
+  shareDataWithOtherCanvas(){
+    this.canvasDataHandle.shareDataWithOtherCanvas(this.indexTool);
   }
 }

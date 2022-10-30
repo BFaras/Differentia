@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Coordinate } from '@app/interfaces/coordinate';
+import { CanvasDataHandlerService } from '@app/services/canvas-data-handler.service';
 import { DrawingHandlerService } from '@app/services/drawing-handler.service';
 import { DrawingHistoryService } from '@app/services/drawing-history.service';
 import { MergeImageCanvasHandlerService } from '@app/services/merge-image-canvas-handler.service';
@@ -19,9 +20,10 @@ export class CanvasDrawingComponent implements  AfterViewInit {
   constructor(private drawingHandlerService:DrawingHandlerService,
     private mergeImageCanvasService:MergeImageCanvasHandlerService,
     private pencilService:PencilService,
-    private drawingHistoryService:DrawingHistoryService) { }
+    private drawingHistoryService:DrawingHistoryService,
+    private canvasDataHandlerService:CanvasDataHandlerService) { }
 
-  public async ngAfterViewInit(){
+  ngAfterViewInit(){
     this.canvas = this.canvasDOM.nativeElement;
     this.context = this.canvas.getContext('2d');
     this.context!.globalAlpha = 0.00;
@@ -30,8 +32,13 @@ export class CanvasDrawingComponent implements  AfterViewInit {
     this.canvas.height = IMAGE_HEIGHT;
     this.useCanvasFocusedOn();
     this.prepareCanvasDrawing();
-    await this.prepareCanvasMerging()
+    this.prepareCanvasMerging()
+    this.addContextToCanvasData();
 
+  }
+
+  addContextToCanvasData(){
+    this.canvasDataHandlerService.setContext(this.context!,this.indexOfCanvas)
   }
 
   allowToDrawOnCanvas(){
