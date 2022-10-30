@@ -24,12 +24,12 @@ describe('ChatMessagesService', () => {
     const notValidClickInfo: GameplayDifferenceInformations = {
         differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
         isValidDifference: false,
-        playerName: DEFAULT_USERNAME,
+        socketId: DEFAULT_USERNAME,
     };
     const differencesFoundInfo: GameplayDifferenceInformations = {
         differencePixelsNumbers: [0],
         isValidDifference: true,
-        playerName: DEFAULT_USERNAME,
+        socketId: DEFAULT_USERNAME,
     };
     let chatMessagesService: ChatMessagesService;
     let socketService: SocketClientService;

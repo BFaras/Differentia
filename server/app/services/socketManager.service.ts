@@ -61,7 +61,7 @@ export class SocketManager {
             socket.on('I am waiting', (gameName: string) => {
                 console.log('creation createur');
                 this.waitingLineHandlerService.addCreatingPlayer(gameName, socket.id);
-                this.sio.emit(`${gameName} someone is waiting`);
+                this.sio.emit(`${gameName} let me tell you if someone is waiting`, true);
             });
 
             socket.on('Reload game selection page', (msg) => {
@@ -138,16 +138,25 @@ export class SocketManager {
                 this.gameManagerService.clickResponse(socket, position);
             });
 
+            //To test
             socket.on('kill the game', () => {
+                //To test qu'on appelle la fonction ci-dessous
+                this.gameManagerService.handleAbandonEmit(socket);
                 this.gameManagerService.endGame(socket);
             });
-
-            socket.on('Check if game is finished', () => {
+            socket.on('Check if game is finished', (isMultiplayer: boolean) => {
                 const mouseHandler: MouseHandlerService = this.gameManagerService.getSocketMouseHandlerService(socket);
-                if (mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === mouseHandler.nbDifferencesTotal) {
+                let isGameFinished = this.gameManagerService.isGameFinishedSolo(socket);
+
+                //To test this if
+                if (isMultiplayer) {
+                    isGameFinished = this.gameManagerService.isGameFinishedMulti(socket);
+                }
+
+                if (isGameFinished) {
                     mouseHandler.resetData();
+                    this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
                     this.gameManagerService.endGame(socket);
-                    socket.emit('End game');
                 }
             });
 

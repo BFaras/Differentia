@@ -77,7 +77,7 @@ describe('PlayAreaComponent', () => {
     });
 
     it('should open dialog', () => {
-        component.openDialog();
+        component.openEndGameDialog();
         expect(matDialogSpy).toBeTruthy();
     });
 

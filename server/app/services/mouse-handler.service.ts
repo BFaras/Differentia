@@ -26,12 +26,10 @@ export class MouseHandlerService {
         this.differencesList = [];
     }
 
-    //To test
     addPlayerToGame(plrSocketID: string) {
         this.differencesNbFoundByPlayer.set(plrSocketID, []);
     }
 
-    //To test
     getNumberOfDifferencesFoundByPlayer(plrSocketId: string): number {
         return this.differencesNbFoundByPlayer.get(plrSocketId)!.length;
     }
@@ -83,7 +81,7 @@ export class MouseHandlerService {
             differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
             isValidDifference: false,
             //To modify with a constant (constant is in feature/ChatGameView)
-            playerName: '',
+            socketId: '',
         };
 
         if (this.differencesHashmap.has(pixelNumber)) {

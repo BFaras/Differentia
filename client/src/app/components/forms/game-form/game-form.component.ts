@@ -27,7 +27,7 @@ export class GameFormComponent {
 
     ngOnInit(): void {
         this.configureGameFormSocketFeatures();
-        if (this.gameForm.gameName) this.socketService.send('is there someone waiting', this.gameForm.gameName);
+        this.socketService.send('is there someone waiting', this.gameForm.gameName);
     }
 
     ngOnAfterInit(): void {}
@@ -52,13 +52,15 @@ export class GameFormComponent {
     }
     public setJoinFlag(): void {
         this.joinFLag = true;
+        this.createFlag = false;
     }
 
     public setCreateFlag(): void {
         this.createFlag = true;
+        this.joinFLag = false;
     }
 
-    private resetFlags(): void {
+    public resetFlags(): void {
         this.createFlag = false;
         this.joinFLag = false;
     }
@@ -68,17 +70,6 @@ export class GameFormComponent {
         if (this.gameForm.gameName) {
             this.socketService.on(`${this.gameForm.gameName} let me tell you if someone is waiting`, (response: boolean) => {
                 this.isPlayerWaiting = response;
-            });
-
-            this.socketService.on(`${this.gameForm.gameName} someone is waiting`, () => {
-                console.log('salut');
-                this.isPlayerWaiting = true;
-                this.resetFlags();
-            });
-
-            this.socketService.on(`${this.gameForm.gameName} nobody is waiting no more`, () => {
-                this.isPlayerWaiting = false;
-                this.resetFlags();
             });
 
             this.socketService.on('reconnect', () => {

@@ -5,10 +5,21 @@ import { DrawService } from '@app/services/draw.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { MouseDetectionService } from '@app/services/mouse-detection.service';
 import { SocketClientService } from '@app/services/socket-client.service';
-import { DEFAULT_HEIGHT_CANVAS, DEFAULT_WIDTH_CANVAs, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
+import {
+    CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE,
+    CLASSIC_MULTIPLAYER_LOST_MESSAGE,
+    CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE,
+    CLASSIC_SOLO_END_GAME_MESSAGE,
+    DEFAULT_HEIGHT_CANVAS,
+    DEFAULT_WIDTH_CANVAs,
+    MODIFIED_IMAGE_POSITION,
+    ORIGINAL_IMAGE_POSITION,
+} from '@common/const';
+import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
 import { PopDialogEndgameComponent } from '../pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
+
 @Component({
     selector: 'app-play-area',
     templateUrl: './play-area.component.html',
@@ -21,7 +32,8 @@ export class PlayAreaComponent implements OnInit {
     @ViewChild('clickCanvas2', { static: false }) clickCanvas2!: ElementRef<HTMLCanvasElement>;
     @ViewChild('blinkCanvas', { static: false }) blinkCanvas!: ElementRef<HTMLCanvasElement>;
     @Input() differentImages: HTMLImageElement[];
-    @Input() nbDifferencesTotal: number = 0;
+    @Input() localPlayerUsername: string;
+    @Input() isMultiplayer: boolean;
     mousePosition: Position = { x: 0, y: 0 };
     pixelList: number[] = [];
 
@@ -39,16 +51,10 @@ export class PlayAreaComponent implements OnInit {
         this.socketService.connect();
         this.configurePlayAreaSocket();
 
-        this.mouseDetection.nbrDifferencesTotal = this.nbDifferencesTotal;
-
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[ORIGINAL_IMAGE_POSITION]);
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[MODIFIED_IMAGE_POSITION]);
 
         this.displayImages();
-    }
-
-    ngOnDestroy() {
-        this.mouseDetection.nbrDifferencesFound = 0;
     }
 
     displayImages() {
@@ -81,21 +87,24 @@ export class PlayAreaComponent implements OnInit {
         this.mouseDetection.mouseHitDetect(event);
     }
 
-    openDialog() {
+    openEndGameDialog(messageToDisplay: string) {
         this.dialog.open(PopDialogEndgameComponent, {
             height: '400px',
             width: '600px',
+            data: messageToDisplay,
         });
     }
 
     configurePlayAreaSocket(): void {
         this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {
+            const isLocalPlayer = differencesInfo.socketId == this.socketService.socket.id;
+            console.log(isLocalPlayer);
             this.pixelList = differencesInfo.differencePixelsNumbers;
 
             let isDifference: boolean = differencesInfo.isValidDifference;
-            this.mouseDetection.playSound(isDifference);
-            this.mouseDetection.clickMessage(isDifference);
-            this.mouseDetection.incrementNbrDifference(isDifference);
+            this.mouseDetection.playSound(isDifference, isLocalPlayer);
+            this.mouseDetection.clickMessage(isDifference, isLocalPlayer);
+            this.mouseDetection.verifyGameFinished(isDifference, this.isMultiplayer, isLocalPlayer);
 
             if (isDifference) {
                 console.log('Appel de copycertain...');
@@ -112,8 +121,17 @@ export class PlayAreaComponent implements OnInit {
             }
         });
 
-        this.socketService.on('End game', () => {
-            this.openDialog();
+        //To test
+        this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
+            let endGameMessage = CLASSIC_SOLO_END_GAME_MESSAGE;
+            if (endGameInfos.isMultiplayer && endGameInfos.isGameWon && !endGameInfos.isAbandon) {
+                endGameMessage = CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE;
+            } else if (endGameInfos.isMultiplayer && endGameInfos.isAbandon) {
+                endGameMessage = CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE;
+            } else if (!endGameInfos.isGameWon) {
+                endGameMessage = CLASSIC_MULTIPLAYER_LOST_MESSAGE;
+            }
+            this.openEndGameDialog(endGameMessage);
         });
     }
 }

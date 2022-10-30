@@ -1,4 +1,5 @@
 import { DEFAULT_GAME_ROOM_NAME, GAME_ROOM_GENERAL_ID, MODIFIED_IMAGE_POSITION, NO_OTHER_PLAYER_ROOM, ORIGINAL_IMAGE_POSITION } from '@common/const';
+import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
 import * as io from 'socket.io';
@@ -16,43 +17,84 @@ export class GameManagerService {
 
     constructor(private sio: io.Server) {}
 
-    async beginGame(socket: io.Socket, gameName: string) {
+    async beginGame(socket: io.Socket, gameName: string, adversarySocket?: io.Socket) {
         this.setupSocketGameRoom(socket, NO_OTHER_PLAYER_ROOM);
         this.setupNecessaryGameServices(socket);
 
         await this.getSocketMouseHandlerService(socket).generateDifferencesInformations(gameName);
         this.getSocketMouseHandlerService(socket).addPlayerToGame(socket.id);
+
+        if (adversarySocket) {
+            this.setupSocketGameRoom(adversarySocket, this.findSocketGameRoomName(socket));
+            this.getSocketMouseHandlerService(adversarySocket).addPlayerToGame(adversarySocket.id);
+        }
+
         await this.sendImagesToClient(gameName, socket);
     }
 
     async startMultiplayerMatch(socket: io.Socket, adversarySocket: io.Socket, gameName: string) {
-        await this.beginGame(socket, gameName);
+        adversarySocket.emit(`${gameName} you have been accepted`);
+        await this.beginGame(socket, gameName, adversarySocket);
+
+        socket.emit('show the username', this.getSocketUsername(socket));
+        adversarySocket.emit('show the username', this.getSocketUsername(adversarySocket));
+        socket.emit('The adversary username is', this.getSocketUsername(adversarySocket));
+        adversarySocket.emit('The adversary username is', this.getSocketUsername(socket));
 
         const gameRoomName = this.findSocketGameRoomName(socket);
-        this.setupSocketGameRoom(adversarySocket, gameRoomName);
-        this.getSocketMouseHandlerService(adversarySocket).addPlayerToGame(adversarySocket.id);
-
-        adversarySocket.emit(`${gameName} you have been accepted`);
-        socket.emit('The adversary username is', adversarySocket.data.username);
-        adversarySocket.emit('The adversary username is', socket.data.username);
-
         this.sio.to(gameRoomName).emit('classic mode');
         this.sio.to(gameRoomName).emit('The game is', gameName);
     }
 
-    endGame(socket: io.Socket) {
+    async endGame(socket: io.Socket) {
         const gameRoomName: string = this.findSocketGameRoomName(socket);
         this.endChrono(socket);
         this.chronometerServices.delete(gameRoomName);
         this.mouseHandlerServices.delete(gameRoomName);
         this.timeIntervals.delete(gameRoomName);
-        socket.rooms.delete(gameRoomName);
+
+        this.sio.in(gameRoomName).socketsLeave(gameRoomName);
     }
 
     clickResponse(socket: io.Socket, mousePosition: Position) {
         const differencesInfo: GameplayDifferenceInformations = this.getSocketMouseHandlerService(socket).isValidClick(mousePosition, socket.id);
-        differencesInfo.playerName = socket.data.username;
+        differencesInfo.socketId = socket.id;
         this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
+    }
+
+    //To test
+    isGameFinishedSolo(socket: io.Socket) {
+        const mouseHandler = this.getSocketMouseHandlerService(socket);
+        return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === mouseHandler.nbDifferencesTotal;
+    }
+
+    //To test
+    isGameFinishedMulti(socket: io.Socket) {
+        const mouseHandler = this.getSocketMouseHandlerService(socket);
+        return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === Math.floor(mouseHandler.nbDifferencesTotal / 2) + 1;
+    }
+
+    //To test
+    handleEndGameEmits(socket: io.Socket, isMultiplayer: boolean) {
+        let endGameInfos: EndGameInformations = {
+            isMultiplayer: isMultiplayer,
+            isAbandon: false,
+            isGameWon: true,
+        };
+        socket.emit('End game', endGameInfos);
+
+        endGameInfos.isGameWon = false;
+        socket.broadcast.to(this.findSocketGameRoomName(socket)).emit('End game', endGameInfos);
+    }
+
+    //To test
+    handleAbandonEmit(socket: io.Socket) {
+        let endGameInfos: EndGameInformations = {
+            isMultiplayer: true,
+            isAbandon: true,
+            isGameWon: true,
+        };
+        socket.broadcast.to(this.findSocketGameRoomName(socket)).emit('End game', endGameInfos);
     }
 
     private setupNecessaryGameServices(socket: io.Socket) {
@@ -102,7 +144,7 @@ export class GameManagerService {
 
         this.sio
             .to(this.findSocketGameRoomName(socket))
-            .emit('classic solo images', [gameImagesData[ORIGINAL_IMAGE_POSITION], gameImagesData[MODIFIED_IMAGE_POSITION]]);
+            .emit('game images', [gameImagesData[ORIGINAL_IMAGE_POSITION], gameImagesData[MODIFIED_IMAGE_POSITION]]);
     }
 
     private getSocketChronometerService(socket: io.Socket): ChronometerService {
@@ -123,5 +165,9 @@ export class GameManagerService {
     private endChrono(socket: io.Socket) {
         clearInterval(this.getSocketTimeInterval(socket));
         this.getSocketChronometerService(socket)?.resetChrono();
+    }
+
+    private getSocketUsername(socket: io.Socket) {
+        return socket.data.username;
     }
 }

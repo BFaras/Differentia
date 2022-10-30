@@ -51,20 +51,22 @@ export const FIRST_ARRAY_POSITION = 0;
 //width Pencil constants
 
 export const VERY_SMALL = 1;
-export const SMALL = 2
-export const MEDIUM = 3
-export const BIG = 4
-export const VERY_BIG = 5
+export const SMALL = 2;
+export const MEDIUM = 3;
+export const BIG = 4;
+export const VERY_BIG = 5;
 
 //color
-export const BLACK_COLOR = "#000";
-
+export const BLACK_COLOR = '#000';
 
 //Game sockets constantes
 export const GAME_ROOM_GENERAL_ID = 'GameRoom';
 export const NO_OTHER_PLAYER_ROOM = '';
 export const DEFAULT_GAME_ROOM_NAME = GAME_ROOM_GENERAL_ID + 'EASJDS';
 
+//Player usernames constants
+export const LOCAL_PLR_USERNAME_POS = 0;
+export const ADVERSARY_PLR_USERNAME_POS = 1;
 //Player constants
 export const DEFAULT_USERNAME = 'anonyme';
 
@@ -75,6 +77,12 @@ export const MESSAGE_DIFFERENCE_FOUND_SOLO = 'Vous avez trouver une différence!
 export const MESSAGE_DIFFERENCE_FOUND_MULTI = 'Différence trouvée par ';
 export const MESSAGE_ERROR_DIFFERENCE_MULTI = 'Erreur par ';
 export const TWO_DIGIT_TIME_VALUE = '2-digit';
+
+//End game messages
+export const CLASSIC_SOLO_END_GAME_MESSAGE = 'Vous avez trouvé toutes les différences!';
+export const CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE = 'Vous avez gagnez contre votre adversaire!';
+export const CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE = 'Votre adversaire a abandonné, donc vous avez gagner!';
+export const CLASSIC_MULTIPLAYER_LOST_MESSAGE = 'Vous avez perdu contre votre adversaire :(';
 
 // Chat size constant
 export const CHAT_HEIGHT = 30;

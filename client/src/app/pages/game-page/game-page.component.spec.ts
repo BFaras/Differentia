@@ -7,12 +7,12 @@ import { TopbarComponent } from '@app/components/topbar/topbar.component';
 import { CommunicationService } from '@app/services/communication.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
+import { ADVERSARY_PLR_USERNAME_POS } from '@common/const';
 import { Game } from '@common/game';
 import { of } from 'rxjs';
 import { Socket } from 'socket.io-client';
 import { GamePageComponent } from './game-page.component';
 import SpyObj = jasmine.SpyObj;
-
 
 class SocketClientServiceMock extends SocketClientService {
     override connect() {}
@@ -51,8 +51,8 @@ describe('GamePageComponent', () => {
                 { provide: SocketClientService, useValue: socketServiceMock },
                 { provide: TimeService, useValue: timeServiceSpy },
                 { provide: CommunicationService, useValue: communicationServiceSpy },
-                { provide: MatDialog, useValue: {}},
-                { provide: MatDialogRef, useValue: {}}
+                { provide: MatDialog, useValue: {} },
+                { provide: MatDialogRef, useValue: {} },
             ],
         }).compileComponents();
     });
@@ -98,6 +98,12 @@ describe('GamePageComponent', () => {
             expect(component['communicationService'].getGames).toHaveBeenCalled();
             expect(component.nbDifferences).toEqual(errorNumberOfDifferences);
         });
+    });
+
+    it("should handle 'The adversary username is' event and set the value of the adversary username", () => {
+        const testUsername = 'userAdversary';
+        socketHelper.peerSideEmit('The adversary username is', testUsername);
+        expect(component.usernames[ADVERSARY_PLR_USERNAME_POS]).toEqual(testUsername);
     });
 
     describe('Emiting events', () => {
