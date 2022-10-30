@@ -40,7 +40,7 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
                 this.scrollToBottom();
             },
         });
-        this.initializeChatHeight();
+     //   this.initializeChatHeight();
         
     }
 
