@@ -31,6 +31,7 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
         this.scrollToBottom();
     }
 
+    //Tested Observer avec le add message
     ngOnInit(): void {
         this.socketService.connect();
         this.configureSocket();
@@ -40,8 +41,7 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
                 this.scrollToBottom();
             },
         });
-     //   this.initializeChatHeight();
-        
+        //   this.initializeChatHeight();
     }
 
     ngOnDestroy(): void {
@@ -68,15 +68,18 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
         }, 2);
     }
 
+    //Tested
     private addMessage(messageToAdd: ChatMessage) {
         console.log(messageToAdd.timeMessageSent);
         this.messagesSent.push(messageToAdd);
     }
 
     private configureSocket() {
+        //Tested
         this.socketService.on('show the username', (username: string) => {
             this.localPlayerUsername = username;
         });
+
         this.socketService.on('The adversary username is', (adversaryName: string) => {
             this.isMultiplayerGame = true;
         });
