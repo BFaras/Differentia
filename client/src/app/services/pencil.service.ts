@@ -59,12 +59,13 @@ export class PencilService {
     return
   }
 
-  getStateOfPencil(mouseClick:MouseEvent,formerStyle:string):string{
+  getStateOfPencil(context:CanvasRenderingContext2D,mouseClick:MouseEvent){
     if(mouseClick.which === 3)
-    return '#fff';
-    if (mouseClick.which === 1)
-    return formerStyle;
-    else return formerStyle
+      context.globalCompositeOperation = "destination-out";
+    if (mouseClick.which === 1){
+      context.globalCompositeOperation = "source-over";
+    }
+
   }
   
 

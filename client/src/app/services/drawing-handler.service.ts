@@ -56,14 +56,14 @@ export class DrawingHandlerService {
   drawOnCanvas(
     prevCoord: Coordinate,
     currentCoord: Coordinate,
-    cx: CanvasRenderingContext2D 
+    cx: CanvasRenderingContext2D,
   ) {
-      if (cx != null) {
+
         cx.beginPath();
         cx.moveTo(prevCoord.x, prevCoord.y);
         cx.lineTo(currentCoord.x, currentCoord.y);
         cx.stroke();
-        }
+
   }
 
 }
