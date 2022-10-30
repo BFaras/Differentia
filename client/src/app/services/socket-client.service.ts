@@ -36,4 +36,8 @@ export class SocketClientService {
             this.socket.emit(event);
         }
     }
+
+    off(event: string) {
+        this.socket.off(event);
+    }
 }

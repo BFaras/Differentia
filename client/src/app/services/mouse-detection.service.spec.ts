@@ -70,10 +70,4 @@ describe('MouseDetectionService', () => {
         service.clickMessage(false);
         expect(service.message).toEqual('ERROR');
     });
-
-    it('should increment nbDifference ', () => {
-        service.nbrDifferencesFound = 3;
-        service.incrementNbrDifference(true);
-        expect(service.nbrDifferencesFound).toEqual(4);
-    });
 });

@@ -19,12 +19,17 @@ export class PopDialogUsernameComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public gameInfo: any,
         public startUpGameService: StartUpGameService,
         private dialog: MatDialog,
-        private dialogRef: MatDialogRef<PopDialogUsernameComponent>,
-    ) {}
+        public dialogRef: MatDialogRef<PopDialogUsernameComponent>
+        ) {}
 
     ngOnInit(): void {
+        console.log("ngOnInit de username est appelé")
         this.socketService.connect();
         this.configureUsernamePopUpSocketFeatures();
+    }
+
+    ngOnDestroy(): void {
+        this.socketService.off('username valid');
     }
 
     private startWaitingLine(): void {
@@ -52,9 +57,9 @@ export class PopDialogUsernameComponent implements OnInit {
 
     configureUsernamePopUpSocketFeatures(): void {
         this.socketService.on('username valid', () => {
-            if (this.gameInfo.multiFlag) this.openDialog();
             this.startWaitingLine();
             this.dialogRef.close();
+            if(this.gameInfo.multiFlag) this.openDialog();
         });
 
         this.socketService.on('username not valid', () => {

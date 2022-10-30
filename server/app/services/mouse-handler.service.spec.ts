@@ -22,7 +22,8 @@ describe('MouseHandlerService', () => {
             [899, 951],
         ],
     };
-    const testDifferencesList = [[0]];
+    const testDifferencesFoundArray :number[] = [1,2,3];
+    const testDifferencesList : number[][] = [[0]];
     //const gamesService: GamesService = Container.get(GamesService);
     const hashmapConverter: HashmapConverterService = Container.get(HashmapConverterService);
 
@@ -94,9 +95,19 @@ describe('MouseHandlerService', () => {
         let differencesHashmapTest: Map<number, number> = new Map<number, number>();
         let differencesNbFoundByPlayerTest: Map<string, number> = new Map<string, number>();
 
-        mouseService.differencesNbFoundByPlayer.set(testSocketID, [1, 2, 3]);
+        mouseService.differencesNbFoundByPlayer.set(testSocketID, testDifferencesFoundArray);
         mouseService.resetData();
         expect(mouseService.differencesHashmap).to.deep.equals(differencesHashmapTest);
         expect(mouseService.differencesNbFoundByPlayer).to.deep.equals(differencesNbFoundByPlayerTest);
+    });
+
+    it('should add a socketID to the differencesNbFoundByPLayerMap on addPlayerToGame()', () => {
+        mouseService.addPlayerToGame(testSocketID);
+        expect(mouseService.differencesNbFoundByPlayer.get(testSocketID)).to.deep.equals([]);
+    });
+
+    it('should return the number of differences found by a player on getNumberOfDifferencesFoundByPlayer()', () => {
+        mouseService.differencesNbFoundByPlayer.set(testSocketID, testDifferencesFoundArray);
+        expect(mouseService.getNumberOfDifferencesFoundByPlayer(testSocketID)).to.equal(testDifferencesFoundArray.length);
     });
 });

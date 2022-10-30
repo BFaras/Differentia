@@ -10,7 +10,7 @@ import { TimeService } from '@app/services/time.service';
     styleUrls: ['./topbar.component.scss'],
 })
 export class TopbarComponent implements OnInit {
-    @Input() nbrDifferencesFound: number;
+    @Input() nbrDifferencesFound: number[];
     @Input() playerNames: string[];
 
     constructor(public readonly timeService: TimeService, public mouseDetection: MouseDetectionService) {}
