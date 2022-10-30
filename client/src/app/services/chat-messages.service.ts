@@ -71,6 +71,7 @@ export class ChatMessagesService {
             this.adversaryUsername = adversaryName;
         });
 
+        //To test
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
             if (endGameInfos.isMultiplayer && endGameInfos.isAbandon) {
                 observer.next(this.generateChatMessageFromGame(this.adversaryUsername + ABANDON_MESSAGE));

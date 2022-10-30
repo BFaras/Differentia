@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { ChatMessage } from '@common/chat-message';
 import {
+    ABANDON_MESSAGE,
     DEFAULT_USERNAME,
     MESSAGE_DIFFERENCE_FOUND_MULTI,
     MESSAGE_DIFFERENCE_FOUND_SOLO,
@@ -9,6 +10,7 @@ import {
     MESSAGE_ERROR_DIFFERENCE_SOLO,
     NO_DIFFERENCE_FOUND_ARRAY,
 } from '@common/const';
+import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Subscription } from 'rxjs';
 
@@ -17,19 +19,23 @@ import { ChatMessagesService } from './chat-messages.service';
 import { SocketClientService } from './socket-client.service';
 
 describe('ChatMessagesService', () => {
+    const littleTimeout = 100;
     const emptySubcriberCallbackTest = (message: ChatMessage) => {};
     const putResponseInVariableCallback = (message: ChatMessage) => {
         messageReceivedFromObservable = message;
     };
+    const testSocketId = 'HSTW263H';
     const notValidClickInfo: GameplayDifferenceInformations = {
         differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
         isValidDifference: false,
-        socketId: DEFAULT_USERNAME,
+        socketId: testSocketId,
+        playerUsername: DEFAULT_USERNAME,
     };
     const differencesFoundInfo: GameplayDifferenceInformations = {
         differencePixelsNumbers: [0],
         isValidDifference: true,
-        socketId: DEFAULT_USERNAME,
+        socketId: testSocketId,
+        playerUsername: DEFAULT_USERNAME,
     };
     let chatMessagesService: ChatMessagesService;
     let socketService: SocketClientService;
@@ -65,7 +71,7 @@ describe('ChatMessagesService', () => {
         socketTestHelper.peerSideEmit('Valid click', notValidClickInfo);
         await setTimeout(() => {
             expect(messageReceivedFromObservable.message).toEqual(MESSAGE_ERROR_DIFFERENCE_SOLO);
-        });
+        }, littleTimeout);
     });
 
     it('should send solo the error message when a Valid click event is sent and there is no difference found and the game is solo', async () => {
@@ -74,7 +80,7 @@ describe('ChatMessagesService', () => {
         socketTestHelper.peerSideEmit('Valid click', differencesFoundInfo);
         await setTimeout(() => {
             expect(messageReceivedFromObservable.message).toEqual(MESSAGE_DIFFERENCE_FOUND_SOLO);
-        });
+        }, littleTimeout);
     });
 
     it('should send the multiplayer error message when a Valid click event is sent and there is no difference found and the game is multiplayer', async () => {
@@ -83,7 +89,7 @@ describe('ChatMessagesService', () => {
         socketTestHelper.peerSideEmit('Valid click', notValidClickInfo);
         await setTimeout(() => {
             expect(messageReceivedFromObservable.message.includes(MESSAGE_ERROR_DIFFERENCE_MULTI)).toBeTruthy();
-        });
+        }, littleTimeout);
     });
 
     it('should send multiplayer the error message when a Valid click event is sent and there is no difference found and the game is multiplayer', async () => {
@@ -92,6 +98,19 @@ describe('ChatMessagesService', () => {
         socketTestHelper.peerSideEmit('Valid click', differencesFoundInfo);
         await setTimeout(() => {
             expect(messageReceivedFromObservable.message.includes(MESSAGE_DIFFERENCE_FOUND_MULTI)).toBeTruthy();
-        });
+        }, littleTimeout);
+    });
+
+    it('should send multiplayer the abandon message when a player abandonned the game', async () => {
+        const endGameInfos: EndGameInformations = {
+            isMultiplayer: true,
+            isAbandon: true,
+            isGameWon: true,
+        };
+        observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
+        socketTestHelper.peerSideEmit('End Game', endGameInfos);
+        await setTimeout(() => {
+            expect(messageReceivedFromObservable.message.includes(ABANDON_MESSAGE)).toBeTruthy();
+        }, littleTimeout);
     });
 });
