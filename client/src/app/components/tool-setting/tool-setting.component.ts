@@ -1,6 +1,7 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { CanvasDataHandlerService } from '@app/services/canvas-data-handler.service';
 import { DrawingHistoryService } from '@app/services/drawing-history.service';
+import { KeyEventHandlerService } from '@app/services/key-event-handler.service';
 import { PencilService } from '@app/services/pencil.service';
 import { BIG, BLACK_COLOR, MEDIUM, SMALL, VERY_BIG, VERY_SMALL } from '@common/const';
 @Component({
@@ -14,7 +15,9 @@ export class ToolSettingComponent implements OnInit {
   @Input() indexTool:number;
   constructor(private pencilService:PencilService,
     private drawingHistoryService: DrawingHistoryService,
-    private canvasDataHandle:CanvasDataHandlerService
+    private canvasDataHandle:CanvasDataHandlerService,
+    private keyEventHandlerService:KeyEventHandlerService
+
     ) { }
 
 
@@ -24,12 +27,12 @@ export class ToolSettingComponent implements OnInit {
 
   @HostListener('document:keyup.control.z', ['$event'])
   handleKeyboardToCancelDrawnLine(event: KeyboardEvent) { 
-    this.cancelActionDrawnLine()
+    this.keyEventHandlerService.deleteDrawnLineShortCut()
   }
 
   @HostListener('document:keyup.control.shift.z', ['$event'])
   handleKeyboardToCancelDeletedDrawnLine(event: KeyboardEvent) { 
-    this.cancelActionDeletedDrawnLine()
+    this.keyEventHandlerService.cancelDeleteDrawnLineShortCut()
   }
 
   checkIfThereAreSavedDrawnLines(){

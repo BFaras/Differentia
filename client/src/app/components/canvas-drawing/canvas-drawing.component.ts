@@ -3,6 +3,7 @@ import { Coordinate } from '@app/interfaces/coordinate';
 import { CanvasDataHandlerService } from '@app/services/canvas-data-handler.service';
 import { DrawingHandlerService } from '@app/services/drawing-handler.service';
 import { DrawingHistoryService } from '@app/services/drawing-history.service';
+import { KeyEventHandlerService } from '@app/services/key-event-handler.service';
 import { MergeImageCanvasHandlerService } from '@app/services/merge-image-canvas-handler.service';
 import { PencilService } from '@app/services/pencil.service';
 import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
@@ -21,7 +22,8 @@ export class CanvasDrawingComponent implements  AfterViewInit {
     private mergeImageCanvasService:MergeImageCanvasHandlerService,
     private pencilService:PencilService,
     private drawingHistoryService:DrawingHistoryService,
-    private canvasDataHandlerService:CanvasDataHandlerService) { }
+    private canvasDataHandlerService:CanvasDataHandlerService,
+    private keyEventHandlerService:KeyEventHandlerService) { }
 
   ngAfterViewInit(){
     this.canvas = this.canvasDOM.nativeElement;
@@ -35,6 +37,10 @@ export class CanvasDrawingComponent implements  AfterViewInit {
     this.prepareCanvasMerging()
     this.addContextToCanvasData();
 
+  }
+
+  saveCanvasForShortcut(){
+    this.keyEventHandlerService.indexImageOnDrawing = this.indexOfCanvas;
   }
 
   addContextToCanvasData(){
