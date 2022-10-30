@@ -72,7 +72,7 @@ describe('ChatSectionComponent', () => {
             get: () => 'Enter',
         });
 
-        chatSectionComponent.handleKeyEvent(keyboardEvent);
+        // chatSectionComponent.handleKeyEvent(keyboardEvent);
         expect(spy).toHaveBeenCalled();
     });
 
@@ -83,7 +83,7 @@ describe('ChatSectionComponent', () => {
             get: () => 'ArrowDown',
         });
 
-        chatSectionComponent.handleKeyEvent(arrowDownEvent);
+        // chatSectionComponent.handleKeyEvent(arrowDownEvent);
         expect(spy).not.toHaveBeenCalled();
     });
 });
