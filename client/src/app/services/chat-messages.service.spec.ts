@@ -65,6 +65,13 @@ describe('ChatMessagesService', () => {
         expect(emptySubcriberCallbackTest).toHaveBeenCalled;
     });
 
+    it('should change the multiplayer game to true and set the adversary name on The adversary username is event', () => {
+        const testAdversaryName = 'testName1234';
+        socketTestHelper.peerSideEmit('The adversary username is', testAdversaryName);
+        expect(chatMessagesService['isMultiplayerGame']).toBeTruthy();
+        expect(chatMessagesService['adversaryUsername']).toEqual(testAdversaryName);
+    });
+
     it('should send the solo error message when a Valid click event is sent and there is no difference found and the game is solo', async () => {
         observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
         chatMessagesService['isMultiplayerGame'] = false;

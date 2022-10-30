@@ -65,13 +65,11 @@ export class ChatMessagesService {
             observer.next(message);
         });
 
-        //To test
         this.socketService.on('The adversary username is', (adversaryName: string) => {
             this.isMultiplayerGame = true;
             this.adversaryUsername = adversaryName;
         });
 
-        //To test
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
             if (endGameInfos.isMultiplayer && endGameInfos.isAbandon) {
                 observer.next(this.generateChatMessageFromGame(this.adversaryUsername + ABANDON_MESSAGE));
