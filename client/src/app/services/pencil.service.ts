@@ -6,24 +6,45 @@ const SQUARE_LINE_CAP:CanvasLineCap = "square"
   providedIn: 'root'
 })
 export class PencilService {
-  width:number;
-  color:string;
+  leftCanvasWidth:number;
+  leftCanvasColor:string;
+  RightCanvasWidth:number;
+  RightCanvasColor:string;
 
-  getColor():string{
-    return this.color
+  obtainPencilColor(index:number):string{
+    if(index == 0){
+      return this.leftCanvasColor
+    }
+    else 
+    {
+      return this.RightCanvasColor
+    }
   }
 
-  setColor(color:string):void{
-    this.color = color;
+  setColor(color:string,index:number):void{
+    if (index == 0)
+      {this.leftCanvasColor = color}
+    else if(index == 1)
+      {this.RightCanvasColor = color};
 
   }
 
-  setWidth(width:number):void{
-    this.width = width
+  setWidth(width:number,index:number):void{
+    
+    if (index == 0)
+      {this.leftCanvasWidth = width}
+    else if(index == 1)
+      {this.RightCanvasWidth = width};
   }
 
-  getWidth():number{
-    return this.width
+  obtainPencilWidth(index:number):number{
+    if(index == 0){
+      return this.leftCanvasWidth
+    }
+    else 
+    {
+      return this.RightCanvasWidth
+    }
   }
 
   assignRightLineCap(mouseClick:MouseEvent){

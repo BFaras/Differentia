@@ -10,7 +10,7 @@ import { ListImagesRenderedService } from '@app/services/list-images-rendered.se
     styleUrls: ['./game-creation-page.component.scss'],
 })
 export class GameCreationPageComponent implements OnInit {
-
+    readonly indexToolsCanvas:number[] = [0,1];
     constructor(private dialog: MatDialog,private editImageService:ListImagesRenderedService,
          private gameToServerService: GameToServerService) {
     }

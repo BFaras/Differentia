@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { DrawingHistoryService } from '@app/services/drawing-history.service';
 import { PencilService } from '@app/services/pencil.service';
 import { BIG, BLACK_COLOR, MEDIUM, SMALL, VERY_BIG, VERY_SMALL } from '@common/const';
@@ -10,6 +10,7 @@ import { BIG, BLACK_COLOR, MEDIUM, SMALL, VERY_BIG, VERY_SMALL } from '@common/c
 export class ToolSettingComponent implements OnInit {
   widths:number[] = [VERY_SMALL,SMALL,MEDIUM,BIG,VERY_BIG]
   color:string;
+  @Input() indexTool:number;
   constructor(private pencilService:PencilService,
     private drawingHistoryService: DrawingHistoryService,
     ) { }
@@ -58,15 +59,15 @@ export class ToolSettingComponent implements OnInit {
   }
 
   setOriginalSetting(){
-    this.pencilService.setWidth(VERY_SMALL);
-    this.pencilService.setColor(BLACK_COLOR);
+    this.pencilService.setWidth(VERY_SMALL,this.indexTool);
+    this.pencilService.setColor(BLACK_COLOR,this.indexTool);
   }
 
   onChangeColor():void{
-    this.pencilService.setColor(this.color);
+    this.pencilService.setColor(this.color,this.indexTool);
   }
 
   onChangeWidth(width: number):void{
-    this.pencilService.setWidth(width);
+    this.pencilService.setWidth(width,this.indexTool);
   }
 }

@@ -4,7 +4,10 @@
     </button>
     <div class="container-images-paint">
         <app-list-images-rendered class="container-images" ></app-list-images-rendered>
-        <app-tool-setting class="container-paint"></app-tool-setting>
+        <div class = "container-tools">
+            <app-tool-setting [indexTool] = "0" class="container-paint"></app-tool-setting>
+            <app-tool-setting [indexTool] = "1" class="container-paint" ></app-tool-setting>
+        </div>
     </div>
     <div class="container-buttons">
         <button id="validate" >Merge</button>
@@ -12,3 +15,5 @@
         <button id="validate" [disabled]="verifyTwoImagesUploaded()" mat-raised-button (click)="onCreateValidatePopDialog()">Valider</button>
     </div>
 </div>
+
+

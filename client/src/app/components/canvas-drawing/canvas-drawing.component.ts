@@ -68,8 +68,8 @@ export class CanvasDrawingComponent implements  AfterViewInit {
     this.drawingHandlerService.startObservingMousePath()
       .subscribe((mouseEvent:[MouseEvent,MouseEvent]) => {
         if (this.context != null) {
-          this.context.lineWidth = this.pencilService.getWidth();
-          this.context.strokeStyle = this.pencilService.getStateOfPencil(mouseEvent[0],this.pencilService.getColor());
+          this.context.lineWidth = this.pencilService.obtainPencilWidth(this.indexOfCanvas);
+          this.context.strokeStyle = this.pencilService.getStateOfPencil(mouseEvent[0],this.pencilService.obtainPencilColor(this.indexOfCanvas));
           this.context.lineCap = this.pencilService.assignRightLineCap(mouseEvent[0])!;
         }
 
