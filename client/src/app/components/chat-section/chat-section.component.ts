@@ -41,6 +41,7 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
             },
         });
         this.initializeChatHeight();
+        
     }
 
     ngOnDestroy(): void {
