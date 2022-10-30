@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular
 import { Coordinate } from '@app/interfaces/coordinate';
 import { DrawingHandlerService } from '@app/services/drawing-handler.service';
 import { DrawingHistoryService } from '@app/services/drawing-history.service';
+import { MergeImageCanvasHandlerService } from '@app/services/merge-image-canvas-handler.service';
 import { PencilService } from '@app/services/pencil.service';
 import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
 @Component({
@@ -16,16 +17,20 @@ export class CanvasDrawingComponent implements  AfterViewInit {
   private context: CanvasRenderingContext2D | null;
 
   constructor(private drawingHandlerService:DrawingHandlerService,
-    private pencilService:PencilService,private drawingHistoryService:DrawingHistoryService) { }
+    private mergeImageCanvasService:MergeImageCanvasHandlerService,
+    private pencilService:PencilService,
+    private drawingHistoryService:DrawingHistoryService) { }
 
-  public ngAfterViewInit():void {
+  public async ngAfterViewInit(){
     this.canvas = this.canvasDOM.nativeElement;
     this.context = this.canvas.getContext('2d');
+    this.context!.globalAlpha = 0.00;
 
     this.canvas.width = IMAGE_WIDTH;
     this.canvas.height = IMAGE_HEIGHT;
     this.useCanvasFocusedOn();
     this.prepareCanvasDrawing();
+    await this.prepareCanvasMerging()
 
   }
 
@@ -85,4 +90,14 @@ export class CanvasDrawingComponent implements  AfterViewInit {
       });
   }
 
+  prepareCanvasMerging(){
+    if (this.indexOfCanvas == 0){
+      console.log(this.indexOfCanvas)
+    this.mergeImageCanvasService.setLeftContextAndCanvas(this.context!,this.canvas);
+  }
+  else if (this.indexOfCanvas == 1){
+    console.log(this.indexOfCanvas)
+    this.mergeImageCanvasService.setRightContextAndCanvas(this.context!,this.canvas);
+  }
+}
 }

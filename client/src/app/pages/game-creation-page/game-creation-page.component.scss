@@ -6,6 +6,7 @@
     gap: 40px;
 }
 
+
 .container-paint {
     display: flex;
     flex-direction: column;
@@ -17,14 +18,11 @@
     margin: 10px 10px 10px 20px;
 }
 
-app-editable-images {
-    margin: 0px 0px 0px 40px;
-}
-
 .container-images-paint {
     display: grid;
-    grid-template-columns: 9fr 1fr;
+    grid-template-columns: 9fr  1fr ;
 }
+
 
 .container-buttons {
     display: flex;

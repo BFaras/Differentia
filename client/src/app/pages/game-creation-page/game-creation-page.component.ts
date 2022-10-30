@@ -12,7 +12,7 @@ import { ListImagesRenderedService } from '@app/services/list-images-rendered.se
 export class GameCreationPageComponent implements OnInit {
 
     constructor(private dialog: MatDialog,private editImageService:ListImagesRenderedService,
-         private gameToServerService: GameToServerService ) {
+         private gameToServerService: GameToServerService) {
     }
 
     ngOnInit(): void {
@@ -67,6 +67,7 @@ export class GameCreationPageComponent implements OnInit {
     }
 
     onCreateValidatePopDialog() {
+
         this.dialog.open(PopDialogValidateGameComponent, {
             height: '400px',
             width: '600px',

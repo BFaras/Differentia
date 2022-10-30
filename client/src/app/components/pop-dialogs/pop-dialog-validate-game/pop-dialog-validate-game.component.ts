@@ -30,8 +30,6 @@ export class PopDialogValidateGameComponent  {
 
 
     onRadiusChanged(value: number){
-        
-        console.log(value)
         this.valueChosen = value
     }
 

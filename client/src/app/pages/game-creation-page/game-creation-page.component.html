@@ -3,10 +3,11 @@
         <mat-icon routerLink="/admin">home</mat-icon>
     </button>
     <div class="container-images-paint">
-        <app-list-images-rendered></app-list-images-rendered>
+        <app-list-images-rendered class="container-images" ></app-list-images-rendered>
         <app-tool-setting class="container-paint"></app-tool-setting>
     </div>
     <div class="container-buttons">
+        <button id="validate" >Merge</button>
         <button id="download" mat-raised-button (click)="onCreateDownloadPopDialog()">Download</button>
         <button id="validate" [disabled]="verifyTwoImagesUploaded()" mat-raised-button (click)="onCreateValidatePopDialog()">Valider</button>
     </div>
