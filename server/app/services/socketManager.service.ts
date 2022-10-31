@@ -64,8 +64,16 @@ export class SocketManager {
                 this.sio.emit(`${gameName} let me tell you if someone is waiting`, true);
             });
 
-            socket.on('Reload game selection page', (msg) => {
-                this.sio.emit('Page reloaded', msg);
+            socket.on('Reload game selection page', (msg: string) => {
+                let roomToKeep: string[] = [];
+                for (let rooms of this.gameManagerService.gamesRooms.entries()) {
+                    if (roomToKeep.length === 0)
+                        rooms[1].forEach((room) => {
+                            roomToKeep.push(room);
+                        });
+                    else roomToKeep = roomToKeep.concat(rooms[1]);
+                }
+                this.sio.except(roomToKeep).emit('Page reloaded', msg);
             });
 
             socket.on('I left', (gameName: string) => {

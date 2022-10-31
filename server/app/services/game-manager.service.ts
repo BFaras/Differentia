@@ -14,6 +14,7 @@ export class GameManagerService {
     readonly chronometerServices: Map<string, ChronometerService> = new Map<string, ChronometerService>();
     readonly mouseHandlerServices: Map<string, MouseHandlerService> = new Map<string, MouseHandlerService>();
     private gamesService = Container.get(GamesService);
+    gamesRooms: Map<string, string[]> = new Map<string, string[]>();
 
     constructor(private sio: io.Server) {}
 
@@ -23,11 +24,13 @@ export class GameManagerService {
 
         await this.getSocketMouseHandlerService(socket).generateDifferencesInformations(gameName);
         this.getSocketMouseHandlerService(socket).addPlayerToGame(socket.id);
+        const gameRoomName = this.findSocketGameRoomName(socket);
 
         if (adversarySocket) {
-            this.setupSocketGameRoom(adversarySocket, this.findSocketGameRoomName(socket));
+            this.setupSocketGameRoom(adversarySocket, gameRoomName);
             this.getSocketMouseHandlerService(adversarySocket).addPlayerToGame(adversarySocket.id);
         }
+        this.logRoomsWithGames(gameName, gameRoomName);
 
         await this.sendImagesToClient(gameName, socket);
     }
@@ -85,6 +88,7 @@ export class GameManagerService {
         socket.emit('End game', endGameInfos);
 
         endGameInfos.isGameWon = false;
+        this.deleteRoom(socket);
         socket.broadcast.to(this.findSocketGameRoomName(socket)).emit('End game', endGameInfos);
     }
 
@@ -95,7 +99,24 @@ export class GameManagerService {
             isAbandon: true,
             isGameWon: true,
         };
+        this.deleteRoom(socket);
         socket.broadcast.to(this.findSocketGameRoomName(socket)).emit('End game', endGameInfos);
+    }
+
+    findSocketGameRoomName(socket: io.Socket): string {
+        let gameRoomName = DEFAULT_GAME_ROOM_NAME;
+        socket.rooms.forEach((roomName: string) => {
+            if (roomName.includes(GAME_ROOM_GENERAL_ID)) {
+                gameRoomName = roomName;
+            }
+        });
+
+        return gameRoomName;
+    }
+
+    getSocketMouseHandlerService(socket: io.Socket): MouseHandlerService {
+        const gameRoomName = this.findSocketGameRoomName(socket);
+        return this.mouseHandlerServices.get(gameRoomName)!;
     }
 
     private setupNecessaryGameServices(socket: io.Socket) {
@@ -114,6 +135,39 @@ export class GameManagerService {
         );
     }
 
+    private logRoomsWithGames(gameName: string, roomName: string) {
+        let rooms: string[] = [];
+        if (this.gamesRooms.has(gameName)) {
+            this.gamesRooms.get(gameName)?.forEach((socketRoom) => {
+                rooms.push(socketRoom);
+            });
+            rooms.push(roomName);
+        } else {
+            rooms.push(roomName);
+        }
+        this.gamesRooms.set(gameName, rooms);
+    }
+
+    private deleteRoom(socket: io.Socket) {
+        const gameRoomName = this.findSocketGameRoomName(socket);
+        let gameName = '';
+        for (let rooms of this.gamesRooms.entries()) {
+            rooms[1].forEach((value) => {
+                if (value === gameRoomName) {
+                    gameName = rooms[0];
+                }
+            });
+        }
+        const newRoom = this.gamesRooms.get(gameName)?.filter((socketRoom) => {
+            return socketRoom !== gameRoomName;
+        });
+
+        if (newRoom) {
+            this.gamesRooms.set(gameName, newRoom);
+        }
+        if (newRoom?.length === 0) this.gamesRooms.delete(gameName);
+    }
+
     private setupSocketGameRoom(socket: io.Socket, otherPlayerGameRoomId: string) {
         const playerGameRoomID = socket.id + GAME_ROOM_GENERAL_ID;
 
@@ -122,17 +176,6 @@ export class GameManagerService {
         } else {
             socket.join(otherPlayerGameRoomId);
         }
-    }
-
-    findSocketGameRoomName(socket: io.Socket): string {
-        let gameRoomName = DEFAULT_GAME_ROOM_NAME;
-        socket.rooms.forEach((roomName: string) => {
-            if (roomName.includes(GAME_ROOM_GENERAL_ID)) {
-                gameRoomName = roomName;
-            }
-        });
-
-        return gameRoomName;
     }
 
     private emitTime(socket: io.Socket, chronometerService: ChronometerService, gameRoomName: string) {
@@ -151,11 +194,6 @@ export class GameManagerService {
     private getSocketChronometerService(socket: io.Socket): ChronometerService {
         const gameRoomName = this.findSocketGameRoomName(socket);
         return this.chronometerServices.get(gameRoomName)!;
-    }
-
-    getSocketMouseHandlerService(socket: io.Socket): MouseHandlerService {
-        const gameRoomName = this.findSocketGameRoomName(socket);
-        return this.mouseHandlerServices.get(gameRoomName)!;
     }
 
     private getSocketTimeInterval(socket: io.Socket): NodeJS.Timer {
