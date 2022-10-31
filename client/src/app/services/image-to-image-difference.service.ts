@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { ImageGeneratorService } from '@app/services/image-generator.service';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
-import { ImageGeneratorService } from './difference-detector-feature/image-generator.service';
 
 @Injectable({
     providedIn: 'root',

@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
-import { ImageGeneratorService } from '@app/services/difference-detector-feature/image-generator.service';
 import { DrawService } from '@app/services/draw.service';
+import { ImageGeneratorService } from '@app/services/image-generator.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { MouseDetectionService } from '@app/services/mouse-detection.service';
 import { SocketClientService } from '@app/services/socket-client.service';
