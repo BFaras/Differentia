@@ -2,7 +2,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { ChatMessagesService } from '@app/services/chat-messages.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { ChatMessage } from '@common/chat-message';
-import { CHAT_HEIGHT, DEFAULT_USERNAME, GAME_MESSAGE_SENDER_NAME } from '@common/const';
+import { DEFAULT_USERNAME, GAME_MESSAGE_SENDER_NAME } from '@common/const';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -31,6 +31,7 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
         this.scrollToBottom();
     }
 
+    //Tested Observer avec le add message
     ngOnInit(): void {
         this.socketService.connect();
         this.configureSocket();
@@ -40,25 +41,11 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
                 this.scrollToBottom();
             },
         });
-     //   this.initializeChatHeight();
-        
     }
 
     ngOnDestroy(): void {
         this.chatMessagesSubscription.unsubscribe();
         this.chatMessagesService.resetIsMultiplayer();
-    }
-
-    /*handleKeyEvent(event: KeyboardEvent): void {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            this.sendMessage();
-        }
-    }*/
-
-    initializeChatHeight(): void {
-        const chatBox = document.getElementById('chat-container');
-        if (chatBox) chatBox.style.height = CHAT_HEIGHT + 'vh';
     }
 
     scrollToBottom(): void {
@@ -68,15 +55,18 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
         }, 2);
     }
 
+    //Tested
     private addMessage(messageToAdd: ChatMessage) {
         console.log(messageToAdd.timeMessageSent);
         this.messagesSent.push(messageToAdd);
     }
 
     private configureSocket() {
+        //Tested
         this.socketService.on('show the username', (username: string) => {
             this.localPlayerUsername = username;
         });
+
         this.socketService.on('The adversary username is', (adversaryName: string) => {
             this.isMultiplayerGame = true;
         });
