@@ -1,9 +1,9 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { DifferenceDetectionService } from '@app/services/difference-detection.service';
 import { DrawService } from '@app/services/draw.service';
 import { ImageGeneratorService } from '@app/services/image-generator.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
-import { MouseDetectionService } from '@app/services/mouse-detection.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import {
     CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE,
@@ -41,7 +41,7 @@ export class PlayAreaComponent implements OnInit {
     constructor(
         public socketService: SocketClientService,
         private readonly drawService: DrawService,
-        private readonly mouseDetection: MouseDetectionService,
+        private readonly mouseDetection: DifferenceDetectionService,
         private imageToImageDifferenceService: ImageToImageDifferenceService,
         private dialog: MatDialog,
         private imageGenerator: ImageGeneratorService,

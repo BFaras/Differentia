@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
+import { DifferenceDetectionService } from '@app/services/difference-detection.service';
 import { DrawService } from '@app/services/draw.service';
 import { ImageGeneratorService } from '@app/services/image-generator.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
-import { MouseDetectionService } from '@app/services/mouse-detection.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { Position } from '@common/position';
 import { Socket } from 'socket.io-client';
@@ -14,7 +14,7 @@ describe('PlayAreaComponent', () => {
     let component: PlayAreaComponent;
     let fixture: ComponentFixture<PlayAreaComponent>;
     let socketServiceSpy: SpyObj<SocketClientService>;
-    let mouseServiceSpy: SpyObj<MouseDetectionService>;
+    let mouseServiceSpy: SpyObj<DifferenceDetectionService>;
     let drawServiceSpy: SpyObj<DrawService>;
     let matDialogSpy: SpyObj<MatDialog>;
     let imageGeneratorSpy: SpyObj<ImageGeneratorService>;
@@ -39,7 +39,7 @@ describe('PlayAreaComponent', () => {
             providers: [
                 { provide: SocketClientService, useValue: socketServiceSpy },
                 { provide: DrawService, useValue: drawServiceSpy },
-                { provide: MouseDetectionService, useValue: mouseServiceSpy },
+                { provide: DifferenceDetectionService, useValue: mouseServiceSpy },
                 { provide: ImageToImageDifferenceService, useValue: imageDifferenceSpy },
                 { provide: MatDialog, useValue: matDialogSpy },
                 { provide: ImageGeneratorService, useValue: imageGeneratorSpy },

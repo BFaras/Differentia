@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { Position } from '@common/position';
+import { DifferenceDetectionService } from './difference-detection.service';
 import { DrawService } from './draw.service';
-import { MouseDetectionService } from './mouse-detection.service';
 import { SocketClientService } from './socket-client.service';
 
 describe('MouseDetectionService', () => {
-    let service: MouseDetectionService;
+    let service: DifferenceDetectionService;
     let socketSpy: jasmine.SpyObj<SocketClientService>;
     let drawServiceSpy: jasmine.SpyObj<DrawService>;
     let mouseEvent: MouseEvent;
@@ -31,7 +31,7 @@ describe('MouseDetectionService', () => {
 
         socketSpy.connect();
         drawServiceSpy.drawWord('hello', position, drawServiceSpy.context1);
-        service = TestBed.inject(MouseDetectionService);
+        service = TestBed.inject(DifferenceDetectionService);
         service.mousePosition = position;
     });
 

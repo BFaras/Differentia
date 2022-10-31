@@ -7,7 +7,7 @@ import { SocketClientService } from './socket-client.service';
 @Injectable({
     providedIn: 'root',
 })
-export class MouseDetectionService {
+export class DifferenceDetectionService {
     constructor(public socketService: SocketClientService, private drawService: DrawService) {}
     mousePosition: Position = { x: 0, y: 0 };
     message: string = '';
