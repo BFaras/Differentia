@@ -48,7 +48,7 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
         this.chatMessagesService.resetIsMultiplayer();
     }
 
-    scrollToBottom(): void {
+    private scrollToBottom(): void {
         setTimeout(() => {
             // Timeout is used to update the scroll after the last element added
             this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
