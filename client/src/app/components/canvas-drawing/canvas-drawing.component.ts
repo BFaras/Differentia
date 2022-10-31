@@ -32,7 +32,7 @@ export class CanvasDrawingComponent implements  AfterViewInit {
     this.useCanvasFocusedOn()
   }
 
-  useCanvasFocusedOn(){
+  private useCanvasFocusedOn(){
     this.drawingHandlerService.setCanvas(this.canvas);
     this.drawingHandlerService.setAllObservables();
   }
@@ -42,7 +42,7 @@ export class CanvasDrawingComponent implements  AfterViewInit {
       .some(channel => channel !== 0);
   }
 
-  prepareCanvasDrawing():void {
+  private prepareCanvasDrawing():void {
 
     this.drawingHandlerService.mouseDownObservable.subscribe((e)=>{
         this.drawingHistoryService.saveCanvas(this.context!);

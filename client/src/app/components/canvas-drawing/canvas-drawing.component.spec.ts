@@ -40,13 +40,13 @@ describe('CanvasDrawingComponent', () => {
     });
 
     it('should useThisCanvas should initilize canvas', () => {
-        component.useCanvasFocusedOn();
+        component["useCanvasFocusedOn"]();
         expect(drawingHandlerServiceSpy.setCanvas).toHaveBeenCalled();
         expect(drawingHandlerServiceSpy.setAllObservables).toHaveBeenCalled();
     });
 
     it('should test functions of drawHandler were called when drawing ', () => {
-        component.useCanvasFocusedOn();
+        component["useCanvasFocusedOn"]();
         const mockEventUp = new MouseEvent('mouseup', { clientX: 50, clientY: 150 });
         const mockEventDown = new MouseEvent('mousedown', { clientX: 200, clientY: 250 });
 
