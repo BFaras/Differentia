@@ -8,7 +8,7 @@ import * as io from 'socket.io';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
 import { MouseHandlerService } from './mouse-handler.service';
-import { WaitingLineHandlerService } from './waitingLineHandler.service';
+import { WaitingLineHandlerService } from './waiting-line-handler.service';
 
 export class SocketManager {
     private sio: io.Server;
@@ -59,7 +59,6 @@ export class SocketManager {
             });
 
             socket.on('I am waiting', (gameName: string) => {
-                console.log('creation createur');
                 this.waitingLineHandlerService.addCreatingPlayer(gameName, socket.id);
                 this.sio.emit(`${gameName} let me tell you if someone is waiting`, true);
             });
