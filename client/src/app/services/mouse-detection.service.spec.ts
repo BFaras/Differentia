@@ -70,4 +70,8 @@ describe('MouseDetectionService', () => {
         service.clickMessage(false, true);
         expect(service.message).toEqual('ERROR');
     });
+
+    it('should end game at the right time', () => {
+        expect(false).toBeTrue(); // fait pas passer par defaut
+    });
 });
