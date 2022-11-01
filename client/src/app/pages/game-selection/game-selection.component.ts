@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SocketClientService } from '@app/services/socket-client.service';
 
 @Component({
     selector: 'app-game-selection',
@@ -6,8 +7,18 @@ import { Component } from '@angular/core';
     styleUrls: ['./game-selection.component.scss'],
 })
 export class GameSelectionComponent {
-    constructor() {}
+    constructor(private socketService: SocketClientService) {}
     nameOfPage: string = 'GameSelection';
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        this.socketService.connect();
+        this.configureGameSelectionSocketFeatures();
+    }
+
+    private configureGameSelectionSocketFeatures(): void {
+        this.socketService.on('reconnect', () => {
+            this.socketService.disconnect();
+            this.ngOnInit();
+        });
+    }
 }

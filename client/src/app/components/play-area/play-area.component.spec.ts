@@ -69,7 +69,7 @@ describe('PlayAreaComponent', () => {
     });
 
     it('should display images ', () => {
-        component.displayImages();
+        component['displayImages']();
         fixture.detectChanges();
         expect(drawServiceSpy).toHaveBeenCalled();
         expect(drawServiceSpy['context1'].drawImage).toHaveBeenCalled();
@@ -77,7 +77,7 @@ describe('PlayAreaComponent', () => {
     });
 
     it('should open dialog', () => {
-        component.openEndGameDialog('Hello');
+        component['openEndGameDialog']('Hello');
         expect(matDialogSpy).toBeTruthy();
     });
 

@@ -65,7 +65,7 @@ export class GameFormComponent {
         this.joinFLag = false;
     }
 
-    configureGameFormSocketFeatures(): void {
+    private configureGameFormSocketFeatures(): void {
         this.socketService.connect();
         if (this.gameForm.gameName) {
             this.socketService.on(`${this.gameForm.gameName} let me tell you if someone is waiting`, (response: boolean) => {
