@@ -5,7 +5,6 @@
     background-color: rgb(234, 223, 223);
     font: 1.3rem Inconsolata, monospace;
     text-shadow: 0 0 5px #c8c8c8;
-    flex-direction: column;
 }
 
 .chatMessages {
@@ -58,7 +57,7 @@
 }
 
 #list-display {
-    margin-left: 10px;
+    margin-left: auto;
     line-height: 1.6;
     white-space: pre-line;
 }
