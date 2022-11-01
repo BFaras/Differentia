@@ -35,7 +35,7 @@ export class GamePageComponent {
         this.socketService.disconnect();
     }
 
-    configureGamePageSocketFeatures() {
+    private configureGamePageSocketFeatures() {
         this.socketService.on('classic mode', () => {
             this.timeService.classicMode();
         });
