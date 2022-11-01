@@ -120,4 +120,9 @@ describe('ChatMessagesService', () => {
             expect(messageReceivedFromObservable.message.includes(ABANDON_MESSAGE)).toBeTruthy();
         }, littleTimeout);
     });
+
+    it('should reset isMultiplayerGame to false on resetIsMultiplayer()', async () => {
+        chatMessagesService.resetIsMultiplayer();
+        expect(chatMessagesService['isMultiplayerGame']).toBeFalsy();
+    });
 });

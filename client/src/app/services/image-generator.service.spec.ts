@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 
+import { ImageGeneratorService } from '@app/services/image-generator.service';
 import { BLACK_RGB, IMAGE_HEIGHT, IMAGE_WIDTH, NB_BIT_PER_PIXEL } from '@common/const';
-import { ImageGeneratorService } from './image-generator.service';
 
 describe('DifferenceImageGeneratorService', () => {
     const TEST_DIFFERENCES_ARRAY: number[] = [1, 788, 899];

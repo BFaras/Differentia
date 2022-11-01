@@ -2,7 +2,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { ChatMessagesService } from '@app/services/chat-messages.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { ChatMessage } from '@common/chat-message';
-import { CHAT_HEIGHT, DEFAULT_USERNAME, GAME_MESSAGE_SENDER_NAME } from '@common/const';
+import { DEFAULT_USERNAME, GAME_MESSAGE_SENDER_NAME } from '@common/const';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -19,6 +19,7 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
     public localPlayerUsername: string = DEFAULT_USERNAME;
     public readonly gameMessageSenderName = GAME_MESSAGE_SENDER_NAME;
     private chatMessagesSubscription: Subscription;
+    public isMultiplayerGame: boolean;
 
     constructor(private chatMessagesService: ChatMessagesService, private socketService: SocketClientService) {
         this.messagesSent = [];
@@ -30,16 +31,16 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
         this.scrollToBottom();
     }
 
+    //Tested Observer avec le add message
     ngOnInit(): void {
         this.socketService.connect();
         this.configureSocket();
         this.chatMessagesSubscription = this.chatMessagesService.messagesObservable.subscribe({
             next: (message: ChatMessage) => {
                 this.addMessage(message);
+                this.scrollToBottom();
             },
         });
-        this.initializeChatHeight();
-        this.scrollToBottom();
     }
 
     ngOnDestroy(): void {
@@ -47,33 +48,27 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
         this.chatMessagesService.resetIsMultiplayer();
     }
 
-    /*handleKeyEvent(event: KeyboardEvent): void {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            this.sendMessage();
-        }
-    }*/
-
-    initializeChatHeight(): void {
-        const chatBox = document.getElementById('chat-container');
-        if (chatBox) chatBox.style.height = CHAT_HEIGHT + 'vh';
-    }
-
-    scrollToBottom(): void {
+    private scrollToBottom(): void {
         setTimeout(() => {
             // Timeout is used to update the scroll after the last element added
             this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
         }, 2);
     }
 
+    //Tested
     private addMessage(messageToAdd: ChatMessage) {
         console.log(messageToAdd.timeMessageSent);
         this.messagesSent.push(messageToAdd);
     }
 
     private configureSocket() {
+        //Tested
         this.socketService.on('show the username', (username: string) => {
             this.localPlayerUsername = username;
+        });
+
+        this.socketService.on('The adversary username is', (adversaryName: string) => {
+            this.isMultiplayerGame = true;
         });
     }
 }
