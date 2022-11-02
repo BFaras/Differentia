@@ -1,7 +1,7 @@
 <div class="chatContainer">
     <div class ="display"  #scrollMe>
         <p  id="list-display"
-            *ngFor="let message of messagesSent"
+            *ngFor="let message of messagesSent.slice().reverse()"
                     [ngClass]="{
                         localUserMessage: message.senderName === localPlayerUsername,
                         otherUserMessage: message.senderName !== localPlayerUsername && message.senderName !== gameMessageSenderName,

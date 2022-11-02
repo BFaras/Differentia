@@ -69,4 +69,6 @@
     font-size: 16px;
     word-break: break-word;
     overflow-y: auto;
+    display:flex;
+    flex-direction: column-reverse;
 }
