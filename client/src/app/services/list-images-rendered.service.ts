@@ -9,6 +9,14 @@ export class ListImagesRenderedService {
     private activatedEmitterUrlImageSingle: EventEmitter<{ index: number; url: string }> = new EventEmitter<{ index: number; url: string }>();
     private activatedEmitterRemoveImage: EventEmitter<number> = new EventEmitter<number>();
 
+    sendUrlImageBoth(url: string) {
+        this.activatedEmitterUrlImageBoth.emit(url);
+    }
+
+    sendUrlImageSingle(info: { index: number; url: string }) {
+        this.activatedEmitterUrlImageSingle.emit(info);
+    }
+
     sendIdImageToRemove(id: number) {
         this.activatedEmitterRemoveImage.emit(id);
     }
