@@ -13,7 +13,7 @@ import {
     DEFAULT_HEIGHT_CANVAS,
     DEFAULT_WIDTH_CANVAs,
     MODIFIED_IMAGE_POSITION,
-    ORIGINAL_IMAGE_POSITION
+    ORIGINAL_IMAGE_POSITION,
 } from '@common/const';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
@@ -98,7 +98,6 @@ export class PlayAreaComponent implements OnInit {
     configurePlayAreaSocket(): void {
         this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {
             const isLocalPlayer = differencesInfo.socketId == this.socketService.socket.id;
-            console.log(isLocalPlayer);
             this.pixelList = differencesInfo.differencePixelsNumbers;
 
             let isDifference: boolean = differencesInfo.isValidDifference;
@@ -107,7 +106,6 @@ export class PlayAreaComponent implements OnInit {
             this.mouseDetection.verifyGameFinished(isDifference, this.isMultiplayer, isLocalPlayer);
 
             if (isDifference) {
-                console.log('Appel de copycertain...');
                 this.drawService.context5 = this.blinkCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
                 this.drawService.context5.canvas.id = 'blink';
                 this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
