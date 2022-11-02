@@ -95,6 +95,7 @@ export class PlayAreaComponent implements OnInit {
         });
     }
 
+    // To test
     configurePlayAreaSocket(): void {
         this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {
             const isLocalPlayer = differencesInfo.socketId == this.socketService.socket.id;

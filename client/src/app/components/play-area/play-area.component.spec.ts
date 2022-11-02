@@ -72,7 +72,7 @@ describe('PlayAreaComponent', () => {
         expect(matDialogSpy).toBeTruthy();
     });
 
-    it('should detect mouseEvent  ', () => {
+    it('should detect mouseEvent', () => {
         mouseEvent = {
             offsetX: position.x,
             offsetY: position.y,
