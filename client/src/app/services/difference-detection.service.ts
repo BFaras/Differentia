@@ -20,13 +20,11 @@ export class DifferenceDetectionService {
         }
     }
 
-    //To test
     playSound(differenceIsValid: boolean, isLocalPlayer: boolean) {
         if (differenceIsValid) this.playAudio('../../assets/sounds/validSound.mp3');
         else if (isLocalPlayer) this.playAudio('../../assets/sounds/invalidSound.mp3');
     }
 
-    //To test
     clickMessage(differenceIsValid: boolean, isLocalPlayer: boolean) {
         if (differenceIsValid) {
             this.message = 'BON TRAVAIL';
@@ -41,7 +39,7 @@ export class DifferenceDetectionService {
         }
     }
 
-    //To correct test
+    //To correct test - Where is it?
     verifyGameFinished(differenceIsValid: boolean, isMultiplayer: boolean, isLocalPlayer: boolean) {
         if (differenceIsValid && isLocalPlayer) {
             this.socketService.send('Check if game is finished', isMultiplayer);

@@ -49,28 +49,26 @@ describe('MouseDetectionService', () => {
         expect(service.mousePosition).toEqual(position);
     });
 
-    // Pourquoi les tests sont en commentaires?
+    it('should call correct sound', () => {
+        const playSoundSpy = spyOn(service, 'playSound').and.callThrough();
+        service.playSound(true, true);
+        expect(playSoundSpy).toHaveBeenCalled();
+    });
 
-    // it('should call correct sound', () => {
-    //     const playSoundSpy = spyOn(service, 'playSound').and.callThrough();
-    //     service.playSound(true);
-    //     expect(playSoundSpy).toHaveBeenCalled();
-    // });
-
-    // it('should call incorrect sound', () => {
-    //     const playSoundSpy = spyOn(service, 'playSound').and.callThrough();
-    //     service.playSound(false);
-    //     expect(playSoundSpy).toHaveBeenCalled();
-    // });
+    it('should call incorrect sound', () => {
+        const playSoundSpy = spyOn(service, 'playSound').and.callThrough();
+        service.playSound(false, true);
+        expect(playSoundSpy).toHaveBeenCalled();
+    });
 
     it('should call clickMessage with good position', () => {
         service.clickMessage(true, true);
-        expect(service.message).toEqual('GOOD JOB');
+        expect(service.message).toEqual('BON TRAVAIL');
     });
 
     it('should call clickMessage with wrong position', () => {
         service.clickMessage(false, true);
-        expect(service.message).toEqual('ERROR');
+        expect(service.message).toEqual('ERREUR');
     });
 
     it('should end game at the right time', () => {
