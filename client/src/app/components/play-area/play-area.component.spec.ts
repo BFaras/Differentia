@@ -25,10 +25,12 @@ describe('PlayAreaComponent', () => {
     let position: Position = { x: 10, y: 20 };
     let differenceImage: HTMLImageElement[] = [new Image(640, 480)];
     let socketTestHelper: SocketTestHelper;
+    const testSocketId = 'HSTW263H';
     const differencesFoundInfo: GameplayDifferenceInformations = {
         differencePixelsNumbers: [],
         isValidDifference: true,
-        playerName: DEFAULT_USERNAME,
+        socketId: testSocketId,
+        playerUsername: DEFAULT_USERNAME,
     };
 
     beforeAll(async () => {
