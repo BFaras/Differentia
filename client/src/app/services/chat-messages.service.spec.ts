@@ -25,6 +25,8 @@ describe('ChatMessagesService', () => {
         messageReceivedFromObservable = message;
     };
     const testSocketId = 'HSTW263H';
+    const testMessageTime = '00:00:00';
+    const message = 'test message';
     const notValidClickInfo: GameplayDifferenceInformations = {
         differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
         isValidDifference: false,
@@ -36,6 +38,11 @@ describe('ChatMessagesService', () => {
         isValidDifference: true,
         socketId: testSocketId,
         playerUsername: DEFAULT_USERNAME,
+    };
+    const messageFromPlayer: ChatMessage = {
+        timeMessageSent: testMessageTime,
+        senderName: DEFAULT_USERNAME,
+        message: message,
     };
     let chatMessagesService: ChatMessagesService;
     let socketService: SocketClientService;
@@ -105,6 +112,15 @@ describe('ChatMessagesService', () => {
         socketTestHelper.peerSideEmit('Valid click', differencesFoundInfo);
         await setTimeout(() => {
             expect(messageReceivedFromObservable.message.includes(MESSAGE_DIFFERENCE_FOUND_MULTI)).toBeTruthy();
+        }, littleTimeout);
+    });
+
+    it('should send message to opponent when a chat event is sent in multiplayer game', async () => {
+        observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
+        chatMessagesService['isMultiplayerGame'] = true;
+        socketTestHelper.peerSideEmit('Send message to opponent', messageFromPlayer);
+        await setTimeout(() => {
+            expect(messageReceivedFromObservable.message.includes(messageFromPlayer.message)).toBeTruthy();
         }, littleTimeout);
     });
 

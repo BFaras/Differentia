@@ -65,6 +65,7 @@ describe('GameManagerService tests', () => {
                 differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
                 isValidDifference: false,
                 socketId: testUsername,
+                playerUsername: testUsername
             };
         });
     });
