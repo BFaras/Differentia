@@ -49,6 +49,8 @@ describe('MouseDetectionService', () => {
         expect(service.mousePosition).toEqual(position);
     });
 
+    // Pourquoi les tests sont en commentaires?
+
     // it('should call correct sound', () => {
     //     const playSoundSpy = spyOn(service, 'playSound').and.callThrough();
     //     service.playSound(true);
