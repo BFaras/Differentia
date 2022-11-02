@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DrawingHandlerService } from '@app/services/drawing-handler.service';
 import { Subject } from 'rxjs';
 import { CanvasDrawingComponent } from './canvas-drawing.component';
-describe('CanvasDrawingComponent', () => {
+fdescribe('CanvasDrawingComponent', () => {
   let component: CanvasDrawingComponent;
   let fixture: ComponentFixture<CanvasDrawingComponent>;
   let drawingHandlerServiceSpy:jasmine.SpyObj<DrawingHandlerService>

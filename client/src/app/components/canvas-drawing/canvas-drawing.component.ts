@@ -72,18 +72,12 @@ export class CanvasDrawingComponent implements  AfterViewInit {
 
     this.drawingHandlerService.mouseUpObservable.subscribe((e)=>{
         this.drawingHistoryService.saveCanvas(this.context!,this.indexOfCanvas);
-
     });
-
-
 
     this.drawingHandlerService.startObservingMousePath()
       .subscribe((mouseEvent:[MouseEvent,MouseEvent]) => {
-        if (this.context != null) {
-          this.context.lineWidth = this.pencilService.obtainPencilWidth(this.indexOfCanvas);
-          this.pencilService.getStateOfPencil(this.context!,this.indexOfCanvas);
-          this.context.lineCap = this.pencilService.assignRightLineCap(this.indexOfCanvas)!;
-        }
+
+        this.setPencilInformation();
 
         const canvasReact = this.canvas.getBoundingClientRect();
 
@@ -100,6 +94,16 @@ export class CanvasDrawingComponent implements  AfterViewInit {
         this.drawingHandlerService.drawOnCanvas(previousCoordinate, actualCoordinate,this.context!);
         
       });
+  }
+
+  setPencilInformation(){
+    if (this.context != null) {
+      this.context.lineWidth = this.pencilService.obtainPencilWidth(this.indexOfCanvas);
+      this.pencilService.getStateOfPencil(this.context!,this.indexOfCanvas);
+      this.context.lineCap = this.pencilService.assignRightLineCap(this.indexOfCanvas)!;
+      this.context.strokeStyle = this.pencilService.obtainPencilColor(this.indexOfCanvas);
+    }
+
   }
 
   prepareCanvasMerging(){

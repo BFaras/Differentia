@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 const ROUND_LINE_CAP:CanvasLineCap = "round";
-const SQUARE_LINE_CAP:CanvasLineCap = "square"
+const SQUARE_LINE_CAP:CanvasLineCap = "square";
 @Injectable({
   providedIn: 'root'
 })
@@ -25,7 +25,10 @@ export class PencilService {
 
   setColor(color:string,index:number):void{
     if (index == 0)
-      {this.leftCanvasColor = color}
+      {
+        console.log(color)
+        this.leftCanvasColor = color
+      }
     else if(index == 1)
       {this.RightCanvasColor = color};
 
