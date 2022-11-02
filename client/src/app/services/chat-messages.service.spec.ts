@@ -72,6 +72,10 @@ describe('ChatMessagesService', () => {
         expect(emptySubcriberCallbackTest).toHaveBeenCalled;
     });
 
+    it('should send message ', () => {
+    });
+
+
     it('should change the multiplayer game to true and set the adversary name on The adversary username is event', () => {
         const testAdversaryName = 'testName1234';
         socketTestHelper.peerSideEmit('The adversary username is', testAdversaryName);
