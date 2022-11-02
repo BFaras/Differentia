@@ -59,7 +59,9 @@ describe('ChatMessagesService', () => {
     });
 
     afterEach(() => {
+        if (observer) {
         observer.unsubscribe();
+        }
     });
 
     it('should create an observable which we can subscribe to on construction', () => {
@@ -71,10 +73,6 @@ describe('ChatMessagesService', () => {
         observer = chatMessagesService.messagesObservable.subscribe(emptySubcriberCallbackTest);
         expect(emptySubcriberCallbackTest).toHaveBeenCalled;
     });
-
-    it('should send message ', () => {
-    });
-
 
     it('should change the multiplayer game to true and set the adversary name on The adversary username is event', () => {
         const testAdversaryName = 'testName1234';
@@ -135,7 +133,7 @@ describe('ChatMessagesService', () => {
             isGameWon: true,
         };
         observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
-        socketTestHelper.peerSideEmit('End Game', endGameInfos);
+        socketTestHelper.peerSideEmit('End game', endGameInfos);
         await setTimeout(() => {
             expect(messageReceivedFromObservable.message.includes(ABANDON_MESSAGE)).toBeTruthy();
         }, littleTimeout);
