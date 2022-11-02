@@ -81,8 +81,8 @@ export class CanvasDrawingComponent implements  AfterViewInit {
       .subscribe((mouseEvent:[MouseEvent,MouseEvent]) => {
         if (this.context != null) {
           this.context.lineWidth = this.pencilService.obtainPencilWidth(this.indexOfCanvas);
-          this.pencilService.getStateOfPencil(this.context!,mouseEvent[0]);
-          this.context.lineCap = this.pencilService.assignRightLineCap(mouseEvent[0])!;
+          this.pencilService.getStateOfPencil(this.context!,this.indexOfCanvas);
+          this.context.lineCap = this.pencilService.assignRightLineCap(this.indexOfCanvas)!;
         }
 
         const canvasReact = this.canvas.getBoundingClientRect();

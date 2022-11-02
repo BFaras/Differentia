@@ -3,14 +3,14 @@ import { CanvasDataHandlerService } from '@app/services/canvas-data-handler.serv
 import { DrawingHistoryService } from '@app/services/drawing-history.service';
 import { KeyEventHandlerService } from '@app/services/key-event-handler.service';
 import { PencilService } from '@app/services/pencil.service';
-import { BIG, BLACK_COLOR, MEDIUM, SMALL, VERY_BIG, VERY_SMALL } from '@common/const';
+import { BIG, BLACK_COLOR, MEDIUM, SMALL, VERY_SMALL } from '@common/const';
 @Component({
   selector: 'app-tool-setting',
   templateUrl: './tool-setting.component.html',
   styleUrls: ['./tool-setting.component.scss']
 })
 export class ToolSettingComponent implements OnInit {
-  widths:number[] = [VERY_SMALL,SMALL,MEDIUM,BIG,VERY_BIG]
+  widths:number[] = [VERY_SMALL,SMALL,MEDIUM,BIG,15]
   color:string;
   @Input() indexTool:number;
   constructor(private pencilService:PencilService,
@@ -66,6 +66,7 @@ export class ToolSettingComponent implements OnInit {
   setOriginalSetting(){
     this.pencilService.setWidth(VERY_SMALL,this.indexTool);
     this.pencilService.setColor(BLACK_COLOR,this.indexTool);
+    this.pencilService.setStateOfPencilForRightCanvas('write',this.indexTool)
   }
 
   onChangeColor():void{
@@ -86,5 +87,14 @@ export class ToolSettingComponent implements OnInit {
 
   shareDataWithOtherCanvas(){
     this.canvasDataHandle.shareDataWithOtherCanvas(this.indexTool);
+  }
+
+  setPencilMode(clickEvent:Event){
+    const currentValue = (clickEvent.currentTarget as HTMLInputElement).value;
+    const currentId = (clickEvent.currentTarget as HTMLInputElement).id;
+    console.log(typeof currentValue)
+    console.log(typeof currentId)
+
+    this.pencilService.setStateOfPencilForRightCanvas(currentValue,parseInt(currentId))
   }
 }

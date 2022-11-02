@@ -1,3 +1,7 @@
+<div class = "mouse-mode-container">
+  <button mat-mini-fab id = "{{indexTool}}" value= "write"(click)="setPencilMode($event)">W</button>
+  <button mat-mini-fab id = "{{indexTool}}" value= "erase"(click)="setPencilMode($event)">E</button>
+</div>
 <div >
     <label>Couleur : </label>
     <input (change) = "onChangeColor()" [(ngModel)]="color" type="color" />

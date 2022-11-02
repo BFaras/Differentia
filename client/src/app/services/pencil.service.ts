@@ -10,6 +10,8 @@ export class PencilService {
   leftCanvasColor:string;
   RightCanvasWidth:number;
   RightCanvasColor:string;
+  pencilMode:string;
+  canvasId:number[] = [];
 
   obtainPencilColor(index:number):string{
     if(index == 0){
@@ -47,25 +49,31 @@ export class PencilService {
     }
   }
 
-  assignRightLineCap(mouseClick:MouseEvent){
-    console.log(mouseClick.which)
-    if(mouseClick.which === 1){
+  assignRightLineCap(indexCanvas:number){
+    if(this.pencilMode == "write" && indexCanvas == this.canvasId[indexCanvas]){
+      console.log('round')
       return ROUND_LINE_CAP
     }
 
-    if(mouseClick.which === 3){
+    else if(this.pencilMode == "erase" && indexCanvas == this.canvasId[indexCanvas] ){
+      console.log('square')
       return SQUARE_LINE_CAP
     }
     return
+    
   }
 
-  getStateOfPencil(context:CanvasRenderingContext2D,mouseClick:MouseEvent){
-    if(mouseClick.which === 3)
+  setStateOfPencilForRightCanvas(pencilMode:string,indexCanvas:number){
+    this.pencilMode = pencilMode;
+    this.canvasId[indexCanvas] = indexCanvas;
+  }
+
+  getStateOfPencil(context:CanvasRenderingContext2D,indexCanvas:number){
+    if(this.pencilMode == "erase" && indexCanvas == this.canvasId[indexCanvas] )
       context.globalCompositeOperation = "destination-out";
-    if (mouseClick.which === 1){
+    if (this.pencilMode == "write" && indexCanvas == this.canvasId[indexCanvas]){
       context.globalCompositeOperation = "source-over";
     }
-
   }
   
 
