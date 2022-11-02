@@ -8,10 +8,10 @@ import { SocketClientService } from './socket-client.service';
     providedIn: 'root',
 })
 export class DifferenceDetectionService {
-    constructor(public socketService: SocketClientService, private drawService: DrawService) {}
-    mousePosition: Position = { x: 0, y: 0 };
-    message: string = '';
-    audio: HTMLAudioElement;
+    constructor(private socketService: SocketClientService, private drawService: DrawService) {}
+    private mousePosition: Position = { x: 0, y: 0 };
+    private message: string = '';
+    private audio: HTMLAudioElement;
 
     mouseHitDetect(event: MouseEvent) {
         if (event.button === MouseButton.Left) {
@@ -48,7 +48,7 @@ export class DifferenceDetectionService {
         }
     }
 
-    drawMessage(message: string) {
+    private drawMessage(message: string) {
         this.drawService.drawWord(message, this.mousePosition, this.drawService.context1);
         this.drawService.drawWord(message, this.mousePosition, this.drawService.context2);
     }
