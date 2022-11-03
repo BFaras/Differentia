@@ -4,10 +4,14 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class MergeImageCanvasHandlerService {
-  canvas: HTMLCanvasElement[] = [];
-  context:CanvasRenderingContext2D[] | null= [];
-  imageDownloaded: HTMLImageElement[] = [new Image(),new Image()];
-  constructor() { }
+  canvas: HTMLCanvasElement[];
+  context:CanvasRenderingContext2D[] | null;
+  imageDownloaded: HTMLImageElement[];
+  constructor() {
+    this.canvas = []
+    this.context = [];
+    this.imageDownloaded = [new Image(),new Image()]
+   }
 
   setLeftContextAndCanvas(context:CanvasRenderingContext2D,canvas:HTMLCanvasElement ){
     this.context!.push(context);

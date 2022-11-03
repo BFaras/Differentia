@@ -2,16 +2,21 @@ import { Injectable } from '@angular/core';
 
 const ROUND_LINE_CAP:CanvasLineCap = "round";
 const SQUARE_LINE_CAP:CanvasLineCap = "square";
+const WRITE_MODE:string = "write";
+const ERASE_MODE:string = "erase";
 @Injectable({
   providedIn: 'root'
 })
 export class PencilService {
-  leftCanvasWidth:number;
-  leftCanvasColor:string;
-  RightCanvasWidth:number;
-  RightCanvasColor:string;
-  pencilMode:string;
-  canvasId:number[] = [];
+  private leftCanvasWidth:number;
+  private leftCanvasColor:string;
+  private RightCanvasWidth:number;
+  private RightCanvasColor:string;
+  private pencilMode:string[];
+
+  constructor() {
+    this.pencilMode = [];
+   }
 
   obtainPencilColor(index:number):string{
     if(index == 0){
@@ -26,7 +31,6 @@ export class PencilService {
   setColor(color:string,index:number):void{
     if (index == 0)
       {
-        console.log(color)
         this.leftCanvasColor = color
       }
     else if(index == 1)
@@ -53,13 +57,11 @@ export class PencilService {
   }
 
   assignRightLineCap(indexCanvas:number){
-    if(this.pencilMode == "write" && indexCanvas == this.canvasId[indexCanvas]){
-      console.log('round')
+    if(this.pencilMode[indexCanvas] == WRITE_MODE){
       return ROUND_LINE_CAP
     }
 
-    else if(this.pencilMode == "erase" && indexCanvas == this.canvasId[indexCanvas] ){
-      console.log('square')
+    else if(this.pencilMode[indexCanvas] == ERASE_MODE){
       return SQUARE_LINE_CAP
     }
     return
@@ -67,18 +69,15 @@ export class PencilService {
   }
 
   setStateOfPencilForRightCanvas(pencilMode:string,indexCanvas:number){
-    this.pencilMode = pencilMode;
-    this.canvasId[indexCanvas] = indexCanvas;
+    this.pencilMode[indexCanvas] = pencilMode;
   }
 
   getStateOfPencil(context:CanvasRenderingContext2D,indexCanvas:number){
-    if(this.pencilMode == "erase" && indexCanvas == this.canvasId[indexCanvas] )
+    if(this.pencilMode[indexCanvas] == ERASE_MODE)
       context.globalCompositeOperation = "destination-out";
-    if (this.pencilMode == "write" && indexCanvas == this.canvasId[indexCanvas]){
+    if (this.pencilMode[indexCanvas] == WRITE_MODE){
       context.globalCompositeOperation = "source-over";
     }
   }
-  
 
-  constructor() { }
 }

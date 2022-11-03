@@ -1,20 +1,38 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CanvasDataHandlerService } from '@app/services/canvas-data-handler.service';
 import { DrawingHandlerService } from '@app/services/drawing-handler.service';
+import { DrawingHistoryService } from '@app/services/drawing-history.service';
+import { KeyEventHandlerService } from '@app/services/key-event-handler.service';
+import { MergeImageCanvasHandlerService } from '@app/services/merge-image-canvas-handler.service';
+import { PencilService } from '@app/services/pencil.service';
 import { Subject } from 'rxjs';
 import { CanvasDrawingComponent } from './canvas-drawing.component';
 fdescribe('CanvasDrawingComponent', () => {
   let component: CanvasDrawingComponent;
   let fixture: ComponentFixture<CanvasDrawingComponent>;
+  let canvasDataHandlerService:jasmine.SpyObj<CanvasDataHandlerService>
+  let keyEventHandlerService:jasmine.SpyObj<KeyEventHandlerService>
   let drawingHandlerServiceSpy:jasmine.SpyObj<DrawingHandlerService>
-  let mockEmitterStartObservingMousePath: Subject<[MouseEvent,MouseEvent]>
+  let drawingHistoryServiceSpy:jasmine.SpyObj<DrawingHistoryService>
+  let pencilServiceSpy:jasmine.SpyObj<PencilService>
+  let mergeImageCanvasServiceSpy:jasmine.SpyObj<MergeImageCanvasHandlerService>
+  let mockEmitterStartObservingMousePath: Subject<[MouseEvent,MouseEvent]>;
+  let mockEmitterMouseDown: Subject<MouseEvent>
+  let mockEmitterMouseUp: Subject<MouseEvent>
 
 
   beforeEach(async () => {
     mockEmitterStartObservingMousePath = new Subject();
+    mockEmitterMouseDown = new Subject();
+    mockEmitterMouseUp = new Subject();
     drawingHandlerServiceSpy = jasmine.createSpyObj('DrawingHandlerService',[
-    'startObservingMousePath','setCanvas','setAllObservables','getCoordinateX','getCoordinateY','drawOnCanvas'])
-    drawingHandlerServiceSpy.startObservingMousePath.and.returnValue(mockEmitterStartObservingMousePath.asObservable());
-    drawingHandlerServiceSpy.setAllObservables.and.returnValue()
+    'startObservingMousePath','getMouseDownObservable','getMouseUpObservable','setCanvas','setAllObservables','getCoordinateX','getCoordinateY','drawOnCanvas'])
+    drawingHandlerServiceSpy.startObservingMousePath.and.returnValue(mockEmitterStartObservingMousePath);
+    drawingHandlerServiceSpy.getMouseDownObservable.and.returnValue(mockEmitterMouseDown);
+    drawingHandlerServiceSpy.getMouseUpObservable.and.returnValue(mockEmitterMouseUp);
+    drawingHandlerServiceSpy.setAllObservables.and.returnValue();
+    
+
     await TestBed.configureTestingModule({
       declarations: [ CanvasDrawingComponent ],
       providers:[{

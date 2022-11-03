@@ -4,14 +4,18 @@ import { DrawingHistoryService } from '@app/services/drawing-history.service';
 import { KeyEventHandlerService } from '@app/services/key-event-handler.service';
 import { PencilService } from '@app/services/pencil.service';
 import { BIG, BLACK_COLOR, MEDIUM, SMALL, VERY_SMALL } from '@common/const';
+
+const WRITE_MODE:string = "write";
+const CONTROL_Z_SHORTCUT:string = 'document:keyup.control.z';
+const CONTROL_SHIFT_Z_SHORTCUT:string = 'document:keyup.control.shift.z';
 @Component({
   selector: 'app-tool-setting',
   templateUrl: './tool-setting.component.html',
   styleUrls: ['./tool-setting.component.scss']
 })
 export class ToolSettingComponent implements OnInit {
-  widths:number[] = [VERY_SMALL,SMALL,MEDIUM,BIG,15]
-  color:string;
+  readonly widths:number[] = [VERY_SMALL,SMALL,MEDIUM,BIG,15]
+  public color:string;
   @Input() indexTool:number;
   constructor(private pencilService:PencilService,
     private drawingHistoryService: DrawingHistoryService,
@@ -25,18 +29,18 @@ export class ToolSettingComponent implements OnInit {
     this.setOriginalSetting()
   }
 
-  @HostListener('document:keyup.control.z', ['$event'])
-  handleKeyboardToCancelDrawnLine(event: KeyboardEvent) { 
+  @HostListener(CONTROL_Z_SHORTCUT, ['$event'])
+  handleKeyboardToCancelDrawnLine() { 
     this.keyEventHandlerService.deleteDrawnLineShortCut()
   }
 
-  @HostListener('document:keyup.control.shift.z', ['$event'])
-  handleKeyboardToCancelDeletedDrawnLine(event: KeyboardEvent) { 
+  @HostListener(CONTROL_SHIFT_Z_SHORTCUT, ['$event'])
+  handleKeyboardToCancelDeletedDrawnLine() { 
     this.keyEventHandlerService.cancelDeleteDrawnLineShortCut()
   }
 
   checkIfThereAreSavedDrawnLines(){
-    if (this.drawingHistoryService.cancelDrawingHistory[this.indexTool].length != 0){
+    if (this.drawingHistoryService.getCancelDrawingHistory()[this.indexTool].length != 0){
       return false
     } else{
       return true;
@@ -44,7 +48,7 @@ export class ToolSettingComponent implements OnInit {
   }
 
   checkIfThereAreSavedDeletedDrawnLines(){
-    if (this.drawingHistoryService.undoCancelDrawingHistory[this.indexTool].length != 0){
+    if (this.drawingHistoryService.getUndoCancelDrawingHistory()[this.indexTool].length != 0){
       return false
     } else{
       return true;
@@ -66,7 +70,7 @@ export class ToolSettingComponent implements OnInit {
   setOriginalSetting(){
     this.pencilService.setWidth(VERY_SMALL,this.indexTool);
     this.pencilService.setColor(BLACK_COLOR,this.indexTool);
-    this.pencilService.setStateOfPencilForRightCanvas('write',this.indexTool)
+    this.pencilService.setStateOfPencilForRightCanvas(WRITE_MODE,this.indexTool)
   }
 
   onChangeColor():void{
@@ -92,8 +96,6 @@ export class ToolSettingComponent implements OnInit {
   setPencilMode(clickEvent:Event){
     const currentValue = (clickEvent.currentTarget as HTMLInputElement).value;
     const currentId = (clickEvent.currentTarget as HTMLInputElement).id;
-    console.log(typeof currentValue)
-    console.log(typeof currentId)
 
     this.pencilService.setStateOfPencilForRightCanvas(currentValue,parseInt(currentId))
   }

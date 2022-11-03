@@ -2,10 +2,8 @@ import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular
 import { Coordinate } from '@app/interfaces/coordinate';
 import { CanvasDataHandlerService } from '@app/services/canvas-data-handler.service';
 import { DrawingHandlerService } from '@app/services/drawing-handler.service';
-import { DrawingHistoryService } from '@app/services/drawing-history.service';
 import { KeyEventHandlerService } from '@app/services/key-event-handler.service';
 import { MergeImageCanvasHandlerService } from '@app/services/merge-image-canvas-handler.service';
-import { PencilService } from '@app/services/pencil.service';
 import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
 @Component({
   selector: 'app-canvas-drawing',
@@ -20,8 +18,6 @@ export class CanvasDrawingComponent implements  AfterViewInit {
 
   constructor(private drawingHandlerService:DrawingHandlerService,
     private mergeImageCanvasService:MergeImageCanvasHandlerService,
-    private pencilService:PencilService,
-    private drawingHistoryService:DrawingHistoryService,
     private canvasDataHandlerService:CanvasDataHandlerService,
     private keyEventHandlerService:KeyEventHandlerService) { }
 
@@ -40,7 +36,7 @@ export class CanvasDrawingComponent implements  AfterViewInit {
   }
 
   saveCanvasForShortcut(){
-    this.keyEventHandlerService.indexImageOnDrawing = this.indexOfCanvas;
+    this.keyEventHandlerService.setIndexImageOnDrawing(this.indexOfCanvas);
   }
 
   addContextToCanvasData(){
@@ -52,32 +48,18 @@ export class CanvasDrawingComponent implements  AfterViewInit {
   }
 
   useCanvasFocusedOn(){
-    this.drawingHandlerService.setCanvas(this.canvas);
+    this.drawingHandlerService.setContext(this.context!);
     this.drawingHandlerService.setAllObservables();
   }
 
-  isCanvasNotBlank() {
-    return this.context!.getImageData(0, 0, this.canvas.width, this.canvas.height).data
-      .some(channel => channel !== 0);
-  }
-
   prepareCanvasDrawing():void {
-
-    this.drawingHandlerService.mouseDownObservable.subscribe((e)=>{
-        this.drawingHistoryService.saveCanvas(this.context!,this.indexOfCanvas);
-      if(this.drawingHistoryService.undoCancelDrawingHistory[this.indexOfCanvas].length != 0){
-        this.drawingHistoryService.undoCancelDrawingHistory[this.indexOfCanvas] = [];
-      }
-  });
-
-    this.drawingHandlerService.mouseUpObservable.subscribe((e)=>{
-        this.drawingHistoryService.saveCanvas(this.context!,this.indexOfCanvas);
-    });
+    
+    this.saveOnDrawing()
 
     this.drawingHandlerService.startObservingMousePath()
       .subscribe((mouseEvent:[MouseEvent,MouseEvent]) => {
 
-        this.setPencilInformation();
+        this.drawingHandlerService.setPencilInformation(this.indexOfCanvas);
 
         const canvasReact = this.canvas.getBoundingClientRect();
 
@@ -91,19 +73,14 @@ export class CanvasDrawingComponent implements  AfterViewInit {
           y: this.drawingHandlerService.getCoordinateY(mouseEvent[1],canvasReact),
         };
         
-        this.drawingHandlerService.drawOnCanvas(previousCoordinate, actualCoordinate,this.context!);
+        this.drawingHandlerService.drawOnCanvas(previousCoordinate, actualCoordinate);
         
       });
   }
 
-  setPencilInformation(){
-    if (this.context != null) {
-      this.context.lineWidth = this.pencilService.obtainPencilWidth(this.indexOfCanvas);
-      this.pencilService.getStateOfPencil(this.context!,this.indexOfCanvas);
-      this.context.lineCap = this.pencilService.assignRightLineCap(this.indexOfCanvas)!;
-      this.context.strokeStyle = this.pencilService.obtainPencilColor(this.indexOfCanvas);
-    }
-
+  saveOnDrawing(){
+    this.drawingHandlerService.saveOnMouseDown(this.indexOfCanvas)
+    this.drawingHandlerService.saveOnMouseUp(this.indexOfCanvas)
   }
 
   prepareCanvasMerging(){

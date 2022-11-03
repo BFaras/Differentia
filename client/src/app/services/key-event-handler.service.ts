@@ -5,8 +5,12 @@ import { DrawingHistoryService } from './drawing-history.service';
   providedIn: 'root'
 })
 export class KeyEventHandlerService {
-  indexImageOnDrawing:number;
+  private indexImageOnDrawing:number;
   constructor(private drawingHistoryService:DrawingHistoryService) { }
+
+  setIndexImageOnDrawing(indexOfCanvas:number){
+    this.indexImageOnDrawing = indexOfCanvas;
+  }
 
   deleteDrawnLineShortCut(){
     this.drawingHistoryService.cancelCanvas(this.indexImageOnDrawing);
