@@ -14,7 +14,7 @@ describe('PlayAreaComponent', () => {
     let component: PlayAreaComponent;
     let fixture: ComponentFixture<PlayAreaComponent>;
     let socketServiceSpy: SpyObj<SocketClientService>;
-    let mouseServiceSpy: SpyObj<DifferenceDetectionService>;
+    let differenceServiceSpy: SpyObj<DifferenceDetectionService>;
     let drawServiceSpy: SpyObj<DrawService>;
     let matDialogSpy: SpyObj<MatDialog>;
     let imageGeneratorSpy: SpyObj<ImageGeneratorService>;
@@ -26,7 +26,7 @@ describe('PlayAreaComponent', () => {
 
     beforeAll(async () => {
         socketServiceSpy = jasmine.createSpyObj('SocketClientService', ['connect', 'on', 'send']);
-        mouseServiceSpy = jasmine.createSpyObj('MouseDetectionService', ['mouseHitDetect', 'clickMessage']);
+        differenceServiceSpy = jasmine.createSpyObj('MouseDetectionService', ['mouseHitDetect', 'clickMessage']);
         matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
         drawServiceSpy = jasmine.createSpyObj('DrawService', ['context1', 'context2', 'context3', 'drawWord']);
         imageGeneratorSpy = jasmine.createSpyObj('ImageGeneratorService', ['copyCertainPixelsFromOneImageToACanvas']);
@@ -39,7 +39,7 @@ describe('PlayAreaComponent', () => {
             providers: [
                 { provide: SocketClientService, useValue: socketServiceSpy },
                 { provide: DrawService, useValue: drawServiceSpy },
-                { provide: DifferenceDetectionService, useValue: mouseServiceSpy },
+                { provide: DifferenceDetectionService, useValue: differenceServiceSpy },
                 { provide: ImageToImageDifferenceService, useValue: imageDifferenceSpy },
                 { provide: MatDialog, useValue: matDialogSpy },
                 { provide: ImageGeneratorService, useValue: imageGeneratorSpy },
@@ -79,6 +79,8 @@ describe('PlayAreaComponent', () => {
             button: 0,
         } as MouseEvent;
         component.detectDifference(mouseEvent);
-        expect(mouseServiceSpy['mouseHitDetect']).toHaveBeenCalled();
+        expect(differenceServiceSpy['mouseHitDetect']).toHaveBeenCalled();
     });
+
+    it('sould verify if game is finished', () => {});
 });

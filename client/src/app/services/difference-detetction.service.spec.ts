@@ -74,4 +74,20 @@ describe('MouseDetectionService', () => {
     it('should end game at the right time', () => {
         expect(false).toBeTrue(); // fait pas passer par defaut
     });
+
+    it('should verify if game in multiplayer is finished'),
+        () => {
+            const multiplayer = true;
+            const gameVerifiedSpy = spyOn(service, 'verifyGameFinished').and.callThrough();
+            service.verifyGameFinished(true, multiplayer, false);
+            expect(gameVerifiedSpy).toHaveBeenCalled();
+        };
+
+    it('should verify if game in solo is finished'),
+        () => {
+            const multiplayer = false;
+            const gameVerifiedSpy = spyOn(service, 'verifyGameFinished').and.callThrough();
+            service.verifyGameFinished(false, multiplayer, true);
+            expect(gameVerifiedSpy).toHaveBeenCalled();
+        };
 });
