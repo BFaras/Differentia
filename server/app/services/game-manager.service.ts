@@ -10,9 +10,9 @@ import { MouseHandlerService } from './mouse-handler.service';
 
 @Service()
 export class GameManagerService {
-    readonly timeIntervals: Map<string, NodeJS.Timer> = new Map<string, NodeJS.Timer>();
-    readonly chronometerServices: Map<string, ChronometerService> = new Map<string, ChronometerService>();
-    readonly mouseHandlerServices: Map<string, MouseHandlerService> = new Map<string, MouseHandlerService>();
+    private readonly timeIntervals: Map<string, NodeJS.Timer> = new Map<string, NodeJS.Timer>();
+    private readonly chronometerServices: Map<string, ChronometerService> = new Map<string, ChronometerService>();
+    private readonly mouseHandlerServices: Map<string, MouseHandlerService> = new Map<string, MouseHandlerService>();
     private gamesService = Container.get(GamesService);
 
     constructor(private sio: io.Server) {}
@@ -46,7 +46,7 @@ export class GameManagerService {
         this.sio.to(gameRoomName).emit('The game is', gameName);
     }
 
-    async endGame(socket: io.Socket) {
+    endGame(socket: io.Socket) {
         const gameRoomName: string = this.findSocketGameRoomName(socket);
         this.endChrono(socket);
         this.chronometerServices.delete(gameRoomName);
