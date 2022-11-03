@@ -4,7 +4,7 @@ import { Socket } from 'socket.io-client';
 import { JoinGameService } from './join-game.service';
 import { SocketClientService } from './socket-client.service';
 
-oidescribe('JoinGameService', () => {
+describe('JoinGameService', () => {
     const testGameName = 'Test Game';
     let service: JoinGameService;
     let socketService: SocketClientService;
