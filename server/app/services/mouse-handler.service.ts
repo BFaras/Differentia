@@ -8,10 +8,10 @@ import { GamesService } from './local.games.service';
 
 @Service()
 export class MouseHandlerService {
-    differencesHashmap: Map<number, number>;
-    differencesList: number[][];
-    differencesNbFoundByPlayer: Map<string, number[]>;
-    nbDifferencesTotal: number;
+    private differencesHashmap: Map<number, number>;
+    private differencesList: number[][];
+    private differencesNbFoundByPlayer: Map<string, number[]>;
+    private nbDifferencesTotal: number;
 
     constructor() {
         this.differencesHashmap = new Map<number, number>();
