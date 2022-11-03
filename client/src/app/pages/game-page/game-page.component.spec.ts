@@ -18,7 +18,7 @@ class SocketClientServiceMock extends SocketClientService {
     override connect() {}
 }
 
-describe('GamePageComponent', () => {
+fdescribe('GamePageComponent', () => {
     let component: GamePageComponent;
     let fixture: ComponentFixture<GamePageComponent>;
     let socketServiceMock: SocketClientServiceMock;
@@ -39,8 +39,6 @@ describe('GamePageComponent', () => {
             images: [],
             differencesList: [],
         };
-        // gamesMock = [testGame];
-        // gamesMock = new Subject();
 
         timeServiceSpy = jasmine.createSpyObj('TimeService', ['classicMode', 'changeTime']);
         communicationServiceSpy = jasmine.createSpyObj('CommunicationService', ['getGames']);
@@ -67,7 +65,7 @@ describe('GamePageComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    describe('Receiving events', () => {
+    fdescribe('Receiving events', () => {
         it('should handle classic mode event and call the classicMode method of the time service', () => {
             socketHelper.peerSideEmit('classic mode');
             expect(component['timeService'].classicMode).toHaveBeenCalled();
@@ -82,6 +80,12 @@ describe('GamePageComponent', () => {
             expect(component['timeService'].changeTime).toHaveBeenCalledWith(testTime);
         });
 
+        it("should handle 'show the username' event and set the username value to the received username", () => {
+            const username = 'username';
+            socketHelper.peerSideEmit('show the username', username);
+            expect(component.usernames[0]).toEqual(username);
+        });
+
         it("should handle 'The game is' event and set the value of its attribute nbDifferences to the value of the number of differences of the game wanted", () => {
             const nameOfGame = 'test game';
             socketHelper.peerSideEmit('The game is', nameOfGame);
@@ -91,12 +95,11 @@ describe('GamePageComponent', () => {
 
         // Ce test est inutile comme expliqué aux lignes 54 et 55 du fichier game-page.component.ts, cependant il a été fait car sinon nous n'atteignons pas
         // une couverture de 100%
-        it("should handle 'The game is' event and set the value of its attribute nbDifferences to -1 when the game wanted doesn't exists", () => {
+        it("should handle 'The game is' event and set the value of its attribute nbDifferences to undefined when the game wanted doesn't exists", () => {
             const nameOfGame = 'unvalid game';
-            const errorNumberOfDifferences = -1;
             socketHelper.peerSideEmit('The game is', nameOfGame);
             expect(component['communicationService'].getGames).toHaveBeenCalled();
-            expect(component.nbDifferences).toEqual(errorNumberOfDifferences);
+            expect(component.nbDifferences).toBeUndefined();
         });
     });
 
