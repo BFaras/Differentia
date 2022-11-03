@@ -4,9 +4,9 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class MergeImageCanvasHandlerService {
-  canvas: HTMLCanvasElement[];
-  context:CanvasRenderingContext2D[] | null;
-  imageDownloaded: HTMLImageElement[];
+  private canvas: HTMLCanvasElement[];
+  private context:CanvasRenderingContext2D[] | null;
+  private imageDownloaded: HTMLImageElement[];
   constructor() {
     this.canvas = []
     this.context = [];
@@ -26,7 +26,6 @@ export class MergeImageCanvasHandlerService {
   }
 
   async initializeImage(url : string, index:number){
-    console.log(this.imageDownloaded[index]);
     this.imageDownloaded[index].src = url;
     await this.waitForImageToLoad(this.imageDownloaded[index])
   }
@@ -46,7 +45,6 @@ export class MergeImageCanvasHandlerService {
 
 
   obtainUrlForMerged(index:number){
-    console.log(this.canvas[index].toDataURL())
     return this.canvas[index].toDataURL();
   }
 
