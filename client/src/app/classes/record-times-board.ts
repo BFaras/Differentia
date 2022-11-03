@@ -16,16 +16,20 @@ export class RecordTimesBoard {
     public recordTimesVersus: RecordTime[];
 
     constructor(soloRecord: RecordTime[], versusRecords: RecordTime[]) {
-        if (soloRecord.length == 0) {
+        if (this.isArrayEmpty(soloRecord)) {
             this.recordTimesSolo = [...RecordTimesBoard.DEFAULT_SOLO_RECORD_TIMES];
         } else {
             this.recordTimesSolo = soloRecord;
         }
 
-        if (versusRecords.length == 0) {
+        if (this.isArrayEmpty(versusRecords)) {
             this.recordTimesVersus = [...RecordTimesBoard.DEFAULT_VERSUS_RECORD_TIMES];
         } else {
             this.recordTimesVersus = versusRecords;
         }
+    }
+
+    private isArrayEmpty(array: RecordTime[]) {
+        return array.length == 0;
     }
 }

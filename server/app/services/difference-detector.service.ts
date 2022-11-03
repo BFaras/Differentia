@@ -2,8 +2,10 @@ import {
     ALPHA_POS,
     BLUE_POS,
     DEFAULT_DIFFERENCE_POSITION,
+    DEFAULT_NB_OF_DIFFERENCES,
     DOWN,
     EMPTY_ARRAY_LENGTH,
+    EMPTY_OFFSET_NB,
     FIRST_ARRAY_POSITION,
     GREEN_POS,
     MINIMUM_PIXEL_POSITION,
@@ -15,9 +17,6 @@ import {
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import Container, { Service } from 'typedi';
 import { HashmapConverterService } from './hashmap-converter.service';
-
-const DEFAULT_NB_OF_DIFFERENCES = 0;
-const EMPTY_OFFSET_NB = 0;
 
 @Service()
 export class DifferenceDetectorService {
