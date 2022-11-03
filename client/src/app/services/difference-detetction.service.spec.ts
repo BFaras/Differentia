@@ -71,10 +71,6 @@ describe('MouseDetectionService', () => {
         expect(service['message']).toEqual('ERROR');
     });
 
-    it('should end game at the right time', () => {
-        expect(false).toBeTrue(); // fait pas passer par defaut
-    });
-
     it('should verify if game in multiplayer is finished'),
         () => {
             const multiplayer = true;
