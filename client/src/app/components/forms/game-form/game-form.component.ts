@@ -72,6 +72,10 @@ export class GameFormComponent {
                 this.isPlayerWaiting = response;
             });
 
+            this.socketService.on(`${this.gameForm.gameName} nobody is waiting no more`, () => {
+                this.isPlayerWaiting = false;
+            });
+
             this.socketService.on('reconnect', () => {
                 this.ngOnInit();
             });

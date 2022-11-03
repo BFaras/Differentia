@@ -92,7 +92,6 @@ describe('GameToServerService', () => {
         service.setOriginalUrlUploaded(mockIndex, mockImage);
         service.setNumberDifference(mockNumberDiff);
         service.setNumberDifference(mockNumberDiff);
-        console.log(elmentRef.nativeElement.value);
 
         service.addGame(elmentRef);
         // mockEmitterAddGame.next(200)
