@@ -14,7 +14,7 @@ export class GameManagerService {
     private readonly chronometerServices: Map<string, ChronometerService> = new Map<string, ChronometerService>();
     private readonly mouseHandlerServices: Map<string, MouseHandlerService> = new Map<string, MouseHandlerService>();
     private gamesService = Container.get(GamesService);
-    private gamesRooms: Map<string, string[]> = new Map<string, string[]>();
+    public gamesRooms: Map<string, string[]> = new Map<string, string[]>();
 
     constructor(private sio: io.Server) {}
 
