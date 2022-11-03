@@ -32,6 +32,7 @@ export class ChatMessagesService {
         });
     }
 
+    //Tested
     sendMessage(senderName: string, message: string) {
         this.socketService.send('playerMessage', this.generateChatMessage(senderName, message));
     }

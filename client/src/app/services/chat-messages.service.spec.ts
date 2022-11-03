@@ -51,7 +51,8 @@ describe('ChatMessagesService', () => {
     let messageReceivedFromObservable: ChatMessage;
 
     beforeAll(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+        });
         socketService = TestBed.inject(SocketClientService);
         chatMessagesService = TestBed.inject(ChatMessagesService);
         socketTestHelper = new SocketTestHelper();
@@ -62,6 +63,12 @@ describe('ChatMessagesService', () => {
         if (observer) {
         observer.unsubscribe();
         }
+    });
+
+    it('should call sendMessage', () => {
+        const sendMessageSpy = spyOn(socketService, 'send').and.callThrough();
+        chatMessagesService.sendMessage(DEFAULT_USERNAME, message);
+        expect(sendMessageSpy).toHaveBeenCalled();
     });
 
     it('should create an observable which we can subscribe to on construction', () => {
