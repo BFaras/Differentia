@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { GameToServerService } from '@app/services/game-to-server.service';
 import { ListImagesRenderedService } from '@app/services/list-images-rendered.service';
@@ -12,7 +11,6 @@ import SpyObj = jasmine.SpyObj;
 describe('GameCreationPageComponent', () => {
     let component: GameCreationPageComponent;
     let fixture: ComponentFixture<GameCreationPageComponent>;
-    let router: Router;
     let dialogRefSpyObj = jasmine.createSpyObj({ close: null });
     let dialogSpy: jasmine.Spy;
     dialogRefSpyObj.componentInstance = { body: '' };
@@ -59,7 +57,6 @@ describe('GameCreationPageComponent', () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(GameCreationPageComponent);
-        router = TestBed.inject(Router);
         dialogSpy = spyOn(TestBed.inject(MatDialog), 'open').and.returnValue(dialogRefSpyObj);
         component = fixture.componentInstance;
         fixture.detectChanges();
