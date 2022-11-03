@@ -40,7 +40,7 @@ export class ToolSettingComponent implements OnInit {
   }
 
   checkIfThereAreSavedDrawnLines(){
-    console.log(this.indexTool)
+
     if (this.drawingHistoryService.getCancelDrawingHistory()[this.indexTool].length != 0){
       return false
     } else{

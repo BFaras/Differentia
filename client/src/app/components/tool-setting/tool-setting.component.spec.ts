@@ -4,10 +4,10 @@ import { CanvasDataHandlerService } from '@app/services/canvas-data-handler.serv
 import { DrawingHistoryService } from '@app/services/drawing-history.service';
 import { KeyEventHandlerService } from '@app/services/key-event-handler.service';
 import { PencilService } from '@app/services/pencil.service';
-import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
+import { IMAGE_HEIGHT, IMAGE_WIDTH, VERY_BIG } from '@common/const';
 import { ToolSettingComponent } from './tool-setting.component';
 
-fdescribe('ToolSettingComponent', () => {
+describe('ToolSettingComponent', () => {
   let component: ToolSettingComponent;
   let fixture: ComponentFixture<ToolSettingComponent>;
   let canvasDataHandlerServiceSpy:jasmine.SpyObj<CanvasDataHandlerService>
@@ -85,10 +85,34 @@ fdescribe('ToolSettingComponent', () => {
     expect(drawingHistoryServiceSpy.cancelDeletedCanvas).toHaveBeenCalled()
   });
 
+  it('should verify changeColor and change width', () => {
+    component.color = "#fff";
+    component.onChangeWidth(VERY_BIG);
+    component.onChangeColor();
+    expect(pencilServiceSpy.setColor).toHaveBeenCalled();
+    expect(pencilServiceSpy.setWidth).toHaveBeenCalled();
+  });
+
+  it('should verify interaction between canvas and tools setting',()=>{
+    component.clearCanvas();
+    component.copyOtherCanvas();
+    component.shareDataWithOtherCanvas();
+
+    expect(canvasDataHandlerServiceSpy.copyOtherCanvas).toHaveBeenCalled();
+    expect(canvasDataHandlerServiceSpy.shareDataWithOtherCanvas).toHaveBeenCalled()
+    expect(canvasDataHandlerServiceSpy.clearCanvas).toHaveBeenCalled()
+  })
+
+  it('should verify clickEvent set pencil mode',()=>{
+    const clickEvent = new Event('click'); 
+    Object.defineProperty(clickEvent, 'currentTarget', {value: 'write'});
+    component.setPencilMode(clickEvent)
+
+    expect(pencilServiceSpy.setStateOfPencilForRightCanvas).toHaveBeenCalled();
+  })
 
 
-
-
+  
 
 
 });
