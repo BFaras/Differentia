@@ -60,7 +60,7 @@ describe('ChatSectionComponent', () => {
         expect(chatSectionComponent.messagesSent).not.toEqual([testMessage, testMessage]);
     });
 
-    it('should ngOnDestroy() call resetresetIsMultiplayer() of ChatMessageService', () => {
+    it('should ngOnDestroy() call resetIsMultiplayer() of ChatMessageService', () => {
         const spy = spyOn(chatMessagesService, 'resetIsMultiplayer');
         chatSectionComponent.ngOnDestroy();
         expect(spy).toHaveBeenCalled;
@@ -69,5 +69,22 @@ describe('ChatSectionComponent', () => {
     it('should handle a show the username event and change the local player username', () => {
         socketTestHelper.peerSideEmit('show the username', testUsername);
         expect(chatSectionComponent.localPlayerUsername).toEqual(testUsername);
+    });
+
+    it('should change the multiplayer game to true', () => {
+        const testAdversaryName = 'testName1234';
+        socketTestHelper.peerSideEmit('The adversary username is', testAdversaryName);
+        expect(chatSectionComponent.isMultiplayerGame).toBeTruthy();
+    });
+
+    it('should sendMessage() of ChatSectionComponent call sendMessage() of ChatMessageService', () => {
+        const sendMessageSpy = spyOn(chatMessagesService, 'sendMessage');
+        const scrollSpy = spyOn(chatSectionComponent, <any>'scrollToBottom');
+        chatSectionComponent.playerMsg = { nativeElement: {value: 'Hi'}};
+        chatSectionComponent.sendMessage();
+        
+        expect(sendMessageSpy).toHaveBeenCalled;
+        expect(chatSectionComponent.playerMsg.nativeElement.value).toEqual('');
+        expect(scrollSpy).toHaveBeenCalled;
     });
 });
