@@ -32,7 +32,7 @@ describe('MouseDetectionService', () => {
         socketSpy.connect();
         drawServiceSpy.drawWord('hello', position, drawServiceSpy.context1);
         service = TestBed.inject(DifferenceDetectionService);
-        service.mousePosition = position;
+        service['mousePosition'] = position;
     });
 
     it('should be created', () => {
@@ -46,7 +46,7 @@ describe('MouseDetectionService', () => {
             button: 0,
         } as MouseEvent;
         service.mouseHitDetect(mouseEvent);
-        expect(service.mousePosition).toEqual(position);
+        expect(service['mousePosition']).toEqual(position);
     });
 
     it('should call correct sound', () => {
@@ -63,12 +63,12 @@ describe('MouseDetectionService', () => {
 
     it('should call clickMessage with good position', () => {
         service.clickMessage(true, true);
-        expect(service.message).toEqual('BON TRAVAIL');
+        expect(service['message']).toEqual('GOOD JOB');
     });
 
     it('should call clickMessage with wrong position', () => {
         service.clickMessage(false, true);
-        expect(service.message).toEqual('ERREUR');
+        expect(service['message']).toEqual('ERROR');
     });
 
     it('should end game at the right time', () => {

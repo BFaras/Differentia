@@ -15,7 +15,7 @@ export class GameSelectionComponent {
         this.configureGameSelectionSocketFeatures();
     }
 
-    configureGameSelectionSocketFeatures(): void {
+    private configureGameSelectionSocketFeatures(): void {
         this.socketService.on('reconnect', () => {
             this.socketService.disconnect();
             this.ngOnInit();

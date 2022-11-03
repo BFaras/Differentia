@@ -10,28 +10,23 @@ import { VerifyImageService } from '@app/services/verify-image.service';
 export class PopDialogDownloadImagesComponent {
     warningActivated: boolean = false;
 
-    constructor(
-        @Inject(MAT_DIALOG_DATA) private imageInfo: any,
-        public verifyImageService: VerifyImageService
-    ) {}
+    constructor(@Inject(MAT_DIALOG_DATA) private imageInfo: any, private verifyImageService: VerifyImageService) {}
 
-    onClickUploadImage(event:any) {
-        let target = event.target as HTMLInputElement
-        let file = target.files![0]
-        if (file.type == 'image/bmp'){
-        this.verifyImageService.setFile(file)
-        let reader = new FileReader();
-        reader.readAsArrayBuffer(file)
-        reader.onload = (e)=>{
-        this.verifyImageService.processBuffer(e);
-        this.verifyImageService.getImage().onload = ()=>{
-        this.warningActivated =  this.verifyImageService.verifyRespectAllContraints(this.imageInfo,file)
+    onClickUploadImage(event: any) {
+        let target = event.target as HTMLInputElement;
+        let file = target.files![0];
+        if (file.type == 'image/bmp') {
+            this.verifyImageService.setFile(file);
+            let reader = new FileReader();
+            reader.readAsArrayBuffer(file);
+            reader.onload = (e) => {
+                this.verifyImageService.processBuffer(e);
+                this.verifyImageService.getImage().onload = () => {
+                    this.warningActivated = this.verifyImageService.verifyRespectAllContraints(this.imageInfo, file);
+                };
+            };
+        } else {
+            this.warningActivated = true;
         }
-    }    
-    }else{
-        this.warningActivated = true
     }
-
-}
-
 }

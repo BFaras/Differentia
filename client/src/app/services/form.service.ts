@@ -8,9 +8,9 @@ import { CommunicationService } from './communication.service';
     providedIn: 'root',
 })
 export class FormService {
-    listName: string[] = [];
-    listImage: string[] = [];
-    gamelist: Game[] = [];
+    private listName: string[] = [];
+    private listImage: string[] = [];
+    private gamelist: Game[] = [];
     gameForms: GameFormDescription[] = [];
     gameToDelete: string = '';
 
@@ -26,7 +26,7 @@ export class FormService {
             .catch((error: Error) => console.log(error));
     }
 
-    parseGameList() {
+    private parseGameList() {
         for (let index = 0; index < this.gamelist?.length; index++) {
             this.fillListGameName(this.gamelist[index].name, this.listName);
             this.fillListGameImage(this.gamelist[index].images[0], this.listImage);
@@ -34,19 +34,19 @@ export class FormService {
         }
     }
 
-    fillListGameName(gameName: string, listName: string[]) {
+    private fillListGameName(gameName: string, listName: string[]) {
         listName.push(gameName);
     }
 
-    fillListGameImage(gameImage: string, listImage: string[]) {
+    private fillListGameImage(gameImage: string, listImage: string[]) {
         listImage.push(gameImage);
     }
 
-    initializeGameForm(index: number) {
+    private initializeGameForm(index: number) {
         this.gameForms.push(new GameFormDescription(this.listName[index], this.listImage[index], new RecordTimesBoard([], [])));
     }
 
-    resetGameForms() {
+    private resetGameForms() {
         this.gameForms = [];
         this.gamelist = [];
         this.listImage = [];

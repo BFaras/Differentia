@@ -14,23 +14,23 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
     @Input() offset: number;
     private numberOfDifferences: number;
     private differencesList: number[][];
-    readonly originalImage: HTMLImageElement = new Image();
-    readonly modifiedImage: HTMLImageElement = new Image();
+    private readonly originalImage: HTMLImageElement = new Image();
+    private readonly modifiedImage: HTMLImageElement = new Image();
     readonly finalDifferencesImage: HTMLImageElement = new Image();
 
     constructor(
         private renderer: Renderer2,
         private imageToImageDifferenceService: ImageToImageDifferenceService,
         private gameToServerService: GameToServerService,
-        public socketService: SocketClientService,
+        private socketService: SocketClientService,
     ) {}
 
     async ngOnInit(): Promise<void> {
         const mainCanvas = this.renderer.createElement('canvas');
         this.setUpSocket();
         await this.loadImages();
-        console.log(typeof this.offset)
-        const imagesData = this.imageToImageDifferenceService.getImagesData(mainCanvas, this.originalImage, this.modifiedImage,Number(this.offset));
+        console.log(typeof this.offset);
+        const imagesData = this.imageToImageDifferenceService.getImagesData(mainCanvas, this.originalImage, this.modifiedImage, Number(this.offset));
 
         this.socketService.send('detect images difference', imagesData);
     }
@@ -40,8 +40,8 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
     }
 
     loaded() {
-        console.log(this.finalDifferencesImage)
-        if ((this.finalDifferencesImage.src !== '') &&(this.numberOfDifferences !== undefined) ) {
+        console.log(this.finalDifferencesImage);
+        if (this.finalDifferencesImage.src !== '' && this.numberOfDifferences !== undefined) {
             this.gameToServerService.setNumberDifference(this.numberOfDifferences);
             this.gameToServerService.setUrlImageOfDifference(this.finalDifferencesImage.src);
             this.gameToServerService.setDifferencesList(this.differencesList);

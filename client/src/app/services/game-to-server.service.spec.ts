@@ -48,7 +48,7 @@ describe('GameToServerService', () => {
     it('should navigate', () => {
         const navigateSpy = spyOn(router, 'navigate');
 
-        service.goToAdmin();
+        service['goToAdmin']();
         expect(navigateSpy).toHaveBeenCalledWith(['/admin']);
     });
 
@@ -86,7 +86,7 @@ describe('GameToServerService', () => {
         let mockIndex: number = 2;
         let mockImage: string = 'src';
 
-        const spy = spyOn(service, 'statusCodeTreatment');
+        const spy = spyOn(service, <any>'statusCodeTreatment');
 
         service.setModifiedUrlUploaded(mockIndex, mockImage);
         service.setOriginalUrlUploaded(mockIndex, mockImage);
@@ -104,7 +104,7 @@ describe('GameToServerService', () => {
         let mockIndex: number = 2;
         let mockImage: string = 'src';
 
-        const spy = spyOn(service, 'statusCodeTreatment');
+        const spy = spyOn(service, <any>'statusCodeTreatment');
 
         service.setModifiedUrlUploaded(mockIndex, mockImage);
         service.setOriginalUrlUploaded(mockIndex, mockImage);
@@ -121,13 +121,13 @@ describe('GameToServerService', () => {
     it('should give an alert for game not created ', () => {
         spyOn(window, 'alert');
         HttpResponse;
-        service.statusCodeTreatment(StatusCodes.BAD_GATEWAY);
+        service['statusCodeTreatment'](StatusCodes.BAD_GATEWAY);
         expect(window.alert).toHaveBeenCalledWith(MESSAGE_JEU_NON_CREER);
     });
 
     it('should give an alert for game created ', () => {
         spyOn(window, 'alert');
-        service.statusCodeTreatment(StatusCodes.CREATED);
+        service['statusCodeTreatment'](StatusCodes.CREATED);
         expect(window.alert).toHaveBeenCalledWith(MESSAGE_JEU_CREER);
     });
 

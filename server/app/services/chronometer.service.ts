@@ -20,15 +20,15 @@ export class ChronometerService {
 
     constructor() {}
 
-    increaseSeconds() {
+    private increaseSeconds() {
         this.time.seconds += 1;
     }
 
-    increaseMinutes() {
+    private increaseMinutes() {
         this.time.minutes += 1;
     }
 
-    resetSeconds() {
+    private resetSeconds() {
         this.time.seconds = 0; // Le mettre dans le fichier des constantes?
     }
 
@@ -40,7 +40,7 @@ export class ChronometerService {
         }
     }
 
-    public resetChrono() {
+    resetChrono() {
         this.time.minutes = RESET_VALUE;
         this.time.seconds = RESET_VALUE;
     }

@@ -19,10 +19,10 @@ export class GameToServerService {
 
     constructor(private route: Router, private communicationService: CommunicationService, private uploadFileService: UploadFileService) {}
 
-    goToAdmin() {
+    private goToAdmin() {
         this.route.navigate(['/admin']);
     }
-    statusCodeTreatment(responseStatusCode: any) {
+    private statusCodeTreatment(responseStatusCode: any) {
         if (responseStatusCode == StatusCodes.BAD_GATEWAY) alert(MESSAGE_JEU_NON_CREER);
         else {
             alert(MESSAGE_JEU_CREER);
@@ -30,7 +30,7 @@ export class GameToServerService {
         }
     }
 
-    validateNumberOfDifferences() {
+    private validateNumberOfDifferences() {
         return this.numberDifference >= 3 && this.numberDifference <= 9;
     }
 
@@ -51,7 +51,7 @@ export class GameToServerService {
         } else alert(MESSAGE_NOMBRE_DIFFERENCE_ERREUR);
     }
 
-    sendBothImagesToServer() {
+    private sendBothImagesToServer() {
         this.uploadFileService.upload(this.uploadFileService.getNameOriginalImage());
         this.uploadFileService.upload(this.uploadFileService.getNameModifiedImage());
     }
