@@ -16,6 +16,8 @@ import { MouseHandlerService } from './mouse-handler.service';
 describe('GameManagerService tests', () => {
     const testGameName = 'test12345';
     const testUsername = 'myName15';
+    const testSocketId1 = 'JKHSDA125';
+    const testSocketId2 = 'IIUUYSD5896';
     const testGame: Game = {
         name: testGameName,
         numberOfDifferences: 2,
@@ -36,8 +38,8 @@ describe('GameManagerService tests', () => {
     let mouseHandlerIsValidClickStub: sinon.SinonStub<[mousePosition: Position, plrSocketId: string], GameplayDifferenceInformations>;
 
     beforeEach(async () => {
-        serverSocket = new ServerSocketTestHelper('JKHSDA125') as unknown as io.Socket;
-        serverSocket2 = new ServerSocketTestHelper('IIUUYSD5896') as unknown as io.Socket;
+        serverSocket = new ServerSocketTestHelper(testSocketId1) as unknown as io.Socket;
+        serverSocket2 = new ServerSocketTestHelper(testSocketId2) as unknown as io.Socket;
         gameManagerService = new GameManagerService(new ServerIOTestHelper() as unknown as io.Server);
 
         sinon.stub(GameManagerService.prototype, <any>'getSocketChronometerService').callsFake((socket) => {
@@ -64,7 +66,8 @@ describe('GameManagerService tests', () => {
             return {
                 differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
                 isValidDifference: false,
-                socketId: testUsername,
+                socketId: testSocketId1,
+                playerUsername: testUsername
             };
         });
     });
