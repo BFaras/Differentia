@@ -3,7 +3,7 @@ import { CanvasDataHandlerService } from '@app/services/canvas-data-handler.serv
 import { DrawingHistoryService } from '@app/services/drawing-history.service';
 import { KeyEventHandlerService } from '@app/services/key-event-handler.service';
 import { PencilService } from '@app/services/pencil.service';
-import { BIG, BLACK_COLOR, MEDIUM, SMALL, VERY_SMALL } from '@common/const';
+import { BIG, BLACK_COLOR, MEDIUM, SMALL, VERY_BIG, VERY_SMALL } from '@common/const';
 
 const WRITE_MODE:string = "write";
 const CONTROL_Z_SHORTCUT:string = 'document:keyup.control.z';
@@ -14,7 +14,7 @@ const CONTROL_SHIFT_Z_SHORTCUT:string = 'document:keyup.control.shift.z';
   styleUrls: ['./tool-setting.component.scss']
 })
 export class ToolSettingComponent implements OnInit {
-  readonly widths:number[] = [VERY_SMALL,SMALL,MEDIUM,BIG,15]
+  readonly widths:number[] = [VERY_SMALL,SMALL,MEDIUM,BIG,VERY_BIG]
   public color:string;
   @Input() indexTool:number;
   constructor(private pencilService:PencilService,

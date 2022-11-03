@@ -50,11 +50,11 @@ export const EMPTY_ARRAY_LENGTH = 0;
 export const FIRST_ARRAY_POSITION = 0;
 //width Pencil constants
 
-export const VERY_SMALL = 1;
-export const SMALL = 2
-export const MEDIUM = 3
-export const BIG = 4
-export const VERY_BIG = 5
+export const VERY_SMALL = 3;
+export const SMALL = 6
+export const MEDIUM = 9
+export const BIG = 12
+export const VERY_BIG = 15
 
 //color
 export const BLACK_COLOR = "#000";
