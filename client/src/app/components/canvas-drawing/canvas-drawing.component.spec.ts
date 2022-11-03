@@ -5,7 +5,7 @@ import { KeyEventHandlerService } from '@app/services/key-event-handler.service'
 import { MergeImageCanvasHandlerService } from '@app/services/merge-image-canvas-handler.service';
 import { Subject } from 'rxjs';
 import { CanvasDrawingComponent } from './canvas-drawing.component';
-fdescribe('CanvasDrawingComponent', () => {
+describe('CanvasDrawingComponent', () => {
   let component: CanvasDrawingComponent;
   let fixture: ComponentFixture<CanvasDrawingComponent>;
   let canvasDataHandlerServiceSpy:jasmine.SpyObj<CanvasDataHandlerService>
