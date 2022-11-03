@@ -4,6 +4,7 @@ import { PopDialogDownloadImagesComponent } from '@app/components/pop-dialogs/po
 import { PopDialogValidateGameComponent } from '@app/components/pop-dialogs/pop-dialog-validate-game/pop-dialog-validate-game.component';
 import { GameToServerService } from '@app/services/game-to-server.service';
 import { ListImagesRenderedService } from '@app/services/list-images-rendered.service';
+import { MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 @Component({
     selector: 'app-game-creation-page',
     templateUrl: './game-creation-page.component.html',
@@ -22,16 +23,16 @@ export class GameCreationPageComponent implements OnInit {
 
     private subscirbeToGetDataImageMultiple() {
         this.editImageService.getDataImageMultiple().subscribe((url: any) => {
-            this.gameToServerService.setOriginalUrlUploaded(0, url);
-            this.gameToServerService.setModifiedUrlUploaded(1, url);
+            this.gameToServerService.setOriginalUrlUploaded(ORIGINAL_IMAGE_POSITION, url);
+            this.gameToServerService.setModifiedUrlUploaded(MODIFIED_IMAGE_POSITION, url);
         });
     }
 
     private subscirbeToGetDataImageSingle() {
         this.editImageService.getDataImageSingle().subscribe((dataOfImage: { index: number; url: any }) => {
-            if (dataOfImage.index == 0) {
+            if (dataOfImage.index == ORIGINAL_IMAGE_POSITION) {
                 this.gameToServerService.setOriginalUrlUploaded(dataOfImage.index, dataOfImage.url);
-            } else if (dataOfImage.index == 1) {
+            } else if (dataOfImage.index == MODIFIED_IMAGE_POSITION) {
                 this.gameToServerService.setModifiedUrlUploaded(dataOfImage.index, dataOfImage.url);
             }
         });
