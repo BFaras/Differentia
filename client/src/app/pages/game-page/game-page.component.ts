@@ -21,7 +21,7 @@ export class GamePageComponent {
     images: HTMLImageElement[];
     nbDifferrencesFound: number[] = [0, 0];
 
-    constructor(public socketService: SocketClientService, private timeService: TimeService, private communicationService: CommunicationService) {
+    constructor(private socketService: SocketClientService, private timeService: TimeService, private communicationService: CommunicationService) {
         this.images = [new Image(640, 480), new Image(640, 480)];
     }
 
@@ -35,7 +35,7 @@ export class GamePageComponent {
         this.socketService.disconnect();
     }
 
-    configureGamePageSocketFeatures() {
+    private configureGamePageSocketFeatures() {
         this.socketService.on('classic mode', () => {
             this.timeService.classicMode();
         });

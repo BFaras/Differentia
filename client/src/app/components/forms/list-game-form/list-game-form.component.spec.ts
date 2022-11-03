@@ -99,7 +99,7 @@ describe('ListGameFormComponent', () => {
 
     it('should call config when deleting a gameForm', () => {
         const gameName = 'Dog game';
-        const configSpy = spyOn(listGameFormComp, 'config').and.callThrough();
+        const configSpy = spyOn(listGameFormComp, <any>'config').and.callThrough();
         listGameFormComp.deleteGameForm(gameName);
         expect(configSpy).toHaveBeenCalled();
     });

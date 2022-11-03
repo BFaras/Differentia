@@ -35,11 +35,11 @@ export class PlayAreaComponent implements OnInit {
     @Input() localPlayerUsername: string;
     @Input() isMultiplayer: boolean;
     mousePosition: Position = { x: 0, y: 0 };
-    pixelList: number[] = [];
+    private pixelList: number[] = [];
 
     private canvasSize = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
     constructor(
-        public socketService: SocketClientService,
+        private socketService: SocketClientService,
         private readonly drawService: DrawService,
         private readonly mouseDetection: DifferenceDetectionService,
         private imageToImageDifferenceService: ImageToImageDifferenceService,
@@ -57,7 +57,7 @@ export class PlayAreaComponent implements OnInit {
         this.displayImages();
     }
 
-    displayImages() {
+    private displayImages() {
         this.drawService.context1 = this.clickCanvas1.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.drawService.context1.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);
         this.originalCanvas.nativeElement.focus();
@@ -87,7 +87,7 @@ export class PlayAreaComponent implements OnInit {
         this.mouseDetection.mouseHitDetect(event);
     }
 
-    openEndGameDialog(messageToDisplay: string) {
+    private openEndGameDialog(messageToDisplay: string) {
         this.dialog.open(PopDialogEndgameComponent, {
             height: '400px',
             width: '600px',
@@ -95,8 +95,7 @@ export class PlayAreaComponent implements OnInit {
         });
     }
 
-    // To test
-    configurePlayAreaSocket(): void {
+    private configurePlayAreaSocket(): void {
         this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {
             const isLocalPlayer = differencesInfo.socketId == this.socketService.socket.id;
             this.pixelList = differencesInfo.differencePixelsNumbers;
