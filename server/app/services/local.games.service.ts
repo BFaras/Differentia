@@ -10,8 +10,8 @@ const IMAGES_PATH = 'assets/images/';
 
 @Service()
 export class GamesService {
-    gamesFilePath: string = 'games.json';
-    games: Game[];
+    private gamesFilePath: string = 'games.json';
+    private games: Game[];
 
     constructor() {}
 
