@@ -11,7 +11,7 @@ export class MouseHandlerService {
     private differencesHashmap: Map<number, number>;
     private differencesList: number[][];
     private differencesNbFoundByPlayer: Map<string, number[]>;
-    private nbDifferencesTotal: number;
+    nbDifferencesTotal: number;
 
     constructor() {
         this.differencesHashmap = new Map<number, number>();
