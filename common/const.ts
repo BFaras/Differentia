@@ -33,6 +33,7 @@ export const NO_DIFFERENCE_FOUND_ARRAY: number[] = [];
 //Images constants
 export const IMAGE_WIDTH = 640;
 export const IMAGE_HEIGHT = 480;
+export const CORRECT_BIT_DEPTH = 24;
 export const DEFAULT_OFFSET = 3;
 export const MINIMUM_PIXEL_POSITION = 0;
 

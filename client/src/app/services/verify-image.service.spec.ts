@@ -1,7 +1,8 @@
 
 import { TestBed } from '@angular/core/testing';
-import { VerifyImageService } from './verify-image.service';
+import { CORRECT_BIT_DEPTH } from '@common/const';
 import { UploadFileService } from './upload-file.service';
+import { VerifyImageService } from './verify-image.service';
 import SpyObj = jasmine.SpyObj;
 const mockEventFile = {
   target: {
@@ -38,50 +39,49 @@ describe('VerifyImageService', () => {
   it('should set the file',()=>{
     const imageToSend = new File([""], "filename", { type: 'text/html' });
     service.setFile(imageToSend);
-    expect(service.file).toEqual(imageToSend)
+    expect(service['file']).toEqual(imageToSend)
   })
   it('should test process Buffer',()=>{
     const spyGettingBmp = spyOn<any>(service,'getBmp').and.returnValue({})
-    const spyTransformation = spyOn<any>(service,'transformByteToImage').and.returnValue({})
+    const spyTransformation = spyOn<any>(service,'transformByteToImage').and.returnValue({});
 
     service.processBuffer(mockEventFile);
 
-    expect(spyGettingBmp).toHaveBeenCalled()
-    expect(spyTransformation).toHaveBeenCalled()
+    expect(spyGettingBmp).toHaveBeenCalled();
+    expect(spyTransformation).toHaveBeenCalled();
   })
 
   it('it should call transformByteToImage',()=>{
     let bufferMock = "buffer"
     let srcMock = 'string'
-    service.transformByteToImage(bufferMock);
-    expect(typeof service.getImage().src).toEqual(srcMock );
+    service['transformByteToImage'](bufferMock);
+    expect(typeof service.getImage().src).toEqual(srcMock);
 
   })
 
   it('it should call all functions in sendImageRespetContraints and the warning should be false',()=>{
-    const spyConstraint = spyOn<any>(service,'verifyImageConstraint').and.returnValue(true)
-    const spyTransformation = spyOn<any>(service,'verifyImageFormat').and.returnValue(true)
-    const spySentMultipleOrSingle = spyOn<any>(service,'verifyIfSentMultipleOrSingle').and.returnValue(true)
-    const spygetBitDepth = spyOn<any>(service,'getBitDepth').and.returnValue(24)
+    service['bitDepth'] = CORRECT_BIT_DEPTH;
+    const spyConstraint = spyOn<any>(service,'verifyImageConstraint').and.returnValue(true);
+    const spyTransformation = spyOn<any>(service,'verifyImageFormat').and.returnValue(true);
+    const spySentMultipleOrSingle = spyOn<any>(service,'verifyIfSentMultipleOrSingle').and.returnValue(true);
     let mockDialog :MatDialogMock = {
       open() {
         return;
   }}; 
     const imageToSend = new File([""], "filename", { type: 'text/html' });
-    const isWarningActivated = service.verifyRespectAllContraints(mockDialog,imageToSend)
-    expect(spyConstraint).toHaveBeenCalled()
-    expect(spyTransformation).toHaveBeenCalled()
-    expect(spySentMultipleOrSingle).toHaveBeenCalled()
-    expect(spygetBitDepth).toHaveBeenCalled()
-    expect(isWarningActivated).toBeFalsy()
+    const isWarningActivated = service.verifyRespectAllContraints(mockDialog,imageToSend);
+    expect(spyConstraint).toHaveBeenCalled();
+    expect(spyTransformation).toHaveBeenCalled();
+    expect(spySentMultipleOrSingle).toHaveBeenCalled();
+    expect(isWarningActivated).toBeFalsy();
 
   })
 
   it('it should call all functions in sendImageRespetContraints and the warning should be true',()=>{
+    service['bitDepth'] = CORRECT_BIT_DEPTH;
     spyOn<any>(service,'verifyImageConstraint').and.returnValue(true)
     spyOn<any>(service,'verifyImageFormat').and.returnValue(false)
     spyOn<any>(service,'verifyIfSentMultipleOrSingle').and.returnValue(true)
-    spyOn<any>(service,'getBitDepth').and.returnValue(24)
     let mockDialog :MatDialogMock = {
       open() {
         return;
@@ -91,43 +91,35 @@ describe('VerifyImageService', () => {
 
   })
 
-  it('should gave same value getBitDeptj to bitDepth of service',()=>{
-    service.bitDepth = 10;
-    let answerExpect = 10;
-    expect(service.getBitDepth()).toEqual(answerExpect)
-
-  })
-
   it('should give true when right type when doing this function verifyImageFormat',()=>{
     const imageToSend = new File([""], "filename", { type: 'image/bmp' });
-    service.verifyImageFormat(imageToSend);
-    expect(service.verifyImageFormat(imageToSend)).toBeTruthy
+    expect(service['verifyImageFormat'](imageToSend)).toBeTruthy();
 
   })
 
   it('should verifyImageWidthHeight give true when we have right height and width ',()=>{
     const fakeWidth = 640;
     const fakeHeight = 480;
-    service.imageToVerify.width = 640;
-    service.imageToVerify.height = 480;
+    service['imageToVerify'].width = 640;
+    service['imageToVerify'].height = 480;
 
-    expect(service.verifyImageWidthHeight(fakeWidth,fakeHeight)).toBeTruthy
+    expect(service['verifyImageWidthHeight'](fakeWidth,fakeHeight)).toBeTruthy();
 
   })
 
   it('should verifyImageWidthHeight give true when we have right height and width ',()=>{
     const fakeWidth = 640;
     const fakeHeight = 200;
-    service.imageToVerify.width = 640;
-    service.imageToVerify.height = 480;
+    service['imageToVerify'].width = 640;
+    service['imageToVerify'].height = 480;
 
-    expect(service.verifyImageWidthHeight(fakeWidth,fakeHeight)).toBeFalsy()
+    expect(service['verifyImageWidthHeight'](fakeWidth,fakeHeight)).toBeFalsy();
 
   })
 
   it('should verifyImageConstraint be called and return true',()=>{
     const spy = spyOn<any>(service,'verifyImageWidthHeight').and.returnValue(true)
-    service.verifyImageConstraint()
+    service['verifyImageConstraint']()
 
     expect(spy).toBeTruthy()
 
@@ -139,10 +131,7 @@ describe('VerifyImageService', () => {
       bothImage: true,
     }
 
-
-    service.verifyIfSentMultipleOrSingle(fakeUrlInfo,fakeDialog)
-    expect(service.verifyIfSentMultipleOrSingle(fakeUrlInfo,fakeDialog)).toBe()
-
+    expect(service['verifyIfSentMultipleOrSingle'](fakeUrlInfo,fakeDialog)).toBe();
   })
 
   it('should update single original file ',()=>{
@@ -154,9 +143,8 @@ describe('VerifyImageService', () => {
 
     uploadFileSpy.setModifiedImage.and.returnValue();
     let spy = uploadFileSpy.setOriginalImage.and.returnValue();
-    service.verifyIfSentMultipleOrSingle(fakeUrlInfo,fakeDialog)
-    expect(service.verifyIfSentMultipleOrSingle(fakeUrlInfo,fakeDialog)).toBe()
-    expect(spy).toHaveBeenCalled()
+    expect(service['verifyIfSentMultipleOrSingle'](fakeUrlInfo,fakeDialog)).toBe();
+    expect(spy).toHaveBeenCalled();
   })
 
   it('should update single modified filed ',()=>{
@@ -167,12 +155,8 @@ describe('VerifyImageService', () => {
     }
 
     let spy = uploadFileSpy.setModifiedImage.and.returnValue();
-    service.verifyIfSentMultipleOrSingle(fakeUrlInfo,fakeDialog)
-    expect(service.verifyIfSentMultipleOrSingle(fakeUrlInfo,fakeDialog)).toBe()
-    expect(spy).toHaveBeenCalled()
-  })
-
-
-
-  
+    service['verifyIfSentMultipleOrSingle'](fakeUrlInfo,fakeDialog)
+    expect(service['verifyIfSentMultipleOrSingle'](fakeUrlInfo,fakeDialog)).toBe();
+    expect(spy).toHaveBeenCalled();
+  })  
 });

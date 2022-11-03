@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ImageSize } from '@app/classes/image-size';
+import { CORRECT_BIT_DEPTH, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { ListImagesRenderedService } from './list-images-rendered.service';
 import { UploadFileService } from './upload-file.service';
 @Injectable({
     providedIn: 'root',
 })
 export class VerifyImageService {
-    imageToVerify = new Image();
-    imageSizeConstraint: ImageSize = new ImageSize(640, 480);
-    bitDepth: number;
-    file: File;
+    private imageToVerify = new Image();
+    private imageSizeConstraint: ImageSize = new ImageSize(640, 480);
+    private bitDepth: number;
+    private file: File;
     constructor(
         private editImagesService: ListImagesRenderedService,
         private sanitizer: DomSanitizer,
@@ -21,7 +22,7 @@ export class VerifyImageService {
         this.file = file;
     }
 
-    transformByteToImage(buffer: any) {
+    private transformByteToImage(buffer: any) {
         let bytes = new Uint8Array(buffer);
         let blob = new Blob([bytes.buffer]);
         this.imageToVerify.src = URL.createObjectURL(blob);
@@ -34,7 +35,7 @@ export class VerifyImageService {
     }
 
     verifyRespectAllContraints(dialog: any, file: File) {
-        if (this.verifyImageConstraint() && this.verifyImageFormat(file) && this.getBitDepth() == 24) {
+        if (this.verifyImageConstraint() && this.verifyImageFormat(file) && this.bitDepth == CORRECT_BIT_DEPTH) {
             let imageToSend = this.sanitizer.bypassSecurityTrustResourceUrl(this.imageToVerify.src as string);
             this.verifyIfSentMultipleOrSingle(imageToSend as string, dialog);
 
@@ -44,40 +45,37 @@ export class VerifyImageService {
         }
     }
 
-    getBitDepth() {
-        return this.bitDepth;
-    }
-
     getImage() {
         return this.imageToVerify;
     }
-    verifyImageFormat(file: File) {
+    
+    private verifyImageFormat(file: File) {
         return file.type === 'image/bmp';
     }
 
-    getBmp(buffer: any) {
+    private getBmp(buffer: any) {
         let datav = new DataView(buffer);
         this.bitDepth = datav.getUint8(28);
     }
 
-    verifyImageWidthHeight(width: number, height: number) {
+    private verifyImageWidthHeight(width: number, height: number) {
         return height === this.imageSizeConstraint.height && width === this.imageSizeConstraint.width;
     }
 
-    verifyImageConstraint() {
+    private verifyImageConstraint() {
         return this.verifyImageWidthHeight(this.imageToVerify.width, this.imageToVerify.height);
     }
 
-    verifyIfSentMultipleOrSingle(urlOfImage: string, imageInfo: any) {
+    private verifyIfSentMultipleOrSingle(urlOfImage: string, imageInfo: any) {
         if (imageInfo.bothImage) {
             this.editImagesService.sendUrlImageBoth(urlOfImage);
         } else {
             this.editImagesService.sendUrlImageSingle({ index: imageInfo.indexOfImage, url: urlOfImage });
             console.log(imageInfo.indexOfImage);
-            if (imageInfo.indexOfImage == 0) {
+            if (imageInfo.indexOfImage == ORIGINAL_IMAGE_POSITION) {
                 this.uploadFileService.setOriginalImage(this.file, imageInfo.indexOfImage);
             }
-            if (imageInfo.indexOfImage == 1) {
+            if (imageInfo.indexOfImage == MODIFIED_IMAGE_POSITION) {
                 this.uploadFileService.setModifiedImage(this.file, imageInfo.indexOfImage);
             }
         }
