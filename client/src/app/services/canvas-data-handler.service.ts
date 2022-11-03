@@ -16,6 +16,7 @@ export class CanvasDataHandlerService {
 
   clearCanvas(indexContext:number){
     this.context[indexContext].clearRect(0,0,IMAGE_WIDTH,IMAGE_HEIGHT);
+    this.drawingHistoryService.saveCanvas(this.context[indexContext],indexContext)
   }
 
   copyOtherCanvas(indexContext:number){
