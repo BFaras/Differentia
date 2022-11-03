@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ImageSize } from '@app/classes/image-size';
-import { CORRECT_BIT_DEPTH, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
+import { CORRECT_BIT_DEPTH, CORRECT_IMAGE_FORMAT, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { ListImagesRenderedService } from './list-images-rendered.service';
 import { UploadFileService } from './upload-file.service';
 @Injectable({
@@ -50,7 +50,7 @@ export class VerifyImageService {
     }
     
     private verifyImageFormat(file: File) {
-        return file.type === 'image/bmp';
+        return file.type === CORRECT_IMAGE_FORMAT;
     }
 
     private getBmp(buffer: any) {

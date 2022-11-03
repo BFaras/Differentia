@@ -1,6 +1,6 @@
 
 import { TestBed } from '@angular/core/testing';
-import { CORRECT_BIT_DEPTH } from '@common/const';
+import { CORRECT_BIT_DEPTH, CORRECT_IMAGE_FORMAT } from '@common/const';
 import { UploadFileService } from './upload-file.service';
 import { VerifyImageService } from './verify-image.service';
 import SpyObj = jasmine.SpyObj;
@@ -87,12 +87,12 @@ describe('VerifyImageService', () => {
         return;
   }}; 
     const imageToSend = new File([""], "filename", { type: 'text/html' });
-    expect(service.verifyRespectAllContraints(mockDialog,imageToSend)).toBeTruthy()
+    expect(service.verifyRespectAllContraints(mockDialog,imageToSend)).toBeTruthy();
 
   })
 
   it('should give true when right type when doing this function verifyImageFormat',()=>{
-    const imageToSend = new File([""], "filename", { type: 'image/bmp' });
+    const imageToSend = new File([""], "filename", { type: CORRECT_IMAGE_FORMAT });
     expect(service['verifyImageFormat'](imageToSend)).toBeTruthy();
 
   })

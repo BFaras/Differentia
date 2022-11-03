@@ -36,6 +36,7 @@ export const IMAGE_HEIGHT = 480;
 export const CORRECT_BIT_DEPTH = 24;
 export const DEFAULT_OFFSET = 3;
 export const MINIMUM_PIXEL_POSITION = 0;
+export const CORRECT_IMAGE_FORMAT = 'image/bmp'
 
 //constantes message quand add game
 
