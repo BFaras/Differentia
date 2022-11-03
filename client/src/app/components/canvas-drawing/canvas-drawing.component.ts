@@ -25,7 +25,6 @@ export class CanvasDrawingComponent implements  AfterViewInit {
     this.canvas = this.canvasDOM.nativeElement;
     this.context = this.canvas.getContext('2d');
     this.context!.globalAlpha = 0.00;
-
     this.canvas.width = IMAGE_WIDTH;
     this.canvas.height = IMAGE_HEIGHT;
     this.useCanvasFocusedOn();
