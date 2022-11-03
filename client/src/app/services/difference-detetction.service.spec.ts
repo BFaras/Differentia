@@ -63,12 +63,12 @@ describe('MouseDetectionService', () => {
 
     it('should call clickMessage with good position', () => {
         service.clickMessage(true, true);
-        expect(service['message']).toEqual('GOOD JOB');
+        expect(service['message']).toEqual('BON TRAVAIL');
     });
 
     it('should call clickMessage with wrong position', () => {
         service.clickMessage(false, true);
-        expect(service['message']).toEqual('ERROR');
+        expect(service['message']).toEqual('ERREUR');
     });
 
     it('should verify if game in multiplayer is finished'),
