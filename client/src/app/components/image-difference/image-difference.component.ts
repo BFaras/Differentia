@@ -29,7 +29,6 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
         const mainCanvas = this.renderer.createElement('canvas');
         this.setUpSocket();
         await this.loadImages();
-        console.log(typeof this.offset);
         const imagesData = this.imageToImageDifferenceService.getImagesData(mainCanvas, this.originalImage, this.modifiedImage, Number(this.offset));
 
         this.socketService.send('detect images difference', imagesData);
