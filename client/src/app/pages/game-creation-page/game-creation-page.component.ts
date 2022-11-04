@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PopDialogDownloadImagesComponent } from '@app/components/pop-dialogs/pop-dialog-download-images/pop-dialog-download-images.component';
 import { PopDialogValidateGameComponent } from '@app/components/pop-dialogs/pop-dialog-validate-game/pop-dialog-validate-game.component';
+import { ImageRenderedInformations } from '@app/interfaces/image-rendered-informations';
 import { GameToServerService } from '@app/services/game-to-server.service';
 import { ListImagesRenderedService } from '@app/services/list-images-rendered.service';
 import { MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
@@ -29,7 +30,7 @@ export class GameCreationPageComponent implements OnInit {
     }
 
     private subscirbeToGetDataImageSingle() {
-        this.editImageService.getDataImageSingleObservable().subscribe((dataOfImage: { index: number; url: any }) => {
+        this.editImageService.getDataImageSingleObservable().subscribe((dataOfImage: ImageRenderedInformations) => {
             if (dataOfImage.index == ORIGINAL_IMAGE_POSITION) {
                 this.gameToServerService.setOriginalUrlUploaded(dataOfImage.index, dataOfImage.url);
             } else if (dataOfImage.index == MODIFIED_IMAGE_POSITION) {

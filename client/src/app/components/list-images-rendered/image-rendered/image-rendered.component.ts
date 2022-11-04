@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SafeValue } from '@angular/platform-browser';
+import { ImageRenderedInformations } from '@app/interfaces/image-rendered-informations';
 import { AssignImageDataService } from '@app/services/assign-image-data.service';
 import { ListImagesRenderedService } from '@app/services/list-images-rendered.service';
 @Component({
@@ -27,7 +28,7 @@ export class ImageRenderedComponent implements OnInit {
     }
 
     getDataSingleImage() {
-        this.editImagesService.getDataImageSingleObservable().subscribe((dataOfImage: { index: any; url: SafeValue }) => {
+        this.editImagesService.getDataImageSingleObservable().subscribe((dataOfImage: ImageRenderedInformations) => {
             if (dataOfImage.index === this.idFromParent) {
                 this.assignImageDataService.assignImageData(dataOfImage);
                 this.updateIsImageObtainedAndUrl();

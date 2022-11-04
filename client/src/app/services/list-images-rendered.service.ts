@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
+import { ImageRenderedInformations } from '@app/interfaces/image-rendered-informations';
 import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
@@ -6,14 +7,14 @@ import { Observable } from 'rxjs/internal/Observable';
 })
 export class ListImagesRenderedService {
     private activatedEmitterUrlImageBoth: EventEmitter<string> = new EventEmitter<string>();
-    private activatedEmitterUrlImageSingle: EventEmitter<{ index: number; url: string }> = new EventEmitter<{ index: number; url: string }>();
+    private activatedEmitterUrlImageSingle: EventEmitter<ImageRenderedInformations> = new EventEmitter<ImageRenderedInformations>();
     private activatedEmitterRemoveImage: EventEmitter<number> = new EventEmitter<number>();
 
     sendUrlImageBoth(url: string) {
         this.activatedEmitterUrlImageBoth.emit(url);
     }
 
-    sendUrlImageSingle(info: { index: number; url: string }) {
+    sendUrlImageSingle(info: ImageRenderedInformations) {
         this.activatedEmitterUrlImageSingle.emit(info);
     }
 
@@ -27,7 +28,7 @@ export class ListImagesRenderedService {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getDataImageSingleObservable(): Observable<{ index: number; url: string }> {
+    getDataImageSingleObservable(): Observable<ImageRenderedInformations> {
         return this.activatedEmitterUrlImageSingle;
     }
 
