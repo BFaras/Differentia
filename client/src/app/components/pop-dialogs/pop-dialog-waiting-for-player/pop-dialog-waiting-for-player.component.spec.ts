@@ -20,11 +20,6 @@ describe('PopDialogWaitingForPlayerComponent', () => {
 
     beforeAll(async () => {
         socketSpy = jasmine.createSpyObj('SocketClientService', ['connect', 'on', 'send']);
-        // mouseServiceSpy = jasmine.createSpyObj('MouseDetectionService', ['mouseHitDetect', 'clickMessage']);
-        // matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
-        // drawServiceSpy = jasmine.createSpyObj('DrawService', ['context1', 'context2', 'context3', 'context4', 'context5', 'drawWord']);
-        // imageGeneratorSpy = jasmine.createSpyObj('ImageGeneratorService', ['copyCertainPixelsFromOneImageToACanvas']);
-        // imageDifferenceSpy = jasmine.createSpyObj('ImageToImageDifferenceService', ['waitForImageToLoad']);
     });
 
     beforeEach(async () => {
