@@ -9,6 +9,7 @@ import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
 import { ADVERSARY_PLR_USERNAME_POS } from '@common/const';
 import { Game } from '@common/game';
+import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { of } from 'rxjs';
 import { Socket } from 'socket.io-client';
 import { GamePageComponent } from './game-page.component';
@@ -66,6 +67,7 @@ fdescribe('GamePageComponent', () => {
     });
 
     fdescribe('Receiving events', () => {
+        // enlever le fdescribe
         it('should handle classic mode event and call the classicMode method of the time service', () => {
             socketHelper.peerSideEmit('classic mode');
             expect(component['timeService'].classicMode).toHaveBeenCalled();
@@ -86,12 +88,24 @@ fdescribe('GamePageComponent', () => {
             expect(component.usernames[0]).toEqual(username);
         });
 
+        it("should handle 'Valid click' event and increment the number of player", () => {
+            const differencesInfo: GameplayDifferenceInformations = {
+                differencePixelsNumbers: [],
+                isValidDifference: true,
+                socketId: '',
+                playerUsername: '',
+            };
+            const spy = spyOn(component, <any>'incrementPlayerNbOfDifferencesFound');
+            socketHelper.peerSideEmit('Valid click', differencesInfo);
+            expect(spy).toHaveBeenCalled();
+        });
+
         it("should handle 'The game is' event and set the value of its attribute nbDifferences to the value of the number of differences of the game wanted", () => {
             const nameOfGame = 'test game';
             socketHelper.peerSideEmit('The game is', nameOfGame);
             expect(component['communicationService'].getGames).toHaveBeenCalled();
             expect(component.nbDifferences).toEqual(testGame.numberOfDifferences);
-        });
+        }); // erreur dans DifferenceDetection.clickMessage
 
         // Ce test est inutile comme expliqué aux lignes 54 et 55 du fichier game-page.component.ts, cependant il a été fait car sinon nous n'atteignons pas
         // une couverture de 100%

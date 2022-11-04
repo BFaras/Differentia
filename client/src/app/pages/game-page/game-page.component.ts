@@ -47,7 +47,6 @@ export class GamePageComponent {
             this.gameName = message;
         });
 
-        // To test
         this.socketService.on('show the username', (username: string) => {
             this.usernames[LOCAL_PLR_USERNAME_POS] = username;
         });
