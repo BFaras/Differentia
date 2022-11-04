@@ -66,14 +66,12 @@ export class GameManagerService {
         this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
     }
 
-    //To test
-    isGameFinishedSolo(socket: io.Socket) {
+    isGameFinishedSolo(socket: io.Socket): boolean {
         const mouseHandler = this.getSocketMouseHandlerService(socket);
         return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === mouseHandler.nbDifferencesTotal;
     }
 
-    //To test
-    isGameFinishedMulti(socket: io.Socket) {
+    isGameFinishedMulti(socket: io.Socket): boolean {
         const mouseHandler = this.getSocketMouseHandlerService(socket);
         return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === Math.floor(mouseHandler.nbDifferencesTotal / 2) + 1;
     }
@@ -135,7 +133,7 @@ export class GameManagerService {
         );
     }
 
-    private logRoomsWithGames(gameName: string, roomName: string) {
+    private logRoomsWithGames(gameName: string, roomName: string): void {
         let rooms: string[] = [];
         if (this.gamesRooms.has(gameName)) {
             this.gamesRooms.get(gameName)?.forEach((socketRoom) => {
@@ -148,7 +146,7 @@ export class GameManagerService {
         this.gamesRooms.set(gameName, rooms);
     }
 
-    private deleteRoom(socket: io.Socket) {
+    private deleteRoom(socket: io.Socket): void {
         const gameRoomName = this.findSocketGameRoomName(socket);
         let gameName = '';
         for (let rooms of this.gamesRooms.entries()) {

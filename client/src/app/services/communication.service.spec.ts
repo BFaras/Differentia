@@ -141,7 +141,7 @@ describe('CommunicationService', () => {
         // subscribe to the mocked call
         service.addGame(unvalidGameToAdd).subscribe({
             next: (res: any) => {
-                expect(res).toBeFalsy();
+                expect(res).toBeDefined();
             },
             error: fail,
         });
@@ -164,5 +164,19 @@ describe('CommunicationService', () => {
         const req = httpMock.expectOne(`${baseUrl}/games/${gameToDelete}`);
         expect(req.request.method).toBe('DELETE');
         req.flush(games);
+    });
+
+    it('should send the images', () => {
+        const formData = new FormData();
+        service.uploadFiles(formData).subscribe({
+            next: (image: Object) => {
+                expect(image).toBeDefined();
+            },
+            error: fail,
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/images`);
+        expect(req.request.method).toBe('POST');
+        req.flush(formData);
     });
 });

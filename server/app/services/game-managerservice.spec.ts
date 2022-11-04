@@ -62,12 +62,12 @@ describe('GameManagerService tests', () => {
             return Promise.resolve(['', '']);
         });
 
-        mouseHandlerIsValidClickStub = sinon.stub(MouseHandlerService.prototype, 'isValidClick').callsFake(() => {
+        mouseHandlerIsValidClickStub = sinon.stub(MouseHandlerService.prototype, 'isValidClick').callsFake((): GameplayDifferenceInformations => {
             return {
                 differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
                 isValidDifference: false,
                 socketId: testSocketId1,
-                playerUsername: testUsername
+                playerUsername: testUsername,
             };
         });
     });
@@ -128,5 +128,23 @@ describe('GameManagerService tests', () => {
         const spy = sinon.spy(gameManagerService, <any>'endChrono');
         gameManagerService.endGame(serverSocket);
         expect(spy.calledOnce);
+    });
+
+    it('should tell if the game in solo is done or not', () => {
+        mouseHandlerService.nbDifferencesTotal = 7;
+        const stub = sinon.stub(mouseHandlerService, 'getNumberOfDifferencesFoundByPlayer').callsFake(() => {
+            return 4;
+        });
+        expect(gameManagerService.isGameFinishedSolo(serverSocket)).to.be.false;
+        expect(stub.calledOnce);
+    });
+
+    it('should tell if the game in multiplayer is done or not', () => {
+        mouseHandlerService.nbDifferencesTotal = 7;
+        const stub = sinon.stub(mouseHandlerService, 'getNumberOfDifferencesFoundByPlayer').callsFake(() => {
+            return 4;
+        });
+        expect(gameManagerService.isGameFinishedMulti(serverSocket)).to.be.true;
+        expect(stub.calledOnce);
     });
 });

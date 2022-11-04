@@ -29,7 +29,7 @@ describe('SocketManager service tests', () => {
     let clientSocket: Socket;
     let differenceDetectorService: DifferenceDetectorService = new DifferenceDetectorService(imagesData);
     let mouseHandlerService: MouseHandlerService = new MouseHandlerService();
-    let gameManagerServiceBeginGameStub: sinon.SinonStub<[socket: io.Socket, gameName: string, adversarySocket? : io.Socket], Promise<void>>;
+    let gameManagerServiceBeginGameStub: sinon.SinonStub<[socket: io.Socket, gameName: string, adversarySocket?: io.Socket], Promise<void>>;
     let gameManagerServiceClickResponseStub: sinon.SinonStub<[socket: io.Socket, mousePos: Position], void>;
 
     const urlString = 'http://localhost:3000';
@@ -46,7 +46,7 @@ describe('SocketManager service tests', () => {
             return mouseHandlerService;
         });
         gameManagerServiceBeginGameStub = sinon.stub(GameManagerService.prototype, 'beginGame').callsFake(async () => {});
-        sinon.stub(GameManagerService.prototype, 'endGame').callsFake(() => {});
+        sinon.stub(GameManagerService.prototype, 'endGame').callThrough();
         gameManagerServiceClickResponseStub = sinon.stub(GameManagerService.prototype, 'clickResponse').callsFake(() => {});
     });
 

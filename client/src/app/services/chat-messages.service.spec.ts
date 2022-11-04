@@ -52,7 +52,7 @@ describe('ChatMessagesService', () => {
     });
 
     afterEach(() => {
-        observer.unsubscribe();
+        if (observer) observer.unsubscribe();
     });
 
     it('should create an observable which we can subscribe to on construction', () => {

@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./chat-section.component.scss'],
 })
 export class ChatSectionComponent implements OnInit, OnDestroy {
-    @ViewChild('scrollMe') private myScrollContainer: ElementRef;
+    // @ViewChild('scrollMe') private myScrollContainer: ElementRef;
     @ViewChild('playerMsg') playerMsg: ElementRef;
 
     message: string;
@@ -49,10 +49,10 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
     }
 
     private scrollToBottom(): void {
-        setTimeout(() => {
-            // Timeout is used to update the scroll after the last element added
-            this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-        }, 2);
+        // setTimeout(() => {
+        //     // Timeout is used to update the scroll after the last element added
+        //     this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+        // }, 2);
     }
 
     //Tested
