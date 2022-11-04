@@ -11,7 +11,7 @@ export class ImageRenderedComponent implements OnInit {
     @Input() idFromParent: number;
     isImageObtained: boolean;
     urlImage: SafeValue;
-    constructor(private editImagesService: ListImagesRenderedService,private assignImageDataService:AssignImageDataService) {}
+    constructor(private editImagesService: ListImagesRenderedService, private assignImageDataService: AssignImageDataService) {}
 
     ngOnInit(): void {
         this.getDataSingleImage();
@@ -21,33 +21,33 @@ export class ImageRenderedComponent implements OnInit {
         this.getDeletedImageId();
     }
 
-    updateIsImageObtainedAndUrl(){
-        this.isImageObtained = this.assignImageDataService.getIsImageObtained()
-        this.urlImage = this.assignImageDataService.getUrlImage()
+    updateIsImageObtainedAndUrl() {
+        this.isImageObtained = this.assignImageDataService.getIsImageObtained();
+        this.urlImage = this.assignImageDataService.getUrlImage();
     }
 
     getDataSingleImage() {
-        this.editImagesService.getDataImageSingle().subscribe((dataOfImage: { index: any; url: SafeValue; }) => {
-            if (dataOfImage.index === this.idFromParent){
-            this.assignImageDataService.assignImageData(dataOfImage);
-            this.updateIsImageObtainedAndUrl();
-        }
+        this.editImagesService.getDataImageSingleObservable().subscribe((dataOfImage: { index: any; url: SafeValue }) => {
+            if (dataOfImage.index === this.idFromParent) {
+                this.assignImageDataService.assignImageData(dataOfImage);
+                this.updateIsImageObtainedAndUrl();
+            }
         });
     }
 
     getDataMultipleImage() {
-        this.editImagesService.getDataImageMultiple().subscribe((url: SafeValue) => {
-            this.assignImageDataService.assignMultipleImageData(url)
+        this.editImagesService.getDataImageMultipleObservable().subscribe((url: SafeValue) => {
+            this.assignImageDataService.assignMultipleImageData(url);
             this.updateIsImageObtainedAndUrl();
         });
     }
 
     getDeletedImageId() {
-        this.editImagesService.getIdImageToRemove().subscribe((dataOfImage: number) => {
+        this.editImagesService.getIdImageToRemoveObservable().subscribe((dataOfImage: number) => {
             if (dataOfImage === this.idFromParent) {
-            this.assignImageDataService.deleteImage()
-            this.updateIsImageObtainedAndUrl();
-        }
+                this.assignImageDataService.deleteImage();
+                this.updateIsImageObtainedAndUrl();
+            }
         });
     }
 }

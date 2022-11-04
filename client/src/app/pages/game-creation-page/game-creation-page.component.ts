@@ -22,14 +22,14 @@ export class GameCreationPageComponent implements OnInit {
     }
 
     private subscirbeToGetDataImageMultiple() {
-        this.editImageService.getDataImageMultiple().subscribe((url: any) => {
+        this.editImageService.getDataImageMultipleObservable().subscribe((url: any) => {
             this.gameToServerService.setOriginalUrlUploaded(ORIGINAL_IMAGE_POSITION, url);
             this.gameToServerService.setModifiedUrlUploaded(MODIFIED_IMAGE_POSITION, url);
         });
     }
 
     private subscirbeToGetDataImageSingle() {
-        this.editImageService.getDataImageSingle().subscribe((dataOfImage: { index: number; url: any }) => {
+        this.editImageService.getDataImageSingleObservable().subscribe((dataOfImage: { index: number; url: any }) => {
             if (dataOfImage.index == ORIGINAL_IMAGE_POSITION) {
                 this.gameToServerService.setOriginalUrlUploaded(dataOfImage.index, dataOfImage.url);
             } else if (dataOfImage.index == MODIFIED_IMAGE_POSITION) {
@@ -39,7 +39,7 @@ export class GameCreationPageComponent implements OnInit {
     }
 
     private subscirbeToGetIdImageToRemove() {
-        this.editImageService.getIdImageToRemove().subscribe((indexImage: number | undefined) => {
+        this.editImageService.getIdImageToRemoveObservable().subscribe((indexImage: number | undefined) => {
             if (this.gameToServerService.getModifiedImageUploaded().index == indexImage) {
                 this.gameToServerService.setModifiedUrlUploaded(undefined, undefined);
             } else if (this.gameToServerService.getOriginalImageUploaded().index == indexImage) {

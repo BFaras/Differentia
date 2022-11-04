@@ -22,16 +22,16 @@ export class ListImagesRenderedService {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getIdImageToRemove(): Observable<any> {
+    getIdImageToRemoveObservable(): Observable<any> {
         return this.activatedEmitterRemoveImage;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getDataImageSingle(): Observable<{ index: number; url: string }> {
+    getDataImageSingleObservable(): Observable<{ index: number; url: string }> {
         return this.activatedEmitterUrlImageSingle;
     }
 
-    getDataImageMultiple(): Observable<string> {
+    getDataImageMultipleObservable(): Observable<string> {
         return this.activatedEmitterUrlImageBoth;
     }
 }
