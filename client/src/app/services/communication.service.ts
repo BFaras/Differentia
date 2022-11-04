@@ -15,12 +15,10 @@ export class CommunicationService {
     constructor(private readonly http: HttpClient) {}
 
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {
-        console.log(result);
         return () => of(result as T);
     }
 
     getGames(): Observable<Array<Game>> {
-        console.log('avant le get');
         return this.http.get<Array<Game>>(`${this.baseUrl}/games`).pipe(catchError(this.handleError<Array<Game>>('getGames')));
     }
 

@@ -8,7 +8,7 @@ import * as io from 'socket.io';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
 import { MouseHandlerService } from './mouse-handler.service';
-import { WaitingLineHandlerService } from './waitingLineHandler.service';
+import { WaitingLineHandlerService } from './waiting-line-handler.service';
 
 export class SocketManager {
     private sio: io.Server;
@@ -59,13 +59,20 @@ export class SocketManager {
             });
 
             socket.on('I am waiting', (gameName: string) => {
-                console.log('creation createur');
                 this.waitingLineHandlerService.addCreatingPlayer(gameName, socket.id);
                 this.sio.emit(`${gameName} let me tell you if someone is waiting`, true);
             });
 
-            socket.on('Reload game selection page', (msg) => {
-                this.sio.emit('Page reloaded', msg);
+            socket.on('Reload game selection page', (msg: string) => {
+                let roomToKeep: string[] = [];
+                for (let rooms of this.gameManagerService.gamesRooms.entries()) {
+                    if (roomToKeep.length === 0)
+                        rooms[1].forEach((room) => {
+                            roomToKeep.push(room);
+                        });
+                    else roomToKeep = roomToKeep.concat(rooms[1]);
+                }
+                this.sio.except(roomToKeep).emit('Page reloaded', msg);
             });
 
             socket.on('I left', (gameName: string) => {

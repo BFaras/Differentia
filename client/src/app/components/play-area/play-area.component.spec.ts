@@ -6,6 +6,8 @@ import { DrawService } from '@app/services/draw.service';
 import { ImageGeneratorService } from '@app/services/image-generator.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { SocketClientService } from '@app/services/socket-client.service';
+import { DEFAULT_USERNAME } from '@common/const';
+import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
 import { Socket } from 'socket.io-client';
 import { PlayAreaComponent } from './play-area.component';
@@ -14,7 +16,7 @@ describe('PlayAreaComponent', () => {
     let component: PlayAreaComponent;
     let fixture: ComponentFixture<PlayAreaComponent>;
     let socketServiceSpy: SpyObj<SocketClientService>;
-    let mouseServiceSpy: SpyObj<DifferenceDetectionService>;
+    let differenceServiceSpy: SpyObj<DifferenceDetectionService>;
     let drawServiceSpy: SpyObj<DrawService>;
     let matDialogSpy: SpyObj<MatDialog>;
     let imageGeneratorSpy: SpyObj<ImageGeneratorService>;
@@ -23,12 +25,18 @@ describe('PlayAreaComponent', () => {
     let position: Position = { x: 10, y: 20 };
     let differenceImage: HTMLImageElement[] = [new Image(640, 480)];
     let socketTestHelper: SocketTestHelper;
+    const differencesFoundInfo: GameplayDifferenceInformations = {
+        differencePixelsNumbers: [],
+        isValidDifference: true,
+        playerUsername: DEFAULT_USERNAME,
+        socketId: '',
+    };
 
     beforeAll(async () => {
         socketServiceSpy = jasmine.createSpyObj('SocketClientService', ['connect', 'on', 'send']);
-        mouseServiceSpy = jasmine.createSpyObj('MouseDetectionService', ['mouseHitDetect', 'clickMessage']);
+        differenceServiceSpy = jasmine.createSpyObj('MouseDetectionService', ['mouseHitDetect', 'clickMessage']);
         matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
-        drawServiceSpy = jasmine.createSpyObj('DrawService', ['context1', 'context2', 'context3', 'drawWord']);
+        drawServiceSpy = jasmine.createSpyObj('DrawService', ['context1', 'context2', 'context3', 'context4', 'context5', 'drawWord']);
         imageGeneratorSpy = jasmine.createSpyObj('ImageGeneratorService', ['copyCertainPixelsFromOneImageToACanvas']);
         imageDifferenceSpy = jasmine.createSpyObj('ImageToImageDifferenceService', ['waitForImageToLoad']);
     });
@@ -39,7 +47,7 @@ describe('PlayAreaComponent', () => {
             providers: [
                 { provide: SocketClientService, useValue: socketServiceSpy },
                 { provide: DrawService, useValue: drawServiceSpy },
-                { provide: DifferenceDetectionService, useValue: mouseServiceSpy },
+                { provide: DifferenceDetectionService, useValue: differenceServiceSpy },
                 { provide: ImageToImageDifferenceService, useValue: imageDifferenceSpy },
                 { provide: MatDialog, useValue: matDialogSpy },
                 { provide: ImageGeneratorService, useValue: imageGeneratorSpy },
@@ -65,6 +73,8 @@ describe('PlayAreaComponent', () => {
         component['displayImages']();
         fixture.detectChanges();
         expect(drawServiceSpy).toHaveBeenCalled();
+        expect(drawServiceSpy['context1'].drawImage).toHaveBeenCalled();
+        expect(spyOn(drawServiceSpy['context1'], 'drawImage')).toBeTruthy();
     });
 
     it('should open dialog', () => {
@@ -72,13 +82,28 @@ describe('PlayAreaComponent', () => {
         expect(matDialogSpy).toBeTruthy();
     });
 
-    it('should detect mouseEvent  ', () => {
+    it('should detect mouseEvent', () => {
         mouseEvent = {
             offsetX: position.x,
             offsetY: position.y,
             button: 0,
         } as MouseEvent;
         component.detectDifference(mouseEvent);
-        expect(mouseServiceSpy['mouseHitDetect']).toHaveBeenCalled();
+        expect(differenceServiceSpy['mouseHitDetect']).toHaveBeenCalled();
     });
+
+    it('should configure socket', () => {
+        component['configurePlayAreaSocket'];
+        socketTestHelper.peerSideEmit('Valid click', differencesFoundInfo);
+        socketServiceSpy.connect();
+        expect(component['pixelList']).toEqual(differencesFoundInfo.differencePixelsNumbers);
+        expect(socketServiceSpy['on']).toHaveBeenCalled();
+        socketTestHelper.peerSideEmit('End game', () => {});
+    });
+
+    // it('should configure socket', () => {
+    //     component.configurePlayAreaSocket();
+    //     socketTestHelper.peerSideEmit('Valid click', differencesFoundInfo);
+    //     expect(component.pixelList).toEqual(differencesFoundInfo.differencePixelsNumbers);
+    // });
 });

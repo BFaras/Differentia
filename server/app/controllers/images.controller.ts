@@ -16,8 +16,8 @@ export class ImagesController {
         this.router.post('/', (req: Request, res: Response) => {
             if (req['files']) {
                 let sampleFile = req['files'].file;
-                const filePatth = './assets/images/' + sampleFile.name;
-                sampleFile.mv(filePatth);
+                const filePath = './assets/images/' + sampleFile.name;
+                sampleFile.mv(filePath);
                 res.sendStatus(StatusCodes.CREATED);
             } else {
                 res.sendStatus(StatusCodes.BAD_REQUEST);

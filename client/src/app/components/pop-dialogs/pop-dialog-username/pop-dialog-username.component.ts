@@ -23,7 +23,6 @@ export class PopDialogUsernameComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        console.log('ngOnInit de username est appelé');
         this.socketService.connect();
         this.configureUsernamePopUpSocketFeatures();
     }

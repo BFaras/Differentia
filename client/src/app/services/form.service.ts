@@ -24,7 +24,6 @@ export class FormService {
                 this.parseGameList();
             })
             .catch((error: Error) => console.log(error));
-        console.log('apres receive');
     }
 
     private parseGameList() {
