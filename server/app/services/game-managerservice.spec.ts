@@ -50,10 +50,6 @@ describe('GameManagerService tests', () => {
             return mouseHandlerService;
         });
 
-        sinon.stub(GameManagerService.prototype, <any>'getSocketUsername').callsFake((socket) => {
-            return testUsername;
-        });
-
         sinon.stub(gamesService, 'getGame').callsFake(async (gameName: string) => {
             return Promise.resolve(testGame);
         });
@@ -62,14 +58,16 @@ describe('GameManagerService tests', () => {
             return Promise.resolve(['', '']);
         });
 
-        mouseHandlerIsValidClickStub = sinon.stub(MouseHandlerService.prototype, 'isValidClick').callsFake(() => {
+        mouseHandlerIsValidClickStub = sinon.stub(MouseHandlerService.prototype, 'isValidClick').callsFake((): GameplayDifferenceInformations => {
             return {
                 differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
                 isValidDifference: false,
-                socketId: testSocketId1,
+                socketId: testUsername,
                 playerUsername: testUsername,
             };
         });
+
+        serverSocket.data.username = testUsername;
     });
 
     afterEach(async () => {
@@ -124,9 +122,59 @@ describe('GameManagerService tests', () => {
         expect(mouseHandlerIsValidClickStub.calledOnce);
     });
 
+    it('should call isGameFinishedSolo() to verify if the game is finished', () => {
+        const spy = sinon.spy(gameManagerService, <any>'isGameFinishedSolo');
+        gameManagerService.isGameFinishedSolo(serverSocket);
+        expect(spy.calledOnce);
+    });
+
+    it('should call isGameFinishedMulti() to verify if the game is finished', () => {
+        const spy = sinon.spy(gameManagerService, <any>'isGameFinishedMulti');
+        gameManagerService.isGameFinishedMulti(serverSocket);
+        expect(spy.calledOnce);
+    });
+
+    // Tests passed pas
+    it('should call deleteRoom() on handleEndGameEmit()', () => {
+        const spy = sinon.spy(gameManagerService, <any>'deleteRoom');
+        gameManagerService.handleEndGameEmits(serverSocket, true);
+        expect(spy.calledOnce);
+    });
+
+    // Tests passed pas
+    it('should call deleteRoom() on handleAbandonEmit()', () => {
+        const spy = sinon.spy(gameManagerService, <any>'deleteRoom');
+        gameManagerService.handleAbandonEmit(serverSocket);
+        expect(spy.calledOnce);
+    });
+
+    it('should call findSocketGameRoomName() on getSocketMouseHandlerService()', () => {
+        const spy = sinon.spy(gameManagerService, <any>'findSocketGameRoomName');
+        gameManagerService.getSocketMouseHandlerService(serverSocket);
+        expect(spy.calledOnce);
+    });
+
     it('should call endChrono() on endGame()', () => {
         const spy = sinon.spy(gameManagerService, <any>'endChrono');
         gameManagerService.endGame(serverSocket);
         expect(spy.calledOnce);
+    });
+
+    it('should tell if the game in solo is done or not', () => {
+        mouseHandlerService.nbDifferencesTotal = 7;
+        const stub = sinon.stub(mouseHandlerService, 'getNumberOfDifferencesFoundByPlayer').callsFake(() => {
+            return 4;
+        });
+        expect(gameManagerService.isGameFinishedSolo(serverSocket)).to.be.false;
+        expect(stub.calledOnce);
+    });
+
+    it('should tell if the game in multiplayer is done or not', () => {
+        mouseHandlerService.nbDifferencesTotal = 7;
+        const stub = sinon.stub(mouseHandlerService, 'getNumberOfDifferencesFoundByPlayer').callsFake(() => {
+            return 4;
+        });
+        expect(gameManagerService.isGameFinishedMulti(serverSocket)).to.be.true;
+        expect(stub.calledOnce);
     });
 });

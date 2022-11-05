@@ -27,7 +27,6 @@ export class ListImagesRenderedService {
         return this.activatedEmitterRemoveImage;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getDataImageSingleObservable(): Observable<ImageRenderedInformations> {
         return this.activatedEmitterUrlImageSingle;
     }

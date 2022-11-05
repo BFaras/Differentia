@@ -32,6 +32,7 @@ export class ChatMessagesService {
         });
     }
 
+    //Tested
     sendMessage(senderName: string, message: string) {
         this.socketService.send('playerMessage', this.generateChatMessage(senderName, message));
     }
@@ -65,6 +66,7 @@ export class ChatMessagesService {
                 observer.next(this.generateChatMessageFromGame(MESSAGE_ERROR_DIFFERENCE_SOLO));
             }
         });
+        // Tested
         this.socketService.on('Send message to opponent', (message: ChatMessage) => {
             observer.next(message);
         });
