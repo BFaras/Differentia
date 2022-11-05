@@ -51,8 +51,7 @@ describe('ChatMessagesService', () => {
     let messageReceivedFromObservable: ChatMessage;
 
     beforeAll(() => {
-        TestBed.configureTestingModule({
-        });
+        TestBed.configureTestingModule({});
         socketService = TestBed.inject(SocketClientService);
         chatMessagesService = TestBed.inject(ChatMessagesService);
         socketTestHelper = new SocketTestHelper();
@@ -61,7 +60,7 @@ describe('ChatMessagesService', () => {
 
     afterEach(() => {
         if (observer) {
-        observer.unsubscribe();
+            observer.unsubscribe();
         }
     });
 
