@@ -50,16 +50,26 @@ describe('PopDialogUsernameComponent', () => {
         expect(component.disabledButton).toBeTrue();
     });
 
-    it('should call configure socket in NgonInit', async () => {
-        const spy = spyOn(component, <any>'configureUsernamePopUpSocketFeatures');
-        await component.ngOnInit();
-        expect(spy).toHaveBeenCalled();
-        expect(socketSpy['connect']).toHaveBeenCalled();
-    });
+    // it('should call configure socket in NgonInit', async () => {
+    //     const spy = spyOn(component, <any>'configureUsernamePopUpSocketFeatures');
+    //     await component.ngOnInit();
+    //     expect(spy).toHaveBeenCalled();
+    //     expect(socketSpy['connect']).toHaveBeenCalled();
+    // });
 
-    it('should call configure socket in NgonInit', async () => {
-        spyOn(component, <any>'configureUsernamePopUpSocketFeatures').and.callThrough();
-        await component.ngOnInit();
-        expect(socketSpy['on']).toHaveBeenCalled();
-    });
+    // it('should call configure socket in NgonInit', async () => {
+    //     spyOn(component, <any>'configureUsernamePopUpSocketFeatures').and.callThrough();
+    //     await component.ngOnInit();
+    //     expect(socketSpy['on']).toHaveBeenCalled();
+    // });
+
+    // it('should call event `on` with sockets', async () => {
+    //     let socket: SocketClientService = new SocketClientService();
+    //     const spy = spyOn(component, <any>'openDialog');
+    //     spyOn(socket, 'on').and.callFake(() => {
+    //         componentSpy['openDialog'];
+    //     });
+    //     component['configureUsernamePopUpSocketFeatures'];
+    //     expect(spy).toBeDefined();
+    // });
 });
