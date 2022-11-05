@@ -8,10 +8,10 @@ import { SocketClientService } from './socket-client.service';
     providedIn: 'root',
 })
 export class DifferenceDetectionService {
-    constructor(public socketService: SocketClientService, private drawService: DrawService) {}
-    mousePosition: Position = { x: 0, y: 0 };
-    message: string = '';
-    audio: HTMLAudioElement;
+    constructor(private socketService: SocketClientService, private drawService: DrawService) {}
+    private mousePosition: Position = { x: 0, y: 0 };
+    private message: string = '';
+    private audio: HTMLAudioElement;
 
     mouseHitDetect(event: MouseEvent) {
         if (event.button === MouseButton.Left) {
@@ -20,13 +20,11 @@ export class DifferenceDetectionService {
         }
     }
 
-    //To test
     playSound(differenceIsValid: boolean, isLocalPlayer: boolean) {
         if (differenceIsValid) this.playAudio('../../assets/sounds/validSound.mp3');
         else if (isLocalPlayer) this.playAudio('../../assets/sounds/invalidSound.mp3');
     }
 
-    //To test
     clickMessage(differenceIsValid: boolean, isLocalPlayer: boolean) {
         if (differenceIsValid) {
             this.message = 'BON TRAVAIL';
@@ -41,14 +39,13 @@ export class DifferenceDetectionService {
         }
     }
 
-    //To correct test
     verifyGameFinished(differenceIsValid: boolean, isMultiplayer: boolean, isLocalPlayer: boolean) {
         if (differenceIsValid && isLocalPlayer) {
             this.socketService.send('Check if game is finished', isMultiplayer);
         }
     }
 
-    drawMessage(message: string) {
+    private drawMessage(message: string) {
         this.drawService.drawWord(message, this.mousePosition, this.drawService.context1);
         this.drawService.drawWord(message, this.mousePosition, this.drawService.context2);
     }

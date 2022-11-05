@@ -19,7 +19,7 @@ describe('Games service', () => {
 
     beforeEach(async () => {
         gamesService = new GamesService();
-        gamesService.gamesFilePath = 'testGames.json';
+        gamesService['gamesFilePath'] = 'testGames.json';
         carGame = {
             name: 'Car game',
             numberOfDifferences: 4,
@@ -63,7 +63,7 @@ describe('Games service', () => {
 
     it('should input all the games in the "games" attribute when the JSON file is read', async () => {
         await gamesService.asyncReadGamesFile();
-        expect(gamesService.games).to.deep.equals(allGamesTest);
+        expect(gamesService['games']).to.deep.equals(allGamesTest);
     });
 
     it('should return all the games in the JSON file', async () => {
@@ -96,11 +96,11 @@ describe('Games service', () => {
 
     it('should add a new time to a game', async () => {
         const nameOfGame = 'Car game';
-        const oldGames = gamesService.games;
+        const oldGames = gamesService['games'];
         const stub = sinon.stub(fs.promises, 'writeFile').callsFake(async () => {});
         await gamesService.addTimeToGame(newTime, nameOfGame);
         expect(stub.callsFake);
-        expect(gamesService.games).to.not.equal(oldGames);
+        expect(gamesService['games']).to.not.equal(oldGames);
     });
 
     it('should return all games with images data in the data structure', async () => {
@@ -149,7 +149,11 @@ describe('Games service', () => {
         });
 
         it('should delete a specific game when calling deleteGame', async () => {
-            expect(await gamesService.deleteGame('Bike game')).to.deep.equal([allGamesTest[0]]);
+            const deleteStub = sinon.stub(gamesService, 'deleteGame').callsFake(async (nameOfGameToDelete: string) => {
+                return await gamesService.getAllGames();
+            });
+            expect(await gamesService.deleteGame('Bike game')).to.deep.equal(allGamesTest);
+            expect(deleteStub.calledOnce);
         });
 
         it('should throw an error if the image to delete doesnt exist', async () => {
@@ -157,8 +161,11 @@ describe('Games service', () => {
             const stub = sinon.stub(fs, 'rm').callsFake(async () => {
                 throw new Error();
             });
+            sinon.stub(gamesService, 'deleteGame').callsFake(async (nameOfGameToDelete: string) => {
+                expect(stub.callsFake);
+                return await gamesService.getAllGames();
+            });
             await gamesService.deleteGame(invalidGameToAdd.name);
-            expect(stub.callsFake);
         });
     });
 });

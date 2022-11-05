@@ -16,6 +16,8 @@ import { MouseHandlerService } from './mouse-handler.service';
 describe('GameManagerService tests', () => {
     const testGameName = 'test12345';
     const testUsername = 'myName15';
+    const testSocketId1 = 'JKHSDA125';
+    const testSocketId2 = 'IIUUYSD5896';
     const testGame: Game = {
         name: testGameName,
         numberOfDifferences: 2,
@@ -36,8 +38,8 @@ describe('GameManagerService tests', () => {
     let mouseHandlerIsValidClickStub: sinon.SinonStub<[mousePosition: Position, plrSocketId: string], GameplayDifferenceInformations>;
 
     beforeEach(async () => {
-        serverSocket = new ServerSocketTestHelper('JKHSDA125') as unknown as io.Socket;
-        serverSocket2 = new ServerSocketTestHelper('IIUUYSD5896') as unknown as io.Socket;
+        serverSocket = new ServerSocketTestHelper(testSocketId1) as unknown as io.Socket;
+        serverSocket2 = new ServerSocketTestHelper(testSocketId2) as unknown as io.Socket;
         gameManagerService = new GameManagerService(new ServerIOTestHelper() as unknown as io.Server);
 
         sinon.stub(GameManagerService.prototype, <any>'getSocketChronometerService').callsFake((socket) => {
@@ -60,12 +62,12 @@ describe('GameManagerService tests', () => {
             return Promise.resolve(['', '']);
         });
 
-        mouseHandlerIsValidClickStub = sinon.stub(MouseHandlerService.prototype, 'isValidClick').callsFake(() => {
+        mouseHandlerIsValidClickStub = sinon.stub(MouseHandlerService.prototype, 'isValidClick').callsFake((): GameplayDifferenceInformations => {
             return {
                 differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
                 isValidDifference: false,
                 socketId: testUsername,
-                playerUsername: testUsername
+                playerUsername: testUsername,
             };
         });
     });
@@ -122,9 +124,60 @@ describe('GameManagerService tests', () => {
         expect(mouseHandlerIsValidClickStub.calledOnce);
     });
 
+    it('should call isGameFinishedSolo() to verify if the game is finished', () => {
+        const spy = sinon.spy(gameManagerService, <any>'isGameFinishedSolo');
+        gameManagerService.isGameFinishedSolo(serverSocket);
+        expect(spy.calledOnce);
+    });
+
+    it('should call isGameFinishedMulti() to verify if the game is finished', () => {
+        const spy = sinon.spy(gameManagerService, <any>'isGameFinishedMulti');
+        gameManagerService.isGameFinishedMulti(serverSocket);
+        expect(spy.calledOnce);
+    });
+
+    // Tests passed pas, why?
+    it('should call deleteRoom() on handleEndGameEmit()', () => {
+        const spy = sinon.spy(gameManagerService, <any>'deleteRoom');
+        gameManagerService.handleEndGameEmits(serverSocket, true);
+        expect(spy.calledOnce);
+    });
+
+    // Tests passed pas, why?
+    it('should call deleteRoom() on handleAbandonEmit()', () => {
+        const spy = sinon.spy(gameManagerService, <any>'deleteRoom');
+        gameManagerService.handleAbandonEmit(serverSocket);
+        expect(spy.calledOnce);
+    });
+
+    // Devrait couvrir ligen 117-118
+    it('should call findSocketGameRoomName() on getSocketMouseHandlerService()', () => {
+        const spy = sinon.spy(gameManagerService, <any>'findSocketGameRoomName');
+        gameManagerService.getSocketMouseHandlerService(serverSocket);
+        expect(spy.calledOnce);
+    });
+
     it('should call endChrono() on endGame()', () => {
         const spy = sinon.spy(gameManagerService, <any>'endChrono');
         gameManagerService.endGame(serverSocket);
         expect(spy.calledOnce);
+    });
+
+    it('should tell if the game in solo is done or not', () => {
+        mouseHandlerService.nbDifferencesTotal = 7;
+        const stub = sinon.stub(mouseHandlerService, 'getNumberOfDifferencesFoundByPlayer').callsFake(() => {
+            return 4;
+        });
+        expect(gameManagerService.isGameFinishedSolo(serverSocket)).to.be.false;
+        expect(stub.calledOnce);
+    });
+
+    it('should tell if the game in multiplayer is done or not', () => {
+        mouseHandlerService.nbDifferencesTotal = 7;
+        const stub = sinon.stub(mouseHandlerService, 'getNumberOfDifferencesFoundByPlayer').callsFake(() => {
+            return 4;
+        });
+        expect(gameManagerService.isGameFinishedMulti(serverSocket)).to.be.true;
+        expect(stub.calledOnce);
     });
 });

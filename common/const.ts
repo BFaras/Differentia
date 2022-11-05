@@ -26,6 +26,8 @@ export const DEFAULT_DIFFERENCE_POSITION = -1;
 export const RADIUS_AROUND_PIXEL = 1;
 export const UP = -1;
 export const DOWN = 1;
+export const DEFAULT_NB_OF_DIFFERENCES = 0;
+export const EMPTY_OFFSET_NB = 0;
 
 //Differences found constants
 export const NO_DIFFERENCE_FOUND_ARRAY: number[] = [];
@@ -33,8 +35,10 @@ export const NO_DIFFERENCE_FOUND_ARRAY: number[] = [];
 //Images constants
 export const IMAGE_WIDTH = 640;
 export const IMAGE_HEIGHT = 480;
+export const CORRECT_BIT_DEPTH = 24;
 export const DEFAULT_OFFSET = 3;
 export const MINIMUM_PIXEL_POSITION = 0;
+export const CORRECT_IMAGE_FORMAT = 'image/bmp';
 
 //constantes message quand add game
 

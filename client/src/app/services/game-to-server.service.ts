@@ -1,6 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { ElementRef, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { MAXIMUM_NB_DIFFERENCES, MINIMUM_NB_DIFFERENCES } from '@app/client-consts';
 import { MESSAGE_JEU_CREER, MESSAGE_JEU_NON_CREER, MESSAGE_NOMBRE_DIFFERENCE_ERREUR } from '@common/const';
 import { Game } from '@common/game';
 import { ImageToSendToServer } from '@common/imageToSendToServer';
@@ -19,10 +20,10 @@ export class GameToServerService {
 
     constructor(private route: Router, private communicationService: CommunicationService, private uploadFileService: UploadFileService) {}
 
-    goToAdmin() {
+    private goToAdmin() {
         this.route.navigate(['/admin']);
     }
-    statusCodeTreatment(responseStatusCode: any) {
+    private statusCodeTreatment(responseStatusCode: any) {
         if (responseStatusCode == StatusCodes.BAD_GATEWAY) alert(MESSAGE_JEU_NON_CREER);
         else {
             alert(MESSAGE_JEU_CREER);
@@ -30,8 +31,8 @@ export class GameToServerService {
         }
     }
 
-    validateNumberOfDifferences() {
-        return this.numberDifference >= 3 && this.numberDifference <= 9;
+    private validateNumberOfDifferences() {
+        return this.numberDifference >= MINIMUM_NB_DIFFERENCES && this.numberDifference <= MAXIMUM_NB_DIFFERENCES;
     }
 
     addGame(inputName: ElementRef) {
@@ -51,7 +52,7 @@ export class GameToServerService {
         } else alert(MESSAGE_NOMBRE_DIFFERENCE_ERREUR);
     }
 
-    sendBothImagesToServer() {
+    private sendBothImagesToServer() {
         this.uploadFileService.upload(this.uploadFileService.getNameOriginalImage());
         this.uploadFileService.upload(this.uploadFileService.getNameModifiedImage());
     }

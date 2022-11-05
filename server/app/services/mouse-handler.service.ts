@@ -8,9 +8,9 @@ import { GamesService } from './local.games.service';
 
 @Service()
 export class MouseHandlerService {
-    differencesHashmap: Map<number, number>;
-    differencesList: number[][];
-    differencesNbFoundByPlayer: Map<string, number[]>;
+    private differencesHashmap: Map<number, number>;
+    private differencesList: number[][];
+    private differencesNbFoundByPlayer: Map<string, number[]>;
     nbDifferencesTotal: number;
 
     constructor() {

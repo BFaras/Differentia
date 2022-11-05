@@ -10,9 +10,9 @@ import { MouseHandlerService } from './mouse-handler.service';
 
 @Service()
 export class GameManagerService {
-    readonly timeIntervals: Map<string, NodeJS.Timer> = new Map<string, NodeJS.Timer>();
-    readonly chronometerServices: Map<string, ChronometerService> = new Map<string, ChronometerService>();
-    readonly mouseHandlerServices: Map<string, MouseHandlerService> = new Map<string, MouseHandlerService>();
+    private readonly timeIntervals: Map<string, NodeJS.Timer> = new Map<string, NodeJS.Timer>();
+    private readonly chronometerServices: Map<string, ChronometerService> = new Map<string, ChronometerService>();
+    private readonly mouseHandlerServices: Map<string, MouseHandlerService> = new Map<string, MouseHandlerService>();
     private gamesService = Container.get(GamesService);
     gamesRooms: Map<string, string[]> = new Map<string, string[]>();
 
@@ -49,7 +49,7 @@ export class GameManagerService {
         this.sio.to(gameRoomName).emit('The game is', gameName);
     }
 
-    async endGame(socket: io.Socket) {
+    endGame(socket: io.Socket) {
         const gameRoomName: string = this.findSocketGameRoomName(socket);
         this.endChrono(socket);
         this.chronometerServices.delete(gameRoomName);
@@ -66,21 +66,19 @@ export class GameManagerService {
         this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
     }
 
-    //To test
     isGameFinishedSolo(socket: io.Socket) {
         const mouseHandler = this.getSocketMouseHandlerService(socket);
         return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === mouseHandler.nbDifferencesTotal;
     }
 
-    //To test
     isGameFinishedMulti(socket: io.Socket) {
         const mouseHandler = this.getSocketMouseHandlerService(socket);
         return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === Math.floor(mouseHandler.nbDifferencesTotal / 2) + 1;
     }
 
-    //To test
+    // To test
     handleEndGameEmits(socket: io.Socket, isMultiplayer: boolean) {
-        let endGameInfos: EndGameInformations = {
+        const endGameInfos: EndGameInformations = {
             isMultiplayer: isMultiplayer,
             isAbandon: false,
             isGameWon: true,
@@ -92,9 +90,9 @@ export class GameManagerService {
         socket.broadcast.to(this.findSocketGameRoomName(socket)).emit('End game', endGameInfos);
     }
 
-    //To test
+    // To test
     handleAbandonEmit(socket: io.Socket) {
-        let endGameInfos: EndGameInformations = {
+        const endGameInfos: EndGameInformations = {
             isMultiplayer: true,
             isAbandon: true,
             isGameWon: true,
@@ -114,6 +112,7 @@ export class GameManagerService {
         return gameRoomName;
     }
 
+    // To test
     getSocketMouseHandlerService(socket: io.Socket): MouseHandlerService {
         const gameRoomName = this.findSocketGameRoomName(socket);
         return this.mouseHandlerServices.get(gameRoomName)!;
@@ -135,7 +134,7 @@ export class GameManagerService {
         );
     }
 
-    private logRoomsWithGames(gameName: string, roomName: string) {
+    private logRoomsWithGames(gameName: string, roomName: string): void {
         let rooms: string[] = [];
         if (this.gamesRooms.has(gameName)) {
             this.gamesRooms.get(gameName)?.forEach((socketRoom) => {
@@ -148,7 +147,7 @@ export class GameManagerService {
         this.gamesRooms.set(gameName, rooms);
     }
 
-    private deleteRoom(socket: io.Socket) {
+    private deleteRoom(socket: io.Socket): void {
         const gameRoomName = this.findSocketGameRoomName(socket);
         let gameName = '';
         for (let rooms of this.gamesRooms.entries()) {

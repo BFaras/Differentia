@@ -4,7 +4,7 @@ import { DifferenceDetectionService } from './difference-detection.service';
 import { DrawService } from './draw.service';
 import { SocketClientService } from './socket-client.service';
 
-describe('MouseDetectionService', () => {
+describe('DifferenceDetectionService', () => {
     let service: DifferenceDetectionService;
     let socketSpy: jasmine.SpyObj<SocketClientService>;
     let drawServiceSpy: jasmine.SpyObj<DrawService>;
@@ -32,7 +32,7 @@ describe('MouseDetectionService', () => {
         socketSpy.connect();
         drawServiceSpy.drawWord('hello', position, drawServiceSpy.context1);
         service = TestBed.inject(DifferenceDetectionService);
-        service.mousePosition = position;
+        service['mousePosition'] = position;
     });
 
     it('should be created', () => {
@@ -46,28 +46,54 @@ describe('MouseDetectionService', () => {
             button: 0,
         } as MouseEvent;
         service.mouseHitDetect(mouseEvent);
-        expect(service.mousePosition).toEqual(position);
+        expect(service['mousePosition']).toEqual(position);
     });
 
-    // it('should call correct sound', () => {
-    //     const playSoundSpy = spyOn(service, 'playSound').and.callThrough();
-    //     service.playSound(true);
-    //     expect(playSoundSpy).toHaveBeenCalled();
-    // });
+    it('should call correct sound', () => {
+        const playSoundSpy = spyOn(service, <any>'playAudio');
+        service.playSound(true, true);
+        expect(playSoundSpy).toBeDefined();
+    });
 
-    // it('should call incorrect sound', () => {
-    //     const playSoundSpy = spyOn(service, 'playSound').and.callThrough();
-    //     service.playSound(false);
-    //     expect(playSoundSpy).toHaveBeenCalled();
-    // });
+    it('should call incorrect sound', () => {
+        const playSoundSpy = spyOn(service, <any>'playAudio');
+        service.playSound(false, true);
+        expect(playSoundSpy).toHaveBeenCalled();
+    });
 
     it('should call clickMessage with good position', () => {
+        spyOn<any>(service, 'message');
         service.clickMessage(true, true);
-        expect(service.message).toEqual('GOOD JOB');
+        expect(service['message']).toEqual('BON TRAVAIL');
     });
 
     it('should call clickMessage with wrong position', () => {
+        spyOn<any>(service, 'message');
         service.clickMessage(false, true);
-        expect(service.message).toEqual('ERROR');
+        expect(service['message']).toEqual('ERREUR');
     });
+
+    it('should call verifyGameFinished', () => {
+        let isMultiplayer = true;
+        let differenceIsValid = true;
+        let isLocalPlayer = true;
+        service.verifyGameFinished(differenceIsValid, isMultiplayer, isLocalPlayer);
+        expect(socketSpy['send']).toHaveBeenCalled();
+    });
+
+    it('should verify if game in multiplayer is finished'),
+        () => {
+            const multiplayer = true;
+            const gameVerifiedSpy = spyOn(service, 'verifyGameFinished').and.callThrough();
+            service.verifyGameFinished(true, multiplayer, false);
+            expect(gameVerifiedSpy).toHaveBeenCalled();
+        };
+
+    it('should verify if game in solo is finished'),
+        () => {
+            const multiplayer = false;
+            const gameVerifiedSpy = spyOn(service, 'verifyGameFinished').and.callThrough();
+            service.verifyGameFinished(false, multiplayer, true);
+            expect(gameVerifiedSpy).toHaveBeenCalled();
+        };
 });

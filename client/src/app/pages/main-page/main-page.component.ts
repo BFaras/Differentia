@@ -7,12 +7,10 @@ import { SocketClientService } from '@app/services/socket-client.service';
     styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent {
-    // à mettre dans le fichier des constantes
     readonly title: string = 'Jeu de Difference';
     readonly buttonName: String[] = ['Mode classique', 'Temps limité', 'Administration'];
-    //
 
-    constructor(public socketService: SocketClientService) {}
+    constructor(private socketService: SocketClientService) {}
 
     get socketId() {
         return this.socketService.socket.id ? this.socketService.socket.id : '';
@@ -23,7 +21,7 @@ export class MainPageComponent {
         this.configureBaseSocketFeatures();
     }
 
-    configureBaseSocketFeatures() {
+    private configureBaseSocketFeatures() {
         this.socketService.on('connect', () => {
             console.log(`Connexion par WebSocket sur le socket ${this.socketId}`);
         });
