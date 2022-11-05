@@ -66,13 +66,11 @@ export class GameManagerService {
         this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
     }
 
-    //To test
     isGameFinishedSolo(socket: io.Socket) {
         const mouseHandler = this.getSocketMouseHandlerService(socket);
         return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === mouseHandler.nbDifferencesTotal;
     }
 
-    //To test
     isGameFinishedMulti(socket: io.Socket) {
         const mouseHandler = this.getSocketMouseHandlerService(socket);
         return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === Math.floor(mouseHandler.nbDifferencesTotal / 2) + 1;
@@ -114,6 +112,7 @@ export class GameManagerService {
         return gameRoomName;
     }
 
+    // To test
     getSocketMouseHandlerService(socket: io.Socket): MouseHandlerService {
         const gameRoomName = this.findSocketGameRoomName(socket);
         return this.mouseHandlerServices.get(gameRoomName)!;
