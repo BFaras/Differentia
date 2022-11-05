@@ -17,10 +17,11 @@ describe('ToolSettingComponent', () => {
   let mockDrawingHistory:ImageData[][];
   let mainCanvas: HTMLCanvasElement;
 
-  mainCanvas = CanvasTestHelper.createCanvas(IMAGE_HEIGHT, IMAGE_WIDTH);
-  const firstImageData = mainCanvas.getContext("2d")!.getImageData(0,0,IMAGE_WIDTH,IMAGE_HEIGHT)
+
   
   beforeAll(()=>{
+  mainCanvas = CanvasTestHelper.createCanvas(IMAGE_HEIGHT, IMAGE_WIDTH);
+  const firstImageData = mainCanvas.getContext("2d")!.getImageData(0,0,IMAGE_WIDTH,IMAGE_HEIGHT)
   mockDrawingHistory = [[firstImageData],[]];
   
   drawingHistoryServiceSpy = jasmine.createSpyObj('DrawingHandlerService',['getCancelDrawingHistory','getUndoCancelDrawingHistory','cancelCanvas','cancelDeletedCanvas']);
@@ -98,7 +99,7 @@ describe('ToolSettingComponent', () => {
     component.copyOtherCanvas();
     component.shareDataWithOtherCanvas();
 
-    expect(canvasDataHandlerServiceSpy.copyOtherCanvas).toHaveBeenCalled();
+    expect(canvasDataHandlerServiceSpy.copyCanvas).toHaveBeenCalled();
     expect(canvasDataHandlerServiceSpy.shareDataWithOtherCanvas).toHaveBeenCalled()
     expect(canvasDataHandlerServiceSpy.clearCanvas).toHaveBeenCalled()
   })

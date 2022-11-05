@@ -87,7 +87,7 @@ export class ToolSettingComponent implements OnInit {
   }
 
   copyOtherCanvas(){
-    this.canvasDataHandle.copyOtherCanvas(this.indexTool);
+    this.canvasDataHandle.copyCanvas(this.indexTool);
   }
 
   shareDataWithOtherCanvas(){
