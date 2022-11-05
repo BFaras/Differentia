@@ -10,41 +10,15 @@ import { SocketClientService } from '@app/services/socket-client.service';
 import { ImageToSendToServer } from '@common/imageToSendToServer';
 import { ImageDifferenceComponent } from './image-difference.component';
 // import SpyObj = jasmine.SpyObj;
-describe('ImageDifferenceComponent', () => {
+fdescribe('ImageDifferenceComponent', () => {
     let component: ImageDifferenceComponent;
     let fixture: ComponentFixture<ImageDifferenceComponent>;
-    // let imageToImagesDifferenceServiceSpy: SpyObj<ImageToImageDifferenceService>;
-    // let gameToServerServiceSpy: SpyObj<GameToServerService>;
-    // let socketServiceSpy: SpyObj<SocketClientService>;
     let gameToServerService: GameToServerService;
     let renderer: Renderer2;
     let mockImage: ImageToSendToServer = {
         image: 'url' as SafeValue,
         index: 1,
     };
-
-    // beforeAll(async () => {
-    //     imageToImagesDifferenceServiceSpy = jasmine.createSpyObj('ImageToImageDifferenceService', [
-    //         'waitForImageToLoad',
-    //         'getImagesData',
-    //         'putDifferencesDataInImage',
-    //     ]);
-    //     imageToImagesDifferenceServiceSpy.waitForImageToLoad.and.returnValue(Promise.resolve());
-    // gameToServerServiceSpy = jasmine.createSpyObj('GameToServerService', [
-    //     'getOriginalImageUploaded',
-    //     'getModifiedImageUploaded',
-    //     'setNumberDifference',
-    //     'setUrlImageOfDifference',
-    //     'setDifferencesList',
-    // ]);
-    //     socketServiceSpy = jasmine.createSpyObj('SocketClientService', ['connect', 'on', 'send']);
-
-    //     gameToServerServiceSpy.getOriginalImageUploaded.and.returnValue(mockImage);
-    //     gameToServerServiceSpy.getModifiedImageUploaded.and.returnValue(mockImage);
-    //     gameToServerServiceSpy.setNumberDifference.and.returnValue();
-    //     gameToServerServiceSpy.setUrlImageOfDifference.and.returnValue();
-    //     gameToServerServiceSpy.setDifferencesList.and.returnValue();
-    // });
 
     beforeEach(async () => {
         renderer = new Renderer2TestHelper() as unknown as Renderer2;
@@ -57,19 +31,22 @@ describe('ImageDifferenceComponent', () => {
 
         fixture = TestBed.createComponent(ImageDifferenceComponent);
         gameToServerService = fixture.debugElement.injector.get(GameToServerService);
-
-        spyOn(gameToServerService, 'getOriginalImageUploaded').and.callFake(() => {
-            return mockImage;
-        });
-        spyOn(gameToServerService, 'getModifiedImageUploaded').and.callFake(() => {
-            return mockImage;
-        });
-
-        fixture.detectChanges();
         component = fixture.componentInstance;
+
+        spyOn(gameToServerService, 'getOriginalImageUploaded').and.returnValue(mockImage);
+        spyOn(gameToServerService, 'getModifiedImageUploaded').and.returnValue(mockImage);
+        spyOn(ImageToImageDifferenceService.prototype, 'waitForImageToLoad').and.returnValue(Promise.resolve());
+        spyOn(ImageToImageDifferenceService.prototype, 'getImagesData').and.returnValue({
+            originalImageData: new Uint8ClampedArray(),
+            modifiedImageData: new Uint8ClampedArray(),
+            imageHeight: 0,
+            imageWidth: 0,
+            offSet: 0,
+        });
+        fixture.detectChanges();
     });
 
-    fit('should test load return true with number difference', async () => {
+    it('should test load return true with number difference', async () => {
         component.finalDifferencesImage.src = 'string';
         component['numberOfDifferences'] = 2;
 

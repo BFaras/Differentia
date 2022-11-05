@@ -53,7 +53,6 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
     }
 
     private async loadImages() {
-        console.log(this.gameToServerService.getOriginalImageUploaded());
         const unwrapedOriginalModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getOriginalImageUploaded().image as SafeValue);
         const unwrapedModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getModifiedImageUploaded().image as SafeValue);
 
