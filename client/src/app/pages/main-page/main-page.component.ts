@@ -7,10 +7,8 @@ import { SocketClientService } from '@app/services/socket-client.service';
     styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent {
-    // à mettre dans le fichier des constantes
     readonly title: string = 'Jeu de Difference';
     readonly buttonName: String[] = ['Mode classique', 'Temps limité', 'Administration'];
-    //
 
     constructor(private socketService: SocketClientService) {}
 

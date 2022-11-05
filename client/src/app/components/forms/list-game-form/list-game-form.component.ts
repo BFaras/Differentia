@@ -28,7 +28,6 @@ export class ListGameFormComponent implements OnInit {
     }
 
     nextPageGameForms() {
-        //const 4
         if (this.firstElementIndex + Constants.MAX_NB_OF_FORMS_PER_PAGE < this.formService.gameForms.length) {
             this.firstElementIndex += Constants.MAX_NB_OF_FORMS_PER_PAGE;
 
@@ -43,7 +42,6 @@ export class ListGameFormComponent implements OnInit {
     }
 
     previousPageGameForms() {
-        //const 4
         if (this.firstElementIndex - Constants.MAX_NB_OF_FORMS_PER_PAGE >= 0) {
             this.firstElementIndex -= Constants.MAX_NB_OF_FORMS_PER_PAGE;
             this.lastElementIndex = this.firstElementIndex + (Constants.MAX_NB_OF_FORMS_PER_PAGE - 1);

@@ -34,9 +34,9 @@ describe('GameCreationPageComponent', () => {
             'getDataImageSingle',
             'getDataImageMultiple',
         ]);
-        listImagesRenderedSpy.getIdImageToRemove.and.returnValue(mockEmitterGetIDToRemove);
-        listImagesRenderedSpy.getDataImageSingle.and.returnValue(mockEmitterGetSingleImage);
-        listImagesRenderedSpy.getDataImageMultiple.and.returnValue(mockEmitterGetMultipleImage);
+        listImagesRenderedSpy.getIdImageToRemoveObservable.and.returnValue(mockEmitterGetIDToRemove);
+        listImagesRenderedSpy.getDataImageSingleObservable.and.returnValue(mockEmitterGetSingleImage);
+        listImagesRenderedSpy.getDataImageMultipleObservable.and.returnValue(mockEmitterGetMultipleImage);
         gameToServerServiceSpy = jasmine.createSpyObj('gameToServerServiceSpy', [
             'setOriginalUrlUploaded',
             'setModifiedUrlUploaded',
