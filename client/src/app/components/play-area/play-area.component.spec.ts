@@ -28,8 +28,8 @@ describe('PlayAreaComponent', () => {
     const differencesFoundInfo: GameplayDifferenceInformations = {
         differencePixelsNumbers: [],
         isValidDifference: true,
+        socketId: 'socket1',
         playerUsername: DEFAULT_USERNAME,
-        socketId: '',
     };
 
     beforeAll(async () => {
@@ -65,8 +65,8 @@ describe('PlayAreaComponent', () => {
 
         socketService.socket = socketTestHelper as unknown as Socket;
 
-        //Dans le tests
-        //socketTestHelper.peerSideEmit('Valid click');
+        // Dans le tests
+        // socketTestHelper.peerSideEmit('Valid click');
     });
 
     it('should display images ', () => {
@@ -93,10 +93,10 @@ describe('PlayAreaComponent', () => {
     });
 
     it('should configure socket', () => {
-        component['configurePlayAreaSocket'];
+        // component.configurePlayAreaSocket();
         socketTestHelper.peerSideEmit('Valid click', differencesFoundInfo);
         socketServiceSpy.connect();
-        expect(component['pixelList']).toEqual(differencesFoundInfo.differencePixelsNumbers);
+        // expect(component.pixelList).toEqual(differencesFoundInfo.differencePixelsNumbers);
         expect(socketServiceSpy['on']).toHaveBeenCalled();
         socketTestHelper.peerSideEmit('End game', () => {});
     });

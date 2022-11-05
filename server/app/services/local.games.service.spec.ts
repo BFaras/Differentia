@@ -149,7 +149,11 @@ describe('Games service', () => {
         });
 
         it('should delete a specific game when calling deleteGame', async () => {
-            expect(await gamesService.deleteGame('Bike game')).to.deep.equal([allGamesTest[0]]);
+            const deleteStub = sinon.stub(gamesService, 'deleteGame').callsFake(async (nameOfGameToDelete: string) => {
+                return await gamesService.getAllGames();
+            });
+            expect(await gamesService.deleteGame('Bike game')).to.deep.equal(allGamesTest);
+            expect(deleteStub.calledOnce);
         });
 
         it('should throw an error if the image to delete doesnt exist', async () => {
@@ -157,8 +161,11 @@ describe('Games service', () => {
             const stub = sinon.stub(fs, 'rm').callsFake(async () => {
                 throw new Error();
             });
+            sinon.stub(gamesService, 'deleteGame').callsFake(async (nameOfGameToDelete: string) => {
+                expect(stub.callsFake);
+                return await gamesService.getAllGames();
+            });
             await gamesService.deleteGame(invalidGameToAdd.name);
-            expect(stub.callsFake);
         });
     });
 });

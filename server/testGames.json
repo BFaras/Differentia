@@ -1,1 +1,24 @@
-{"games":[]}name":"Bike game","numberOfDifferences":5,"times":[],"images":["ImageBlanche.bmp","image_7_diff.bmp"],"differencesList":[]},{"name":"Car game","numberOfDifferences":4,"times":[],"images":["ImageBlanche.bmp","image_7_diff.bmp"],"differencesList":[]}]}
+{
+    "games": [
+        {
+            "name": "Car game",
+            "numberOfDifferences": 4,
+            "times": [],
+            "images": [
+                "ImageBlanche.bmp",
+                "image_7_diff.bmp"
+            ],
+            "differencesList": []
+        },
+        {
+            "name": "Bike game",
+            "numberOfDifferences": 5,
+            "times": [],
+            "images": [
+                "ImageBlanche.bmp",
+                "image_7_diff.bmp"
+            ],
+            "differencesList": []
+        }
+    ]
+}

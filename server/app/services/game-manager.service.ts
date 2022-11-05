@@ -14,7 +14,7 @@ export class GameManagerService {
     private readonly chronometerServices: Map<string, ChronometerService> = new Map<string, ChronometerService>();
     private readonly mouseHandlerServices: Map<string, MouseHandlerService> = new Map<string, MouseHandlerService>();
     private gamesService = Container.get(GamesService);
-    public gamesRooms: Map<string, string[]> = new Map<string, string[]>();
+    gamesRooms: Map<string, string[]> = new Map<string, string[]>();
 
     constructor(private sio: io.Server) {}
 
@@ -131,7 +131,7 @@ export class GameManagerService {
         );
     }
 
-    private logRoomsWithGames(gameName: string, roomName: string) {
+    private logRoomsWithGames(gameName: string, roomName: string): void {
         let rooms: string[] = [];
         if (this.gamesRooms.has(gameName)) {
             this.gamesRooms.get(gameName)?.forEach((socketRoom) => {
@@ -144,7 +144,7 @@ export class GameManagerService {
         this.gamesRooms.set(gameName, rooms);
     }
 
-    private deleteRoom(socket: io.Socket) {
+    private deleteRoom(socket: io.Socket): void {
         const gameRoomName = this.findSocketGameRoomName(socket);
         let gameName = '';
         for (let rooms of this.gamesRooms.entries()) {

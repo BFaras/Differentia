@@ -66,7 +66,7 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
         this.socketService.on('show the username', (username: string) => {
             this.localPlayerUsername = username;
         });
-
+        //Tested
         this.socketService.on('The adversary username is', (adversaryName: string) => {
             this.isMultiplayerGame = true;
         });
