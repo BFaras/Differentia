@@ -29,8 +29,8 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
         const mainCanvas = this.renderer.createElement('canvas');
         this.setUpSocket();
         await this.loadImages();
-        console.log(typeof this.offset)
-        const imagesData = this.imageToImageDifferenceService.getImagesData(mainCanvas, this.originalImage, this.modifiedImage,Number(this.offset));
+        console.log(typeof this.offset);
+        const imagesData = this.imageToImageDifferenceService.getImagesData(mainCanvas, this.originalImage, this.modifiedImage, Number(this.offset));
 
         this.socketService.send('detect images difference', imagesData);
     }
@@ -40,8 +40,8 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
     }
 
     loaded() {
-        console.log(this.finalDifferencesImage)
-        if ((this.finalDifferencesImage.src !== '') &&(this.numberOfDifferences !== undefined) ) {
+        console.log(this.finalDifferencesImage);
+        if (this.finalDifferencesImage.src !== '' && this.numberOfDifferences !== undefined) {
             this.gameToServerService.setNumberDifference(this.numberOfDifferences);
             this.gameToServerService.setUrlImageOfDifference(this.finalDifferencesImage.src);
             this.gameToServerService.setDifferencesList(this.differencesList);
@@ -53,6 +53,7 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
     }
 
     private async loadImages() {
+        console.log(this.gameToServerService.getOriginalImageUploaded());
         const unwrapedOriginalModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getOriginalImageUploaded().image as SafeValue);
         const unwrapedModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getModifiedImageUploaded().image as SafeValue);
 
