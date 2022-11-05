@@ -9,11 +9,11 @@ import { PencilService } from './pencil.service';
   providedIn: 'root'
 })
 export class DrawingHandlerService {
-  private context: CanvasRenderingContext2D
-  private mouseDownObservable:Observable<MouseEvent>
-  private mouseMoveObservable:Observable<MouseEvent>
-  private mouseUpObservable:Observable<MouseEvent> 
-  private mouseLeaveObservable:Observable<MouseEvent> 
+  private context: CanvasRenderingContext2D;
+  private mouseDownObservable:Observable<MouseEvent>;
+  private mouseMoveObservable:Observable<MouseEvent>;
+  private mouseUpObservable:Observable<MouseEvent> ;
+  private mouseLeaveObservable:Observable<MouseEvent> ;
   constructor(private pencilService : PencilService,
     private drawingHistoryService:DrawingHistoryService) { }
 
@@ -25,15 +25,15 @@ export class DrawingHandlerService {
   }
 
   setContext(context: CanvasRenderingContext2D){
-    this.context = context
+    this.context = context;
   }
 
   getCoordinateX(mouseEvent:MouseEvent,canvasReact:DOMRect){
-    return mouseEvent.clientX - canvasReact.left
+    return mouseEvent.clientX - canvasReact.left;
   }
 
   getCoordinateY(mouseEvent:MouseEvent,canvasReact:DOMRect){
-    return mouseEvent.clientY - canvasReact.top
+    return mouseEvent.clientY - canvasReact.top;
   }
 
   saveOnMouseDown(indexOfCanvas:number){
@@ -60,7 +60,7 @@ export class DrawingHandlerService {
   }
 
   getCanvas():HTMLCanvasElement{
-    return this.context.canvas
+    return this.context.canvas;
   }
 
   stopObservingMousePath():Observable<[MouseEvent,MouseEvent]>{
