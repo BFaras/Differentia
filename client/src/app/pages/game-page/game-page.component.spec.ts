@@ -26,7 +26,6 @@ fdescribe('GamePageComponent', () => {
     let timeServiceSpy: SpyObj<TimeService>;
     let communicationServiceSpy: SpyObj<CommunicationService>;
     let testGame: Game;
-    // let gamesMock: Subject<Game[]>;
 
     beforeEach(async () => {
         socketHelper = new SocketTestHelper();
@@ -65,8 +64,7 @@ fdescribe('GamePageComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    fdescribe('Receiving events', () => {
-        // enlever le fdescribe
+    describe('Receiving events', () => {
         it('should handle classic mode event and call the classicMode method of the time service', () => {
             socketHelper.peerSideEmit('classic mode');
             expect(component['timeService'].classicMode).toHaveBeenCalled();
@@ -97,7 +95,7 @@ fdescribe('GamePageComponent', () => {
             const spy = spyOn(component, <any>'incrementPlayerNbOfDifferencesFound').and.callFake(() => {});
             socketHelper.peerSideEmit('Valid click', differencesInfo);
             expect(spy).toHaveBeenCalled();
-        }); // erreur dans DifferenceDetection.clickMessage, il faut trouver une facon de faire pour pas appeler 'Valid click' sur les autres sockets
+        });
 
         it("should call 'incrementPlayerNbOfDifferencesFound' and increment the right counter for the right player", () => {
             const differencesInfo: GameplayDifferenceInformations = {
@@ -109,7 +107,7 @@ fdescribe('GamePageComponent', () => {
             const spy = spyOn(component, <any>'incrementPlayerNbOfDifferencesFound').and.callFake(() => {});
             socketHelper.peerSideEmit('Valid click', differencesInfo);
             expect(spy).toHaveBeenCalled();
-        }); // meme erreur que avant
+        });
 
         it("should handle 'The game is' event and set the value of its attribute nbDifferences to the value of the number of differences of the game wanted", () => {
             const nameOfGame = 'test game';
