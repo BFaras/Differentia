@@ -44,6 +44,29 @@ fdescribe('CanvasDataHandlerService', () => {
     expect(spySaveCanvas).toHaveBeenCalled();
   });
 
+  it('should test if it draws on canvas', () => {
+    service.setContext(contextMock,mockIndexLeftCanvas);
+    service.setContext(contextMock,mockIndexRightCanvas);
+    service.drawOnCanvas(contextMock.canvas,mockIndexLeftCanvas)
+    expect(service.contextList[mockIndexLeftCanvas]).toBeDefined()
+  });
+
+  it('should test If obtain right canvas works', () => {
+    service.setContext(contextMock,mockIndexLeftCanvas);
+    service.setContext(contextMock,mockIndexRightCanvas);
+    service.obtainTheRightCanvas(mockIndexLeftCanvas)
+    expect(service.canvas).toBeDefined()
+  });
+
+  it('should test If obtain right canvas works', () => {
+    service.setContext(contextMock,mockIndexLeftCanvas);
+    service.setContext(contextMock,mockIndexRightCanvas);
+    service.obtainTheRightCanvas(mockIndexRightCanvas)
+    expect(service.canvas).toBeDefined()
+  });
+
+  
+
   it('should verify if copy other canvas for index 0 ', () => {
     service.setContext(contextMock,mockIndexLeftCanvas);
     service.setContext(contextMock,mockIndexRightCanvas);
