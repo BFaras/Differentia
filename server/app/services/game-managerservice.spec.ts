@@ -50,10 +50,6 @@ describe('GameManagerService tests', () => {
             return mouseHandlerService;
         });
 
-        sinon.stub(GameManagerService.prototype, <any>'getSocketUsername').callsFake((socket) => {
-            return testUsername;
-        });
-
         sinon.stub(gamesService, 'getGame').callsFake(async (gameName: string) => {
             return Promise.resolve(testGame);
         });
@@ -70,6 +66,8 @@ describe('GameManagerService tests', () => {
                 playerUsername: testUsername,
             };
         });
+
+        serverSocket.data.username = testUsername;
     });
 
     afterEach(async () => {
@@ -136,21 +134,20 @@ describe('GameManagerService tests', () => {
         expect(spy.calledOnce);
     });
 
-    // Tests passed pas, why?
+    // Tests passed pas
     it('should call deleteRoom() on handleEndGameEmit()', () => {
         const spy = sinon.spy(gameManagerService, <any>'deleteRoom');
         gameManagerService.handleEndGameEmits(serverSocket, true);
         expect(spy.calledOnce);
     });
 
-    // Tests passed pas, why?
+    // Tests passed pas
     it('should call deleteRoom() on handleAbandonEmit()', () => {
         const spy = sinon.spy(gameManagerService, <any>'deleteRoom');
         gameManagerService.handleAbandonEmit(serverSocket);
         expect(spy.calledOnce);
     });
 
-    // Devrait couvrir ligen 117-118
     it('should call findSocketGameRoomName() on getSocketMouseHandlerService()', () => {
         const spy = sinon.spy(gameManagerService, <any>'findSocketGameRoomName');
         gameManagerService.getSocketMouseHandlerService(serverSocket);
