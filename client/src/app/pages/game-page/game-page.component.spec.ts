@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
-import { PlayAreaComponent } from '@app/components/play-area/play-area.component';
 import { SidebarComponent } from '@app/components/sidebar/sidebar.component';
 import { TopbarComponent } from '@app/components/topbar/topbar.component';
 import { CommunicationService } from '@app/services/communication.service';
@@ -45,7 +44,7 @@ fdescribe('GamePageComponent', () => {
         communicationServiceSpy = jasmine.createSpyObj('CommunicationService', ['getGames']);
         communicationServiceSpy.getGames.and.returnValue(of([testGame]));
         await TestBed.configureTestingModule({
-            declarations: [GamePageComponent, SidebarComponent, PlayAreaComponent, TopbarComponent],
+            declarations: [GamePageComponent, SidebarComponent, TopbarComponent],
             providers: [
                 { provide: SocketClientService, useValue: socketServiceMock },
                 { provide: TimeService, useValue: timeServiceSpy },
@@ -107,8 +106,9 @@ fdescribe('GamePageComponent', () => {
                 socketId: socketServiceMock.socket.id,
                 playerUsername: '',
             };
+            const spy = spyOn(component, <any>'incrementPlayerNbOfDifferencesFound').and.callFake(() => {});
             socketHelper.peerSideEmit('Valid click', differencesInfo);
-            expect(component['incrementPlayerNbOfDifferencesFound']).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         }); // meme erreur que avant
 
         it("should handle 'The game is' event and set the value of its attribute nbDifferences to the value of the number of differences of the game wanted", () => {

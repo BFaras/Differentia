@@ -55,7 +55,6 @@ export class GamePageComponent {
             this.usernames[ADVERSARY_PLR_USERNAME_POS] = advesaryUsername;
         });
 
-        //To test
         this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {
             if (differencesInfo.isValidDifference) {
                 this.incrementPlayerNbOfDifferencesFound(differencesInfo.socketId);
