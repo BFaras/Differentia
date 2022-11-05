@@ -80,4 +80,20 @@ describe('DifferenceDetectionService', () => {
         service.verifyGameFinished(differenceIsValid, isMultiplayer, isLocalPlayer);
         expect(socketSpy['send']).toHaveBeenCalled();
     });
+
+    it('should verify if game in multiplayer is finished'),
+        () => {
+            const multiplayer = true;
+            const gameVerifiedSpy = spyOn(service, 'verifyGameFinished').and.callThrough();
+            service.verifyGameFinished(true, multiplayer, false);
+            expect(gameVerifiedSpy).toHaveBeenCalled();
+        };
+
+    it('should verify if game in solo is finished'),
+        () => {
+            const multiplayer = false;
+            const gameVerifiedSpy = spyOn(service, 'verifyGameFinished').and.callThrough();
+            service.verifyGameFinished(false, multiplayer, true);
+            expect(gameVerifiedSpy).toHaveBeenCalled();
+        };
 });

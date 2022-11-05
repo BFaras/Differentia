@@ -16,14 +16,14 @@ describe('ListImagesRenderedService', () => {
     });
 
     it('should return activitedEmitter when calling getIdImageToRemove ', () => {
-        expect(service.getIdImageToRemove()).toEqual(service['activatedEmitterRemoveImage']);
+        expect(service.getIdImageToRemoveObservable()).toEqual(service['activatedEmitterRemoveImage']);
     });
 
     it('should return activatedEmitterUrlImageSingle when calling getIdImageToRemove ', () => {
-        expect(service.getDataImageSingle()).toEqual(service['activatedEmitterUrlImageSingle']);
+        expect(service.getDataImageSingleObservable()).toEqual(service['activatedEmitterUrlImageSingle']);
     });
 
     it('should return activitedEmitter when calling sendIdImageToRemove ', () => {
-        expect(service.getDataImageMultiple()).toEqual(service['activatedEmitterUrlImageBoth']);
+        expect(service.getDataImageMultipleObservable()).toEqual(service['activatedEmitterUrlImageBoth']);
     });
 });

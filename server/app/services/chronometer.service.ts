@@ -3,8 +3,6 @@
 /* eslint-disable no-restricted-imports */
 /* eslint-disable prettier/prettier */
 
-// Est ce que les disable sont corrects?
-
 import { MAX_TIME, RESET_VALUE } from '@common/const';
 import { Time } from '@common/time';
 import { Service } from 'typedi';
@@ -15,7 +13,7 @@ export class ChronometerService {
         minutes: 0,
         seconds: 0,
     };
-    intervalForTimer: any; // On px mettre quelque chose d'autre que any?
+    intervalForTimer: any;
     intervalToCheckTime: any;
 
     constructor() {}

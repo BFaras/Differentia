@@ -124,6 +124,39 @@ describe('GameManagerService tests', () => {
         expect(mouseHandlerIsValidClickStub.calledOnce);
     });
 
+    it('should call isGameFinishedSolo() to verify if the game is finished', () => {
+        const spy = sinon.spy(gameManagerService, <any>'isGameFinishedSolo');
+        gameManagerService.isGameFinishedSolo(serverSocket);
+        expect(spy.calledOnce);
+    });
+
+    it('should call isGameFinishedMulti() to verify if the game is finished', () => {
+        const spy = sinon.spy(gameManagerService, <any>'isGameFinishedMulti');
+        gameManagerService.isGameFinishedMulti(serverSocket);
+        expect(spy.calledOnce);
+    });
+
+    // Tests passed pas, why?
+    it('should call deleteRoom() on handleEndGameEmit()', () => {
+        const spy = sinon.spy(gameManagerService, <any>'deleteRoom');
+        gameManagerService.handleEndGameEmits(serverSocket, true);
+        expect(spy.calledOnce);
+    });
+
+    // Tests passed pas, why?
+    it('should call deleteRoom() on handleAbandonEmit()', () => {
+        const spy = sinon.spy(gameManagerService, <any>'deleteRoom');
+        gameManagerService.handleAbandonEmit(serverSocket);
+        expect(spy.calledOnce);
+    });
+
+    // Devrait couvrir ligen 117-118
+    it('should call findSocketGameRoomName() on getSocketMouseHandlerService()', () => {
+        const spy = sinon.spy(gameManagerService, <any>'findSocketGameRoomName');
+        gameManagerService.getSocketMouseHandlerService(serverSocket);
+        expect(spy.calledOnce);
+    });
+
     it('should call endChrono() on endGame()', () => {
         const spy = sinon.spy(gameManagerService, <any>'endChrono');
         gameManagerService.endGame(serverSocket);

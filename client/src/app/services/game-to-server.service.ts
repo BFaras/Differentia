@@ -1,6 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { ElementRef, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { MAXIMUM_NB_DIFFERENCES, MINIMUM_NB_DIFFERENCES } from '@app/client-consts';
 import { MESSAGE_JEU_CREER, MESSAGE_JEU_NON_CREER, MESSAGE_NOMBRE_DIFFERENCE_ERREUR } from '@common/const';
 import { Game } from '@common/game';
 import { ImageToSendToServer } from '@common/imageToSendToServer';
@@ -31,7 +32,7 @@ export class GameToServerService {
     }
 
     private validateNumberOfDifferences() {
-        return this.numberDifference >= 3 && this.numberDifference <= 9;
+        return this.numberDifference >= MINIMUM_NB_DIFFERENCES && this.numberDifference <= MAXIMUM_NB_DIFFERENCES;
     }
 
     addGame(inputName: ElementRef) {

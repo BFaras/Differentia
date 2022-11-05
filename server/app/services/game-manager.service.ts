@@ -66,19 +66,19 @@ export class GameManagerService {
         this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
     }
 
-    isGameFinishedSolo(socket: io.Socket): boolean {
+    isGameFinishedSolo(socket: io.Socket) {
         const mouseHandler = this.getSocketMouseHandlerService(socket);
         return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === mouseHandler.nbDifferencesTotal;
     }
 
-    isGameFinishedMulti(socket: io.Socket): boolean {
+    isGameFinishedMulti(socket: io.Socket) {
         const mouseHandler = this.getSocketMouseHandlerService(socket);
         return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === Math.floor(mouseHandler.nbDifferencesTotal / 2) + 1;
     }
 
-    //To test
+    // To test
     handleEndGameEmits(socket: io.Socket, isMultiplayer: boolean) {
-        let endGameInfos: EndGameInformations = {
+        const endGameInfos: EndGameInformations = {
             isMultiplayer: isMultiplayer,
             isAbandon: false,
             isGameWon: true,
@@ -90,9 +90,9 @@ export class GameManagerService {
         socket.broadcast.to(this.findSocketGameRoomName(socket)).emit('End game', endGameInfos);
     }
 
-    //To test
+    // To test
     handleAbandonEmit(socket: io.Socket) {
-        let endGameInfos: EndGameInformations = {
+        const endGameInfos: EndGameInformations = {
             isMultiplayer: true,
             isAbandon: true,
             isGameWon: true,
@@ -112,6 +112,7 @@ export class GameManagerService {
         return gameRoomName;
     }
 
+    // To test
     getSocketMouseHandlerService(socket: io.Socket): MouseHandlerService {
         const gameRoomName = this.findSocketGameRoomName(socket);
         return this.mouseHandlerServices.get(gameRoomName)!;
