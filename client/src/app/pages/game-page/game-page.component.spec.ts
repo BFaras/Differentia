@@ -18,7 +18,7 @@ class SocketClientServiceMock extends SocketClientService {
     override connect() {}
 }
 
-fdescribe('GamePageComponent', () => {
+describe('GamePageComponent', () => {
     let component: GamePageComponent;
     let fixture: ComponentFixture<GamePageComponent>;
     let socketServiceMock: SocketClientServiceMock;
