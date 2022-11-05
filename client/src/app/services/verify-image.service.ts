@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ImageSize } from '@app/classes/image-size';
+import { ImageRenderedInformations } from '@app/interfaces/image-rendered-informations';
 import { CORRECT_BIT_DEPTH, CORRECT_IMAGE_FORMAT, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { ListImagesRenderedService } from './list-images-rendered.service';
 import { UploadFileService } from './upload-file.service';
@@ -48,7 +49,7 @@ export class VerifyImageService {
     getImage() {
         return this.imageToVerify;
     }
-    
+
     private verifyImageFormat(file: File) {
         return file.type === CORRECT_IMAGE_FORMAT;
     }
@@ -70,7 +71,8 @@ export class VerifyImageService {
         if (imageInfo.bothImage) {
             this.editImagesService.sendUrlImageBoth(urlOfImage);
         } else {
-            this.editImagesService.sendUrlImageSingle({ index: imageInfo.indexOfImage, url: urlOfImage });
+            const imageRenderedInfos: ImageRenderedInformations = { index: imageInfo.indexOfImage, url: urlOfImage };
+            this.editImagesService.sendUrlImageSingle(imageRenderedInfos);
             console.log(imageInfo.indexOfImage);
             if (imageInfo.indexOfImage == ORIGINAL_IMAGE_POSITION) {
                 this.uploadFileService.setOriginalImage(this.file, imageInfo.indexOfImage);

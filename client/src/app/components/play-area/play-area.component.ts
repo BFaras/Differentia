@@ -1,5 +1,6 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Coordinate } from '@app/interfaces/coordinate';
 import { DifferenceDetectionService } from '@app/services/difference-detection.service';
 import { DrawService } from '@app/services/draw.service';
 import { ImageGeneratorService } from '@app/services/image-generator.service';
@@ -37,7 +38,7 @@ export class PlayAreaComponent implements OnInit {
     mousePosition: Position = { x: 0, y: 0 };
     private pixelList: number[] = [];
 
-    private canvasSize = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
+    private canvasSize: Coordinate = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
     constructor(
         private socketService: SocketClientService,
         private readonly drawService: DrawService,

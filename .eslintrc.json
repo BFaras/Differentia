@@ -16,9 +16,6 @@
                     "error",
                     {
                         "default": "array"
-                    },
-                    {
-                        "endOfLine": "auto"
                     }
                 ],
                 "@typescript-eslint/ban-types": [
