@@ -27,7 +27,7 @@ describe('ToolSettingComponent', () => {
   drawingHistoryServiceSpy = jasmine.createSpyObj('DrawingHandlerService',['getCancelDrawingHistory','getUndoCancelDrawingHistory','cancelCanvas','cancelDeletedCanvas']);
   drawingHistoryServiceSpy.getCancelDrawingHistory.and.returnValue(mockDrawingHistory);
   drawingHistoryServiceSpy.getUndoCancelDrawingHistory.and.returnValue(mockDrawingHistory);
-  canvasDataHandlerServiceSpy= jasmine.createSpyObj('CanvasDataHandlerService',['clearCanvas','copyOtherCanvas','shareDataWithOtherCanvas']);
+  canvasDataHandlerServiceSpy= jasmine.createSpyObj('CanvasDataHandlerService',['clearCanvas','copyCanvas','shareDataWithOtherCanvas']);
   keyEventHandlerServiceSpy = jasmine.createSpyObj('KeyEventHandlerService',['deleteDrawnLineShortCut','cancelDeleteDrawnLineShortCut','cancelCanvas','cancelDeletedCanvas']);
   pencilServiceSpy = jasmine.createSpyObj('PencilService',['setWidth','setColor','setStateOfPencilForRightCanvas',''])  
 
@@ -111,6 +111,14 @@ describe('ToolSettingComponent', () => {
 
     expect(pencilServiceSpy.setStateOfPencilForRightCanvas).toHaveBeenCalled();
   })
+
+  it('should verify vereify with other canvas',()=>{
+
+    component.shareDataWithOtherCanvas()
+    expect(canvasDataHandlerServiceSpy.shareDataWithOtherCanvas).toHaveBeenCalled();
+  })
+
+  
 
 
   
