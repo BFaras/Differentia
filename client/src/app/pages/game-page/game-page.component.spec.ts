@@ -95,17 +95,28 @@ fdescribe('GamePageComponent', () => {
                 socketId: '',
                 playerUsername: '',
             };
-            const spy = spyOn(component, <any>'incrementPlayerNbOfDifferencesFound');
+            const spy = spyOn(component, <any>'incrementPlayerNbOfDifferencesFound').and.callFake(() => {});
             socketHelper.peerSideEmit('Valid click', differencesInfo);
             expect(spy).toHaveBeenCalled();
-        });
+        }); // erreur dans DifferenceDetection.clickMessage, il faut trouver une facon de faire pour pas appeler 'Valid click' sur les autres sockets
+
+        it("should call 'incrementPlayerNbOfDifferencesFound' and increment the right counter for the right player", () => {
+            const differencesInfo: GameplayDifferenceInformations = {
+                differencePixelsNumbers: [],
+                isValidDifference: true,
+                socketId: socketServiceMock.socket.id,
+                playerUsername: '',
+            };
+            socketHelper.peerSideEmit('Valid click', differencesInfo);
+            expect(component['incrementPlayerNbOfDifferencesFound']).toHaveBeenCalled();
+        }); // meme erreur que avant
 
         it("should handle 'The game is' event and set the value of its attribute nbDifferences to the value of the number of differences of the game wanted", () => {
             const nameOfGame = 'test game';
             socketHelper.peerSideEmit('The game is', nameOfGame);
             expect(component['communicationService'].getGames).toHaveBeenCalled();
             expect(component.nbDifferences).toEqual(testGame.numberOfDifferences);
-        }); // erreur dans DifferenceDetection.clickMessage
+        });
 
         // Ce test est inutile comme expliqué aux lignes 54 et 55 du fichier game-page.component.ts, cependant il a été fait car sinon nous n'atteignons pas
         // une couverture de 100%
