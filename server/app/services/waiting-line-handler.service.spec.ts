@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import * as io from 'socket.io';
-import { WaitingLineHandlerService } from './waitingLineHandler.service';
+import { WaitingLineHandlerService } from './waiting-line-handler.service';
 
 describe('WaitingLineHandlerService tests', () => {
     const testGameName = 'test12345';
