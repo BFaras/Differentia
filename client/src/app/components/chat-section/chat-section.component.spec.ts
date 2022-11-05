@@ -24,6 +24,7 @@ describe('ChatSectionComponent', () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(ChatSectionComponent);
+        jasmine.clock().install();
         chatSectionComponent = fixture.componentInstance;
         fixture.detectChanges();
 
@@ -40,6 +41,10 @@ describe('ChatSectionComponent', () => {
         chatSectionComponent.ngOnInit();
     });
 
+    afterEach(() => {
+        jasmine.clock().uninstall();
+    });
+
     it('should subscribe to the ChatMessagesService observable on init ', () => {
         expect(testObserver).not.toBeUndefined();
     });
@@ -47,6 +52,12 @@ describe('ChatSectionComponent', () => {
     it('should call addMessage when the observer sends information', () => {
         const spy = spyOn(chatSectionComponent, <any>'addMessage');
         expect(spy).toHaveBeenCalled;
+    });
+
+    it('should call scrollToBottom when the observer sends information', () => {
+        const scrollSpy = spyOn(chatSectionComponent, <any>'scrollToBottom');
+        jasmine.clock().tick(2);
+        expect(scrollSpy).toHaveBeenCalled;
     });
 
     it('should add a message to the message list when the observable sends an event', () => {
@@ -77,14 +88,12 @@ describe('ChatSectionComponent', () => {
         expect(chatSectionComponent.isMultiplayerGame).toBeTruthy();
     });
 
-    it('should sendMessage() of ChatSectionComponent call sendMessage() of ChatMessageService', () => {
+    it('should sendMessage() of ChatSectionComponent call sendMessage() of ChatMessageService and clear the input', () => {
         const sendMessageSpy = spyOn(chatMessagesService, 'sendMessage');
-        const scrollSpy = spyOn(chatSectionComponent, <any>'scrollToBottom');
-        chatSectionComponent.playerMsg = { nativeElement: {value: 'Hi'}};
+        chatSectionComponent.playerMsg = { nativeElement: { value: 'Hi' } };
         chatSectionComponent.sendMessage();
-        
+
         expect(sendMessageSpy).toHaveBeenCalled;
         expect(chatSectionComponent.playerMsg.nativeElement.value).toEqual('');
-        expect(scrollSpy).toHaveBeenCalled;
     });
 });
