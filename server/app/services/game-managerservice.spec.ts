@@ -136,16 +136,16 @@ describe('GameManagerService tests', () => {
 
     // Tests passed pas
     it('should call deleteRoom() on handleEndGameEmit()', () => {
-        const spy = sinon.spy(gameManagerService, <any>'deleteRoom');
+        const stub = sinon.stub(gameManagerService, <any>'deleteRoom').callsFake(() => {});
         gameManagerService.handleEndGameEmits(serverSocket, true);
-        expect(spy.calledOnce);
+        expect(stub.calledOnce);
     });
 
     // Tests passed pas
     it('should call deleteRoom() on handleAbandonEmit()', () => {
-        const spy = sinon.spy(gameManagerService, <any>'deleteRoom');
+        const stub = sinon.stub(gameManagerService, <any>'deleteRoom').callsFake(() => {});
         gameManagerService.handleAbandonEmit(serverSocket);
-        expect(spy.calledOnce);
+        expect(stub.calledOnce);
     });
 
     it('should call findSocketGameRoomName() on getSocketMouseHandlerService()', () => {
