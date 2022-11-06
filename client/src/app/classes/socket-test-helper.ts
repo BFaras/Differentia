@@ -1,4 +1,4 @@
-type CallbackSignature = (params: any) => {}
+type CallbackSignature = (params: any) => {};
 
 export class SocketTestHelper {
     on(event: string, callback: CallbackSignature): void {
@@ -13,7 +13,9 @@ export class SocketTestHelper {
         return;
     }
 
-    disconnect(): void { return; }
+    disconnect(): void {
+        return;
+    }
 
     peerSideEmit(event: string, params?: any) {
         if (!this.callbacks.has(event)) {
@@ -26,4 +28,5 @@ export class SocketTestHelper {
     }
 
     private callbacks = new Map<string, CallbackSignature[]>();
+    public connected = true;
 }
