@@ -9,14 +9,15 @@ import { StatusCodes } from 'http-status-codes';
 import { Subject } from 'rxjs';
 import { CommunicationService } from './communication.service';
 import { GameToServerService } from './game-to-server.service';
+import { UploadFileService } from './upload-file.service';
 
 import SpyObj = jasmine.SpyObj;
-describe('GameToServerService', () => {
+fdescribe('GameToServerService', () => {
+    const imageTestValue = { name: 'Hi', image: 'src' };
     let service: GameToServerService;
     let elmentRef: ElementRef;
     let communicationServiceSpy: SpyObj<CommunicationService>;
     let mockEmitterAddGame: Subject<HttpResponse<any>>;
-    let router: Router;
 
     const mockElementRef = {
         nativeElement: {
@@ -30,8 +31,10 @@ describe('GameToServerService', () => {
 
     beforeEach(async () => {
         mockEmitterAddGame = new Subject();
+
         communicationServiceSpy = jasmine.createSpyObj('CommunicationService', ['addGame']);
         communicationServiceSpy.addGame.and.returnValue(mockEmitterAddGame);
+
         TestBed.configureTestingModule({
             imports: [RouterTestingModule.withRoutes([])],
             providers: [
@@ -40,16 +43,17 @@ describe('GameToServerService', () => {
                 { provide: Router, useValue: mockRouter },
             ],
         });
-        router = TestBed.inject(Router);
         service = TestBed.inject(GameToServerService);
         elmentRef = TestBed.inject(ElementRef);
+
+        spyOn(UploadFileService.prototype, 'getNameOriginalImage').and.returnValue(imageTestValue as unknown as File);
+        spyOn(UploadFileService.prototype, 'getNameModifiedImage').and.returnValue(imageTestValue as unknown as File);
+        spyOn(UploadFileService.prototype, 'upload').and.callFake(() => {});
     });
 
     it('should navigate', () => {
-        const navigateSpy = spyOn(router, 'navigate');
-
         service['goToAdmin']();
-        expect(navigateSpy).toHaveBeenCalledWith(['/admin']);
+        expect(mockRouter.navigate).toHaveBeenCalledWith(['/admin']);
     });
 
     it('should be created', () => {
@@ -94,7 +98,7 @@ describe('GameToServerService', () => {
         service.setNumberDifference(mockNumberDiff);
 
         service.addGame(elmentRef);
-        // mockEmitterAddGame.next(200)
+        mockEmitterAddGame.next(new HttpResponse());
 
         expect(spy).toHaveBeenCalled();
     });
