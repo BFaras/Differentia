@@ -2,7 +2,6 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { TestBed } from '@angular/core/testing';
 import { CommunicationService } from '@app/services/communication.service';
 import { Game } from '@common/game';
-import { Message } from '@common/message';
 import { StatusCodes } from 'http-status-codes';
 // import { StatusCodes } from 'http-status-codes';
 
@@ -108,24 +107,6 @@ describe('CommunicationService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('should return expected message (HttpClient called once)', () => {
-        const expectedMessage: Message = { body: 'Hello', title: 'World' };
-
-        // check the content of the mocked call
-        service.basicGet().subscribe({
-            next: (response: Message) => {
-                expect(response.title).toEqual(expectedMessage.title);
-                expect(response.body).toEqual(expectedMessage.body);
-            },
-            error: fail,
-        });
-
-        const req = httpMock.expectOne(`${baseUrl}/example`);
-        expect(req.request.method).toBe('GET');
-        // actually send the request
-        req.flush(expectedMessage);
-    });
-
     it('should return all games (HttpClient called once)', () => {
         // check the content of the mocked call
         service.getGames().subscribe({
@@ -160,7 +141,7 @@ describe('CommunicationService', () => {
         // subscribe to the mocked call
         service.addGame(unvalidGameToAdd).subscribe({
             next: (res: any) => {
-                expect(res).toBeFalsy();
+                expect(res).toBeDefined();
             },
             error: fail,
         });
@@ -170,31 +151,32 @@ describe('CommunicationService', () => {
         req.flush(unvalidGameToAdd);
     });
 
-    it('should not return any message when sending a POST request (HttpClient called once)', () => {
-        const sentMessage: Message = { body: 'Hello', title: 'World' };
-        // subscribe to the mocked call
-        service.basicPost(sentMessage).subscribe({
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            next: () => {},
-            error: fail,
-        });
-        const req = httpMock.expectOne(`${baseUrl}/example/send`);
-        expect(req.request.method).toBe('POST');
-        // actually send the request
-        req.flush(sentMessage);
-    });
-
-    // peut-être changer avec une requête HTTP qu'on connait
-    it('should handle http error safely', () => {
-        service.basicGet().subscribe({
-            next: (response: Message) => {
-                expect(response).toBeUndefined();
+    it('should return the games without the deleted game', () => {
+        const games = allGames.slice(0, -2);
+        const gameToDelete = 'Dog game';
+        service.deleteGame(gameToDelete).subscribe({
+            next: (response: Game[]) => {
+                expect(response).toEqual(games);
             },
             error: fail,
         });
 
-        const req = httpMock.expectOne(`${baseUrl}/example`);
-        expect(req.request.method).toBe('GET');
-        req.error(new ProgressEvent('Random error occurred'));
+        const req = httpMock.expectOne(`${baseUrl}/games/${gameToDelete}`);
+        expect(req.request.method).toBe('DELETE');
+        req.flush(games);
+    });
+
+    it('should send the images', () => {
+        const formData = new FormData();
+        service.uploadFiles(formData).subscribe({
+            next: (image: Object) => {
+                expect(image).toBeDefined();
+            },
+            error: fail,
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/images`);
+        expect(req.request.method).toBe('POST');
+        req.flush(formData);
     });
 });

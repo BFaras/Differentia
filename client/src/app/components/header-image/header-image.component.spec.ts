@@ -35,13 +35,13 @@ describe('HeaderImageComponent', () => {
     });
 
     it('should open a mock if we use method onCreateDownload', () => {
-        const spy = spyOn(component.dialog, 'open');
+        const spy = spyOn(component['dialog'], 'open');
         component.onCreateDownloadPopDialog();
         expect(spy).toHaveBeenCalled();
     });
 
     it('should do an emit when using EventEmitter', () => {
         component.onDeleteImage();
-        expect(component.editImagesService.sendIdImageToRemove).toHaveBeenCalled();
+        expect(component['editImagesService'].sendIdImageToRemove).toHaveBeenCalled();
     });
 });

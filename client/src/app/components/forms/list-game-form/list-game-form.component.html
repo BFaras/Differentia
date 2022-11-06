@@ -1,17 +1,17 @@
-<ng-container *ngIf="page== 'Admin'">
-    <button id="adminButton" mat-mini-fab aria-label routerLink="/home"> 
+<ng-container *ngIf="page == 'Admin'">
+    <button id="adminButton" mat-mini-fab aria-label routerLink="/home">
         <mat-icon>home</mat-icon>
     </button>
 </ng-container>
-<ng-container *ngIf="page== 'GameSelection'">
-    <button mat-mini-fab routerLink="/home"> 
-    <mat-icon>home</mat-icon>
-</button>
+<ng-container *ngIf="page == 'GameSelection'">
+    <button mat-mini-fab routerLink="/home">
+        <mat-icon>home</mat-icon>
+    </button>
 </ng-container>
 <div *ngIf="firstElementIndex != 0" class="arrow left" (click)="previousPageGameForms()"></div>
 <div class="gameFormsContainer">
     <ng-container *ngFor="let form of currentPageGameFormList">
-        <app-game-form class="gameForm" [gameForm]="form" [buttonPage]="page"></app-game-form>
+        <app-game-form class="gameForm" [gameForm]="form" [buttonPage]="page" (newItemEvent)="deleteGameForm($event)"></app-game-form>
     </ng-container>
 </div>
 <div *ngIf="lastElementIndex + 1 < formService.gameForms.length" class="arrow right" (click)="nextPageGameForms()"></div>

@@ -1,6 +1,8 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { PopDialogWaitingForPlayerComponent } from '@app/components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
 import { SocketClientService } from '@app/services/socket-client.service';
+import { StartUpGameService } from '@app/services/start-up-game.service';
 
 @Component({
     selector: 'app-pop-dialog-username',
@@ -8,18 +10,59 @@ import { SocketClientService } from '@app/services/socket-client.service';
     styleUrls: ['./pop-dialog-username.component.scss'],
 })
 export class PopDialogUsernameComponent implements OnInit {
-    @ViewChild('username') username: ElementRef;
+    @ViewChild('userName') username: ElementRef;
+    disabledButton: boolean = true;
+    usernameNotValid: boolean = false;
 
-    constructor(private socketService: SocketClientService, @Inject(MAT_DIALOG_DATA) private gameInfo: any) {}
+    constructor(
+        private socketService: SocketClientService,
+        @Inject(MAT_DIALOG_DATA) public gameInfo: any,
+        public startUpGameService: StartUpGameService,
+        private dialog: MatDialog,
+        public dialogRef: MatDialogRef<PopDialogUsernameComponent>,
+    ) {}
 
     ngOnInit(): void {
         this.socketService.connect();
+        this.configureUsernamePopUpSocketFeatures();
     }
 
-    gamePage() {
-        this.socketService.send('game page', this.gameInfo.nameGame);
-        let username = this.username.nativeElement.value;
-        if (username == '') username = 'anonyme';
-        this.socketService.send('username is', username);
+    ngOnDestroy(): void {
+        this.socketService.off('username valid');
+    }
+
+    private startWaitingLine(): void {
+        this.startUpGameService.startUpWaitingLine(this.gameInfo, this.username.nativeElement.value);
+    }
+
+    public inputChanged(): void {
+        if (this.username.nativeElement.value) this.disabledButton = false;
+        else this.disabledButton = true;
+    }
+
+    private openDialog(): void {
+        this.dialog.open(PopDialogWaitingForPlayerComponent, {
+            height: '400px',
+            width: '600px',
+            disableClose: true,
+            data: {
+                nameGame: this.gameInfo.nameGame,
+                joinFlag: this.gameInfo.joinFlag,
+                createFlag: this.gameInfo.createFlag,
+                username: this.username.nativeElement.value,
+            },
+        });
+    }
+
+    private configureUsernamePopUpSocketFeatures(): void {
+        this.socketService.on('username valid', () => {
+            this.startWaitingLine();
+            this.dialogRef.close();
+            if (this.gameInfo.multiFlag) this.openDialog();
+        });
+
+        this.socketService.on('username not valid', () => {
+            this.usernameNotValid = true;
+        });
     }
 }

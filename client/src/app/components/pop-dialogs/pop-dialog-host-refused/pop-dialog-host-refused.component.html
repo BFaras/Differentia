@@ -1,0 +1,13 @@
+<div class="container">
+    <mat-dialog-content class="dialog-content">
+        <ng-container *ngIf="gameInfo.didHostChoseAnotherFlag; else hostDidNotChoseAnother">
+            <h3>L'hôte a choisi quelqu'un d'autre</h3>
+        </ng-container>
+        <ng-template #hostDidNotChoseAnother>
+            <h3>L'hôte ne vous a pas accepté</h3>
+        </ng-template>
+        <mat-dialog-actions>
+            <button mat-raised-button mat-dialog-close>Ok</button>
+        </mat-dialog-actions>
+    </mat-dialog-content>
+</div>

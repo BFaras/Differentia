@@ -8,38 +8,55 @@ import { CommunicationService } from './communication.service';
     providedIn: 'root',
 })
 export class FormService {
-    listName: string[] = [];
-    listImage: string[] = [];
-
+    private listName: string[] = [];
+    private listImage: string[] = [];
+    private gamelist: Game[] = [];
     gameForms: GameFormDescription[] = [];
+    gameToDelete: string = '';
 
-    constructor(private communicationService: CommunicationService) {
-    }
+    constructor(private communicationService: CommunicationService) {}
 
     async receiveGameInformations() {
-        this.gameForms = [];
-        await firstValueFrom(this.communicationService.getGames()).then( (gameList)=>{
-            this.parseGameList(gameList);
-        })
+        this.resetGameForms();
+        await firstValueFrom(this.communicationService.getGames())
+            .then((games) => {
+                this.gamelist = games;
+                this.parseGameList();
+            })
+            .catch((error: Error) => console.log(error));
     }
 
-    parseGameList(gamelist: Game[]) {
-        for (let index = 0; index < gamelist.length; index++) {
-            this.fillListGameName(gamelist[index].name, this.listName);
-            this.fillListGameImage(gamelist[index].images[0], this.listImage);
+    private parseGameList() {
+        for (let index = 0; index < this.gamelist?.length; index++) {
+            this.fillListGameName(this.gamelist[index].name, this.listName);
+            this.fillListGameImage(this.gamelist[index].images[0], this.listImage);
             this.initializeGameForm(index);
         }
     }
 
-    fillListGameName(gameName: string, listName: string[]) {
+    private fillListGameName(gameName: string, listName: string[]) {
         listName.push(gameName);
     }
 
-    fillListGameImage(gameImage: string, listImage: string[]) {
+    private fillListGameImage(gameImage: string, listImage: string[]) {
         listImage.push(gameImage);
     }
 
-    initializeGameForm(index: number) {
+    private initializeGameForm(index: number) {
         this.gameForms.push(new GameFormDescription(this.listName[index], this.listImage[index], new RecordTimesBoard([], [])));
+    }
+
+    private resetGameForms() {
+        this.gameForms = [];
+        this.gamelist = [];
+        this.listImage = [];
+        this.listName = [];
+    }
+
+    deleteGameForm() {
+        this.communicationService.deleteGame(this.gameToDelete).subscribe(async (games) => {
+            this.gamelist = games;
+            location.reload();
+        });
     }
 }

@@ -1,5 +1,6 @@
-import { FIRST_ARRAY_POSITION, IMAGE_WIDTH, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
+import { DEFAULT_USERNAME, FIRST_ARRAY_POSITION, IMAGE_WIDTH, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
 import { Game } from '@common/game';
+import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
 import Container, { Service } from 'typedi';
 import { HashmapConverterService } from './hashmap-converter.service';
@@ -7,26 +8,34 @@ import { GamesService } from './local.games.service';
 
 @Service()
 export class MouseHandlerService {
-    differencesHashmap: Map<number, number>;
-    differencesList: number[][];
-    differencesNumberFound: Array<number>;
+    private differencesHashmap: Map<number, number>;
+    private differencesList: number[][];
+    private differencesNbFoundByPlayer: Map<string, number[]>;
     nbDifferencesTotal: number;
 
     constructor() {
         this.differencesHashmap = new Map<number, number>();
         this.differencesList = [];
-        this.differencesNumberFound = [];
+        this.differencesNbFoundByPlayer = new Map<string, number[]>();
         this.nbDifferencesTotal = 0;
     }
 
     resetData() {
         this.differencesHashmap = new Map<number, number>();
-        this.differencesNumberFound = [];
+        this.differencesNbFoundByPlayer = new Map<string, number[]>();
         this.differencesList = [];
     }
 
-    isValidClick(mousePosition: Position) {
-        return this.validateDifferencesOnClick(mousePosition);
+    addPlayerToGame(plrSocketID: string) {
+        this.differencesNbFoundByPlayer.set(plrSocketID, []);
+    }
+
+    getNumberOfDifferencesFoundByPlayer(plrSocketId: string): number {
+        return this.differencesNbFoundByPlayer.get(plrSocketId)!.length;
+    }
+
+    isValidClick(mousePosition: Position, plrSocketID: string): GameplayDifferenceInformations {
+        return this.validateDifferencesOnClick(mousePosition, plrSocketID);
     }
 
     async generateDifferencesInformations(gameName: string) {
@@ -51,25 +60,42 @@ export class MouseHandlerService {
         return copiedArray;
     }
 
+    private isDifferenceAlreadyFound(differenceNb: number): boolean {
+        let isAlreadyFound: boolean = false;
+        this.differencesNbFoundByPlayer.forEach((differencesFound: number[]) => {
+            if (differencesFound.includes(differenceNb)) {
+                isAlreadyFound = true;
+            }
+        });
+
+        return isAlreadyFound;
+    }
+
     private convertMousePositionToPixelNumber(mousePosition: Position): number {
         return (mousePosition.y + 1) * IMAGE_WIDTH + mousePosition.x - IMAGE_WIDTH;
     }
 
-    private validateDifferencesOnClick(mousePosition: Position) {
+    private validateDifferencesOnClick(mousePosition: Position, plrSocketID: string): GameplayDifferenceInformations {
         const pixelNumber = this.convertMousePositionToPixelNumber(mousePosition);
-        let differencesNumber: number;
-        let pixelsOfDifference: number[] = NO_DIFFERENCE_FOUND_ARRAY;
+        let differenceInformation: GameplayDifferenceInformations = {
+            differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
+            isValidDifference: false,
+            //To modify with a constant (constant is in feature/ChatGameView)
+            socketId: plrSocketID,
+            playerUsername: DEFAULT_USERNAME,
+        };
 
         if (this.differencesHashmap.has(pixelNumber)) {
-            differencesNumber = this.differencesHashmap.get(pixelNumber)!;
+            let differencesNumber = this.differencesHashmap.get(pixelNumber)!;
 
-            if (!this.differencesNumberFound.includes(differencesNumber)) {
+            if (!this.isDifferenceAlreadyFound(differencesNumber)) {
                 // Nouvelle Différence trouvée
-                this.differencesNumberFound.push(differencesNumber);
-                pixelsOfDifference = this.differencesList[differencesNumber];
+                this.differencesNbFoundByPlayer.get(plrSocketID)!.push(differencesNumber);
+                differenceInformation.differencePixelsNumbers = this.differencesList[differencesNumber];
+                differenceInformation.isValidDifference = true;
             }
         }
 
-        return pixelsOfDifference;
+        return differenceInformation;
     }
 }

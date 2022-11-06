@@ -62,4 +62,13 @@ describe('GamesController', () => {
                 expect(response.status).to.deep.equal(StatusCodes.CREATED);
             });
     });
+
+    it('should delete a specify game on delete request to /:gameName ', async () => {
+        return supertest(expressApp)
+            .delete('/games/:gameName')
+            .send(baseGame.name)
+            .then((response) => {
+                expect(response.body).to.deep.equal('');
+            });
+    });
 });

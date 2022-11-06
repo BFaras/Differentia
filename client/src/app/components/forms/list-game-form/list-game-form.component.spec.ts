@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { RecordTimesBoard } from '@app/classes/record-times-board';
 import { FormService } from '@app/services/form.service';
+import { SocketClientService } from '@app/services/socket-client.service';
 import { Constants } from '@common/config';
 import { ListGameFormComponent } from './list-game-form.component';
 
@@ -21,14 +22,23 @@ describe('ListGameFormComponent', () => {
     let listGameFormComp: ListGameFormComponent;
     let fixture: ComponentFixture<ListGameFormComponent>;
     let formServiceSpy: jasmine.SpyObj<FormService>;
+    let socketServiceSpy: jasmine.SpyObj<SocketClientService>;
     let formService: FormService;
+
+    beforeAll(async () => {
+        formServiceSpy = jasmine.createSpyObj('FormService', ['receiveGameInformations', 'deleteGameForm']);
+        socketServiceSpy = jasmine.createSpyObj('SocketClientService', ['connect', 'on', 'send']);
+    });
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [ListGameFormComponent],
-            providers: [{ provide: FormService, useValue: formServiceSpy }],
+            providers: [
+                { provide: FormService, useValue: formServiceSpy },
+                { provide: SocketClientService, useValue: socketServiceSpy },
+            ],
         }).compileComponents();
-        formServiceSpy = jasmine.createSpyObj('FormService', ['receiveGameInformations']);
+
         fixture = TestBed.createComponent(ListGameFormComponent);
         listGameFormComp = fixture.componentInstance;
 
@@ -78,5 +88,19 @@ describe('ListGameFormComponent', () => {
         listGameFormComp.previousPageGameForms();
         expect(listGameFormComp.firstElementIndex).toEqual(INITIAL_FIRST_ELEMENT_INDEX);
         expect(listGameFormComp.lastElementIndex).toEqual(Constants.MAX_NB_OF_FORMS_PER_PAGE - 1);
+    });
+
+    it('should be able to delete a gameForm', () => {
+        formService.gameForms = gameFormsInTestFormService;
+        const gameName = 'Dog game';
+        listGameFormComp.deleteGameForm(gameName);
+        expect(formService.gameToDelete).toEqual(gameName);
+    });
+
+    it('should call config when deleting a gameForm', () => {
+        const gameName = 'Dog game';
+        const configSpy = spyOn(listGameFormComp, <any>'config').and.callThrough();
+        listGameFormComp.deleteGameForm(gameName);
+        expect(configSpy).toHaveBeenCalled();
     });
 });
