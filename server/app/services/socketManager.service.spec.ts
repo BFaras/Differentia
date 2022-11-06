@@ -153,4 +153,24 @@ describe('SocketManager service tests', () => {
             done();
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
+
+    it("should handle 'kill the game' and call handleAbandonEmit and endGame", () => {
+        const stubAbandon = sinon.stub(GameManagerService.prototype, <any>'handleAbandonEmit').callsFake(() => {});
+        clientSocket.emit('kill the game');
+        expect(stubAbandon.calledOnce);
+    });
+
+    it("should handle 'Check if game is finished' and end the game", () => {
+        const stub = sinon.stub(GameManagerService.prototype, <any>'isGameFinishedMulti').callsFake(() => {
+            return true;
+        });
+        clientSocket.emit('Check if game is finished');
+        expect(stub.calledOnce);
+    });
+
+    it("should handle 'playerMessage' and send a message", () => {
+        const stub = sinon.stub(GameManagerService.prototype, <any>'findSocketGameRoomName').callsFake(() => {});
+        clientSocket.emit('playerMessage', '');
+        expect(stub.calledOnce);
+    });
 });

@@ -150,9 +150,7 @@ export class SocketManager {
                 this.gameManagerService.clickResponse(socket, position);
             });
 
-            //To test
             socket.on('kill the game', () => {
-                //To test qu'on appelle la fonction ci-dessous
                 this.gameManagerService.handleAbandonEmit(socket);
                 this.gameManagerService.endGame(socket);
             });
@@ -161,12 +159,10 @@ export class SocketManager {
                 const mouseHandler: MouseHandlerService = this.gameManagerService.getSocketMouseHandlerService(socket);
                 let isGameFinished = this.gameManagerService.isGameFinishedSolo(socket);
 
-                //To test this if
                 if (isMultiplayer) {
                     isGameFinished = this.gameManagerService.isGameFinishedMulti(socket);
                 }
 
-                // To test this if
                 if (isGameFinished) {
                     mouseHandler.resetData();
                     this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
