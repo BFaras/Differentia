@@ -1,34 +1,51 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
+import { Socket } from 'socket.io-client';
 
 import { PopDialogUsernameComponent } from './pop-dialog-username.component';
+export class SocketClientServiceMock extends SocketClientService {
+    override connect() {}
+    override off() {
+        this.disconnect();
+    }
+}
 
 describe('PopDialogUsernameComponent', () => {
     let component: PopDialogUsernameComponent;
     let fixture: ComponentFixture<PopDialogUsernameComponent>;
-    let socketSpy: jasmine.SpyObj<SocketClientService>;
-    let startUpGameService: jasmine.SpyObj<StartUpGameService>;
+    let socketClientServiceMock: SocketClientServiceMock;
+    let startUpGameServiceSpy: jasmine.SpyObj<StartUpGameService>;
+    let socketTestHelper: SocketTestHelper;
+    let dialogRef: jasmine.SpyObj<MatDialogRef<PopDialogUsernameComponent, any>>;
     let dialog: jasmine.SpyObj<MatDialog>;
 
     beforeAll(async () => {
-        socketSpy = jasmine.createSpyObj('SocketClientService', ['connect', 'on', 'send', 'off']);
+        socketTestHelper = new SocketTestHelper();
+        socketClientServiceMock = new SocketClientServiceMock();
+        socketClientServiceMock.socket = socketTestHelper as unknown as Socket;
+
+        startUpGameServiceSpy = jasmine.createSpyObj('StartUpGameService', ['startUpWaitingLine']);
+        dialog = jasmine.createSpyObj('MatDialog', ['open']);
+        dialogRef = jasmine.createSpyObj('MatDialogRef', ['close']);
     });
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [PopDialogUsernameComponent],
             providers: [
-                { provide: MatDialogRef, useValue: {} },
+                { provide: MatDialogRef, useValue: dialogRef },
                 { provide: MAT_DIALOG_DATA, useValue: {} },
-                { provide: StartUpGameService, useValue: startUpGameService },
-                { provide: SocketClientService, useValue: socketSpy },
+                { provide: StartUpGameService, useValue: startUpGameServiceSpy },
+                { provide: SocketClientService, useValue: socketClientServiceMock },
                 { provide: MatDialog, useValue: dialog },
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(PopDialogUsernameComponent);
         component = fixture.componentInstance;
+        TestBed.inject(SocketClientService);
         fixture.detectChanges();
     });
 
@@ -50,26 +67,42 @@ describe('PopDialogUsernameComponent', () => {
         expect(component.disabledButton).toBeTrue();
     });
 
-    // it('should call configure socket in NgonInit', async () => {
-    //     const spy = spyOn(component, <any>'configureUsernamePopUpSocketFeatures');
-    //     await component.ngOnInit();
-    //     expect(spy).toHaveBeenCalled();
-    //     expect(socketSpy['connect']).toHaveBeenCalled();
-    // });
+    it('should set the user to not valid', () => {
+        socketTestHelper.peerSideEmit('username not valid');
+        component['configureUsernamePopUpSocketFeatures']();
+        expect(component.usernameNotValid).toEqual(true);
+    });
 
-    // it('should call configure socket in NgonInit', async () => {
-    //     spyOn(component, <any>'configureUsernamePopUpSocketFeatures').and.callThrough();
-    //     await component.ngOnInit();
-    //     expect(socketSpy['on']).toHaveBeenCalled();
-    // });
+    it('should call dialogRef ', () => {
+        socketTestHelper.peerSideEmit('username valid');
+        component['configureUsernamePopUpSocketFeatures']();
+        expect(dialogRef.close).toHaveBeenCalled();
+    });
 
-    // it('should call event `on` with sockets', async () => {
-    //     let socket: SocketClientService = new SocketClientService();
-    //     const spy = spyOn(component, <any>'openDialog');
-    //     spyOn(socket, 'on').and.callFake(() => {
-    //         componentSpy['openDialog'];
-    //     });
-    //     component['configureUsernamePopUpSocketFeatures'];
-    //     expect(spy).toBeDefined();
-    // });
+    it('should start waiting in line', () => {
+        component.gameInfo['multiFlag'] = false;
+        const spy = spyOn(component, <any>'openDialog');
+        socketTestHelper.peerSideEmit('username valid');
+        component['configureUsernamePopUpSocketFeatures']();
+        expect(startUpGameServiceSpy.startUpWaitingLine).toHaveBeenCalled();
+        expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('should open dialog if game info multiflag is true', () => {
+        component.gameInfo['multiFlag'] = true;
+        const spy = spyOn(component, <any>'openDialog');
+        socketTestHelper.peerSideEmit('username valid');
+        component['configureUsernamePopUpSocketFeatures']();
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('should open the dialog when calling openDialog', () => {
+        component['openDialog']();
+        expect(dialog['open']).toHaveBeenCalled();
+    });
+
+    afterEach(() => {
+        fixture.destroy();
+        TestBed.resetTestingModule();
+    });
 });

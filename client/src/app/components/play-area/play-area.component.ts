@@ -61,11 +61,11 @@ export class PlayAreaComponent implements OnInit {
     private displayImages() {
         this.drawService.context1 = this.clickCanvas1.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.drawService.context1.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);
-        this.originalCanvas.nativeElement.focus();
+        this.clickCanvas1.nativeElement.focus();
 
         this.drawService.context2 = this.clickCanvas2.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.drawService.context2.drawImage(this.differentImages[MODIFIED_IMAGE_POSITION], 0, 0);
-        this.modifiedCanvas.nativeElement.focus();
+        this.clickCanvas2.nativeElement.focus();
 
         this.drawService.context3 = this.originalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.drawService.context3.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);

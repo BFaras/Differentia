@@ -12,8 +12,6 @@ export class SocketClientService {
         return this.socket && this.socket.connected;
     }
 
-    // La ligne 21 n'est pas couverte dans les codes car il est trop compliqué de la tester
-    // Nikolay nous a dit en cours que nous ne perdrions pas de points pour sa
     connect() {
         if (!this.isSocketAlive()) {
             this.socket = io(environment.serverUrl, { transports: ['websocket'], upgrade: false });

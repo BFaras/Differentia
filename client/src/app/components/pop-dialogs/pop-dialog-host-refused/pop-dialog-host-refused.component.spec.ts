@@ -11,6 +11,8 @@ describe('PopDialogHostRefusedComponent', () => {
     let dialog: jasmine.SpyObj<MatDialog>;
 
     beforeEach(async () => {
+        socketSpy = jasmine.createSpyObj('SocketClientService', ['send']);
+
         await TestBed.configureTestingModule({
             declarations: [PopDialogHostRefusedComponent],
             providers: [
@@ -23,10 +25,16 @@ describe('PopDialogHostRefusedComponent', () => {
 
         fixture = TestBed.createComponent(PopDialogHostRefusedComponent);
         component = fixture.componentInstance;
+        TestBed.inject(SocketClientService);
         fixture.detectChanges();
     });
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    afterEach(() => {
+        fixture.destroy();
+        TestBed.resetTestingModule();
     });
 });
