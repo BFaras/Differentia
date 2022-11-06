@@ -12,7 +12,7 @@ import { GameToServerService } from './game-to-server.service';
 import { UploadFileService } from './upload-file.service';
 
 import SpyObj = jasmine.SpyObj;
-fdescribe('GameToServerService', () => {
+describe('GameToServerService', () => {
     const imageTestValue = { name: 'Hi', image: 'src' };
     let service: GameToServerService;
     let elmentRef: ElementRef;
