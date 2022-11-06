@@ -60,14 +60,14 @@ describe('ImageDifferenceComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should test loaded() return false with number difference', async () => {
+    it('should test loaded() return true with number difference and source image', async () => {
         component.finalDifferencesImage.src = mockImage.image;
         component['numberOfDifferences'] = nbDifferencesTest;
         await component.ngOnInit();
-        expect(component.loaded()).toBeFalsy();
+        expect(component.loaded()).toBeTruthy();
     });
 
-    it('should test loaded() return false with source image', async () => {
+    it('should test loaded() return false with source image only', async () => {
         component.finalDifferencesImage.src = mockImage.image;
 
         await component.ngOnInit();
