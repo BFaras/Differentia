@@ -79,6 +79,7 @@ describe('SocketManager service tests', () => {
         });
     });
 
+    // Test passe pas
     it('should handle a username is event and emit a show the username event', (done) => {
         const usernameTest = 'Test username';
         clientSocket.emit('username is', usernameTest);
@@ -88,6 +89,7 @@ describe('SocketManager service tests', () => {
         });
     });
 
+    // Test passe pas
     it('should handle a verify position event and call clickResponse', (done) => {
         let positionTest: Position = {
             x: 0,
@@ -145,7 +147,7 @@ describe('SocketManager service tests', () => {
     it('should handle a Check if game is finished on finished game and call resetData', (done) => {
         const spy = sinon.spy(mouseHandlerService, 'resetData');
         mouseHandlerService.addPlayerToGame(clientSocket.id);
-        clientSocket.emit('Check if game is finished');
+        clientSocket.emit('Check if game is finished', true);
         setTimeout(() => {
             expect(spy.calledOnce);
             done();
