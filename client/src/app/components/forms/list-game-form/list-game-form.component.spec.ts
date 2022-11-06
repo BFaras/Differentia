@@ -1,11 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { RecordTimesBoard } from '@app/classes/record-times-board';
+import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { FormService } from '@app/services/form.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { Constants } from '@common/config';
+import { Socket } from 'socket.io-client';
 import { ListGameFormComponent } from './list-game-form.component';
+export class SocketClientServiceMock extends SocketClientService {
+    override connect() {}
+    override off() {
+        this.disconnect();
+    }
+}
 
 describe('ListGameFormComponent', () => {
     const INITIAL_FIRST_ELEMENT_INDEX = 0;
@@ -22,12 +31,19 @@ describe('ListGameFormComponent', () => {
     let listGameFormComp: ListGameFormComponent;
     let fixture: ComponentFixture<ListGameFormComponent>;
     let formServiceSpy: jasmine.SpyObj<FormService>;
-    let socketServiceSpy: jasmine.SpyObj<SocketClientService>;
+    let snackBarSpy: jasmine.SpyObj<MatSnackBar>;
+    let socketClientServiceMock: SocketClientServiceMock;
+    let socketTestHelper: SocketTestHelper;
+
     let formService: FormService;
 
     beforeAll(async () => {
         formServiceSpy = jasmine.createSpyObj('FormService', ['receiveGameInformations', 'deleteGameForm']);
-        socketServiceSpy = jasmine.createSpyObj('SocketClientService', ['connect', 'on', 'send']);
+        snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
+
+        socketTestHelper = new SocketTestHelper();
+        socketClientServiceMock = new SocketClientServiceMock();
+        socketClientServiceMock.socket = socketTestHelper as unknown as Socket;
     });
 
     beforeEach(async () => {
@@ -35,12 +51,15 @@ describe('ListGameFormComponent', () => {
             declarations: [ListGameFormComponent],
             providers: [
                 { provide: FormService, useValue: formServiceSpy },
-                { provide: SocketClientService, useValue: socketServiceSpy },
+                { provide: SocketClientService, useValue: socketClientServiceMock },
+                { provide: MatSnackBar, useValue: snackBarSpy },
             ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ListGameFormComponent);
         listGameFormComp = fixture.componentInstance;
+        TestBed.inject(SocketClientService);
+        jasmine.clock().install();
 
         formService = listGameFormComp.formService;
         formService.gameForms = gameFormsInTestFormService;
@@ -56,7 +75,7 @@ describe('ListGameFormComponent', () => {
         formService.gameForms = gameFormListWithOnlyOneGame;
         listGameFormComp.ngOnInit();
         expect(listGameFormComp.firstElementIndex).toEqual(INITIAL_FIRST_ELEMENT_INDEX);
-        expect(listGameFormComp.lastElementIndex).toEqual(formService.gameForms.length - 1);
+        expect(listGameFormComp.lastElementIndex).toEqual(listGameFormComp.firstElementIndex + formService.gameForms.length - 1);
     });
 
     it('should have the right index values when there is more than four games in the initial list', () => {
@@ -102,5 +121,28 @@ describe('ListGameFormComponent', () => {
         const configSpy = spyOn(listGameFormComp, <any>'config').and.callThrough();
         listGameFormComp.deleteGameForm(gameName);
         expect(configSpy).toHaveBeenCalled();
+    });
+
+    it('should not call socket in config', () => {
+        let gameName = '';
+        socketTestHelper.peerSideEmit('Page reloaded', gameName);
+        listGameFormComp['config'](gameName);
+
+        expect(listGameFormComp['messageForUpdate']).toEqual('');
+    });
+
+    it('should call socket in config', () => {
+        let gameName = 'Lucky';
+        socketTestHelper.peerSideEmit('Page reloaded', gameName);
+        listGameFormComp['config'](gameName);
+
+        expect(listGameFormComp['messageForUpdate']).toEqual('Reload');
+        expect(snackBarSpy['open']).toHaveBeenCalled();
+    });
+
+    afterEach(() => {
+        fixture.destroy();
+        TestBed.resetTestingModule();
+        jasmine.clock().uninstall();
     });
 });

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { FormService } from '@app/services/form.service';
 import { SocketClientService } from '@app/services/socket-client.service';
@@ -14,9 +15,11 @@ export class ListGameFormComponent implements OnInit {
     lastElementIndex: number = 3;
     currentPageGameFormList: GameFormDescription[];
     private messageForUpdate: string = '';
+    horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+    verticalPosition: MatSnackBarVerticalPosition = 'top';
     @Input() page: string;
 
-    constructor(public formService: FormService, private socketService: SocketClientService) {}
+    constructor(public formService: FormService, private socketService: SocketClientService, private snackBar: MatSnackBar) {}
 
     async ngOnInit() {
         this.config(this.messageForUpdate);
@@ -63,8 +66,13 @@ export class ListGameFormComponent implements OnInit {
         this.socketService.on('Page reloaded', (message) => {
             if (message) this.messageForUpdate = 'Reload';
             if (this.messageForUpdate) {
-                alert('Le jeu ' + message + ' a été supprimé :(');
-                location.reload();
+                this.snackBar.open('Le jeu ' + message + ' a été supprimé :(', 'OK', {
+                    horizontalPosition: this.horizontalPosition,
+                    verticalPosition: this.verticalPosition,
+                });
+                setTimeout(() => {
+                    location.reload();
+                }, 4500);
             }
         });
     }
