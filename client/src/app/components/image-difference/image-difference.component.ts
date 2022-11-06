@@ -40,7 +40,6 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
     }
 
     loaded() {
-        console.log(this.finalDifferencesImage);
         if (this.finalDifferencesImage.src !== '' && this.numberOfDifferences !== undefined) {
             this.gameToServerService.setNumberDifference(this.numberOfDifferences);
             this.gameToServerService.setUrlImageOfDifference(this.finalDifferencesImage.src);

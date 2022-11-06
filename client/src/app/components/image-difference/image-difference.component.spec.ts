@@ -9,16 +9,19 @@ import { ImageToImageDifferenceService } from '@app/services/image-to-image-diff
 import { SocketClientService } from '@app/services/socket-client.service';
 import { ImageToSendToServer } from '@common/imageToSendToServer';
 import { ImageDifferenceComponent } from './image-difference.component';
-// import SpyObj = jasmine.SpyObj;
+
 fdescribe('ImageDifferenceComponent', () => {
-    let component: ImageDifferenceComponent;
-    let fixture: ComponentFixture<ImageDifferenceComponent>;
-    let gameToServerService: GameToServerService;
-    let renderer: Renderer2;
-    let mockImage: ImageToSendToServer = {
+    const nbDifferencesTest = 4;
+    const mockImage: ImageToSendToServer = {
         image: 'url' as SafeValue,
         index: 1,
     };
+
+    let component: ImageDifferenceComponent;
+    let fixture: ComponentFixture<ImageDifferenceComponent>;
+    let getImagesDataSpy: jasmine.Spy;
+    let gameToServerService: GameToServerService;
+    let renderer: Renderer2;
 
     beforeEach(async () => {
         renderer = new Renderer2TestHelper() as unknown as Renderer2;
@@ -36,7 +39,7 @@ fdescribe('ImageDifferenceComponent', () => {
         spyOn(gameToServerService, 'getOriginalImageUploaded').and.returnValue(mockImage);
         spyOn(gameToServerService, 'getModifiedImageUploaded').and.returnValue(mockImage);
         spyOn(ImageToImageDifferenceService.prototype, 'waitForImageToLoad').and.returnValue(Promise.resolve());
-        spyOn(ImageToImageDifferenceService.prototype, 'getImagesData').and.returnValue({
+        getImagesDataSpy = spyOn(ImageToImageDifferenceService.prototype, 'getImagesData').and.returnValue({
             originalImageData: new Uint8ClampedArray(),
             modifiedImageData: new Uint8ClampedArray(),
             imageHeight: 0,
@@ -46,37 +49,39 @@ fdescribe('ImageDifferenceComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should test load return true with number difference', async () => {
-        component.finalDifferencesImage.src = 'string';
-        component['numberOfDifferences'] = 2;
+    it('should test loaded() return true with number difference', async () => {
+        component.finalDifferencesImage.src = mockImage.image;
+        component['numberOfDifferences'] = nbDifferencesTest;
 
         await component.ngOnInit();
         expect(component.loaded()).toBeTruthy();
     });
 
-    it('should test load return true with source image', async () => {
-        component.finalDifferencesImage.src = 'string';
+    it('should test loaded() return false with source image', async () => {
+        component.finalDifferencesImage.src = mockImage.image;
 
         await component.ngOnInit();
-        expect(component.loaded()).toBeTruthy();
+        expect(component.loaded()).toBeFalsy();
     });
 
-    it('should call functions from GameToServerService when there is an image source and a number of differences and loaded is called', async () => {
-        const spy1 = spyOn(GameToServerService.prototype, 'setNumberDifference');
-        const spy2 = spyOn(GameToServerService.prototype, 'setUrlImageOfDifference');
-        const spy3 = spyOn(GameToServerService.prototype, 'setDifferencesList');
+    it('should call functions from GameToServerService when there is an image source and a number of differences and loaded() is called', async () => {
+        const spy1 = spyOn(gameToServerService, 'setNumberDifference');
+        const spy2 = spyOn(gameToServerService, 'setUrlImageOfDifference');
+        const spy3 = spyOn(gameToServerService, 'setDifferencesList');
 
-        await component.ngOnInit();
+        component['finalDifferencesImage'].src = mockImage.image;
+        component['numberOfDifferences'] = nbDifferencesTest;
         component.loaded();
+
         expect(spy1).toHaveBeenCalled();
         expect(spy2).toHaveBeenCalled();
         expect(spy3).toHaveBeenCalled();
     });
 
     it('should call getImagesData from ImageToImageDifferenceService on ngOnInit', async () => {
-        const spy = spyOn(ImageToImageDifferenceService.prototype, 'getImagesData');
+        //const spy = spyOn(ImageToImageDifferenceService.prototype, 'getImagesData');
         await component.ngOnInit();
-        expect(spy).toHaveBeenCalled();
+        expect(getImagesDataSpy).toHaveBeenCalled();
     });
 
     it('should send an event to the server on ngOnInit', async () => {
