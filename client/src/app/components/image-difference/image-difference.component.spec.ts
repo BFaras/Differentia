@@ -7,6 +7,7 @@ import { Renderer2TestHelper } from '@app/classes/renderer2-test-helper';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { GameToServerService } from '@app/services/game-to-server.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
+import { MergeImageCanvasHandlerService } from '@app/services/merge-image-canvas-handler.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { DifferencesInformations } from '@common/differences-informations';
 import { ImageToSendToServer } from '@common/imageToSendToServer';
@@ -33,10 +34,19 @@ describe('ImageDifferenceComponent', () => {
         socketTestHelper = new SocketTestHelper();
         renderer = new Renderer2TestHelper() as unknown as Renderer2;
 
+        const mergeImageCanvasServiceMock = jasmine.createSpyObj('MergeImageCanvasHandlerService', [
+            'initializeImage',
+            'drawImageOnCanvas',
+            'obtainUrlForMerged',
+        ]);
+
         await TestBed.configureTestingModule({
             imports: [RouterTestingModule, HttpClientTestingModule],
             declarations: [ImageDifferenceComponent],
-            providers: [{ provide: Renderer2, useValue: renderer }],
+            providers: [
+                { provide: Renderer2, useValue: renderer },
+                { provide: MergeImageCanvasHandlerService, useValue: mergeImageCanvasServiceMock },
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ImageDifferenceComponent);

@@ -19,9 +19,9 @@ describe('ImageRenderedComponent', () => {
         mockEmitterGetSingleImage = new Subject();
         mockEmitterGetMultipleImage = new Subject();
         listImagesRenderedSpy = jasmine.createSpyObj('ListImagesRenderedService', [
-            'getIdImageToRemove',
-            'getDataImageSingle',
-            'getDataImageMultiple',
+            'getIdImageToRemoveObservable',
+            'getDataImageSingleObservable',
+            'getDataImageMultipleObservable',
         ]);
         listImagesRenderedSpy.getIdImageToRemoveObservable.and.returnValue(mockEmitterGetIDToRemove);
         listImagesRenderedSpy.getDataImageSingleObservable.and.returnValue(mockEmitterGetSingleImage);
