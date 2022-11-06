@@ -11,7 +11,7 @@ import { MouseHandlerService } from './mouse-handler.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
 
 export class SocketManager {
-    private sio: io.Server;\
+    private sio: io.Server;
     public socket: io.Socket;
     private waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
     private gameManagerService: GameManagerService;

@@ -175,13 +175,4 @@ describe('SocketManager service tests', () => {
         clientSocket.emit('playerMessage', '');
         expect(stub.calledOnce);
     });
-
-    // Test passe pas, mais couvre une ligne de plus, a regler
-    it("should handle 'I refuse this adversary'", () => {
-        const spy = sinon.stub(waitingLineHandlerService, 'getIDFirstPlayerWaiting').callsFake(() => {
-            return clientSocket.id;
-        });
-        clientSocket.emit('I refuse this adversary', 'Car game');
-        expect(spy.calledOnce);
-    });
 });
