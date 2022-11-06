@@ -1,4 +1,4 @@
-import { FIRST_ARRAY_POSITION, IMAGE_WIDTH, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
+import { DEFAULT_USERNAME, FIRST_ARRAY_POSITION, IMAGE_WIDTH, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
 import { Game } from '@common/game';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
@@ -8,9 +8,9 @@ import { GamesService } from './local.games.service';
 
 @Service()
 export class MouseHandlerService {
-    differencesHashmap: Map<number, number>;
-    differencesList: number[][];
-    differencesNbFoundByPlayer: Map<string, number[]>;
+    private differencesHashmap: Map<number, number>;
+    private differencesList: number[][];
+    private differencesNbFoundByPlayer: Map<string, number[]>;
     nbDifferencesTotal: number;
 
     constructor() {
@@ -26,12 +26,10 @@ export class MouseHandlerService {
         this.differencesList = [];
     }
 
-    //To test
     addPlayerToGame(plrSocketID: string) {
         this.differencesNbFoundByPlayer.set(plrSocketID, []);
     }
 
-    //To test
     getNumberOfDifferencesFoundByPlayer(plrSocketId: string): number {
         return this.differencesNbFoundByPlayer.get(plrSocketId)!.length;
     }
@@ -83,7 +81,8 @@ export class MouseHandlerService {
             differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
             isValidDifference: false,
             //To modify with a constant (constant is in feature/ChatGameView)
-            playerName: '',
+            socketId: plrSocketID,
+            playerUsername: DEFAULT_USERNAME,
         };
 
         if (this.differencesHashmap.has(pixelNumber)) {

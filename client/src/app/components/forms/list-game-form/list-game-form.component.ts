@@ -13,7 +13,7 @@ export class ListGameFormComponent implements OnInit {
     firstElementIndex: number = 0;
     lastElementIndex: number = 3;
     currentPageGameFormList: GameFormDescription[];
-    messageForUpdate: string = '';
+    private messageForUpdate: string = '';
     @Input() page: string;
 
     constructor(public formService: FormService, private socketService: SocketClientService) {}
@@ -28,7 +28,6 @@ export class ListGameFormComponent implements OnInit {
     }
 
     nextPageGameForms() {
-        //const 4
         if (this.firstElementIndex + Constants.MAX_NB_OF_FORMS_PER_PAGE < this.formService.gameForms.length) {
             this.firstElementIndex += Constants.MAX_NB_OF_FORMS_PER_PAGE;
 
@@ -43,7 +42,6 @@ export class ListGameFormComponent implements OnInit {
     }
 
     previousPageGameForms() {
-        //const 4
         if (this.firstElementIndex - Constants.MAX_NB_OF_FORMS_PER_PAGE >= 0) {
             this.firstElementIndex -= Constants.MAX_NB_OF_FORMS_PER_PAGE;
             this.lastElementIndex = this.firstElementIndex + (Constants.MAX_NB_OF_FORMS_PER_PAGE - 1);
@@ -52,13 +50,13 @@ export class ListGameFormComponent implements OnInit {
         }
     }
 
-    addCurrentPageGameForms() {
+    private addCurrentPageGameForms() {
         this.currentPageGameFormList = new Array(this.lastElementIndex - this.firstElementIndex + 1);
         for (let index: number = 0; index < this.currentPageGameFormList.length; index++) {
             this.currentPageGameFormList[index] = this.formService.gameForms[index + this.firstElementIndex];
         }
     }
-    config(gameName: string) {
+    private config(gameName: string) {
         this.socketService.connect();
         this.socketService.send('Reload game selection page', gameName);
 

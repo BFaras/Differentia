@@ -24,6 +24,7 @@ describe('ChatSectionComponent', () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(ChatSectionComponent);
+        jasmine.clock().install();
         chatSectionComponent = fixture.componentInstance;
         fixture.detectChanges();
 
@@ -40,6 +41,10 @@ describe('ChatSectionComponent', () => {
         chatSectionComponent.ngOnInit();
     });
 
+    afterEach(() => {
+        jasmine.clock().uninstall();
+    });
+
     it('should subscribe to the ChatMessagesService observable on init ', () => {
         expect(testObserver).not.toBeUndefined();
     });
@@ -47,6 +52,12 @@ describe('ChatSectionComponent', () => {
     it('should call addMessage when the observer sends information', () => {
         const spy = spyOn(chatSectionComponent, <any>'addMessage');
         expect(spy).toHaveBeenCalled;
+    });
+
+    it('should call scrollToBottom when the observer sends information', () => {
+        const scrollSpy = spyOn(chatSectionComponent, <any>'scrollToBottom');
+        jasmine.clock().tick(2);
+        expect(scrollSpy).toHaveBeenCalled;
     });
 
     it('should add a message to the message list when the observable sends an event', () => {
@@ -60,30 +71,29 @@ describe('ChatSectionComponent', () => {
         expect(chatSectionComponent.messagesSent).not.toEqual([testMessage, testMessage]);
     });
 
+    it('should ngOnDestroy() call resetIsMultiplayer() of ChatMessageService', () => {
+        const spy = spyOn(chatMessagesService, 'resetIsMultiplayer');
+        chatSectionComponent.ngOnDestroy();
+        expect(spy).toHaveBeenCalled;
+    });
+
     it('should handle a show the username event and change the local player username', () => {
         socketTestHelper.peerSideEmit('show the username', testUsername);
         expect(chatSectionComponent.localPlayerUsername).toEqual(testUsername);
     });
 
-    it('should call preventDefault if key is Enter', () => {
-        const keyboardEvent: KeyboardEvent = new KeyboardEvent('Enter');
-        const spy = spyOn(keyboardEvent, 'preventDefault');
-        Object.defineProperty(keyboardEvent, 'key', {
-            get: () => 'Enter',
-        });
-
-        // chatSectionComponent.handleKeyEvent(keyboardEvent);
-        expect(spy).toHaveBeenCalled();
+    it('should change the multiplayer game to true', () => {
+        const testAdversaryName = 'testName1234';
+        socketTestHelper.peerSideEmit('The adversary username is', testAdversaryName);
+        expect(chatSectionComponent.isMultiplayerGame).toBeTruthy();
     });
 
-    it('should call not call preventDefault if key is not Enter', () => {
-        const arrowDownEvent: KeyboardEvent = new KeyboardEvent('ArrowDown');
-        const spy = spyOn(arrowDownEvent, 'preventDefault');
-        Object.defineProperty(arrowDownEvent, 'key', {
-            get: () => 'ArrowDown',
-        });
+    it('should sendMessage() of ChatSectionComponent call sendMessage() of ChatMessageService and clear the input', () => {
+        const sendMessageSpy = spyOn(chatMessagesService, 'sendMessage');
+        chatSectionComponent.playerMsg = { nativeElement: { value: 'Hi' } };
+        chatSectionComponent.sendMessage();
 
-        // chatSectionComponent.handleKeyEvent(arrowDownEvent);
-        expect(spy).not.toHaveBeenCalled();
+        expect(sendMessageSpy).toHaveBeenCalled;
+        expect(chatSectionComponent.playerMsg.nativeElement.value).toEqual('');
     });
 });

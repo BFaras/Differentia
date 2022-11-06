@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GameFormDescription } from '@app/classes/game-form-description';
+import { ADMIN_GAME_FORMS_BUTTON, MULTIPLAYER_MODE, SELECTION_GAME_FORMS_BUTTON } from '@app/client-consts';
 import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
 import { SocketClientService } from '@app/services/socket-client.service';
-// import { ADMIN_GAME_FORMS_BUTTON, SELECTION_GAME_FORMS_BUTTON, MULTIPLAYER_MODE } from '@app/client-consts';
 // Comment je fait pour avoir accès à ces constante dans le fichier html
 
 @Component({
@@ -16,23 +16,21 @@ export class GameFormComponent {
     @Input() buttonPage: string;
     @Output() newItemEvent = new EventEmitter<string>();
     //mettre les 3 prochaines valeurs dans un fichier constantes
-    adminGameFormsButton = ['Supprimer', 'Réinitialiser'];
-    selectionGameFormsButton = ['Créer', 'Jouer', 'Joindre'];
-    multiplayerFlag: boolean = true;
+    adminGameFormsButton = ADMIN_GAME_FORMS_BUTTON;
+    selectionGameFormsButton = SELECTION_GAME_FORMS_BUTTON;
+    multiplayerFlag = MULTIPLAYER_MODE;
     // ---------------------------------------------------------
     isPlayerWaiting: boolean = false;
-    joinFLag: boolean = false;
+    joinFlag: boolean = false;
     createFlag: boolean = false;
     constructor(private dialog: MatDialog, private socketService: SocketClientService) {}
 
     ngOnInit(): void {
         this.configureGameFormSocketFeatures();
-        if (this.gameForm.gameName) this.socketService.send('is there someone waiting', this.gameForm.gameName);
+        this.socketService.send('is there someone waiting', this.gameForm.gameName);
     }
 
-    ngOnAfterInit(): void {}
-
-    public openDialog(multiplayerFlag: boolean): void {
+    openDialog(multiplayerFlag: boolean): void {
         this.dialog.open(PopDialogUsernameComponent, {
             height: '400px',
             width: '600px',
@@ -40,7 +38,7 @@ export class GameFormComponent {
             data: {
                 nameGame: this.gameForm.gameName,
                 multiFlag: multiplayerFlag,
-                joinFlag: this.joinFLag,
+                joinFlag: this.joinFlag,
                 createFlag: this.createFlag,
                 isPlayerWaiting: this.isPlayerWaiting,
             },
@@ -50,35 +48,30 @@ export class GameFormComponent {
     deleteGameForm(value: string) {
         this.newItemEvent.emit(value);
     }
-    public setJoinFlag(): void {
-        this.joinFLag = true;
-    }
-
-    public setCreateFlag(): void {
-        this.createFlag = true;
-    }
-
-    private resetFlags(): void {
+    setJoinFlag(): void {
+        this.joinFlag = true;
         this.createFlag = false;
-        this.joinFLag = false;
     }
 
-    configureGameFormSocketFeatures(): void {
+    setCreateFlag(): void {
+        this.createFlag = true;
+        this.joinFlag = false;
+    }
+
+    resetFlags(): void {
+        this.createFlag = false;
+        this.joinFlag = false;
+    }
+
+    private configureGameFormSocketFeatures(): void {
         this.socketService.connect();
         if (this.gameForm.gameName) {
             this.socketService.on(`${this.gameForm.gameName} let me tell you if someone is waiting`, (response: boolean) => {
                 this.isPlayerWaiting = response;
             });
 
-            this.socketService.on(`${this.gameForm.gameName} someone is waiting`, () => {
-                console.log('salut');
-                this.isPlayerWaiting = true;
-                this.resetFlags();
-            });
-
             this.socketService.on(`${this.gameForm.gameName} nobody is waiting no more`, () => {
                 this.isPlayerWaiting = false;
-                this.resetFlags();
             });
 
             this.socketService.on('reconnect', () => {

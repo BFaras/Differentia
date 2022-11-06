@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { ChronometerService } from './chronometer.service';
 import { MAX_TIME, RESET_VALUE } from '../../../common/const';
+import { ChronometerService } from './chronometer.service';
 
 describe('Chronometer service', () => {
     let chronometerService: ChronometerService;
@@ -11,13 +11,13 @@ describe('Chronometer service', () => {
 
     it('should increase the seconds by 1', () => {
         let seconds = chronometerService.time.seconds;
-        chronometerService.increaseSeconds();
+        chronometerService['increaseSeconds']();
         expect(chronometerService.time.seconds).to.equals(seconds+1);
     });
 
     it('should increase the minutes by 1', () => {
         let minutes = chronometerService.time.minutes;
-        chronometerService.increaseMinutes();
+        chronometerService['increaseMinutes']();
         expect(chronometerService.time.minutes).to.equals(minutes+1);
     });
 

@@ -26,7 +26,7 @@
             <ng-template #noOneIsWaiting>
                 <button mat-stroked-button (click)="setCreateFlag()" (click)="openDialog(multiplayerFlag)">{{ selectionGameFormsButton[0] }}</button>
             </ng-template>
-            <button mat-stroked-button (click)="openDialog(!multiplayerFlag)">{{ selectionGameFormsButton[1] }}</button>
+            <button mat-stroked-button (click)="resetFlags()" (click)="openDialog(!multiplayerFlag)">{{ selectionGameFormsButton[1] }}</button>
         </ng-container>
     </div>
 </body>

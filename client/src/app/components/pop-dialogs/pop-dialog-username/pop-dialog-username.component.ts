@@ -1,8 +1,8 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { PopDialogWaitingForPlayerComponent } from '@app/components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
-import { PopDialogWaitingForPlayerComponent } from '../pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
 
 @Component({
     selector: 'app-pop-dialog-username',
@@ -19,12 +19,16 @@ export class PopDialogUsernameComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public gameInfo: any,
         public startUpGameService: StartUpGameService,
         private dialog: MatDialog,
-        private dialogRef: MatDialogRef<PopDialogUsernameComponent>,
+        public dialogRef: MatDialogRef<PopDialogUsernameComponent>,
     ) {}
 
     ngOnInit(): void {
         this.socketService.connect();
         this.configureUsernamePopUpSocketFeatures();
+    }
+
+    ngOnDestroy(): void {
+        this.socketService.off('username valid');
     }
 
     private startWaitingLine(): void {
@@ -50,11 +54,11 @@ export class PopDialogUsernameComponent implements OnInit {
         });
     }
 
-    configureUsernamePopUpSocketFeatures(): void {
+    private configureUsernamePopUpSocketFeatures(): void {
         this.socketService.on('username valid', () => {
-            if (this.gameInfo.multiFlag) this.openDialog();
             this.startWaitingLine();
             this.dialogRef.close();
+            if (this.gameInfo.multiFlag) this.openDialog();
         });
 
         this.socketService.on('username not valid', () => {

@@ -1,17 +1,14 @@
 .chatContainer {
+    height: 250px;
+    width: 250px;
     border-radius: 6px;
-    background-image: linear-gradient(0deg, #000000 25%, #023600 25%, #023600 50%, #000000 50%, #000000 75%, #023600 75%, #023600 100%);
-    background-size: 4px 4px;
-    color: white;
+    background-color: rgb(234, 223, 223);
     font: 1.3rem Inconsolata, monospace;
     text-shadow: 0 0 5px #c8c8c8;
-    display: flex;
-    flex-direction: column;
 }
 
 .chatMessages {
     border-radius: 20px;
-    display: flex;
     flex-direction: column;
     height: 80%;
     justify-content: space-around;
@@ -54,13 +51,13 @@
 }
 
 .timeInMessage {
-    color: rgb(234, 223, 223);
+    color: rgb(3, 3, 3);
     font-size: xx-small;
     margin-right: 0.05cm;
 }
 
 #list-display {
-    margin-left: 10px;
+    margin-left: auto;
     line-height: 1.6;
     white-space: pre-line;
 }
@@ -68,10 +65,10 @@
 .display {
     width: 100%;
     height: 100%;
-    overflow-y: auto;
     white-space: normal;
     font-size: 16px;
-    flex-grow: 1;
-    max-width: 100%;
     word-break: break-word;
+    overflow-y: auto;
+    display:flex;
+    flex-direction: column-reverse;
 }

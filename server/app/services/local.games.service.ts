@@ -4,14 +4,13 @@ import { Time } from '@common/time';
 import * as fs from 'fs';
 import { join } from 'path';
 import { Service } from 'typedi';
-// import { SocketManager } from './socketManager.service';
 
 const IMAGES_PATH = 'assets/images/';
 
 @Service()
 export class GamesService {
-    gamesFilePath: string = 'games.json';
-    games: Game[];
+    private gamesFilePath: string = 'games.json';
+    private games: Game[];
 
     constructor() {}
 

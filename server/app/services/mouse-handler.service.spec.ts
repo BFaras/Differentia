@@ -22,7 +22,8 @@ describe('MouseHandlerService', () => {
             [899, 951],
         ],
     };
-    const testDifferencesList = [[0]];
+    const testDifferencesFoundArray :number[] = [1,2,3];
+    const testDifferencesList : number[][] = [[0]];
     //const gamesService: GamesService = Container.get(GamesService);
     const hashmapConverter: HashmapConverterService = Container.get(HashmapConverterService);
 
@@ -38,8 +39,8 @@ describe('MouseHandlerService', () => {
     beforeEach(async () => {
         //we need a mock of a local games service which will return a game by default
         mouseService = new MouseHandlerService();
-        mouseService.differencesHashmap.set(0, 0);
-        mouseService.differencesList = testDifferencesList;
+        mouseService['differencesHashmap'].set(0, 0);
+        mouseService['differencesList'] = testDifferencesList;
         mouseService.addPlayerToGame(testSocketID);
         position = { x: 0, y: 0 };
     });
@@ -55,13 +56,13 @@ describe('MouseHandlerService', () => {
 
     it('should set the differences list at the right value when generateDifferencesInformations() is called', async () => {
         await mouseService.generateDifferencesInformations(testGameName);
-        expect(mouseService.differencesList).to.deep.equals(testGame.differencesList);
+        expect(mouseService['differencesList']).to.deep.equals(testGame.differencesList);
     });
 
     it('should change the differencesMap value when generateDifferencesInformations() is called', async () => {
-        const originalDifferencesMap = mouseService.differencesHashmap;
+        const originalDifferencesMap = mouseService['differencesHashmap'];
         await mouseService.generateDifferencesInformations(testGameName);
-        expect(mouseService.differencesHashmap).to.not.deep.equals(originalDifferencesMap);
+        expect(mouseService['differencesHashmap']).to.not.deep.equals(originalDifferencesMap);
     });
 
     it('should call convertNumber2DArrayToNumberMap() from hashmapConverter when generateDifferencesInformations() is called', async () => {
@@ -71,7 +72,7 @@ describe('MouseHandlerService', () => {
     });
 
     it('should return an empty array if difference is already found and return false for isValidDifferenceFound', () => {
-        mouseService.differencesNbFoundByPlayer.set(testSocketID, [FIRST_ARRAY_POSITION]);
+        mouseService['differencesNbFoundByPlayer'].set(testSocketID, [FIRST_ARRAY_POSITION]);
         const differencesInfo: GameplayDifferenceInformations = mouseService.isValidClick(position, testSocketID);
         expect(differencesInfo.differencePixelsNumbers).to.be.deep.equals(NO_DIFFERENCE_FOUND_ARRAY);
         expect(differencesInfo.isValidDifference).to.equal(false);
@@ -94,9 +95,19 @@ describe('MouseHandlerService', () => {
         let differencesHashmapTest: Map<number, number> = new Map<number, number>();
         let differencesNbFoundByPlayerTest: Map<string, number> = new Map<string, number>();
 
-        mouseService.differencesNbFoundByPlayer.set(testSocketID, [1, 2, 3]);
+        mouseService['differencesNbFoundByPlayer'].set(testSocketID, testDifferencesFoundArray);
         mouseService.resetData();
-        expect(mouseService.differencesHashmap).to.deep.equals(differencesHashmapTest);
-        expect(mouseService.differencesNbFoundByPlayer).to.deep.equals(differencesNbFoundByPlayerTest);
+        expect(mouseService['differencesHashmap']).to.deep.equals(differencesHashmapTest);
+        expect(mouseService['differencesNbFoundByPlayer']).to.deep.equals(differencesNbFoundByPlayerTest);
+    });
+
+    it('should add a socketID to the differencesNbFoundByPLayerMap on addPlayerToGame()', () => {
+        mouseService.addPlayerToGame(testSocketID);
+        expect(mouseService['differencesNbFoundByPlayer'].get(testSocketID)).to.deep.equals([]);
+    });
+
+    it('should return the number of differences found by a player on getNumberOfDifferencesFoundByPlayer()', () => {
+        mouseService['differencesNbFoundByPlayer'].set(testSocketID, testDifferencesFoundArray);
+        expect(mouseService.getNumberOfDifferencesFoundByPlayer(testSocketID)).to.equal(testDifferencesFoundArray.length);
     });
 });

@@ -8,11 +8,10 @@ import * as io from 'socket.io';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
 import { MouseHandlerService } from './mouse-handler.service';
-import { WaitingLineHandlerService } from './waitingLineHandler.service';
+import { WaitingLineHandlerService } from './waiting-line-handler.service';
 
 export class SocketManager {
     private sio: io.Server;
-    // private room: string = "serverRoom";
     public socket: io.Socket;
     private waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
     private gameManagerService: GameManagerService;
@@ -59,13 +58,20 @@ export class SocketManager {
             });
 
             socket.on('I am waiting', (gameName: string) => {
-                console.log('creation createur');
                 this.waitingLineHandlerService.addCreatingPlayer(gameName, socket.id);
-                this.sio.emit(`${gameName} someone is waiting`);
+                this.sio.emit(`${gameName} let me tell you if someone is waiting`, true);
             });
 
-            socket.on('Reload game selection page', (msg) => {
-                this.sio.emit('Page reloaded', msg);
+            socket.on('Reload game selection page', (msg: string) => {
+                let roomToKeep: string[] = [];
+                for (let rooms of this.gameManagerService.gamesRooms.entries()) {
+                    if (roomToKeep.length === 0)
+                        rooms[1].forEach((room) => {
+                            roomToKeep.push(room);
+                        });
+                    else roomToKeep = roomToKeep.concat(rooms[1]);
+                }
+                this.sio.except(roomToKeep).emit('Page reloaded', msg);
             });
 
             socket.on('I left', (gameName: string) => {
@@ -78,12 +84,14 @@ export class SocketManager {
                 this.sio.to(socket.id).emit('reconnect');
             });
 
+            // To test
             socket.on(`Is the host still there`, (gameName: string) => {
                 if (this.waitingLineHandlerService.getCreatorPlayer(gameName))
                     this.sio.to(socket.id).emit(`${gameName} response on host presence`, HOST_PRESENT);
                 else this.sio.to(socket.id).emit(`${gameName} response on host presence`, !HOST_PRESENT);
             });
 
+            // To test
             socket.on('I am trying to join', (gameInfoAndUsername: string[]) => {
                 this.waitingLineHandlerService.addJoiningPlayer(socket.id, gameInfoAndUsername);
                 const waitingSocketId = this.waitingLineHandlerService.getCreatorPlayer(gameInfoAndUsername[0]) as string;
@@ -95,6 +103,7 @@ export class SocketManager {
                     );
             });
 
+            // To test
             socket.on('I dont want to join anymore', (gameName: string) => {
                 this.waitingLineHandlerService.deleteJoiningPlayer(socket.id, gameName);
                 const waitingSocketId = this.waitingLineHandlerService.getCreatorPlayer(gameName) as string;
@@ -103,6 +112,7 @@ export class SocketManager {
                     this.waitingLineHandlerService.updateJoiningPlayer(this.sio, gameName, 'someone is trying to join');
             });
 
+            // To test
             socket.on('launch classic mode multiplayer match', async (gameName: string) => {
                 const adversarySocketId = this.waitingLineHandlerService.getIDFirstPlayerWaiting(gameName);
                 this.waitingLineHandlerService.deleteJoiningPlayer(adversarySocketId, gameName);
@@ -116,6 +126,7 @@ export class SocketManager {
                 this.sio.emit(`${gameName} nobody is waiting no more`);
             });
 
+            // To test
             socket.on('I refuse this adversary', (gameName: string) => {
                 const waitingSocketId = this.waitingLineHandlerService.getIDFirstPlayerWaiting(gameName);
                 this.waitingLineHandlerService.deleteJoiningPlayer(waitingSocketId, gameName);
@@ -139,22 +150,27 @@ export class SocketManager {
             });
 
             socket.on('kill the game', () => {
+                this.gameManagerService.handleAbandonEmit(socket);
                 this.gameManagerService.endGame(socket);
             });
 
-            socket.on('Check if game is finished', () => {
+            socket.on('Check if game is finished', (isMultiplayer: boolean) => {
                 const mouseHandler: MouseHandlerService = this.gameManagerService.getSocketMouseHandlerService(socket);
-                if (mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === mouseHandler.nbDifferencesTotal) {
+                let isGameFinished = this.gameManagerService.isGameFinishedSolo(socket);
+
+                if (isMultiplayer) {
+                    isGameFinished = this.gameManagerService.isGameFinishedMulti(socket);
+                }
+
+                if (isGameFinished) {
                     mouseHandler.resetData();
+                    this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
                     this.gameManagerService.endGame(socket);
-                    socket.emit('End game');
                 }
             });
 
             socket.on('playerMessage', (msg: ChatMessage) => {
-                console.log(msg);
-                //Change socket.id by gameroom name
-                this.sio.to(socket.id).emit('Send message to opponent', msg);
+                this.sio.to(this.gameManagerService.findSocketGameRoomName(socket)).emit('Send message to opponent', msg);
             });
         });
     }
