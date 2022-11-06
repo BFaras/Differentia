@@ -63,6 +63,10 @@ describe('ChatMessagesService', () => {
         }
     });
 
+    it('should be created', () => {
+        expect(chatMessagesService).toBeTruthy();
+    });
+
     it('should call sendMessage', () => {
         const sendMessageSpy = spyOn(socketService, 'send').and.callThrough();
         chatMessagesService.sendMessage(DEFAULT_USERNAME, message);
