@@ -71,7 +71,7 @@ describe('SocketManager service tests', () => {
         }, RESPONSE_DELAY);
     });
 
-    it('should handle a solo classic mode event and return the game of the name that was launched', (done) => {
+    it("should handle 'solo classic mode' event and return the game of the name that was launched", (done) => {
         clientSocket.emit('solo classic mode', testGameName);
         clientSocket.once('The game is', (nameOfGame: string) => {
             expect(nameOfGame).to.equal(testGameName);
@@ -80,7 +80,7 @@ describe('SocketManager service tests', () => {
     });
 
     // Test passe pas
-    it('should handle a username is event and emit a show the username event', (done) => {
+    it("should handle 'username is' event and emit a show the username event", (done) => {
         const usernameTest = 'Test username';
         clientSocket.emit('username is', usernameTest);
         clientSocket.once('show the username', (username: string) => {
@@ -90,7 +90,7 @@ describe('SocketManager service tests', () => {
     });
 
     // Test passe pas
-    it('should handle a verify position event and call clickResponse', (done) => {
+    it("should handle 'verify position' event and call clickResponse", (done) => {
         let positionTest: Position = {
             x: 0,
             y: 0,
@@ -102,7 +102,7 @@ describe('SocketManager service tests', () => {
         });
     });
 
-    it('should handle a solo classic mode event and return the game of the name that was launched', (done) => {
+    it("should handle 'solo classic mode event' and return the game of the name that was launched", (done) => {
         clientSocket.emit('solo classic mode', testGameName);
         clientSocket.once('The game is', (nameOfGame: string) => {
             expect(nameOfGame).to.equal(testGameName);
@@ -110,7 +110,7 @@ describe('SocketManager service tests', () => {
         });
     });
 
-    it('should handle a solo classic mode event and call beginGame', (done) => {
+    it("should handle 'solo classic mode' event and call beginGame", (done) => {
         clientSocket.emit('solo classic mode', testGameName);
         setTimeout(() => {
             expect(gameManagerServiceBeginGameStub.calledOnce);
@@ -118,7 +118,7 @@ describe('SocketManager service tests', () => {
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
 
-    it('should handle a detect images difference event and call generateDifferencesList', (done) => {
+    it("should handle 'detect images difference' event and call generateDifferencesList", (done) => {
         const spy = sinon.spy(differenceDetectorService, 'generateDifferencesList');
         clientSocket.emit('detect images difference', imagesData);
         setTimeout(() => {
@@ -127,7 +127,7 @@ describe('SocketManager service tests', () => {
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
 
-    it('should handle a detect images difference event and call getNbDifferences', (done) => {
+    it("should handle 'detect images difference' event and call getNbDifferences", (done) => {
         const spy = sinon.spy(differenceDetectorService, 'getNbDifferences');
         clientSocket.emit('detect images difference', imagesData);
         setTimeout(() => {
@@ -136,7 +136,7 @@ describe('SocketManager service tests', () => {
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
 
-    it('should handle a detect images difference event and emit a game creation differences informations event', (done) => {
+    it("should handle 'detect images difference' event and emit a game creation differences informations event", (done) => {
         clientSocket.emit('detect images difference', imagesData);
         clientSocket.once('game creation differences informations', (differencesInfos: DifferencesInformations) => {
             expect(differencesInfos).to.exist;
@@ -144,7 +144,7 @@ describe('SocketManager service tests', () => {
         }); // 1 seconde
     });
 
-    it('should handle a Check if game is finished on finished game and call resetData', (done) => {
+    it("should handle 'Check if game is finished' on finished game and call resetData", (done) => {
         const spy = sinon.spy(mouseHandlerService, 'resetData');
         mouseHandlerService.addPlayerToGame(clientSocket.id);
         clientSocket.emit('Check if game is finished', true);
@@ -152,5 +152,28 @@ describe('SocketManager service tests', () => {
             expect(spy.calledOnce);
             done();
         }, RESPONSE_DELAY * 5); // 1 seconde
+    });
+
+    it("should handle 'kill the game' and call handleAbandonEmit and endGame", (done) => {
+        const stubAbandon = sinon.stub(GameManagerService.prototype, <any>'handleAbandonEmit').callsFake(() => {});
+        clientSocket.emit('kill the game');
+        setTimeout(() => {
+            expect(stubAbandon.calledOnce);
+            done();
+        }, RESPONSE_DELAY * 5);
+    });
+
+    it("should handle 'Check if game is finished' and end the game", () => {
+        const stub = sinon.stub(GameManagerService.prototype, <any>'isGameFinishedMulti').callsFake(() => {
+            return true;
+        });
+        clientSocket.emit('Check if game is finished');
+        expect(stub.calledOnce);
+    });
+
+    it("should handle 'playerMessage' and send a message", () => {
+        const stub = sinon.stub(GameManagerService.prototype, <any>'findSocketGameRoomName').callsFake(() => {});
+        clientSocket.emit('playerMessage', '');
+        expect(stub.calledOnce);
     });
 });
