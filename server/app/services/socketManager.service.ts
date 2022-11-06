@@ -12,7 +12,6 @@ import { WaitingLineHandlerService } from './waiting-line-handler.service';
 
 export class SocketManager {
     private sio: io.Server;
-    // private room: string = "serverRoom";
     public socket: io.Socket;
     private waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
     private gameManagerService: GameManagerService;
@@ -150,9 +149,7 @@ export class SocketManager {
                 this.gameManagerService.clickResponse(socket, position);
             });
 
-            //To test
             socket.on('kill the game', () => {
-                //To test qu'on appelle la fonction ci-dessous
                 this.gameManagerService.handleAbandonEmit(socket);
                 this.gameManagerService.endGame(socket);
             });
@@ -161,12 +158,10 @@ export class SocketManager {
                 const mouseHandler: MouseHandlerService = this.gameManagerService.getSocketMouseHandlerService(socket);
                 let isGameFinished = this.gameManagerService.isGameFinishedSolo(socket);
 
-                //To test this if
                 if (isMultiplayer) {
                     isGameFinished = this.gameManagerService.isGameFinishedMulti(socket);
                 }
 
-                // To test this if
                 if (isGameFinished) {
                     mouseHandler.resetData();
                     this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
@@ -174,7 +169,6 @@ export class SocketManager {
                 }
             });
 
-            // To test
             socket.on('playerMessage', (msg: ChatMessage) => {
                 this.sio.to(this.gameManagerService.findSocketGameRoomName(socket)).emit('Send message to opponent', msg);
             });
