@@ -11,8 +11,7 @@ import { MouseHandlerService } from './mouse-handler.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
 
 export class SocketManager {
-    private sio: io.Server;
-    // private room: string = "serverRoom";
+    private sio: io.Server;\
     public socket: io.Socket;
     private waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
     private gameManagerService: GameManagerService;
@@ -170,7 +169,6 @@ export class SocketManager {
                 }
             });
 
-            // To test
             socket.on('playerMessage', (msg: ChatMessage) => {
                 this.sio.to(this.gameManagerService.findSocketGameRoomName(socket)).emit('Send message to opponent', msg);
             });

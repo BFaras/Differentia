@@ -11,6 +11,7 @@ import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
 import { MouseHandlerService } from './mouse-handler.service';
 import { SocketManager } from './socketManager.service';
+import { WaitingLineHandlerService } from './waiting-line-handler.service';
 
 // À switch dans le fichier des constantes
 const RESPONSE_DELAY = 200;
@@ -31,6 +32,7 @@ describe('SocketManager service tests', () => {
     let mouseHandlerService: MouseHandlerService = new MouseHandlerService();
     let gameManagerServiceBeginGameStub: sinon.SinonStub<[socket: io.Socket, gameName: string, adversarySocket?: io.Socket], Promise<void>>;
     let gameManagerServiceClickResponseStub: sinon.SinonStub<[socket: io.Socket, mousePos: Position], void>;
+    let waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
 
     const urlString = 'http://localhost:3000';
 
@@ -71,7 +73,7 @@ describe('SocketManager service tests', () => {
         }, RESPONSE_DELAY);
     });
 
-    it('should handle a solo classic mode event and return the game of the name that was launched', (done) => {
+    it("should handle 'solo classic mode' event and return the game of the name that was launched", (done) => {
         clientSocket.emit('solo classic mode', testGameName);
         clientSocket.once('The game is', (nameOfGame: string) => {
             expect(nameOfGame).to.equal(testGameName);
@@ -80,7 +82,7 @@ describe('SocketManager service tests', () => {
     });
 
     // Test passe pas
-    it('should handle a username is event and emit a show the username event', (done) => {
+    it("should handle 'username is' event and emit a show the username event", (done) => {
         const usernameTest = 'Test username';
         clientSocket.emit('username is', usernameTest);
         clientSocket.once('show the username', (username: string) => {
@@ -90,7 +92,7 @@ describe('SocketManager service tests', () => {
     });
 
     // Test passe pas
-    it('should handle a verify position event and call clickResponse', (done) => {
+    it("should handle 'verify position' event and call clickResponse", (done) => {
         let positionTest: Position = {
             x: 0,
             y: 0,
@@ -102,7 +104,7 @@ describe('SocketManager service tests', () => {
         });
     });
 
-    it('should handle a solo classic mode event and return the game of the name that was launched', (done) => {
+    it("should handle 'solo classic mode event' and return the game of the name that was launched", (done) => {
         clientSocket.emit('solo classic mode', testGameName);
         clientSocket.once('The game is', (nameOfGame: string) => {
             expect(nameOfGame).to.equal(testGameName);
@@ -110,7 +112,7 @@ describe('SocketManager service tests', () => {
         });
     });
 
-    it('should handle a solo classic mode event and call beginGame', (done) => {
+    it("should handle 'solo classic mode' event and call beginGame", (done) => {
         clientSocket.emit('solo classic mode', testGameName);
         setTimeout(() => {
             expect(gameManagerServiceBeginGameStub.calledOnce);
@@ -118,7 +120,7 @@ describe('SocketManager service tests', () => {
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
 
-    it('should handle a detect images difference event and call generateDifferencesList', (done) => {
+    it("should handle 'detect images difference' event and call generateDifferencesList", (done) => {
         const spy = sinon.spy(differenceDetectorService, 'generateDifferencesList');
         clientSocket.emit('detect images difference', imagesData);
         setTimeout(() => {
@@ -127,7 +129,7 @@ describe('SocketManager service tests', () => {
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
 
-    it('should handle a detect images difference event and call getNbDifferences', (done) => {
+    it("should handle 'detect images difference' event and call getNbDifferences", (done) => {
         const spy = sinon.spy(differenceDetectorService, 'getNbDifferences');
         clientSocket.emit('detect images difference', imagesData);
         setTimeout(() => {
@@ -136,7 +138,7 @@ describe('SocketManager service tests', () => {
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
 
-    it('should handle a detect images difference event and emit a game creation differences informations event', (done) => {
+    it("should handle 'detect images difference' event and emit a game creation differences informations event", (done) => {
         clientSocket.emit('detect images difference', imagesData);
         clientSocket.once('game creation differences informations', (differencesInfos: DifferencesInformations) => {
             expect(differencesInfos).to.exist;
@@ -144,7 +146,7 @@ describe('SocketManager service tests', () => {
         }); // 1 seconde
     });
 
-    it('should handle a Check if game is finished on finished game and call resetData', (done) => {
+    it("should handle 'Check if game is finished' on finished game and call resetData", (done) => {
         const spy = sinon.spy(mouseHandlerService, 'resetData');
         mouseHandlerService.addPlayerToGame(clientSocket.id);
         clientSocket.emit('Check if game is finished', true);
@@ -172,5 +174,14 @@ describe('SocketManager service tests', () => {
         const stub = sinon.stub(GameManagerService.prototype, <any>'findSocketGameRoomName').callsFake(() => {});
         clientSocket.emit('playerMessage', '');
         expect(stub.calledOnce);
+    });
+
+    // Test passe pas, mais couvre une ligne de plus, a regler
+    it("should handle 'I refuse this adversary'", () => {
+        const spy = sinon.stub(waitingLineHandlerService, 'getIDFirstPlayerWaiting').callsFake(() => {
+            return clientSocket.id;
+        });
+        clientSocket.emit('I refuse this adversary', 'Car game');
+        expect(spy.calledOnce);
     });
 });
