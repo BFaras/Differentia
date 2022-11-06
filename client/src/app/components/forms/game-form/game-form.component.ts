@@ -15,11 +15,9 @@ export class GameFormComponent {
     @Input() gameForm: GameFormDescription;
     @Input() buttonPage: string;
     @Output() newItemEvent = new EventEmitter<string>();
-    //mettre les 3 prochaines valeurs dans un fichier constantes
     adminGameFormsButton = ADMIN_GAME_FORMS_BUTTON;
     selectionGameFormsButton = SELECTION_GAME_FORMS_BUTTON;
     multiplayerFlag = MULTIPLAYER_MODE;
-    // ---------------------------------------------------------
     isPlayerWaiting: boolean = false;
     joinFlag: boolean = false;
     createFlag: boolean = false;
