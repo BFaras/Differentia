@@ -11,7 +11,6 @@ import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
 import { MouseHandlerService } from './mouse-handler.service';
 import { SocketManager } from './socketManager.service';
-import { WaitingLineHandlerService } from './waiting-line-handler.service';
 
 // À switch dans le fichier des constantes
 const RESPONSE_DELAY = 200;
@@ -32,7 +31,6 @@ describe('SocketManager service tests', () => {
     let mouseHandlerService: MouseHandlerService = new MouseHandlerService();
     let gameManagerServiceBeginGameStub: sinon.SinonStub<[socket: io.Socket, gameName: string, adversarySocket?: io.Socket], Promise<void>>;
     let gameManagerServiceClickResponseStub: sinon.SinonStub<[socket: io.Socket, mousePos: Position], void>;
-    let waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
 
     const urlString = 'http://localhost:3000';
 
@@ -156,10 +154,13 @@ describe('SocketManager service tests', () => {
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
 
-    it("should handle 'kill the game' and call handleAbandonEmit and endGame", () => {
+    it("should handle 'kill the game' and call handleAbandonEmit and endGame", (done) => {
         const stubAbandon = sinon.stub(GameManagerService.prototype, <any>'handleAbandonEmit').callsFake(() => {});
         clientSocket.emit('kill the game');
-        expect(stubAbandon.calledOnce);
+        setTimeout(() => {
+            expect(stubAbandon.calledOnce);
+            done();
+        }, RESPONSE_DELAY * 5);
     });
 
     it("should handle 'Check if game is finished' and end the game", () => {
