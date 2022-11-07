@@ -4,7 +4,6 @@ import { GameFormDescription } from '@app/classes/game-form-description';
 import { ADMIN_GAME_FORMS_BUTTON, MULTIPLAYER_MODE, SELECTION_GAME_FORMS_BUTTON } from '@app/client-consts';
 import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
 import { SocketClientService } from '@app/services/socket-client.service';
-// Comment je fait pour avoir accès à ces constante dans le fichier html
 
 @Component({
     selector: 'app-game-form',
