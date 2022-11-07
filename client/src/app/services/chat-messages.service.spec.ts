@@ -2,31 +2,26 @@ import { TestBed } from '@angular/core/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { ChatMessage } from '@common/chat-message';
 import {
-    ABANDON_MESSAGE,
+    //ABANDON_MESSAGE,
     DEFAULT_USERNAME,
-    MESSAGE_DIFFERENCE_FOUND_MULTI,
-    MESSAGE_DIFFERENCE_FOUND_SOLO,
-    MESSAGE_ERROR_DIFFERENCE_MULTI,
-    MESSAGE_ERROR_DIFFERENCE_SOLO,
-    NO_DIFFERENCE_FOUND_ARRAY,
 } from '@common/const';
-import { EndGameInformations } from '@common/end-game-informations';
-import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
+//import { EndGameInformations } from '@common/end-game-informations';
+//import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Subscription } from 'rxjs';
 import { Socket } from 'socket.io-client';
 import { ChatMessagesService } from './chat-messages.service';
 import { SocketClientService } from './socket-client.service';
 
 describe('ChatMessagesService', () => {
-    const littleTimeout = 100;
+    // const littleTimeout = 100;
     const emptySubcriberCallbackTest = (message: ChatMessage) => {};
-    const putResponseInVariableCallback = (message: ChatMessage) => {
+    /*const putResponseInVariableCallback = (message: ChatMessage) => {
         messageReceivedFromObservable = message;
     };
     const testSocketId = 'HSTW263H';
-    const testMessageTime = '00:00:00';
+    const testMessageTime = '00:00:00';*/
     const message = 'test message';
-    const notValidClickInfo: GameplayDifferenceInformations = {
+    /* const notValidClickInfo: GameplayDifferenceInformations = {
         differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
         isValidDifference: false,
         socketId: testSocketId,
@@ -42,12 +37,12 @@ describe('ChatMessagesService', () => {
         timeMessageSent: testMessageTime,
         senderName: DEFAULT_USERNAME,
         message: message,
-    };
+    };*/
     let chatMessagesService: ChatMessagesService;
     let socketService: SocketClientService;
     let observer: Subscription;
     let socketTestHelper: SocketTestHelper;
-    let messageReceivedFromObservable: ChatMessage;
+    // let messageReceivedFromObservable: ChatMessage;
 
     beforeAll(() => {
         TestBed.configureTestingModule({});
@@ -90,7 +85,7 @@ describe('ChatMessagesService', () => {
         expect(chatMessagesService['adversaryUsername']).toEqual(testAdversaryName);
     });
 
-    it('should send the solo error message when a Valid click event is sent and there is no difference found and the game is solo', async () => {
+    /*it('should send the solo error message when a Valid click event is sent and there is no difference found and the game is solo', async () => {
         observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
         chatMessagesService['isMultiplayerGame'] = false;
         socketTestHelper.peerSideEmit('Valid click', notValidClickInfo);
@@ -146,7 +141,7 @@ describe('ChatMessagesService', () => {
         await setTimeout(() => {
             expect(messageReceivedFromObservable.message.includes(ABANDON_MESSAGE)).toBeTruthy();
         }, littleTimeout);
-    });
+    });*/
 
     it('should reset isMultiplayerGame to false on resetIsMultiplayer()', () => {
         chatMessagesService.resetIsMultiplayer();
