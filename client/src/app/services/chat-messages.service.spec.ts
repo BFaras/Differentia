@@ -17,8 +17,8 @@ import { Socket } from 'socket.io-client';
 import { ChatMessagesService } from './chat-messages.service';
 import { SocketClientService } from './socket-client.service';
 
-fdescribe('ChatMessagesService', () => {
-    const littleTimeout = 100;
+describe('ChatMessagesService', () => {
+    const littleTimeout = 200;
     const emptySubcriberCallbackTest = (message: ChatMessage) => {};
     const putResponseInVariableCallback = (message: ChatMessage) => {
         messageReceivedFromObservable = message;
@@ -49,7 +49,7 @@ fdescribe('ChatMessagesService', () => {
     let socketTestHelper: SocketTestHelper;
     let messageReceivedFromObservable: ChatMessage;
 
-    beforeEach(() => {
+    beforeAll(() => {
         TestBed.configureTestingModule({});
         socketService = TestBed.inject(SocketClientService);
         chatMessagesService = TestBed.inject(ChatMessagesService);
