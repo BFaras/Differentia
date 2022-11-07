@@ -2,26 +2,31 @@ import { TestBed } from '@angular/core/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { ChatMessage } from '@common/chat-message';
 import {
-    //ABANDON_MESSAGE,
+    ABANDON_MESSAGE,
     DEFAULT_USERNAME,
+    MESSAGE_DIFFERENCE_FOUND_MULTI,
+    MESSAGE_DIFFERENCE_FOUND_SOLO,
+    MESSAGE_ERROR_DIFFERENCE_MULTI,
+    MESSAGE_ERROR_DIFFERENCE_SOLO,
+    NO_DIFFERENCE_FOUND_ARRAY,
 } from '@common/const';
-//import { EndGameInformations } from '@common/end-game-informations';
-//import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
+import { EndGameInformations } from '@common/end-game-informations';
+import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Subscription } from 'rxjs';
 import { Socket } from 'socket.io-client';
 import { ChatMessagesService } from './chat-messages.service';
 import { SocketClientService } from './socket-client.service';
 
-describe('ChatMessagesService', () => {
-    // const littleTimeout = 100;
+fdescribe('ChatMessagesService', () => {
+    const littleTimeout = 100;
     const emptySubcriberCallbackTest = (message: ChatMessage) => {};
-    /*const putResponseInVariableCallback = (message: ChatMessage) => {
+    const putResponseInVariableCallback = (message: ChatMessage) => {
         messageReceivedFromObservable = message;
     };
     const testSocketId = 'HSTW263H';
-    const testMessageTime = '00:00:00';*/
+    const testMessageTime = '00:00:00';
     const message = 'test message';
-    /* const notValidClickInfo: GameplayDifferenceInformations = {
+    const notValidClickInfo: GameplayDifferenceInformations = {
         differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
         isValidDifference: false,
         socketId: testSocketId,
@@ -36,15 +41,15 @@ describe('ChatMessagesService', () => {
     const messageFromPlayer: ChatMessage = {
         timeMessageSent: testMessageTime,
         senderName: DEFAULT_USERNAME,
-        message: message,
-    };*/
+        message,
+    };
     let chatMessagesService: ChatMessagesService;
     let socketService: SocketClientService;
     let observer: Subscription;
     let socketTestHelper: SocketTestHelper;
-    // let messageReceivedFromObservable: ChatMessage;
+    let messageReceivedFromObservable: ChatMessage;
 
-    beforeAll(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({});
         socketService = TestBed.inject(SocketClientService);
         chatMessagesService = TestBed.inject(ChatMessagesService);
@@ -78,59 +83,67 @@ describe('ChatMessagesService', () => {
         expect(emptySubcriberCallbackTest).toHaveBeenCalled;
     });
 
-    it('should change the multiplayer game to true and set the adversary name on The adversary username is event', () => {
+    it('should change the multiplayer game to true and set the adversary name on The adversary username is event', (done) => {
         const testAdversaryName = 'testName1234';
         socketTestHelper.peerSideEmit('The adversary username is', testAdversaryName);
-        expect(chatMessagesService['isMultiplayerGame']).toBeTruthy();
-        expect(chatMessagesService['adversaryUsername']).toEqual(testAdversaryName);
+        setTimeout(() => {
+            expect(chatMessagesService['isMultiplayerGame']).toBeTruthy();
+            expect(chatMessagesService['adversaryUsername']).toEqual(testAdversaryName);
+            done();
+        }, littleTimeout);
     });
 
-    /*it('should send the solo error message when a Valid click event is sent and there is no difference found and the game is solo', async () => {
+    it('should send the solo error message when a Valid click event is sent and there is no difference found and the game is solo', (done) => {
         observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
         chatMessagesService['isMultiplayerGame'] = false;
         socketTestHelper.peerSideEmit('Valid click', notValidClickInfo);
-        await setTimeout(() => {
+        setTimeout(() => {
             expect(messageReceivedFromObservable.message).toEqual(MESSAGE_ERROR_DIFFERENCE_SOLO);
+            done();
         }, littleTimeout);
     });
 
-    it('should send solo the error message when a Valid click event is sent and there is no difference found and the game is solo', async () => {
+    it('should send solo the error message when a Valid click event is sent and there is no difference found and the game is solo', (done) => {
         observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
         chatMessagesService['isMultiplayerGame'] = false;
         socketTestHelper.peerSideEmit('Valid click', differencesFoundInfo);
-        await setTimeout(() => {
+        setTimeout(() => {
             expect(messageReceivedFromObservable.message).toEqual(MESSAGE_DIFFERENCE_FOUND_SOLO);
+            done();
         }, littleTimeout);
     });
 
-    it('should send the multiplayer error message when a Valid click event is sent and there is no difference found and the game is multiplayer', async () => {
+    it('should send the multiplayer error message when a Valid click event is sent and there is no difference found and the game is multiplayer', (done) => {
         observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
         chatMessagesService['isMultiplayerGame'] = true;
         socketTestHelper.peerSideEmit('Valid click', notValidClickInfo);
-        await setTimeout(() => {
+        setTimeout(() => {
             expect(messageReceivedFromObservable.message.includes(MESSAGE_ERROR_DIFFERENCE_MULTI)).toBeTruthy();
+            done();
         }, littleTimeout);
     });
 
-    it('should send multiplayer the error message when a Valid click event is sent and there is no difference found and the game is multiplayer', async () => {
+    it('should send multiplayer the error message when a Valid click event is sent and there is no difference found and the game is multiplayer', (done) => {
         observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
         chatMessagesService['isMultiplayerGame'] = true;
         socketTestHelper.peerSideEmit('Valid click', differencesFoundInfo);
-        await setTimeout(() => {
+        setTimeout(() => {
             expect(messageReceivedFromObservable.message.includes(MESSAGE_DIFFERENCE_FOUND_MULTI)).toBeTruthy();
+            done();
         }, littleTimeout);
     });
 
-    it('should send message to opponent when a chat event is sent in multiplayer game', async () => {
+    it('should send message to opponent when a chat event is sent in multiplayer game', (done) => {
         observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
         chatMessagesService['isMultiplayerGame'] = true;
         socketTestHelper.peerSideEmit('Send message to opponent', messageFromPlayer);
-        await setTimeout(() => {
+        setTimeout(() => {
             expect(messageReceivedFromObservable.message.includes(messageFromPlayer.message)).toBeTruthy();
+            done();
         }, littleTimeout);
     });
 
-    it('should send multiplayer the abandon message when a player abandonned the game', async () => {
+    it('should send multiplayer the abandon message when a player abandonned the game', (done) => {
         const endGameInfos: EndGameInformations = {
             isMultiplayer: true,
             isAbandon: true,
@@ -138,10 +151,11 @@ describe('ChatMessagesService', () => {
         };
         observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
         socketTestHelper.peerSideEmit('End game', endGameInfos);
-        await setTimeout(() => {
+        setTimeout(() => {
             expect(messageReceivedFromObservable.message.includes(ABANDON_MESSAGE)).toBeTruthy();
+            done();
         }, littleTimeout);
-    });*/
+    });
 
     it('should reset isMultiplayerGame to false on resetIsMultiplayer()', () => {
         chatMessagesService.resetIsMultiplayer();
