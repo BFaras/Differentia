@@ -77,6 +77,8 @@ describe('PlayAreaComponent', () => {
         fixture.detectChanges();
         component.differentImages = differenceImage;
         TestBed.inject(SocketClientService);
+
+        spyOn(CanvasRenderingContext2D.prototype, 'putImageData').and.callFake(() => {});
     });
 
     it('should create', () => {
@@ -141,6 +143,7 @@ describe('PlayAreaComponent', () => {
 
     it('should set the context 5 to blink then to paused', () => {
         differencesFoundInfo.isValidDifference = true;
+        differencesFoundInfo.differencePixelsNumbers = [];
         socketTestHelper.peerSideEmit('Valid click', differencesFoundInfo);
         component['configurePlayAreaSocket']();
         expect(drawServiceSpy['context5'].canvas.id).toEqual('blink');
