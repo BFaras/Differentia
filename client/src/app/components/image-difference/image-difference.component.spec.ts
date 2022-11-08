@@ -9,12 +9,13 @@ import { GameToServerService } from '@app/services/game-to-server.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { MergeImageCanvasHandlerService } from '@app/services/merge-image-canvas-handler.service';
 import { SocketClientService } from '@app/services/socket-client.service';
+import { UploadFileService } from '@app/services/upload-file.service';
 import { DifferencesInformations } from '@common/differences-informations';
 import { ImageToSendToServer } from '@common/imageToSendToServer';
 import { Socket } from 'socket.io-client';
 import { ImageDifferenceComponent } from './image-difference.component';
 
-describe('ImageDifferenceComponent', () => {
+fdescribe('ImageDifferenceComponent', () => {
     const nbDifferencesTest = 4;
     const mockImage: ImageToSendToServer = {
         image: 'url' as SafeValue,
@@ -38,7 +39,10 @@ describe('ImageDifferenceComponent', () => {
             'initializeImage',
             'drawImageOnCanvas',
             'obtainUrlForMerged',
+            'resetCanvas',
         ]);
+
+        const uploadFileServiceMock = jasmine.createSpyObj('UploadFileService', ['setOriginalMergedCanvasImage', 'setModifiedMergedCanvasImage']);
 
         await TestBed.configureTestingModule({
             imports: [RouterTestingModule, HttpClientTestingModule],
@@ -46,6 +50,7 @@ describe('ImageDifferenceComponent', () => {
             providers: [
                 { provide: Renderer2, useValue: renderer },
                 { provide: MergeImageCanvasHandlerService, useValue: mergeImageCanvasServiceMock },
+                { provide: UploadFileService, useValue: uploadFileServiceMock },
             ],
         }).compileComponents();
 
