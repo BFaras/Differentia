@@ -73,7 +73,12 @@ export class GameManagerService {
 
     isGameFinishedMulti(socket: io.Socket) {
         const mouseHandler = this.getSocketMouseHandlerService(socket);
-        return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === Math.floor(mouseHandler.nbDifferencesTotal / 2) + 1;
+
+        if (mouseHandler.nbDifferencesTotal % 2 != 0) {
+            return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === Math.floor(mouseHandler.nbDifferencesTotal / 2) + 1;
+        } else {
+            return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === mouseHandler.nbDifferencesTotal / 2 - 1;
+        }
     }
 
     handleEndGameEmits(socket: io.Socket, isMultiplayer: boolean) {

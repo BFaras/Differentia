@@ -37,7 +37,7 @@ export class PlayAreaComponent implements OnInit {
     @Input() isMultiplayer: boolean;
     mousePosition: Position = { x: 0, y: 0 };
     private pixelList: number[] = [];
-
+    private blinkCanvasOrginial: ImageData;
     private canvasSize: Coordinate = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
     constructor(
         private socketService: SocketClientService,
@@ -56,6 +56,10 @@ export class PlayAreaComponent implements OnInit {
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[MODIFIED_IMAGE_POSITION]);
 
         this.displayImages();
+
+        this.blinkCanvasOrginial = this.blinkCanvas.nativeElement
+            .getContext('2d')!
+            .getImageData(0, 0, this.blinkCanvas.nativeElement.width, this.blinkCanvas.nativeElement.height);
     }
 
     private displayImages() {
@@ -107,13 +111,21 @@ export class PlayAreaComponent implements OnInit {
             this.mouseDetection.verifyGameFinished(isDifference, this.isMultiplayer, isLocalPlayer);
 
             if (isDifference) {
+                this.blinkCanvas.nativeElement.getContext('2d')?.putImageData(this.blinkCanvasOrginial, 0, 0);
                 this.drawService.context5 = this.blinkCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
                 this.drawService.context5.canvas.id = 'blink';
                 this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
                     this.pixelList,
-                    this.originalCanvas.nativeElement,
+                    this.modifiedCanvas.nativeElement,
                     this.blinkCanvas.nativeElement,
                 );
+
+                this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
+                    this.pixelList,
+                    this.originalCanvas.nativeElement,
+                    this.modifiedCanvas.nativeElement,
+                );
+
                 setTimeout(() => {
                     this.drawService.context5.canvas.id = 'paused';
                 }, 3000);
