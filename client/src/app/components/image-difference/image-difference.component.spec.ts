@@ -15,7 +15,7 @@ import { ImageToSendToServer } from '@common/imageToSendToServer';
 import { Socket } from 'socket.io-client';
 import { ImageDifferenceComponent } from './image-difference.component';
 
-fdescribe('ImageDifferenceComponent', () => {
+describe('ImageDifferenceComponent', () => {
     const nbDifferencesTest = 4;
     const mockImage: ImageToSendToServer = {
         image: 'url' as SafeValue,

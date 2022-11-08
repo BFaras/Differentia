@@ -3,6 +3,8 @@ import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
 import { Server } from 'app/server';
 import { assert, expect } from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
+import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as io from 'socket.io';
 import { io as ioClient, Socket } from 'socket.io-client';
@@ -12,13 +14,16 @@ import { GameManagerService } from './game-manager.service';
 import { MouseHandlerService } from './mouse-handler.service';
 import { SocketManager } from './socketManager.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
+chai.use(chaiAsPromised);
 
 // À switch dans le fichier des constantes
 const RESPONSE_DELAY = 200;
 
 describe('SocketManager service tests', () => {
     const testGameName = 'test12345';
-    const testSocketId = 'JKHSDA125';
+    const validTestUsername = 'validTestUsername';
+    const unvalidTestUsername = ' unvalidTestUsername';
+    // const testSocketId = 'JKHSDA125';
     const imagesData: ImageDataToCompare = {
         originalImageData: new Uint8ClampedArray(1),
         modifiedImageData: new Uint8ClampedArray(1),
@@ -29,12 +34,11 @@ describe('SocketManager service tests', () => {
     let service: SocketManager;
     let server: Server;
     let clientSocket: Socket;
-    let differenceDetectorService: DifferenceDetectorService = new DifferenceDetectorService(imagesData);
-    let mouseHandlerService: MouseHandlerService = new MouseHandlerService();
+    const differenceDetectorService: DifferenceDetectorService = new DifferenceDetectorService(imagesData);
+    const mouseHandlerService: MouseHandlerService = new MouseHandlerService();
     let gameManagerServiceBeginGameStub: sinon.SinonStub<[socket: io.Socket, gameName: string, adversarySocket?: io.Socket], Promise<void>>;
-
     let gameManagerServiceClickResponseStub: sinon.SinonStub<[socket: io.Socket, mousePos: Position], void>;
-    let waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
+    const waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
 
     const urlString = 'http://localhost:3000';
 
@@ -46,7 +50,7 @@ describe('SocketManager service tests', () => {
     });
 
     beforeEach(() => {
-        sinon.stub(GameManagerService.prototype, <any>'getSocketMouseHandlerService').callsFake((socket) => {
+        sinon.stub(GameManagerService.prototype, <any>'getSocketMouseHandlerService').callsFake(() => {
             return mouseHandlerService;
         });
         gameManagerServiceBeginGameStub = sinon.stub(GameManagerService.prototype, 'beginGame').callsFake(async () => {});
@@ -107,7 +111,7 @@ describe('SocketManager service tests', () => {
         clientSocket.emit('I am waiting', testGameName);
         clientSocket.once(`${testGameName} let me tell you if someone is waiting`, (isSomeoneWaiting: boolean) => {
             expect(addCreatingPlayerSpy.calledOnce);
-            expect(isSomeoneWaiting).to.be.true;
+            expect(isSomeoneWaiting).to.equal(true);
             done();
         });
     });
@@ -130,13 +134,13 @@ describe('SocketManager service tests', () => {
         });
     });
 
-    // A revoir
+    // Done
     it("should handle 'Is the host still there' event when there is a creator player ", (done) => {
-        waitingLineHandlerService['playersCreatingAGame'].set(testGameName, testSocketId);
-        
+        service['waitingLineHandlerService'].addCreatingPlayer(testGameName, clientSocket.id);
         clientSocket.emit('Is the host still there', testGameName);
         clientSocket.once(`${testGameName} response on host presence`, (isHostPresent: boolean) => {
-            expect(isHostPresent).to.be.true;
+            expect(isHostPresent).to.equal(true);
+            service['waitingLineHandlerService'].deleteCreatorOfGame(testGameName);
             done();
         });
     });
@@ -144,37 +148,54 @@ describe('SocketManager service tests', () => {
     it("should handle 'Is the host still there' event when there is not a creator player ", (done) => {
         clientSocket.emit('Is the host still there', testGameName);
         clientSocket.once(`${testGameName} response on host presence`, (isHostPresent: boolean) => {
-            expect(isHostPresent).to.be.false;
+            expect(isHostPresent).to.equal(false);
             done();
         });
     });
 
-    it("should handle 'I am trying to join' event and call addJoiningPlayer", (done) => {
-        const testGameInfoAndUsername: string[] = ['Hello testgame1234'];
-        const addJoiningPlayerSpy = sinon.spy(waitingLineHandlerService, 'addJoiningPlayer');
-        const getCreatorPlayerSpy = sinon.spy(waitingLineHandlerService, 'getCreatorPlayer');
+    it("should handle 'I am trying to join' event and call addJoiningPlayer and getCreatorPlayer", (done) => {
+        const testGameInfoAndUsername: string[] = [testGameName, validTestUsername];
+        service['waitingLineHandlerService'].addCreatingPlayer(testGameInfoAndUsername[0], clientSocket.id);
+        const addJoiningPlayerSpy = sinon.spy(service['waitingLineHandlerService'], 'addJoiningPlayer');
+        const getCreatorPlayerSpy = sinon.spy(service['waitingLineHandlerService'], 'getCreatorPlayer');
 
         clientSocket.emit('I am trying to join', testGameInfoAndUsername);
         clientSocket.once(`${testGameInfoAndUsername[0]} someone is trying to join`, () => {
             expect(addJoiningPlayerSpy.calledOnce);
             expect(getCreatorPlayerSpy.calledOnce);
-            // console.log(firstPlayerUsername);
-            //expect(firstPlayerUsername).to.be.not.undefined;
+            service['waitingLineHandlerService'].deleteCreatorOfGame(testGameInfoAndUsername[0]);
             done();
         });
     });
 
-    it("should handle 'I dont want to join anymore' event and call deleteJoiningPlayer", (done) => {
+    it("should handle 'I dont want to join anymore' event and call deleteJoiningPlayer", () => {
         const deleteJoiningPlayerSpy = sinon.spy(waitingLineHandlerService, 'deleteJoiningPlayer');
         const getCreatorPlayerSpy = sinon.spy(waitingLineHandlerService, 'getCreatorPlayer');
 
         clientSocket.emit('I dont want to join anymore', testGameName);
         expect(deleteJoiningPlayerSpy.calledOnce);
         expect(getCreatorPlayerSpy.calledOnce);
-        done();
     });
 
-    it("should handle 'launch classic mode multiplayer match' event", async (done) => {
+    it("should handle 'I dont want to join anymore' event and tell the creator if there is someone else waiting", (done) => {
+        sinon.stub(service['waitingLineHandlerService'], 'deleteJoiningPlayer').callsFake(() => {});
+        const getPresenceOfJoiningPlayersSpy = sinon.spy(service['waitingLineHandlerService'], 'getIDFirstPlayerWaiting');
+        const updateJoiningPlayerSpy = sinon.spy(service['waitingLineHandlerService'], 'updateJoiningPlayer');
+        service['waitingLineHandlerService'].addCreatingPlayer(testGameName, clientSocket.id);
+        service['waitingLineHandlerService'].addJoiningPlayer(clientSocket.id, [testGameName]);
+        clientSocket.emit('I dont want to join anymore', testGameName);
+        clientSocket.once(`${testGameName} someone is trying to join`, () => {
+            expect(getPresenceOfJoiningPlayersSpy.calledOnce);
+            expect(updateJoiningPlayerSpy.calledOnce);
+            service['waitingLineHandlerService'].deleteCreatorOfGame(testGameName);
+            sinon.restore();
+            service['waitingLineHandlerService'].deleteJoiningPlayer(clientSocket.id, testGameName);
+            done();
+        });
+    });
+
+    it("should handle 'launch classic mode multiplayer match' event", () => {
+        service['waitingLineHandlerService'].addCreatingPlayer(testGameName, clientSocket.id);
         const getIDFirstPlayerWaitingSpy = sinon.spy(waitingLineHandlerService, 'getIDFirstPlayerWaiting');
         const deleteJoiningPlayerSpy = sinon.spy(waitingLineHandlerService, 'deleteJoiningPlayer');
         const deleteCreatorOfGameSpy = sinon.spy(waitingLineHandlerService, 'deleteCreatorOfGame');
@@ -182,36 +203,73 @@ describe('SocketManager service tests', () => {
         const stub = sinon.stub(GameManagerService.prototype, <any>'startMultiplayerMatch').callsFake(() => {});
 
         clientSocket.emit('launch classic mode multiplayer match', testGameName);
-        await expect(stub.calledOnce);
+        expect(stub.calledOnce);
 
         expect(getIDFirstPlayerWaitingSpy.calledOnce);
         expect(deleteJoiningPlayerSpy.calledOnce);
         expect(deleteCreatorOfGameSpy.calledOnce);
         expect(sendEventToAllJoiningPlayersSpy.calledOnce);
-        done();
+        service['waitingLineHandlerService'].deleteCreatorOfGame(testGameName);
     });
 
-    it("should handle 'I refuse this adversary' event", (done) => {
-        const getIDSpy = sinon.spy(waitingLineHandlerService, 'getIDFirstPlayerWaiting');
-        const deleteJoiningPlayerSpy = sinon.spy(waitingLineHandlerService, 'deleteJoiningPlayer');
+    it("should handle 'launch classic mode multiplayer match' event and tell the other joining players that the host started a match", (done) => {
+        service['waitingLineHandlerService'].addCreatingPlayer(testGameName, clientSocket.id);
+        service['waitingLineHandlerService'].addJoiningPlayer(testGameName, [testGameName]);
+        sinon.stub(GameManagerService.prototype, <any>'startMultiplayerMatch').callsFake(() => {});
+        sinon.stub(service['waitingLineHandlerService'], 'deleteJoiningPlayer').callsFake(() => {});
+
+        clientSocket.emit('launch classic mode multiplayer match', testGameName);
+
+        clientSocket.on(`${testGameName} nobody is waiting no more`, () => {
+            service['waitingLineHandlerService'].deleteCreatorOfGame(testGameName);
+            sinon.restore();
+            service['waitingLineHandlerService'].deleteJoiningPlayer(clientSocket.id, testGameName);
+            done();
+        });
+    });
+
+    it("should handle 'I refuse this adversary' event", () => {
+        service['waitingLineHandlerService'].addCreatingPlayer(testGameName, clientSocket.id);
+        service['waitingLineHandlerService'].addJoiningPlayer(clientSocket.id, [testGameName]);
+        const getIDSpy = sinon.spy(service['waitingLineHandlerService'], 'getIDFirstPlayerWaiting');
+        const deleteJoiningPlayerSpy = sinon.spy(service['waitingLineHandlerService'], 'deleteJoiningPlayer');
         clientSocket.emit('I refuse this adversary', testGameName);
         clientSocket.once(`${testGameName} you have been declined`, (isDeclined: boolean) => {
             expect(getIDSpy.calledOnce);
             expect(deleteJoiningPlayerSpy.calledOnce);
-            expect(isDeclined).to.be.false;
-            done();
+            expect(isDeclined).to.equal(false);
+            service['waitingLineHandlerService'].deleteCreatorOfGame(testGameName);
+            service['waitingLineHandlerService'].deleteJoiningPlayer(clientSocket.id, testGameName);
+        });
+    });
+
+    it("should handle 'I refuse this adversary' event and tell the creator that no one else is waiting", () => {
+        service['waitingLineHandlerService'].addCreatingPlayer(testGameName, clientSocket.id);
+        service['waitingLineHandlerService'].addJoiningPlayer(clientSocket.id, [testGameName]);
+        const getIDSpy = sinon.spy(service['waitingLineHandlerService'], 'getIDFirstPlayerWaiting');
+        const deleteJoiningPlayerSpy = sinon.spy(service['waitingLineHandlerService'], 'deleteJoiningPlayer');
+        clientSocket.emit('I refuse this adversary', testGameName);
+        clientSocket.once(`${testGameName} the player trying to join left`, () => {
+            expect(getIDSpy.calledOnce);
+            expect(deleteJoiningPlayerSpy.calledOnce);
+            service['waitingLineHandlerService'].deleteCreatorOfGame(testGameName);
+            service['waitingLineHandlerService'].deleteJoiningPlayer(clientSocket.id, testGameName);
         });
     });
 
     //A faire
     it("should handle 'Reload game selection page' event and add room", (done) => {});
 
-    // Test passe pas
-    it("should handle 'username is' event and emit a show the username event", (done) => {
-        const usernameTest = 'Test username';
-        clientSocket.emit('username is', usernameTest);
-        clientSocket.once('show the username', (username: string) => {
-            expect(username).to.equal(usernameTest);
+    it("should handle 'my username is' event and emit a 'username valid' event when the username is valid", (done) => {
+        clientSocket.emit('my username is', validTestUsername);
+        clientSocket.once('username valid', () => {
+            done();
+        });
+    });
+
+    it("should handle 'my username is' event and emit a 'username not valid' event when the username is unvalid", (done) => {
+        clientSocket.emit('my username is', unvalidTestUsername);
+        clientSocket.once('username not valid', () => {
             done();
         });
     });
@@ -245,11 +303,12 @@ describe('SocketManager service tests', () => {
         }, RESPONSE_DELAY * 5); // 1 seconde
     });
 
-    it("should handle 'is there someone waiting' event", (done) => {
+    it("should handle 'is there someone waiting' event", () => {
+        service['waitingLineHandlerService'].addCreatingPlayer(testGameName, clientSocket.id);
         clientSocket.emit('is there someone waiting', testGameName);
         clientSocket.once(`${testGameName} let me tell you if someone is waiting`, (isSomeoneWaiting: boolean) => {
-            expect(isSomeoneWaiting).to.be.true;
-            done();
+            expect(isSomeoneWaiting).to.equal(true);
+            service['waitingLineHandlerService'].deleteCreatorOfGame(testGameName);
         });
     });
 

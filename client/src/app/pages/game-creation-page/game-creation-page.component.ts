@@ -5,6 +5,7 @@ import { PopDialogValidateGameComponent } from '@app/components/pop-dialogs/pop-
 import { DrawingHistoryService } from '@app/services/drawing-history.service';
 import { GameToServerService } from '@app/services/game-to-server.service';
 import { ListImagesRenderedService } from '@app/services/list-images-rendered.service';
+import { MergeImageCanvasHandlerService } from '@app/services/merge-image-canvas-handler.service';
 @Component({
     selector: 'app-game-creation-page',
     templateUrl: './game-creation-page.component.html',
@@ -14,11 +15,13 @@ export class GameCreationPageComponent implements OnInit, OnDestroy {
     readonly indexToolsCanvas:number[] = [0,1];
     constructor(private dialog: MatDialog,private editImageService:ListImagesRenderedService,
          private gameToServerService: GameToServerService,
-         private drawingHistoryHandler: DrawingHistoryService) {
+         private drawingHistoryHandler: DrawingHistoryService,
+         private mergeImageHandler: MergeImageCanvasHandlerService) {
     }
 
     ngOnDestroy(): void {
         this.drawingHistoryHandler.clearHistory();
+        this.mergeImageHandler.resetAllCanvas()
 
     }
 
