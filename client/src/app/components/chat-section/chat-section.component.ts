@@ -31,7 +31,6 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
         this.scrollToBottom();
     }
 
-    //Tested Observer avec le add message
     ngOnInit(): void {
         this.socketService.connect();
         this.configureSocket();
@@ -50,23 +49,18 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
 
     private scrollToBottom(): void {
         setTimeout(() => {
-            // Timeout is used to update the scroll after the last element added
             this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
         }, 2);
     }
 
-    //Tested
     private addMessage(messageToAdd: ChatMessage) {
-        console.log(messageToAdd.timeMessageSent);
         this.messagesSent.push(messageToAdd);
     }
 
     private configureSocket() {
-        //Tested
         this.socketService.on('show the username', (username: string) => {
             this.localPlayerUsername = username;
         });
-        //Tested
         this.socketService.on('The adversary username is', (adversaryName: string) => {
             this.isMultiplayerGame = true;
         });
