@@ -45,10 +45,12 @@ canvas {
 #paused {
     opacity: 1;
     animation-play-state: paused;
+    pointer-events: none;
 }
 
 #blink {
     animation: blink 3s infinite;
+    pointer-events: none;
 }
 
 @keyframes blink {

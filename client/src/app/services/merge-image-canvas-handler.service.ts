@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
 
 @Injectable({
   providedIn: 'root'
@@ -6,9 +7,11 @@ import { Injectable } from '@angular/core';
 export class MergeImageCanvasHandlerService {
   private canvas: HTMLCanvasElement[];
   private context:CanvasRenderingContext2D[] | null;
+  private formerCanvas:HTMLCanvasElement[]
   private imageDownloaded: HTMLImageElement[];
   constructor() {
-    this.canvas = []
+    this.canvas = [];
+    this.formerCanvas = [];
     this.context = [];
     this.imageDownloaded = [new Image(),new Image()]
    }
@@ -35,12 +38,38 @@ export class MergeImageCanvasHandlerService {
         imageToLoad.onload = () => resolve(imageToLoad);
         imageToLoad.onerror = (error) => reject(console.log(error));
     });
-}
+  }
 
-  drawImageOnCanvas(index:number){
-    this.context![index].globalAlpha = 0.00;
-    this.context![index].drawImage(this.imageDownloaded[index], 0, 0);
-    this.context![index].globalAlpha = 1.00;
+  cloneCanvas(oldCanvas:HTMLCanvasElement){
+
+    let newCanvas = document.createElement('canvas');
+    let context = newCanvas.getContext('2d');
+    
+
+    newCanvas.width = oldCanvas.width;
+    newCanvas.height = oldCanvas.height;
+    
+
+    context!.drawImage(oldCanvas, 0, 0);
+
+
+    return newCanvas
+
+  }
+
+  resetCanvas(){
+    this.context![0].clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+    this.context![1].clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+
+  }
+
+  async drawImageOnCanvas(index:number){
+    this.formerCanvas[index] = this.cloneCanvas(this.canvas[index])
+    this.context![index].globalCompositeOperation = 'source-over';
+    this.context![index].drawImage(this.imageDownloaded[index],0,0)
+    this.context![index].drawImage(this.formerCanvas[index],0,0)
+
+
   }
 
 
