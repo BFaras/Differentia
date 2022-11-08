@@ -42,7 +42,7 @@ export class SocketManager {
                 socket.emit('show the username', username);
                 await this.gameManagerService.beginGame(socket, gameName);
             });
-
+            //Tested
             socket.on('is there someone waiting', (gameName: string) => {
                 socket.emit(
                     `${gameName} let me tell you if someone is waiting`,
@@ -50,18 +50,19 @@ export class SocketManager {
                 );
             });
 
+            //Tested
             socket.on('my username is', (username: string) => {
                 if (username.charAt(0) !== ' ') {
                     this.waitingLineHandlerService.setUsernamePlayer(socket.id, username, this.sio);
                     this.sio.to(socket.id).emit('username valid');
                 } else this.sio.to(socket.id).emit('username not valid');
             });
-
+            //Tested
             socket.on('I am waiting', (gameName: string) => {
                 this.waitingLineHandlerService.addCreatingPlayer(gameName, socket.id);
                 this.sio.emit(`${gameName} let me tell you if someone is waiting`, true);
             });
-
+            // To test: pour Raph?
             socket.on('Reload game selection page', (msg: string) => {
                 let roomToKeep: string[] = [];
                 for (let rooms of this.gameManagerService.gamesRooms.entries()) {
@@ -74,17 +75,19 @@ export class SocketManager {
                 this.sio.except(roomToKeep).emit('Page reloaded', msg);
             });
 
+            // Tested
             socket.on('I left', (gameName: string) => {
                 this.waitingLineHandlerService.deleteCreatorOfGame(gameName);
                 this.waitingLineHandlerService.sendEventToAllJoiningPlayers(this.sio, gameName, 'response on host presence');
                 this.sio.emit(`${gameName} nobody is waiting no more`);
             });
 
+            //Tested
             socket.on('need reconnection', () => {
                 this.sio.to(socket.id).emit('reconnect');
             });
 
-            // To test
+            // Test commencé mais à finir
             socket.on(`Is the host still there`, (gameName: string) => {
                 if (this.waitingLineHandlerService.getCreatorPlayer(gameName))
                     this.sio.to(socket.id).emit(`${gameName} response on host presence`, HOST_PRESENT);
@@ -168,7 +171,7 @@ export class SocketManager {
                     this.gameManagerService.endGame(socket);
                 }
             });
-
+            //To test
             socket.on('playerMessage', (msg: ChatMessage) => {
                 this.sio.to(this.gameManagerService.findSocketGameRoomName(socket)).emit('Send message to opponent', msg);
             });
