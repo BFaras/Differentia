@@ -64,7 +64,10 @@ export class PencilService {
     }
 
     getStateOfPencil(context: CanvasRenderingContext2D, indexCanvas: number) {
-        if (this.pencilMode[indexCanvas] == ERASE_MODE) context.globalCompositeOperation = 'destination-out';
+        if (this.pencilMode[indexCanvas] == ERASE_MODE) 
+        {context.globalCompositeOperation = 'destination-out'
+        }
+
         if (this.pencilMode[indexCanvas] == WRITE_MODE) {
             context.globalCompositeOperation = 'source-over';
         }

@@ -47,7 +47,7 @@ export class ToolSettingComponent implements OnInit {
     }
 
     checkIfThereAreSavedDeletedDrawnLines() {
-        if (this.drawingHistoryService.getUndoCancelDrawingHistory()[this.indexTool].length != 0) {
+        if (this.drawingHistoryService.getRedoDrawingHistory()[this.indexTool].length != 0) {
             return false;
         } else {
             return true;
@@ -60,8 +60,8 @@ export class ToolSettingComponent implements OnInit {
     }
 
     cancelActionDeletedDrawnLine() {
-        this.drawingHistoryService.cancelDeletedCanvas(this.indexTool);
-        this.drawingHistoryService.cancelDeletedCanvas(this.indexTool);
+        this.drawingHistoryService.redoCanvas(this.indexTool);
+        this.drawingHistoryService.redoCanvas(this.indexTool);
     }
 
     setOriginalSetting() {
