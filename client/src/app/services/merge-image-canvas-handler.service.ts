@@ -16,6 +16,13 @@ export class MergeImageCanvasHandlerService {
     this.imageDownloaded = [new Image(),new Image()]
    }
 
+  resetAllCanvas(){
+    this.canvas = [];
+    this.context = [];
+    this.imageDownloaded = [];
+    this.formerCanvas = [];
+  }
+
   setLeftContextAndCanvas(context:CanvasRenderingContext2D,canvas:HTMLCanvasElement ){
     this.context!.push(context);
     this.canvas.push(canvas);
