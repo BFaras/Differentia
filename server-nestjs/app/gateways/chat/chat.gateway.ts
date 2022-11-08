@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { WebSocketGateway, WebSocketServer, SubscribeMessage, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit } from '@nestjs/websockets';
+import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { DELAY_BEFORE_EMITTING_TIME, PRIVATE_ROOM_ID, WORD_MIN_LENGTH } from './chat.gateway.constants';
 import { ChatEvents } from './chat.gateway.events';
@@ -35,7 +35,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
     @SubscribeMessage(ChatEvents.RoomMessage)
     roomMessage(socket: Socket, message: string) {
-        // Seulement un membre de la salle peut envoyer un message aux autres
         if (socket.rooms.has(this.room)) {
             this.server.to(this.room).emit(ChatEvents.RoomMessage, `${socket.id} : ${message}`);
         }
@@ -49,7 +48,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
     handleConnection(socket: Socket) {
         this.logger.log(`Connexion par l'utilisateur avec id : ${socket.id}`);
-        // message initial
         socket.emit(ChatEvents.Hello, 'Hello World!');
     }
 

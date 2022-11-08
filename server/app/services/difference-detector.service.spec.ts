@@ -9,7 +9,6 @@ import Container from 'typedi';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { HashmapConverterService } from './hashmap-converter.service';
 
-//Test positions in images test file
 const SEVEN_DIFFS_WITH_OR_WITHOUT_OFFSET_TEST = 0;
 const TWO_DIFFS_WITHOUT_OFFSET_ONE_DIFF_WITH_OFFSET_TEST = 1;
 

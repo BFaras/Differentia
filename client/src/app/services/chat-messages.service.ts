@@ -23,7 +23,6 @@ export class ChatMessagesService {
     private isMultiplayerGame: boolean;
     private date: Date;
 
-    //Tested
     constructor(private socketService: SocketClientService) {
         this.date = new Date();
         this.isMultiplayerGame = false;
@@ -32,17 +31,14 @@ export class ChatMessagesService {
         });
     }
 
-    //Tested
     sendMessage(senderName: string, message: string) {
         this.socketService.send('playerMessage', this.generateChatMessage(senderName, message));
     }
 
-    //Tested
     resetIsMultiplayer() {
         this.isMultiplayerGame = false;
     }
 
-    //Tested
     private getTimeInCorrectFormat(): string {
         this.date = new Date();
         return this.date.toLocaleString('en-US', {
@@ -54,7 +50,6 @@ export class ChatMessagesService {
     }
 
     private configureSocket(observer: Subscriber<ChatMessage>) {
-        //Tested
         this.socketService.on('Valid click', (differenceInfos: GameplayDifferenceInformations) => {
             if (differenceInfos.isValidDifference && this.isMultiplayerGame) {
                 observer.next(this.generateChatMessageFromGame(MESSAGE_DIFFERENCE_FOUND_MULTI + differenceInfos.playerUsername));
@@ -66,18 +61,15 @@ export class ChatMessagesService {
                 observer.next(this.generateChatMessageFromGame(MESSAGE_ERROR_DIFFERENCE_SOLO));
             }
         });
-        // Tested
         this.socketService.on('Send message to opponent', (message: ChatMessage) => {
             observer.next(message);
         });
 
-        //Tested
         this.socketService.on('The adversary username is', (adversaryName: string) => {
             this.isMultiplayerGame = true;
             this.adversaryUsername = adversaryName;
         });
 
-        //Tested
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
             if (endGameInfos.isMultiplayer && endGameInfos.isAbandon) {
                 observer.next(this.generateChatMessageFromGame(this.adversaryUsername + ABANDON_MESSAGE));
@@ -85,12 +77,10 @@ export class ChatMessagesService {
         });
     }
 
-    //Tested
     private generateChatMessageFromGame(message: string) {
         return this.generateChatMessage(GAME_MESSAGE_SENDER_NAME, message);
     }
 
-    //Tested
     private generateChatMessage(senderName: string, message: string): ChatMessage {
         return {
             timeMessageSent: this.getTimeInCorrectFormat(),

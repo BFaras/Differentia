@@ -80,7 +80,6 @@ export class MouseHandlerService {
         let differenceInformation: GameplayDifferenceInformations = {
             differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
             isValidDifference: false,
-            //To modify with a constant (constant is in feature/ChatGameView)
             socketId: plrSocketID,
             playerUsername: DEFAULT_USERNAME,
         };
@@ -89,7 +88,6 @@ export class MouseHandlerService {
             let differencesNumber = this.differencesHashmap.get(pixelNumber)!;
 
             if (!this.isDifferenceAlreadyFound(differencesNumber)) {
-                // Nouvelle Différence trouvée
                 this.differencesNbFoundByPlayer.get(plrSocketID)!.push(differencesNumber);
                 differenceInformation.differencePixelsNumbers = this.differencesList[differencesNumber];
                 differenceInformation.isValidDifference = true;

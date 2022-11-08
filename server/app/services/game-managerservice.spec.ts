@@ -134,14 +134,12 @@ describe('GameManagerService tests', () => {
         expect(spy.calledOnce);
     });
 
-    // Tests passed pas
     it('should call deleteRoom() on handleEndGameEmit()', () => {
         const stub = sinon.stub(gameManagerService, <any>'deleteRoom').callsFake(() => {});
         gameManagerService.handleEndGameEmits(serverSocket, true);
         expect(stub.calledOnce);
     });
 
-    // Tests passed pas
     it('should call deleteRoom() on handleAbandonEmit()', () => {
         const stub = sinon.stub(gameManagerService, <any>'deleteRoom').callsFake(() => {});
         gameManagerService.handleAbandonEmit(serverSocket);

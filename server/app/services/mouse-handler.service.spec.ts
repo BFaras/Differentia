@@ -22,9 +22,8 @@ describe('MouseHandlerService', () => {
             [899, 951],
         ],
     };
-    const testDifferencesFoundArray :number[] = [1,2,3];
-    const testDifferencesList : number[][] = [[0]];
-    //const gamesService: GamesService = Container.get(GamesService);
+    const testDifferencesFoundArray: number[] = [1, 2, 3];
+    const testDifferencesList: number[][] = [[0]];
     const hashmapConverter: HashmapConverterService = Container.get(HashmapConverterService);
 
     let mouseService: MouseHandlerService;
@@ -37,7 +36,6 @@ describe('MouseHandlerService', () => {
     });
 
     beforeEach(async () => {
-        //we need a mock of a local games service which will return a game by default
         mouseService = new MouseHandlerService();
         mouseService['differencesHashmap'].set(0, 0);
         mouseService['differencesList'] = testDifferencesList;

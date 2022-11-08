@@ -27,7 +27,7 @@ export class ChronometerService {
     }
 
     private resetSeconds() {
-        this.time.seconds = 0; // Le mettre dans le fichier des constantes?
+        this.time.seconds = 0;
     }
 
     increaseTime() {
