@@ -53,7 +53,7 @@ export class WaitingLineHandlerService {
         this.playersJoiningAGame.set(gameName, playersTryingToJoin);
     }
 
-    public sendEventToAllJoiningPlayers(server: io.Server, gameName: string, event: string): void {
+    sendEventToAllJoiningPlayers(server: io.Server, gameName: string, event: string): void {
         if (this.playersJoiningAGame.get(gameName)?.length) {
             const playersWaiting = this.playersJoiningAGame.get(gameName) as string[];
             for (const player of playersWaiting) {

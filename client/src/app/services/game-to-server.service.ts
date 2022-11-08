@@ -1,7 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { ElementRef, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { MAXIMUM_NB_DIFFERENCES, MINIMUM_NB_DIFFERENCES } from '@app/client-consts';
 import { MESSAGE_JEU_CREER, MESSAGE_JEU_NON_CREER, MESSAGE_NOMBRE_DIFFERENCE_ERREUR } from '@common/const';
 import { Game } from '@common/game';
 import { ImageToSendToServer } from '@common/imageToSendToServer';
@@ -20,29 +19,40 @@ export class GameToServerService {
 
     constructor(private route: Router, private communicationService: CommunicationService, private uploadFileService: UploadFileService) {}
 
-    private goToAdmin() {
+    goToAdmin() {
         this.route.navigate(['/admin']);
     }
-    private statusCodeTreatment(responseStatusCode: any) {
-        if (responseStatusCode == StatusCodes.BAD_GATEWAY) alert(MESSAGE_JEU_NON_CREER);
+    statusCodeTreatment(responseStatusCode: any) {
+        if (responseStatusCode == StatusCodes.BAD_GATEWAY) {
+            alert(MESSAGE_JEU_NON_CREER)
+        }
         else {
             alert(MESSAGE_JEU_CREER);
             this.goToAdmin();
         }
     }
 
-    private validateNumberOfDifferences() {
-        return this.numberDifference >= MINIMUM_NB_DIFFERENCES && this.numberDifference <= MAXIMUM_NB_DIFFERENCES;
+    validateNumberOfDifferences() {
+        return this.numberDifference >= 3 && this.numberDifference <= 9;
     }
 
+    
     addGame(inputName: ElementRef) {
+        this.uploadFileService.setNameGame(inputName.nativeElement.value)
+        this.uploadFileService.setNameImageUpload(0);
+        this.uploadFileService.setNameImageUpload(1);
         const gameToAdd: Game = {
             name: inputName.nativeElement.value,
             numberOfDifferences: this.numberDifference,
             times: [],
-            images: [this.uploadFileService.getNameOriginalImage().name, this.uploadFileService.getNameModifiedImage().name],
+            images: [this.uploadFileService.getNameImageUpload(0)!, this.uploadFileService.getNameImageUpload(1)!],
             differencesList: this.differencesList,
         };
+
+        console.log(this.uploadFileService.getNameImageUpload(0)!)
+        console.log(this.uploadFileService.getNameImageUpload(1)!)
+        
+
 
         if (this.validateNumberOfDifferences()) {
             this.sendBothImagesToServer();
@@ -52,9 +62,9 @@ export class GameToServerService {
         } else alert(MESSAGE_NOMBRE_DIFFERENCE_ERREUR);
     }
 
-    private sendBothImagesToServer() {
-        this.uploadFileService.upload(this.uploadFileService.getNameOriginalImage());
-        this.uploadFileService.upload(this.uploadFileService.getNameModifiedImage());
+    sendBothImagesToServer() {
+        this.uploadFileService.upload(this.uploadFileService.getNameOriginalImage(),0);
+        this.uploadFileService.upload(this.uploadFileService.getNameModifiedImage(),1);
     }
 
     getOriginalImageUploaded() {

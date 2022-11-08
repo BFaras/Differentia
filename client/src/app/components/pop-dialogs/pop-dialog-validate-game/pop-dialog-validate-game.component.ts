@@ -1,20 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MergeImageCanvasHandlerService } from '@app/services/merge-image-canvas-handler.service';
 import { PopDialogCreateGameComponent } from '../pop-dialog-create-game/pop-dialog-create-game.component';
 @Component({
     selector: 'app-pop-dialog-validate-game',
     templateUrl: './pop-dialog-validate-game.component.html',
     styleUrls: ['./pop-dialog-validate-game.component.scss'],
 })
-export class PopDialogValidateGameComponent {
-    areImageDifferenceAndNumberDifferenceReady: boolean = false;
-    isChecked = false;
-    isDisabled: boolean;
-    valueChosen: number = 3;
-    numberDifference: number;
-    imageDifference: any;
-    constructor(private dialog: MatDialog) {}
-
+export class PopDialogValidateGameComponent implements OnDestroy  {
+    areImageDifferenceAndNumberDifferenceReady:boolean = false;
+    isChecked = false
+    isDisabled:boolean ;
+    valueChosen:number = 3;
+    numberDifference:number;
+    imageDifference:any;
+    constructor(private dialog: MatDialog,
+        private mergeImageDataHandler:MergeImageCanvasHandlerService) {}
+    
+    ngOnDestroy(): void {
+        this.mergeImageDataHandler.resetCanvas()
+    }
     onCreateCreateGame() {
         this.dialog.open(PopDialogCreateGameComponent, {
             height: '400px',
@@ -22,13 +27,16 @@ export class PopDialogValidateGameComponent {
         });
     }
 
-    startsGeneratingImageDifferenceAndNumberDifference() {
-        if (this.valueChosen) {
+    startsGeneratingImageDifferenceAndNumberDifference(){
+        if(this.valueChosen ){
             this.areImageDifferenceAndNumberDifferenceReady = true;
         }
     }
 
-    onRadiusChanged(value: number) {
-        this.valueChosen = value;
+
+    onRadiusChanged(value: number){
+        this.valueChosen = value
     }
+
+
 }

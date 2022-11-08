@@ -169,10 +169,19 @@ describe('GameManagerService tests', () => {
         expect(stub.calledOnce);
     });
 
-    it('should tell if the game in multiplayer is done or not', () => {
+    it('should tell if that the multiplayer game is done with 4 differences found on 7', () => {
         mouseHandlerService.nbDifferencesTotal = 7;
         const stub = sinon.stub(mouseHandlerService, 'getNumberOfDifferencesFoundByPlayer').callsFake(() => {
             return 4;
+        });
+        expect(gameManagerService.isGameFinishedMulti(serverSocket)).to.be.true;
+        expect(stub.calledOnce);
+    });
+
+    it('should tell if that the multiplayer game is done with 2 differences found on 6', () => {
+        mouseHandlerService.nbDifferencesTotal = 6;
+        const stub = sinon.stub(mouseHandlerService, 'getNumberOfDifferencesFoundByPlayer').callsFake(() => {
+            return 2;
         });
         expect(gameManagerService.isGameFinishedMulti(serverSocket)).to.be.true;
         expect(stub.calledOnce);
