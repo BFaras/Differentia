@@ -18,6 +18,7 @@ const RESPONSE_DELAY = 200;
 
 describe('SocketManager service tests', () => {
     const testGameName = 'test12345';
+    const testSocketId = 'JKHSDA125';
     const imagesData: ImageDataToCompare = {
         originalImageData: new Uint8ClampedArray(1),
         modifiedImageData: new Uint8ClampedArray(1),
@@ -31,8 +32,10 @@ describe('SocketManager service tests', () => {
     let differenceDetectorService: DifferenceDetectorService = new DifferenceDetectorService(imagesData);
     let mouseHandlerService: MouseHandlerService = new MouseHandlerService();
     let gameManagerServiceBeginGameStub: sinon.SinonStub<[socket: io.Socket, gameName: string, adversarySocket?: io.Socket], Promise<void>>;
+
     let gameManagerServiceClickResponseStub: sinon.SinonStub<[socket: io.Socket, mousePos: Position], void>;
     let waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
+
     const urlString = 'http://localhost:3000';
 
     before(async () => {
@@ -47,6 +50,7 @@ describe('SocketManager service tests', () => {
             return mouseHandlerService;
         });
         gameManagerServiceBeginGameStub = sinon.stub(GameManagerService.prototype, 'beginGame').callsFake(async () => {});
+        // gameManagerServiceStartMultiplayerMatchStub = sinon.stub(GameManagerService.prototype, 'startMultiplayerMatch').callsFake(async () => {});
         sinon.stub(GameManagerService.prototype, 'endGame').callThrough();
         gameManagerServiceClickResponseStub = sinon.stub(GameManagerService.prototype, 'clickResponse').callsFake(() => {});
     });
@@ -128,7 +132,8 @@ describe('SocketManager service tests', () => {
 
     // A revoir
     it("should handle 'Is the host still there' event when there is a creator player ", (done) => {
-        waitingLineHandlerService['playersCreatingAGame'].set(testGameName, clientSocket.id);
+        waitingLineHandlerService['playersCreatingAGame'].set(testGameName, testSocketId);
+        
         clientSocket.emit('Is the host still there', testGameName);
         clientSocket.once(`${testGameName} response on host presence`, (isHostPresent: boolean) => {
             expect(isHostPresent).to.be.true;
@@ -148,13 +153,52 @@ describe('SocketManager service tests', () => {
         const testGameInfoAndUsername: string[] = ['Hello testgame1234'];
         const addJoiningPlayerSpy = sinon.spy(waitingLineHandlerService, 'addJoiningPlayer');
         const getCreatorPlayerSpy = sinon.spy(waitingLineHandlerService, 'getCreatorPlayer');
-        
+
         clientSocket.emit('I am trying to join', testGameInfoAndUsername);
         clientSocket.once(`${testGameInfoAndUsername[0]} someone is trying to join`, () => {
             expect(addJoiningPlayerSpy.calledOnce);
             expect(getCreatorPlayerSpy.calledOnce);
             // console.log(firstPlayerUsername);
             //expect(firstPlayerUsername).to.be.not.undefined;
+            done();
+        });
+    });
+
+    it("should handle 'I dont want to join anymore' event and call deleteJoiningPlayer", (done) => {
+        const deleteJoiningPlayerSpy = sinon.spy(waitingLineHandlerService, 'deleteJoiningPlayer');
+        const getCreatorPlayerSpy = sinon.spy(waitingLineHandlerService, 'getCreatorPlayer');
+
+        clientSocket.emit('I dont want to join anymore', testGameName);
+        expect(deleteJoiningPlayerSpy.calledOnce);
+        expect(getCreatorPlayerSpy.calledOnce);
+        done();
+    });
+
+    it("should handle 'launch classic mode multiplayer match' event", async (done) => {
+        const getIDFirstPlayerWaitingSpy = sinon.spy(waitingLineHandlerService, 'getIDFirstPlayerWaiting');
+        const deleteJoiningPlayerSpy = sinon.spy(waitingLineHandlerService, 'deleteJoiningPlayer');
+        const deleteCreatorOfGameSpy = sinon.spy(waitingLineHandlerService, 'deleteCreatorOfGame');
+        const sendEventToAllJoiningPlayersSpy = sinon.spy(waitingLineHandlerService, 'sendEventToAllJoiningPlayers');
+        const stub = sinon.stub(GameManagerService.prototype, <any>'startMultiplayerMatch').callsFake(() => {});
+
+        clientSocket.emit('launch classic mode multiplayer match', testGameName);
+        await expect(stub.calledOnce);
+
+        expect(getIDFirstPlayerWaitingSpy.calledOnce);
+        expect(deleteJoiningPlayerSpy.calledOnce);
+        expect(deleteCreatorOfGameSpy.calledOnce);
+        expect(sendEventToAllJoiningPlayersSpy.calledOnce);
+        done();
+    });
+
+    it("should handle 'I refuse this adversary' event", (done) => {
+        const getIDSpy = sinon.spy(waitingLineHandlerService, 'getIDFirstPlayerWaiting');
+        const deleteJoiningPlayerSpy = sinon.spy(waitingLineHandlerService, 'deleteJoiningPlayer');
+        clientSocket.emit('I refuse this adversary', testGameName);
+        clientSocket.once(`${testGameName} you have been declined`, (isDeclined: boolean) => {
+            expect(getIDSpy.calledOnce);
+            expect(deleteJoiningPlayerSpy.calledOnce);
+            expect(isDeclined).to.be.false;
             done();
         });
     });

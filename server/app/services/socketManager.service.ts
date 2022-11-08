@@ -87,14 +87,14 @@ export class SocketManager {
                 this.sio.to(socket.id).emit('reconnect');
             });
 
-            // Test commencé mais à finir
+            // Test commencé mais bug
             socket.on(`Is the host still there`, (gameName: string) => {
                 if (this.waitingLineHandlerService.getCreatorPlayer(gameName))
                     this.sio.to(socket.id).emit(`${gameName} response on host presence`, HOST_PRESENT);
                 else this.sio.to(socket.id).emit(`${gameName} response on host presence`, !HOST_PRESENT);
             });
 
-            // To test
+            // Test commencé mais bug
             socket.on('I am trying to join', (gameInfoAndUsername: string[]) => {
                 this.waitingLineHandlerService.addJoiningPlayer(socket.id, gameInfoAndUsername);
                 const waitingSocketId = this.waitingLineHandlerService.getCreatorPlayer(gameInfoAndUsername[0]) as string;
@@ -106,7 +106,7 @@ export class SocketManager {
                     );
             });
 
-            // To test
+            // Test commencé mais bug
             socket.on('I dont want to join anymore', (gameName: string) => {
                 this.waitingLineHandlerService.deleteJoiningPlayer(socket.id, gameName);
                 const waitingSocketId = this.waitingLineHandlerService.getCreatorPlayer(gameName) as string;
@@ -115,7 +115,7 @@ export class SocketManager {
                     this.waitingLineHandlerService.updateJoiningPlayer(this.sio, gameName, 'someone is trying to join');
             });
 
-            // To test
+            // Test commencé mais bug
             socket.on('launch classic mode multiplayer match', async (gameName: string) => {
                 const adversarySocketId = this.waitingLineHandlerService.getIDFirstPlayerWaiting(gameName);
                 this.waitingLineHandlerService.deleteJoiningPlayer(adversarySocketId, gameName);
@@ -129,11 +129,11 @@ export class SocketManager {
                 this.sio.emit(`${gameName} nobody is waiting no more`);
             });
 
-            // To test
+            // Test commencé mais bug
             socket.on('I refuse this adversary', (gameName: string) => {
                 const waitingSocketId = this.waitingLineHandlerService.getIDFirstPlayerWaiting(gameName);
                 this.waitingLineHandlerService.deleteJoiningPlayer(waitingSocketId, gameName);
-                this.sio.to(waitingSocketId).emit(`${gameName} you have been declined`, !HOST_CHOSE_ANOTHER);
+                this.sio.to(socket.id).emit(`${gameName} you have been declined`, !HOST_CHOSE_ANOTHER);
                 if (this.waitingLineHandlerService.getPresenceOfJoiningPlayers(gameName))
                     this.waitingLineHandlerService.updateJoiningPlayer(this.sio, gameName, 'someone is trying to join');
                 else this.sio.to(socket.id).emit(`${gameName} the player trying to join left`);
@@ -164,7 +164,7 @@ export class SocketManager {
                 if (isMultiplayer) {
                     isGameFinished = this.gameManagerService.isGameFinishedMulti(socket);
                 }
-
+                //To test
                 if (isGameFinished) {
                     mouseHandler.resetData();
                     this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
