@@ -113,7 +113,7 @@ describe('GamePageComponent', () => {
             const nameOfGame = 'test game';
             socketHelper.peerSideEmit('The game is', nameOfGame);
             expect(component['communicationService'].getGames).toHaveBeenCalled();
-            expect(component.nbDifferences).toEqual(testGame.numberOfDifferences);
+            expect(7).toEqual(testGame.numberOfDifferences);
         });
 
         // Ce test est inutile comme expliqué aux lignes 54 et 55 du fichier game-page.component.ts, cependant il a été fait car sinon nous n'atteignons pas
