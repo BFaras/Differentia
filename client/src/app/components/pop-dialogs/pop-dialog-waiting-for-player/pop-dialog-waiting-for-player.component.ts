@@ -62,8 +62,5 @@ export class PopDialogWaitingForPlayerComponent implements OnInit {
             this.dialogRef.close();
             this.router.navigate(['/game']);
         });
-        this.socketService.on('The adversary username is', (username: string) => {
-            console.log(username);
-        });
     }
 }

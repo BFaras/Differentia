@@ -106,11 +106,4 @@ describe('PopDialogWaitingForPlayerComponent', () => {
         expect(dialogRef.close).toHaveBeenCalled();
         expect(router['navigate']).toHaveBeenCalledWith(['/game']);
     });
-
-    it('should configure socket if the host accept the request', () => {
-        const spy = spyOn(console, 'log');
-        socketTestHelper.peerSideEmit('The adversary username is', username);
-        component['configureWaitingPopUpSocketFeatures']();
-        expect(spy).toHaveBeenCalledWith(username);
-    });
 });

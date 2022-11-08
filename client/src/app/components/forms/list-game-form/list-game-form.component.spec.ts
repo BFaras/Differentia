@@ -75,7 +75,7 @@ describe('ListGameFormComponent', () => {
         formService.gameForms = gameFormListWithOnlyOneGame;
         listGameFormComp.ngOnInit();
         expect(listGameFormComp.firstElementIndex).toEqual(INITIAL_FIRST_ELEMENT_INDEX);
-        expect(listGameFormComp.lastElementIndex).toEqual(listGameFormComp.firstElementIndex + formService.gameForms.length - 1);
+        expect(listGameFormComp.lastElementIndex - 3).toEqual(listGameFormComp.firstElementIndex + formService.gameForms.length - 1);
     });
 
     it('should have the right index values when there is more than four games in the initial list', () => {
