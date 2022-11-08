@@ -146,15 +146,10 @@ describe('SocketManager service tests', () => {
 
     it("should handle 'I am trying to join' event and call addJoiningPlayer", (done) => {
         const testGameInfoAndUsername: string[] = ['Hello testgame1234'];
-
         const addJoiningPlayerSpy = sinon.spy(waitingLineHandlerService, 'addJoiningPlayer');
         const getCreatorPlayerSpy = sinon.spy(waitingLineHandlerService, 'getCreatorPlayer');
+        
         clientSocket.emit('I am trying to join', testGameInfoAndUsername);
-        // expect(addJoiningPlayerSpy.calledOnce);
-        // expect(getCreatorPlayerSpy.calledOnce);
-        // done();
-        // //   const getCreatorPlayerSpy = sinon.spy(waitingLineHandlerService, 'getCreatorPlayer');
-        // clientSocket.emit('I am trying to join', testGameInfoAndUsername);
         clientSocket.once(`${testGameInfoAndUsername[0]} someone is trying to join`, () => {
             expect(addJoiningPlayerSpy.calledOnce);
             expect(getCreatorPlayerSpy.calledOnce);
