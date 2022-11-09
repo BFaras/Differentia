@@ -17,7 +17,7 @@ describe('DrawingHandlerService', () => {
     canvasMock = CanvasTestHelper.createCanvas(IMAGE_HEIGHT, IMAGE_WIDTH);
     contextMock = canvasMock.getContext("2d")!;
     canvasDomReactMock = canvasMock.getBoundingClientRect()
-    drawingHistoryServiceSpy = jasmine.createSpyObj('DrawingHandlerService',['saveCanvas','getUndoCancelDrawingHistory']);
+    drawingHistoryServiceSpy = jasmine.createSpyObj('DrawingHandlerService',['saveCanvas','getRedoDrawingHistory']);
     pencilServiceSpy = jasmine.createSpyObj('PencilService',['obtainPencilWidth','getStateOfPencil','assignRightLineCap','obtainPencilColor'])  
   })
 
@@ -98,6 +98,17 @@ describe('DrawingHandlerService', () => {
 
     
     
+  });
+
+  it('should verify save on mouse down process ', () => {
+    const mockIndex:number = 0;
+    const mockImageData:ImageData[][] = [[contextMock.getImageData(0,0,640,480)],[contextMock.getImageData(0,0,640,480)]];
+    
+    drawingHistoryServiceSpy.saveCanvas.and.returnValue();
+    drawingHistoryServiceSpy.getRedoDrawingHistory.and.returnValue(mockImageData);
+    service.savingProcess(mockIndex);
+    expect(drawingHistoryServiceSpy.getRedoDrawingHistory).toHaveBeenCalled();
+
   });
 
 });
