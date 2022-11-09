@@ -35,7 +35,6 @@ describe('SocketManager service tests', () => {
     const mouseHandlerService: MouseHandlerService = new MouseHandlerService();
     let gameManagerServiceBeginGameStub: sinon.SinonStub<[socket: io.Socket, gameName: string, adversarySocket?: io.Socket], Promise<void>>;
     const waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
-    
 
     const urlString = 'http://localhost:3000';
 
@@ -55,7 +54,7 @@ describe('SocketManager service tests', () => {
         sinon.stub(GameManagerService.prototype, 'endGame').callThrough();
         sinon.stub(GameManagerService.prototype, 'clickResponse').callsFake(() => {});
         sinon.stub(GameManagerService.prototype, 'getGameRooms').callsFake(() => {
-            let testHashMap: Map<string, string[]> = new Map<string, string[]> ();
+            let testHashMap: Map<string, string[]> = new Map<string, string[]>();
             testHashMap.set('Room1', ['Hello', 'Hi']);
             testHashMap.set('Room2', ['Hello1234', 'Hi1234']);
             return testHashMap;
@@ -157,7 +156,7 @@ describe('SocketManager service tests', () => {
     });
 
     it("should handle 'Reload game selection page' event", (done) => {
-        const testMsg = "Hello";
+        const testMsg = 'Hello';
         clientSocket.emit('Reload game selection page', testMsg);
         clientSocket.once('Page reloaded', (message: string) => {
             expect(message).to.equal(testMsg);
@@ -364,6 +363,12 @@ describe('SocketManager service tests', () => {
     it("should handle 'playerMessage' and send a message", () => {
         const stub = sinon.stub(GameManagerService.prototype, <any>'findSocketGameRoomName').callsFake(() => {});
         clientSocket.emit('playerMessage', '');
+        expect(stub.calledOnce);
+    });
+
+    it("should handle 'Reload game selection page' and call getGameRooms", () => {
+        const stub = sinon.stub(GameManagerService.prototype, <any>'getGameRooms').callsFake(() => {});
+        clientSocket.emit('Reload game selection page', '');
         expect(stub.calledOnce);
     });
 });
