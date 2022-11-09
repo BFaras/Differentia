@@ -97,6 +97,7 @@ export class PlayAreaComponent implements OnInit {
             height: '400px',
             width: '600px',
             data: messageToDisplay,
+            disableClose: true,
         });
     }
 
@@ -132,7 +133,6 @@ export class PlayAreaComponent implements OnInit {
             }
         });
 
-        //To test
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
             let endGameMessage = CLASSIC_SOLO_END_GAME_MESSAGE;
             if (endGameInfos.isMultiplayer && endGameInfos.isGameWon && !endGameInfos.isAbandon) {
