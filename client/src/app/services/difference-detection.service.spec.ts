@@ -67,6 +67,15 @@ describe('DifferenceDetectionService', () => {
         expect(service['message']).toEqual('BON TRAVAIL');
     });
 
+    it('should verify if game sound has been called', () => {
+        const audioSourceMock:string = "mock"
+        const spyLoad = spyOn(HTMLAudioElement.prototype, 'load');
+        const spyPlay= spyOn(HTMLAudioElement.prototype, 'play');
+        service['playAudio'](audioSourceMock);
+        expect(spyLoad).toHaveBeenCalled();
+        expect(spyPlay).toHaveBeenCalled();
+    });
+
     it('should call clickMessage with wrong position', () => {
         spyOn<any>(service, 'message');
         service.clickMessage(false, true);
@@ -81,19 +90,20 @@ describe('DifferenceDetectionService', () => {
         expect(socketSpy['send']).toHaveBeenCalled();
     });
 
-    it('should verify if game in multiplayer is finished'),
+    it('should verify if game in multiplayer is finished',
         () => {
             const multiplayer = true;
             const gameVerifiedSpy = spyOn(service, 'verifyGameFinished').and.callThrough();
             service.verifyGameFinished(true, multiplayer, false);
             expect(gameVerifiedSpy).toHaveBeenCalled();
-        };
+        });
 
-    it('should verify if game in solo is finished'),
+    it('should verify if game in solo is finished',
         () => {
             const multiplayer = false;
             const gameVerifiedSpy = spyOn(service, 'verifyGameFinished').and.callThrough();
             service.verifyGameFinished(false, multiplayer, true);
             expect(gameVerifiedSpy).toHaveBeenCalled();
-        };
+        });
+
 });
