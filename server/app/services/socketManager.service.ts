@@ -157,14 +157,13 @@ export class SocketManager {
                 if (isMultiplayer) {
                     isGameFinished = this.gameManagerService.isGameFinishedMulti(socket);
                 }
-                //To test
                 if (isGameFinished) {
                     mouseHandler.resetData();
                     this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
                     this.gameManagerService.endGame(socket);
                 }
             });
-            
+
             socket.on('playerMessage', (msg: ChatMessage) => {
                 this.sio.to(this.gameManagerService.findSocketGameRoomName(socket)).emit('Send message to opponent', msg);
             });
