@@ -126,7 +126,7 @@ export class SocketManager {
             socket.on('I refuse this adversary', (gameName: string) => {
                 const waitingSocketId = this.waitingLineHandlerService.getIDFirstPlayerWaiting(gameName);
                 this.waitingLineHandlerService.deleteJoiningPlayer(waitingSocketId, gameName);
-                this.sio.to(socket.id).emit(`${gameName} you have been declined`, !HOST_CHOSE_ANOTHER);
+                this.sio.to(waitingSocketId).emit(`${gameName} you have been declined`, !HOST_CHOSE_ANOTHER);
                 if (this.waitingLineHandlerService.getPresenceOfJoiningPlayers(gameName))
                     this.waitingLineHandlerService.updateJoiningPlayer(this.sio, gameName, 'someone is trying to join');
                 else this.sio.to(socket.id).emit(`${gameName} the player trying to join left`);
