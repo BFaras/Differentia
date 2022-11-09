@@ -1,6 +1,7 @@
 import { RESPONSE_DELAY } from '@app/server-consts';
 import { DifferencesInformations } from '@common/differences-informations';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
+import { Position } from '@common/position';
 import { Server } from 'app/server';
 import * as chai from 'chai';
 import { assert, expect } from 'chai';
@@ -15,6 +16,8 @@ import { MouseHandlerService } from './mouse-handler.service';
 import { SocketManager } from './socketManager.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
 chai.use(chaiAsPromised);
+let clickResponseStub: sinon.SinonStub;
+let getGameRoomsStub: sinon.SinonStub;
 
 describe('SocketManager service tests', () => {
     const testGameName = 'test12345';
@@ -50,10 +53,9 @@ describe('SocketManager service tests', () => {
             return mouseHandlerService;
         });
         gameManagerServiceBeginGameStub = sinon.stub(GameManagerService.prototype, 'beginGame').callsFake(async () => {});
-        // gameManagerServiceStartMultiplayerMatchStub = sinon.stub(GameManagerService.prototype, 'startMultiplayerMatch').callsFake(async () => {});
         sinon.stub(GameManagerService.prototype, 'endGame').callThrough();
-        sinon.stub(GameManagerService.prototype, 'clickResponse').callsFake(() => {});
-        sinon.stub(GameManagerService.prototype, 'getGameRooms').callsFake(() => {
+        clickResponseStub = sinon.stub(GameManagerService.prototype, 'clickResponse').callsFake(() => {});
+        getGameRoomsStub = sinon.stub(GameManagerService.prototype, 'getGameRooms').callsFake(() => {
             let testHashMap: Map<string, string[]> = new Map<string, string[]>();
             testHashMap.set('Room1', ['Hello', 'Hi']);
             testHashMap.set('Room2', ['Hello1234', 'Hi1234']);
@@ -367,8 +369,13 @@ describe('SocketManager service tests', () => {
     });
 
     it("should handle 'Reload game selection page' and call getGameRooms", () => {
-        const stub = sinon.stub(GameManagerService.prototype, <any>'getGameRooms').callsFake(() => {});
         clientSocket.emit('Reload game selection page', '');
-        expect(stub.calledOnce);
+        expect(getGameRoomsStub.calledOnce);
+    });
+
+    it("should handle 'Verify' and call click response", () => {
+        const position: Position = { x: 0, y: 0 };
+        clientSocket.emit('Verify position', position);
+        expect(clickResponseStub.calledOnce);
     });
 });
