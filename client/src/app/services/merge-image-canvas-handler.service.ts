@@ -19,7 +19,7 @@ export class MergeImageCanvasHandlerService {
     resetAllCanvas() {
         this.canvas = [];
         this.context = [];
-        this.imageDownloaded = [];
+        this.imageDownloaded = [new Image(), new Image()];
         this.formerCanvas = [];
     }
 
@@ -35,6 +35,7 @@ export class MergeImageCanvasHandlerService {
 
     async initializeImage(url: string, index: number) {
         this.imageDownloaded[index].src = url;
+        console.log(this.imageDownloaded[index].src);
         await this.waitForImageToLoad(this.imageDownloaded[index]);
     }
 
