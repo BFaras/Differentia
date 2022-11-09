@@ -58,10 +58,4 @@ describe('MergeImageCanvasHandlerService', () => {
         imageMock.src = 'imageSrc';
         expect(await service.waitForImageToLoad(imageMock)).not.toBeNull();
     });
-
-    it('should call resetCanvas', () => {
-        const spy = spyOn(service, 'resetCanvas');
-        service.resetCanvas();
-        expect(spy).toHaveBeenCalled();
-    });
 });
