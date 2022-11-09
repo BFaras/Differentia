@@ -8,6 +8,7 @@ describe('WaitingLineHandlerService tests', () => {
     const testGameName = 'test12345';
     const testSocketId1 = 'JKHSDA125';
     let server: io.Server;
+    let socket: io.Socket;
     let event = 'event';
     let waitingLineHandlerService: WaitingLineHandlerService;
     let gameInfo = ['info1', 'info2'];
@@ -40,8 +41,8 @@ describe('WaitingLineHandlerService tests', () => {
         playerCreatorsetSpy = sinon.spy(waitingLineHandlerService['playersCreatingAGame'], 'set');
         playerCreatorgetSpy = sinon.spy(waitingLineHandlerService['playersCreatingAGame'], 'get');
 
-        addJoiningPlayerIdSpy = sinon.spy(waitingLineHandlerService, <any>'addJoiningPlayerId');
-        deleteJoiningPlayerIdSpy = sinon.spy(waitingLineHandlerService, <any>'deleteJoiningPlayerId');
+        addJoiningPlayerIdSpy = sinon.spy(waitingLineHandlerService, <any> 'addJoiningPlayerId');
+        deleteJoiningPlayerIdSpy = sinon.spy(waitingLineHandlerService, <any> 'deleteJoiningPlayerId');
 
         getIDFirstPlayerWaitingSpy = sinon.spy(waitingLineHandlerService, 'getIDFirstPlayerWaiting');
         getUsernamePlayerSpy = sinon.spy(waitingLineHandlerService, 'getUsernamePlayer');
@@ -99,11 +100,9 @@ describe('WaitingLineHandlerService tests', () => {
     });
 
     it('should call getUsernamePlayer ', () => {
-        let players = waitingLineHandlerService.getSocketByID(testSocketId1, server)!;
-        const spy = sinon.spy(players, 'data');
-        waitingLineHandlerService.getUsernamePlayer(testSocketId1, server);
+        socket.data.username = 'test';
+        expect(waitingLineHandlerService.getUsernamePlayer(socket.id, server)).to.equal('test');
         expect(getSocketByIDSpy.calledOnce);
-        expect(spy).to.exist;
     });
 
     it('should call getPresenceOfJoiningPlayers ', () => {
@@ -114,7 +113,7 @@ describe('WaitingLineHandlerService tests', () => {
     it('should call getUsernameFirstPlayerWaiting ', () => {
         waitingLineHandlerService['playersJoiningAGame'].set(testGameName, [testSocketId1]);
 
-        let playersWaiting = waitingLineHandlerService['playersJoiningAGame'].get(testGameName) as string[];
+        const playersWaiting = waitingLineHandlerService['playersJoiningAGame'].get(testGameName) as string[];
         const playersShift = sinon.spy(playersWaiting, 'shift');
         const playersUnshift = sinon.spy(playersWaiting, 'unshift');
         waitingLineHandlerService.getUsernameFirstPlayerWaiting(testGameName, server);

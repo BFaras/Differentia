@@ -7,14 +7,15 @@ import Container, { Service } from 'typedi';
 import { ChronometerService } from './chronometer.service';
 import { GamesService } from './local.games.service';
 import { MouseHandlerService } from './mouse-handler.service';
+import { ONE_SECOND_DELAY } from '@app/server-consts';
 
 @Service()
 export class GameManagerService {
+    gamesRooms: Map<string, string[]> = new Map<string, string[]>();
     private readonly timeIntervals: Map<string, NodeJS.Timer> = new Map<string, NodeJS.Timer>();
     private readonly chronometerServices: Map<string, ChronometerService> = new Map<string, ChronometerService>();
     private readonly mouseHandlerServices: Map<string, MouseHandlerService> = new Map<string, MouseHandlerService>();
     private gamesService = Container.get(GamesService);
-    gamesRooms: Map<string, string[]> = new Map<string, string[]>();
 
     constructor(private sio: io.Server) {}
 
@@ -74,16 +75,16 @@ export class GameManagerService {
     isGameFinishedMulti(socket: io.Socket) {
         const mouseHandler = this.getSocketMouseHandlerService(socket);
 
-        if (mouseHandler.nbDifferencesTotal % 2 != 0) {
+        if (mouseHandler.nbDifferencesTotal % 2 !== 0) {
             return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === Math.floor(mouseHandler.nbDifferencesTotal / 2) + 1;
         } else {
             return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === mouseHandler.nbDifferencesTotal / 2 - 1;
         }
     }
 
-    handleEndGameEmits(socket: io.Socket, isMultiplayer: boolean) {
+    handleEndGameEmits(socket: io.Socket, isItMultiplayer: boolean) {
         const endGameInfos: EndGameInformations = {
-            isMultiplayer: isMultiplayer,
+            isMultiplayer: isItMultiplayer,
             isAbandon: false,
             isGameWon: true,
         };
@@ -117,7 +118,11 @@ export class GameManagerService {
 
     getSocketMouseHandlerService(socket: io.Socket): MouseHandlerService {
         const gameRoomName = this.findSocketGameRoomName(socket);
-        return this.mouseHandlerServices.get(gameRoomName)!;
+        return this.mouseHandlerServices.get(gameRoomName) as MouseHandlerService;
+    }
+
+    getGameRooms(): Map<string, string[]> {
+        return this.gamesRooms;
     }
 
     private setupNecessaryGameServices(socket: io.Socket) {
@@ -132,12 +137,12 @@ export class GameManagerService {
             gameRoomName,
             setInterval(() => {
                 this.emitTime(socket, this.getSocketChronometerService(socket), gameRoomName);
-            }, 1000),
+            }, ONE_SECOND_DELAY),
         );
     }
 
     private logRoomsWithGames(gameName: string, roomName: string): void {
-        let rooms: string[] = [];
+        const rooms: string[] = [];
         if (this.gamesRooms.has(gameName)) {
             this.gamesRooms.get(gameName)?.forEach((socketRoom) => {
                 rooms.push(socketRoom);
@@ -152,7 +157,7 @@ export class GameManagerService {
     private deleteRoom(socket: io.Socket): void {
         const gameRoomName = this.findSocketGameRoomName(socket);
         let gameName = '';
-        for (let rooms of this.gamesRooms.entries()) {
+        for (const rooms of this.gamesRooms.entries()) {
             rooms[1].forEach((value) => {
                 if (value === gameRoomName) {
                     gameName = rooms[0];
@@ -194,12 +199,12 @@ export class GameManagerService {
 
     private getSocketChronometerService(socket: io.Socket): ChronometerService {
         const gameRoomName = this.findSocketGameRoomName(socket);
-        return this.chronometerServices.get(gameRoomName)!;
+        return this.chronometerServices.get(gameRoomName) as ChronometerService;
     }
 
     private getSocketTimeInterval(socket: io.Socket): NodeJS.Timer {
         const gameRoomName = this.findSocketGameRoomName(socket);
-        return this.timeIntervals.get(gameRoomName)!;
+        return this.timeIntervals.get(gameRoomName) as NodeJS.Timer;
     }
 
     private endChrono(socket: io.Socket) {
@@ -209,9 +214,5 @@ export class GameManagerService {
 
     private getSocketUsername(socket: io.Socket) {
         return socket.data.username;
-    }
-
-    getGameRooms(): Map<string, string[]> {
-        return this.gamesRooms;
     }
 }

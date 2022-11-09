@@ -14,23 +14,9 @@ export class GamesService {
 
     constructor() {}
 
-    private async getGameImagesNames(gameName: string): Promise<string[]> {
-        return (await this.getGame(gameName)).images;
-    }
-
-    private async getGameImageData(imageName: string): Promise<Buffer> {
-        try {
-            const imageData: Buffer = await fs.promises.readFile(IMAGES_PATH + imageName);
-            return imageData;
-        } catch (err) {
-            console.log('Something went wrong trying to read the image file:' + err);
-            throw new Error(err);
-        }
-    }
-
     async getGame(gameName: string): Promise<Game> {
         await this.asyncReadGamesFile();
-        const game: Game = (await this.getAllGames()).find((game) => game.name === gameName)!;
+        const game: Game = (await this.getAllGames()).find((game) => game.name === gameName) as Game;
         return game;
     }
 
@@ -121,6 +107,20 @@ export class GamesService {
             this.games = JSON.parse(result).games;
         } catch (err) {
             console.log('Something went wrong trying to read the json file:' + err);
+            throw new Error(err);
+        }
+    }
+
+    private async getGameImagesNames(gameName: string): Promise<string[]> {
+        return (await this.getGame(gameName)).images;
+    }
+    
+    private async getGameImageData(imageName: string): Promise<Buffer> {
+        try {
+            const imageData: Buffer = await fs.promises.readFile(IMAGES_PATH + imageName);
+            return imageData;
+        } catch (err) {
+            console.log('Something went wrong trying to read the image file:' + err);
             throw new Error(err);
         }
     }
