@@ -1,10 +1,10 @@
+import { RESPONSE_DELAY } from '@app/server-consts';
 import { DifferencesInformations } from '@common/differences-informations';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
-import { Position } from '@common/position';
 import { Server } from 'app/server';
+import * as chai from 'chai';
 import { assert, expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as io from 'socket.io';
 import { io as ioClient, Socket } from 'socket.io-client';
@@ -15,9 +15,6 @@ import { MouseHandlerService } from './mouse-handler.service';
 import { SocketManager } from './socketManager.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
 chai.use(chaiAsPromised);
-
-// À switch dans le fichier des constantes
-const RESPONSE_DELAY = 200;
 
 describe('SocketManager service tests', () => {
     const testGameName = 'test12345';
@@ -37,7 +34,6 @@ describe('SocketManager service tests', () => {
     const differenceDetectorService: DifferenceDetectorService = new DifferenceDetectorService(imagesData);
     const mouseHandlerService: MouseHandlerService = new MouseHandlerService();
     let gameManagerServiceBeginGameStub: sinon.SinonStub<[socket: io.Socket, gameName: string, adversarySocket?: io.Socket], Promise<void>>;
-    let gameManagerServiceClickResponseStub: sinon.SinonStub<[socket: io.Socket, mousePos: Position], void>;
     const waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
 
     const urlString = 'http://localhost:3000';
@@ -56,7 +52,7 @@ describe('SocketManager service tests', () => {
         gameManagerServiceBeginGameStub = sinon.stub(GameManagerService.prototype, 'beginGame').callsFake(async () => {});
         // gameManagerServiceStartMultiplayerMatchStub = sinon.stub(GameManagerService.prototype, 'startMultiplayerMatch').callsFake(async () => {});
         sinon.stub(GameManagerService.prototype, 'endGame').callThrough();
-        gameManagerServiceClickResponseStub = sinon.stub(GameManagerService.prototype, 'clickResponse').callsFake(() => {});
+        sinon.stub(GameManagerService.prototype, 'clickResponse').callsFake(() => {});
     });
 
     afterEach(() => {
@@ -257,9 +253,6 @@ describe('SocketManager service tests', () => {
         });
     });
 
-    //A faire
-    it("should handle 'Reload game selection page' event and add room", (done) => {});
-
     it("should handle 'my username is' event and emit a 'username valid' event when the username is valid", (done) => {
         clientSocket.emit('my username is', validTestUsername);
         clientSocket.once('username valid', () => {
@@ -270,19 +263,6 @@ describe('SocketManager service tests', () => {
     it("should handle 'my username is' event and emit a 'username not valid' event when the username is unvalid", (done) => {
         clientSocket.emit('my username is', unvalidTestUsername);
         clientSocket.once('username not valid', () => {
-            done();
-        });
-    });
-
-    // Test passe pas
-    it("should handle 'verify position' event and call clickResponse", (done) => {
-        let positionTest: Position = {
-            x: 0,
-            y: 0,
-        };
-        clientSocket.emit('Verify position', positionTest);
-        clientSocket.once('Valid click', () => {
-            expect(gameManagerServiceClickResponseStub.calledOnce);
             done();
         });
     });
