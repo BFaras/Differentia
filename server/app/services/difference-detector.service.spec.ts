@@ -121,4 +121,22 @@ describe('DifferenceDetectorService', () => {
         diffDetector.generateDifferencesList();
         expect(spy.calledOnce);
     });
+
+    it('should call clampValue and verify the value given', () => {
+        const value: number = 0;
+        const min: number = 5;
+        const max: number = 10;
+        const diffDetector = new DifferenceDetectorService(DEFAULT_IMAGES_DATA);
+
+        expect(diffDetector['clampValue'](value, min, max)).to.be.equal(min);
+    });
+
+    it('should call clampValue and verify the value given', () => {
+        const value: number = 15;
+        const min: number = 5;
+        const max: number = 10;
+        const diffDetector = new DifferenceDetectorService(DEFAULT_IMAGES_DATA);
+
+        expect(diffDetector['clampValue'](value, min, max)).to.be.equal(max);
+    });
 });
