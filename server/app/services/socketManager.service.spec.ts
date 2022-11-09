@@ -1,6 +1,7 @@
 import { RESPONSE_DELAY } from '@app/server-consts';
 import { DifferencesInformations } from '@common/differences-informations';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
+import { Position } from '@common/position';
 import { Server } from 'app/server';
 import * as chai from 'chai';
 import { assert, expect } from 'chai';
@@ -15,6 +16,8 @@ import { MouseHandlerService } from './mouse-handler.service';
 import { SocketManager } from './socketManager.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
 chai.use(chaiAsPromised);
+let clickResponseStub: sinon.SinonStub;
+let getGameRoomsStub: sinon.SinonStub;
 
 describe('SocketManager service tests', () => {
     const testGameName = 'test12345';
@@ -35,7 +38,6 @@ describe('SocketManager service tests', () => {
     const mouseHandlerService: MouseHandlerService = new MouseHandlerService();
     let gameManagerServiceBeginGameStub: sinon.SinonStub<[socket: io.Socket, gameName: string, adversarySocket?: io.Socket], Promise<void>>;
     const waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
-    
 
     const urlString = 'http://localhost:3000';
 
@@ -51,11 +53,10 @@ describe('SocketManager service tests', () => {
             return mouseHandlerService;
         });
         gameManagerServiceBeginGameStub = sinon.stub(GameManagerService.prototype, 'beginGame').callsFake(async () => {});
-        // gameManagerServiceStartMultiplayerMatchStub = sinon.stub(GameManagerService.prototype, 'startMultiplayerMatch').callsFake(async () => {});
         sinon.stub(GameManagerService.prototype, 'endGame').callThrough();
-        sinon.stub(GameManagerService.prototype, 'clickResponse').callsFake(() => {});
-        sinon.stub(GameManagerService.prototype, 'getGameRooms').callsFake(() => {
-            let testHashMap: Map<string, string[]> = new Map<string, string[]> ();
+        clickResponseStub = sinon.stub(GameManagerService.prototype, 'clickResponse').callsFake(() => {});
+        getGameRoomsStub = sinon.stub(GameManagerService.prototype, 'getGameRooms').callsFake(() => {
+            let testHashMap: Map<string, string[]> = new Map<string, string[]>();
             testHashMap.set('Room1', ['Hello', 'Hi']);
             testHashMap.set('Room2', ['Hello1234', 'Hi1234']);
             return testHashMap;
@@ -157,7 +158,7 @@ describe('SocketManager service tests', () => {
     });
 
     it("should handle 'Reload game selection page' event", (done) => {
-        const testMsg = "Hello";
+        const testMsg = 'Hello';
         clientSocket.emit('Reload game selection page', testMsg);
         clientSocket.once('Page reloaded', (message: string) => {
             expect(message).to.equal(testMsg);
@@ -365,5 +366,16 @@ describe('SocketManager service tests', () => {
         const stub = sinon.stub(GameManagerService.prototype, <any>'findSocketGameRoomName').callsFake(() => {});
         clientSocket.emit('playerMessage', '');
         expect(stub.calledOnce);
+    });
+
+    it("should handle 'Reload game selection page' and call getGameRooms", () => {
+        clientSocket.emit('Reload game selection page', '');
+        expect(getGameRoomsStub.calledOnce);
+    });
+
+    it("should handle 'Verify' and call click response", () => {
+        const position: Position = { x: 0, y: 0 };
+        clientSocket.emit('Verify position', position);
+        expect(clickResponseStub.calledOnce);
     });
 });
