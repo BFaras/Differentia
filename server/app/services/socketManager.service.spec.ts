@@ -23,7 +23,6 @@ describe('SocketManager service tests', () => {
     const testGameName = 'test12345';
     const validTestUsername = 'validTestUsername';
     const unvalidTestUsername = ' unvalidTestUsername';
-    // const testSocketId = 'JKHSDA125';
     const imagesData: ImageDataToCompare = {
         originalImageData: new Uint8ClampedArray(1),
         modifiedImageData: new Uint8ClampedArray(1),
@@ -138,7 +137,6 @@ describe('SocketManager service tests', () => {
         });
     });
 
-    // Done
     it("should handle 'Is the host still there' event when there is a creator player ", (done) => {
         service['waitingLineHandlerService'].addCreatingPlayer(testGameName, clientSocket.id);
         clientSocket.emit('Is the host still there', testGameName);
