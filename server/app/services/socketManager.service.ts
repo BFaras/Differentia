@@ -62,10 +62,10 @@ export class SocketManager {
                 this.waitingLineHandlerService.addCreatingPlayer(gameName, socket.id);
                 this.sio.emit(`${gameName} let me tell you if someone is waiting`, true);
             });
-            // To test: pour Raph?
+
             socket.on('Reload game selection page', (msg: string) => {
                 let roomToKeep: string[] = [];
-                for (const rooms of this.gameManagerService.gamesRooms.entries()) {
+                for (const rooms of this.gameManagerService.getGameRooms().entries()) {
                     if (roomToKeep.length === 0)
                         rooms[1].forEach((room) => {
                             roomToKeep.push(room);

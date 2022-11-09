@@ -35,6 +35,7 @@ describe('SocketManager service tests', () => {
     const mouseHandlerService: MouseHandlerService = new MouseHandlerService();
     let gameManagerServiceBeginGameStub: sinon.SinonStub<[socket: io.Socket, gameName: string, adversarySocket?: io.Socket], Promise<void>>;
     const waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
+    
 
     const urlString = 'http://localhost:3000';
 
@@ -53,6 +54,12 @@ describe('SocketManager service tests', () => {
         // gameManagerServiceStartMultiplayerMatchStub = sinon.stub(GameManagerService.prototype, 'startMultiplayerMatch').callsFake(async () => {});
         sinon.stub(GameManagerService.prototype, 'endGame').callThrough();
         sinon.stub(GameManagerService.prototype, 'clickResponse').callsFake(() => {});
+        sinon.stub(GameManagerService.prototype, 'getGameRooms').callsFake(() => {
+            let testHashMap: Map<string, string[]> = new Map<string, string[]> ();
+            testHashMap.set('Room1', ['Hello', 'Hi']);
+            testHashMap.set('Room2', ['Hello1234', 'Hi1234']);
+            return testHashMap;
+        });
     });
 
     afterEach(() => {
@@ -145,6 +152,15 @@ describe('SocketManager service tests', () => {
         clientSocket.emit('Is the host still there', testGameName);
         clientSocket.once(`${testGameName} response on host presence`, (isHostPresent: boolean) => {
             expect(isHostPresent).to.equal(false);
+            done();
+        });
+    });
+
+    it("should handle 'Reload game selection page' event", (done) => {
+        const testMsg = "Hello";
+        clientSocket.emit('Reload game selection page', testMsg);
+        clientSocket.once('Page reloaded', (message: string) => {
+            expect(message).to.equal(testMsg);
             done();
         });
     });

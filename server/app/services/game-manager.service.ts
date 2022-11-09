@@ -210,4 +210,8 @@ export class GameManagerService {
     private getSocketUsername(socket: io.Socket) {
         return socket.data.username;
     }
+
+    getGameRooms():  Map<string, string[]> {
+        return this.gamesRooms;
+    }
 }
