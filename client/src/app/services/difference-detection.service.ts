@@ -21,8 +21,8 @@ export class DifferenceDetectionService {
     }
 
     playSound(differenceIsValid: boolean, isLocalPlayer: boolean) {
-        if (differenceIsValid) this.playAudio('../../assets/sounds/validSound.mp3');
-        else if (isLocalPlayer) this.playAudio('../../assets/sounds/invalidSound.mp3');
+        if (differenceIsValid) this.playAudio('assets/sounds/validSound.mp3');
+        else if (isLocalPlayer) this.playAudio('assets/sounds/invalidSound.mp3');
     }
 
     clickMessage(differenceIsValid: boolean, isLocalPlayer: boolean) {
