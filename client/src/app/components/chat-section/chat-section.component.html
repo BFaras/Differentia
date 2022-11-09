@@ -1,0 +1,21 @@
+<div class="chatContainer">
+    <div class ="display"  #scrollMe>
+        <p  id="list-display"
+            *ngFor="let message of messagesSent.slice().reverse()"
+                    [ngClass]="{
+                        localUserMessage: message.senderName === localPlayerUsername,
+                        otherUserMessage: message.senderName !== localPlayerUsername && message.senderName !== gameMessageSenderName,
+                        gameMessage: message.senderName === gameMessageSenderName
+                    }"
+        >
+
+                    <span class="timeInMessage"> {{ message.timeMessageSent }} </span>
+                    <span> {{ message.senderName }} : {{ message.message }} </span>
+        </p>
+    </div>
+        <form *ngIf ="isMultiplayerGame">
+            <input #playerMsg type="text" placeholder="Entrez un message" maxlength="200"
+            />
+            <button class="chatSend" (click)="sendMessage()">Send</button>
+        </form>
+</div>

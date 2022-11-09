@@ -2,7 +2,9 @@ import { Component, Input, OnDestroy, OnInit, Renderer2, ɵunwrapSafeValue as un
 import { SafeValue } from '@angular/platform-browser';
 import { GameToServerService } from '@app/services/game-to-server.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
+import { MergeImageCanvasHandlerService } from '@app/services/merge-image-canvas-handler.service';
 import { SocketClientService } from '@app/services/socket-client.service';
+import { UploadFileService } from '@app/services/upload-file.service';
 import { DifferencesInformations } from '@common/differences-informations';
 
 @Component({
@@ -23,15 +25,16 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
         private imageToImageDifferenceService: ImageToImageDifferenceService,
         private gameToServerService: GameToServerService,
         public socketService: SocketClientService,
+        private mergeImageCanvasService: MergeImageCanvasHandlerService,
+        private uploadFileService: UploadFileService,
     ) {}
 
     async ngOnInit(): Promise<void> {
         const mainCanvas = this.renderer.createElement('canvas');
         this.setUpSocket();
         await this.loadImages();
-        console.log(typeof this.offset)
-        const imagesData = this.imageToImageDifferenceService.getImagesData(mainCanvas, this.originalImage, this.modifiedImage,Number(this.offset));
-
+        const imagesData = this.imageToImageDifferenceService.getImagesData(mainCanvas, this.originalImage, this.modifiedImage, Number(this.offset));
+        this.mergeImageCanvasService.resetCanvas();
         this.socketService.send('detect images difference', imagesData);
     }
 
@@ -40,8 +43,7 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
     }
 
     loaded() {
-        console.log(this.finalDifferencesImage)
-        if ((this.finalDifferencesImage.src !== '') &&(this.numberOfDifferences !== undefined) ) {
+        if (this.finalDifferencesImage.src !== '' && this.numberOfDifferences !== undefined) {
             this.gameToServerService.setNumberDifference(this.numberOfDifferences);
             this.gameToServerService.setUrlImageOfDifference(this.finalDifferencesImage.src);
             this.gameToServerService.setDifferencesList(this.differencesList);
@@ -53,14 +55,22 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
     }
 
     private async loadImages() {
-        const unwrapedOriginalModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getOriginalImageUploaded().image as SafeValue);
-        const unwrapedModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getModifiedImageUploaded().image as SafeValue);
+        const unwrappedOriginalModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getOriginalImageUploaded().image as SafeValue);
+        const unwrappedModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getModifiedImageUploaded().image as SafeValue);
 
-        this.originalImage.src = unwrapedOriginalModifiedSafeUrl;
+        this.originalImage.src = this.mergeImageCanvas(unwrappedOriginalModifiedSafeUrl, this.gameToServerService.getOriginalImageUploaded().index!);
         await this.imageToImageDifferenceService.waitForImageToLoad(this.originalImage);
+        this.uploadFileService.setOriginalMergedCanvasImage(this.originalImage);
 
-        this.modifiedImage.src = unwrapedModifiedSafeUrl;
+        this.modifiedImage.src = this.mergeImageCanvas(unwrappedModifiedSafeUrl, this.gameToServerService.getModifiedImageUploaded().index!);
         await this.imageToImageDifferenceService.waitForImageToLoad(this.modifiedImage);
+        this.uploadFileService.setModifiedMergedCanvasImage(this.modifiedImage);
+    }
+
+    mergeImageCanvas(urlImage: string, index: number): string {
+        this.mergeImageCanvasService.initializeImage(urlImage, index);
+        this.mergeImageCanvasService.drawImageOnCanvas(index);
+        return this.mergeImageCanvasService.obtainUrlForMerged(index);
     }
 
     private configureGameCreationPageSocketFeatures() {

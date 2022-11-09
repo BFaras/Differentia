@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ImageSize } from '@app/classes/image-size';
-import { UploadFileService } from './upload-file.service';
 import { ListImagesRenderedService } from './list-images-rendered.service';
+import { UploadFileService } from './upload-file.service';
 @Injectable({
     providedIn: 'root',
 })
@@ -69,15 +69,16 @@ export class VerifyImageService {
     verifyIfSentMultipleOrSingle(urlOfImage:string,imageInfo:any){
         if (imageInfo.bothImage) {
             this.editImagesService.activatedEmitterUrlImageBoth.emit(urlOfImage);
+            this.uploadFileService.setOriginalImage(this.file)
+            this.uploadFileService.setModifiedImage(this.file)
         } else {
             this.editImagesService.activatedEmitterUrlImageSingle.emit({ index: imageInfo.indexOfImage, url: urlOfImage });
-            console.log(imageInfo.indexOfImage)
             if(imageInfo.indexOfImage == 0){
-                this.uploadFileService.setOriginalImage(this.file,imageInfo.indexOfImage)
+                this.uploadFileService.setOriginalImage(this.file)
             }
             if (imageInfo.indexOfImage == 1){
 
-                this.uploadFileService.setModifiedImage(this.file,imageInfo.indexOfImage)
+                this.uploadFileService.setModifiedImage(this.file)
             }
         }
     }

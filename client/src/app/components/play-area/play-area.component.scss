@@ -43,12 +43,14 @@ canvas {
 }
 
 #paused {
-    opacity: 1;
+    opacity: 0;
     animation-play-state: paused;
+    pointer-events: none;
 }
 
 #blink {
     animation: blink 3s infinite;
+    pointer-events: none;
 }
 
 @keyframes blink {
@@ -61,7 +63,6 @@ canvas {
     50% {
         opacity: 1;
     }
-
     75% {
         opacity: 0;
     }

@@ -1,6 +1,6 @@
 <div class="container">
     <div mat-dialog-title class="dialog-title">
-        <button mat-icon-button aria-label="close dialog" mat-dialog-close>
+        <button mat-icon-button aria-label="close dialog" (click)="this.dialogRef.close()">
             <mat-icon>close</mat-icon>
         </button>
     </div>
@@ -9,11 +9,19 @@
         <div class="form-radius-container">
             <mat-form-field>
                 <label for="username">Nom d'utilisateur: </label>
-                <input #username matInput name="username" required />
+                <input #userName matInput name="username" (change)="inputChanged()" type="text" />
+                <ng-container *ngIf="usernameNotValid">
+                    <h3>Votre nom ne peux pas commencer par un espace...</h3>
+                </ng-container>
             </mat-form-field>
         </div>
         <mat-dialog-actions>
-            <button mat-raised-button mat-dialog-close (click)="gamePage()" routerLink="/game">Ok</button>
+            <ng-container *ngIf="gameInfo.multiFlag; else soloGame">
+                <button mat-raised-button [disabled]="disabledButton" (click)="startUpGameService.sendUsername(this.username.nativeElement.value)">Ok</button>
+            </ng-container>
+            <ng-template #soloGame>
+                <button mat-raised-button [disabled]="disabledButton" (click)="startUpGameService.sendUsername(this.username.nativeElement.value)" routerLink="/game">Ok</button>
+            </ng-template>
         </mat-dialog-actions>
     </mat-dialog-content>
 </div>

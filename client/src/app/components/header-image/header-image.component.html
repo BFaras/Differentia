@@ -1,4 +1,5 @@
-<mat-grid-list class="container" cols="2" rowHeight="fit">
-    <mat-grid-tile><button mat-raised-button (click)="onCreateDownloadPopDialog()">Download</button></mat-grid-tile>
-    <mat-grid-tile><button mat-raised-button (click)="onDeleteImage()">Reset</button></mat-grid-tile>
+<mat-grid-list class="container" cols="3" rowHeight="fit">
+    <mat-grid-tile><button mat-raised-button (click)="onCreateDownloadPopDialog()">+</button></mat-grid-tile>
+    <mat-grid-tile>Image {{indexOfImageToSend}}</mat-grid-tile>
+    <mat-grid-tile><button mat-raised-button (click)="onDeleteImage()">-</button></mat-grid-tile>
 </mat-grid-list>

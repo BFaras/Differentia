@@ -1,0 +1,25 @@
+<div> Canvas  {{indexTool}}</div>
+
+<div class = "mouse-mode-container">
+  <button mat-mini-fab id = "{{indexTool}}" value= "write"(click)="setPencilMode($event)">W</button>
+  <button mat-mini-fab id = "{{indexTool}}" value= "erase"(click)="setPencilMode($event)">E</button>
+</div>
+<div >
+    <label>Couleur : </label>
+    <input (change) = "onChangeColor()" [(ngModel)]="color" type="color" />
+  </div>
+<mat-form-field appearance="fill">
+    <mat-label>Width</mat-label>
+    <mat-select [(value)] ="widths[0]" >
+      <mat-option *ngFor="let width of widths"  (click) ="onChangeWidth(width)" [value]="width" #chosenWidth>
+        {{width}}
+      </mat-option>
+    </mat-select>
+</mat-form-field>
+<div class ="group-buttons">
+  <button mat-mini-fab [disabled]="checkIfThereAreSavedDrawnLines()" (click) = "cancelActionDrawnLine()"><--</button>
+  <button mat-mini-fab [disabled]="checkIfThereAreSavedDeletedDrawnLines()" (click) = "cancelActionDeletedDrawnLine()" >--></button>
+</div>
+<button  mat-raised-button (click) = "clearCanvas()"> Effacer Canvas</button>
+<button  mat-raised-button (click) = "copyOtherCanvas()"> Copier autre Canvas</button>
+<button  mat-raised-button (click) = "shareDataWithOtherCanvas()"> Partager autre Canvas</button>

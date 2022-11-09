@@ -4,34 +4,19 @@ import { Time } from '@common/time';
 import * as fs from 'fs';
 import { join } from 'path';
 import { Service } from 'typedi';
-// import { SocketManager } from './socketManager.service';
 
 const IMAGES_PATH = 'assets/images/';
 
 @Service()
 export class GamesService {
-    gamesFilePath: string = 'games.json';
-    games: Game[];
+    private gamesFilePath: string = 'games.json';
+    private games: Game[];
 
     constructor() {}
 
-    private async getGameImagesNames(gameName: string): Promise<string[]> {
-        return (await this.getGame(gameName)).images;
-    }
-
-    private async getGameImageData(imageName: string): Promise<Buffer> {
-        try {
-            const imageData: Buffer = await fs.promises.readFile(IMAGES_PATH + imageName);
-            return imageData;
-        } catch (err) {
-            console.log('Something went wrong trying to read the image file:' + err);
-            throw new Error(err);
-        }
-    }
-
     async getGame(gameName: string): Promise<Game> {
         await this.asyncReadGamesFile();
-        const game: Game = (await this.getAllGames()).find((game) => game.name === gameName)!;
+        const game: Game = (await this.getAllGames()).find((game) => game.name === gameName) as Game;
         return game;
     }
 
@@ -87,16 +72,23 @@ export class GamesService {
         this.asyncWriteInGamesFile();
     }
 
-    // Est ce que delete est nécessaire pour le sprint 1???
-
-    // async deleteGame(nameOfGameToDelete: string) {
-    //     await this.asyncReadFile();
-    //     const newGames = this.games.filter((x: Game) => {
-    //         return x.name !== nameOfGameToDelete
-    //     })
-    //     this.games = newGames;
-    //     await this.asyncWriteFile();
-    // }
+    async deleteGame(nameOfGameToDelete: string) {
+        await this.asyncReadGamesFile();
+        const newGames = this.games.filter((game: Game) => {
+            if (game.name === nameOfGameToDelete) {
+                fs.rm(IMAGES_PATH + game.images[0], (err) => {
+                    if (err) throw err;
+                });
+                fs.rm(IMAGES_PATH + game.images[1], (err) => {
+                    if (err) throw err;
+                });
+            }
+            return game.name !== nameOfGameToDelete;
+        });
+        this.games = newGames;
+        await this.asyncWriteInGamesFile();
+        return this.games;
+    }
 
     async asyncWriteInGamesFile() {
         try {
@@ -115,6 +107,20 @@ export class GamesService {
             this.games = JSON.parse(result).games;
         } catch (err) {
             console.log('Something went wrong trying to read the json file:' + err);
+            throw new Error(err);
+        }
+    }
+
+    private async getGameImagesNames(gameName: string): Promise<string[]> {
+        return (await this.getGame(gameName)).images;
+    }
+    
+    private async getGameImageData(imageName: string): Promise<Buffer> {
+        try {
+            const imageData: Buffer = await fs.promises.readFile(IMAGES_PATH + imageName);
+            return imageData;
+        } catch (err) {
+            console.log('Something went wrong trying to read the image file:' + err);
             throw new Error(err);
         }
     }

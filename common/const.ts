@@ -26,15 +26,19 @@ export const DEFAULT_DIFFERENCE_POSITION = -1;
 export const RADIUS_AROUND_PIXEL = 1;
 export const UP = -1;
 export const DOWN = 1;
+export const DEFAULT_NB_OF_DIFFERENCES = 0;
+export const EMPTY_OFFSET_NB = 0;
 
 //Differences found constants
-export const NO_DIFFERENCE_FOUND_ARRAY : number[] = [];
+export const NO_DIFFERENCE_FOUND_ARRAY: number[] = [];
 
 //Images constants
 export const IMAGE_WIDTH = 640;
 export const IMAGE_HEIGHT = 480;
+export const CORRECT_BIT_DEPTH = 24;
 export const DEFAULT_OFFSET = 3;
 export const MINIMUM_PIXEL_POSITION = 0;
+export const CORRECT_IMAGE_FORMAT = 'image/bmp';
 
 //constantes message quand add game
 
@@ -48,8 +52,39 @@ export const MODIFIED_IMAGE_POSITION = 1;
 //Arrays constants
 export const EMPTY_ARRAY_LENGTH = 0;
 export const FIRST_ARRAY_POSITION = 0;
+//width Pencil constants
+
+export const VERY_SMALL = 3;
+export const SMALL = 6;
+export const MEDIUM = 9;
+export const BIG = 12;
+export const VERY_BIG = 15;
+
+//color
+export const BLACK_COLOR = '#000';
 
 //Game sockets constantes
 export const GAME_ROOM_GENERAL_ID = 'GameRoom';
 export const NO_OTHER_PLAYER_ROOM = '';
 export const DEFAULT_GAME_ROOM_NAME = GAME_ROOM_GENERAL_ID + 'EASJDS';
+
+//Player usernames constants
+export const LOCAL_PLR_USERNAME_POS = 0;
+export const ADVERSARY_PLR_USERNAME_POS = 1;
+//Player constants
+export const DEFAULT_USERNAME = 'anonyme';
+
+//Messages constants
+export const GAME_MESSAGE_SENDER_NAME = 'Game';
+export const MESSAGE_ERROR_DIFFERENCE_SOLO = 'Erreur, aucune nouvelle différence trouvée!';
+export const MESSAGE_DIFFERENCE_FOUND_SOLO = 'Vous avez trouver une différence!';
+export const MESSAGE_DIFFERENCE_FOUND_MULTI = 'Différence trouvée par ';
+export const MESSAGE_ERROR_DIFFERENCE_MULTI = 'Erreur par ';
+export const TWO_DIGIT_TIME_VALUE = '2-digit';
+
+//End game messages
+export const CLASSIC_SOLO_END_GAME_MESSAGE = 'Vous avez trouvé toutes les différences!';
+export const CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE = 'Vous avez gagnez contre votre adversaire!';
+export const CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE = 'Votre adversaire a abandonné, donc vous avez gagner!';
+export const CLASSIC_MULTIPLAYER_LOST_MESSAGE = 'Vous avez perdu contre votre adversaire :(';
+export const ABANDON_MESSAGE = ' a abandonné la partie';

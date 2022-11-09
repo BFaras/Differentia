@@ -1,6 +1,7 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { GameFormDescription } from '@app/classes/game-form-description';
+import { RecordTimesBoard } from '@app/classes/record-times-board';
 import { Game } from '@common/game';
-import { firstValueFrom } from 'rxjs';
 import { CommunicationService } from './communication.service';
 import { FormService } from './form.service';
 
@@ -12,74 +13,104 @@ describe('FormService', () => {
     let gameList: Game[] = [{ name: 'bike', numberOfDifferences: 2, times: [], images: ['img1'], differencesList: [][0] }];
 
     beforeEach(() => {
-        communicationSpy = jasmine.createSpyObj('CommunicationService', ['getGames']);
+        communicationSpy = jasmine.createSpyObj('CommunicationService', ['getGames', 'deleteGame']);
         TestBed.configureTestingModule({
             providers: [{ provide: CommunicationService, useValue: communicationSpy }],
         });
         service = TestBed.inject(FormService);
-        service.listImage = listImage;
-        service.listName = listName;
+        service['listName'] = listName;
+        service['listImage'] = listImage;
+    });
+
+    afterEach(() => {
+        listImage = [];
+        listName = [];
+        TestBed.resetTestingModule();
     });
 
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
 
-    it('should receive info', fakeAsync(async () => {
-        const result = await firstValueFrom(communicationSpy.getGames());
-        tick(1000);
+    it('should receive info', async () => {
         await service.receiveGameInformations();
-        expect(result).toHaveBeenCalled();
-    }));
-
-    it('should not parse game list', fakeAsync(() => {
-        const listGameNameSpy = spyOn(service, 'fillListGameName');
-        const listGameImageSpy = spyOn(service, 'fillListGameImage');
-        tick(2000);
-        service.parseGameList([]);
-        expect(listGameNameSpy).not.toHaveBeenCalled();
-        expect(listGameImageSpy).not.toHaveBeenCalled();
-    }));
-
-    it('should parse game list', fakeAsync(() => {
-        const listGameNameSpy = spyOn(service, 'fillListGameName');
-        const listGameImageSpy = spyOn(service, 'fillListGameImage');
-        tick(2000);
-        service.parseGameList(gameList);
-        expect(listGameNameSpy).not.toHaveBeenCalled();
-        expect(listGameImageSpy).not.toHaveBeenCalled();
-    }));
-
-    it('should fill game name list', fakeAsync(() => {
-        const listGameNameSpy = spyOn(service, 'fillListGameName');
-        tick(1000);
-        service.receiveGameInformations();
-        expect(listGameNameSpy).toHaveBeenCalled();
-    }));
-
-    it('should fill game image list', fakeAsync(() => {
-        const listGameImageSpy = spyOn(service, 'fillListGameImage');
-        tick(1000);
-        service.receiveGameInformations();
-        expect(listGameImageSpy).toHaveBeenCalled();
-    }));
-
-    it('should initialize gameForm structure', fakeAsync(() => {
-        const gameFormSpy = spyOn(service, 'initializeGameForm');
-        tick(1000);
-        service.receiveGameInformations();
-        expect(gameFormSpy).toHaveBeenCalled();
-    }));
+        expect(communicationSpy.getGames).toHaveBeenCalled();
+    });
 
     it('should have correct number of names in list ', () => {
-        service.fillListGameName('Max', listName);
-        service.fillListGameName('Tom', listName);
-        expect(service.listName).toEqual(['Max', 'Tom']);
+        service['fillListGameName']('Max', listName);
+        service['fillListGameName']('Tom', listName);
+        expect(service['listName']).toEqual(['Max', 'Tom']);
     });
 
     it('should have correct number of images in list', () => {
-        service.fillListGameName('im1', listImage);
-        service.fillListGameName('im2', listImage);
-        expect(service.listImage).toEqual(['im1', 'im2']);
+        service['fillListGameName']('img1', listImage);
+        service['fillListGameName']('img2', listImage);
+        expect(service['listImage']).toEqual(['img1', 'img2']);
+    });
+
+    it('should delete info', fakeAsync(async () => {
+        service['gamelist'] = gameList;
+        service.gameToDelete = 'Bike';
+        await service.deleteGameForm();
+        tick(1000);
+        expect(communicationSpy['deleteGame']).toHaveBeenCalled();
+    }));
+
+    it('should not parse game list', () => {
+        const listGameNameSpy = spyOn(service, <any>'fillListGameName');
+        const listGameImageSpy = spyOn(service, <any>'fillListGameImage');
+        service['gamelist'] = [];
+        service['parseGameList']();
+        expect(listGameNameSpy).not.toHaveBeenCalled();
+        expect(listGameImageSpy).not.toHaveBeenCalled();
+    });
+
+    it('should parse game list and fill the list for images and names ', () => {
+        const listGameNameSpy = spyOn(service, <any>'fillListGameName');
+        const listGameImageSpy = spyOn(service, <any>'fillListGameImage');
+        service['gamelist'] = gameList;
+        service['parseGameList']();
+        expect(listGameNameSpy).toHaveBeenCalled();
+        expect(listGameImageSpy).toHaveBeenCalled();
+    });
+
+    it('should fill game name list', () => {
+        const listGameNameSpy = spyOn(service, <any>'fillListGameName');
+        service['gamelist'] = gameList;
+        service['parseGameList']();
+        expect(listGameNameSpy).toHaveBeenCalled();
+    });
+
+    it('should fill game image list', () => {
+        const listGameImageSpy = spyOn(service, <any>'fillListGameImage');
+        service['gamelist'] = gameList;
+        service['parseGameList']();
+        expect(listGameImageSpy).toHaveBeenCalled();
+    });
+
+    it('should initialize gameForm structure', () => {
+        const gameFormSpy = spyOn(service, <any>'initializeGameForm');
+        service['gamelist'] = gameList;
+        service['parseGameList']();
+        expect(gameFormSpy).toHaveBeenCalled();
+    });
+
+    it('should reset the game form', () => {
+        const gameList: GameFormDescription = new GameFormDescription('Bike Game', 'img1', new RecordTimesBoard([], []));
+        service.gameForms.push(gameList);
+        service['resetGameForms']();
+        expect(service.gameForms).toEqual([]);
+        expect(service['gamelist']).toEqual([]);
+        expect(service['listImage']).toEqual([]);
+        expect(service['listName']).toEqual([]);
+    });
+
+    it('should delete the game form', () => {
+        const gameList: GameFormDescription = new GameFormDescription('Bike Game', 'img1', new RecordTimesBoard([], []));
+        service.gameForms.push(gameList);
+        service.gameToDelete = 'Bike Game';
+        service.deleteGameForm();
+        expect(service.gameForms).toEqual([]);
     });
 });

@@ -1,29 +1,37 @@
 import { EventEmitter, Injectable } from '@angular/core';
+import { ImageRenderedInformations } from '@app/interfaces/image-rendered-informations';
 import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ListImagesRenderedService {
-    activatedEmitterUrlImageBoth = new EventEmitter<string>();
-    activatedEmitterUrlImageSingle = new EventEmitter<{ index: number; url: string }>();
-    activatedEmitterRemoveImage = new EventEmitter<number>();
+    public activatedEmitterUrlImageBoth: EventEmitter<string> = new EventEmitter<string>();
+    public activatedEmitterUrlImageSingle: EventEmitter<ImageRenderedInformations> = new EventEmitter<ImageRenderedInformations>();
+    public activatedEmitterRemoveImage: EventEmitter<number> = new EventEmitter<number>();
+
+    sendUrlImageBoth(url: string) {
+        this.activatedEmitterUrlImageBoth.emit(url);
+    }
+
+    sendUrlImageSingle(info: ImageRenderedInformations) {
+        this.activatedEmitterUrlImageSingle.emit(info);
+    }
 
     sendIdImageToRemove(id: number) {
         this.activatedEmitterRemoveImage.emit(id);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getIdImageToRemove(): Observable<any> {
+    getIdImageToRemoveObservable(): Observable<any> {
         return this.activatedEmitterRemoveImage;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getDataImageSingle(): Observable<{ index: number; url: string }> {
+    getDataImageSingleObservable(): Observable<ImageRenderedInformations> {
         return this.activatedEmitterUrlImageSingle;
     }
 
-    getDataImageMultiple(): Observable<string> {
+    getDataImageMultipleObservable(): Observable<string> {
         return this.activatedEmitterUrlImageBoth;
     }
 }

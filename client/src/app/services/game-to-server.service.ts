@@ -23,8 +23,9 @@ export class GameToServerService {
         this.route.navigate(['/admin']);
     }
     statusCodeTreatment(responseStatusCode: any) {
-        if (responseStatusCode == StatusCodes.BAD_GATEWAY) alert(MESSAGE_JEU_NON_CREER);
-        else {
+        if (responseStatusCode == StatusCodes.BAD_GATEWAY) {
+            alert(MESSAGE_JEU_NON_CREER);
+        } else {
             alert(MESSAGE_JEU_CREER);
             this.goToAdmin();
         }
@@ -35,11 +36,14 @@ export class GameToServerService {
     }
 
     addGame(inputName: ElementRef) {
+        this.uploadFileService.setNameGame(inputName.nativeElement.value);
+        this.uploadFileService.setNameImageUpload(0);
+        this.uploadFileService.setNameImageUpload(1);
         const gameToAdd: Game = {
             name: inputName.nativeElement.value,
             numberOfDifferences: this.numberDifference,
             times: [],
-            images: [this.uploadFileService.getNameOriginalImage().name, this.uploadFileService.getNameModifiedImage().name],
+            images: [this.uploadFileService.getNameImageUpload(0)!, this.uploadFileService.getNameImageUpload(1)!],
             differencesList: this.differencesList,
         };
 
@@ -52,8 +56,8 @@ export class GameToServerService {
     }
 
     sendBothImagesToServer() {
-        this.uploadFileService.upload(this.uploadFileService.getNameOriginalImage());
-        this.uploadFileService.upload(this.uploadFileService.getNameModifiedImage());
+        this.uploadFileService.upload(this.uploadFileService.getNameOriginalImage(), 0);
+        this.uploadFileService.upload(this.uploadFileService.getNameModifiedImage(), 1);
     }
 
     getOriginalImageUploaded() {

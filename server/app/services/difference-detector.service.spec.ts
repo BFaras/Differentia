@@ -9,7 +9,6 @@ import Container from 'typedi';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { HashmapConverterService } from './hashmap-converter.service';
 
-//Test positions in images test file
 const SEVEN_DIFFS_WITH_OR_WITHOUT_OFFSET_TEST = 0;
 const TWO_DIFFS_WITHOUT_OFFSET_ONE_DIFF_WITH_OFFSET_TEST = 1;
 
@@ -121,5 +120,23 @@ describe('DifferenceDetectorService', () => {
 
         diffDetector.generateDifferencesList();
         expect(spy.calledOnce);
+    });
+
+    it('should call clampValue and verify the value given', () => {
+        const value: number = 0;
+        const min: number = 5;
+        const max: number = 10;
+        const diffDetector = new DifferenceDetectorService(DEFAULT_IMAGES_DATA);
+
+        expect(diffDetector['clampValue'](value, min, max)).to.be.equal(min);
+    });
+
+    it('should call clampValue and verify the value given', () => {
+        const value: number = 15;
+        const min: number = 5;
+        const max: number = 10;
+        const diffDetector = new DifferenceDetectorService(DEFAULT_IMAGES_DATA);
+
+        expect(diffDetector['clampValue'](value, min, max)).to.be.equal(max);
     });
 });

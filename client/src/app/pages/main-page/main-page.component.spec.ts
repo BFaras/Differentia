@@ -23,4 +23,9 @@ describe('MainPageComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('should return socketId()', () => {
+        const socketID = '';
+        expect(component.socketId).toEqual(socketID);
+    });
 });
