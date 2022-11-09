@@ -13,9 +13,9 @@ export class DrawService {
 
     drawWord(word: string, mousePosition: Position, context: CanvasRenderingContext2D) {
         const startPosition: Position = { x: mousePosition.x, y: mousePosition.y };
-        const step = 20;
+        const STEP = 20;
         for (let i = 0; i < word.length; i++) {
-            context.fillText(word[i], startPosition.x + step * i, startPosition.y);
+            context.fillText(word[i], startPosition.x + STEP * i, startPosition.y);
             context.canvas.id = 'noClick';
         }
         setTimeout(() => {

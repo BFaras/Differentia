@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 
 const ROUND_LINE_CAP: CanvasLineCap = 'round';
 const SQUARE_LINE_CAP: CanvasLineCap = 'square';
@@ -19,7 +20,7 @@ export class PencilService {
     }
 
     obtainPencilColor(index: number): string {
-        if (index == 0) {
+        if (index == ORIGINAL_IMAGE_POSITION) {
             return this.leftCanvasColor;
         } else {
             return this.rightCanvasColor;
@@ -27,23 +28,23 @@ export class PencilService {
     }
 
     setColor(color: string, index: number): void {
-        if (index == 0) {
+        if (index == ORIGINAL_IMAGE_POSITION) {
             this.leftCanvasColor = color;
-        } else if (index == 1) {
+        } else if (index == MODIFIED_IMAGE_POSITION) {
             this.rightCanvasColor = color;
         }
     }
 
     setWidth(width: number, index: number): void {
-        if (index == 0) {
+        if (index == ORIGINAL_IMAGE_POSITION) {
             this.leftCanvasWidth = width;
-        } else if (index == 1) {
+        } else if (index == MODIFIED_IMAGE_POSITION) {
             this.rightCanvasWidth = width;
         }
     }
 
     obtainPencilWidth(index: number): number {
-        if (index == 0) {
+        if (index == ORIGINAL_IMAGE_POSITION) {
             return this.leftCanvasWidth;
         } else {
             return this.rightCanvasWidth;
@@ -64,8 +65,8 @@ export class PencilService {
     }
 
     getStateOfPencil(context: CanvasRenderingContext2D, indexCanvas: number) {
-        if (this.pencilMode[indexCanvas] == ERASE_MODE) 
-        {context.globalCompositeOperation = 'destination-out'
+        if (this.pencilMode[indexCanvas] == ERASE_MODE) {
+            context.globalCompositeOperation = 'destination-out';
         }
 
         if (this.pencilMode[indexCanvas] == WRITE_MODE) {

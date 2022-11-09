@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
+import { IMAGE_HEIGHT, IMAGE_WIDTH, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 
 @Injectable({
     providedIn: 'root',
@@ -59,8 +59,8 @@ export class MergeImageCanvasHandlerService {
     }
 
     resetCanvas() {
-        this.context![0].clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
-        this.context![1].clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+        this.context![ORIGINAL_IMAGE_POSITION].clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+        this.context![MODIFIED_IMAGE_POSITION].clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
     }
 
     async drawImageOnCanvas(index: number) {

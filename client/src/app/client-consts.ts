@@ -6,3 +6,6 @@ export const MULTIPLAYER_MODE = true;
 //Constantes vérification jeu avant upload
 export const MINIMUM_NB_DIFFERENCES = 3;
 export const MAXIMUM_NB_DIFFERENCES = 9;
+
+// Constantes pour drawWord
+export const STEP = 20;
