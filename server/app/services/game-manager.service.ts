@@ -211,7 +211,7 @@ export class GameManagerService {
         return socket.data.username;
     }
 
-    getGameRooms():  Map<string, string[]> {
+    getGameRooms(): Map<string, string[]> {
         return this.gamesRooms;
     }
 }
