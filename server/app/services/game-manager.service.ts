@@ -153,8 +153,6 @@ export class GameManagerService {
         const gameRoomName = this.findSocketGameRoomName(socket);
         let gameName = '';
         for (let rooms of this.gamesRooms.entries()) {
-            console.log(rooms[1]);
-            console.log(gameRoomName);
             rooms[1].forEach((value) => {
                 if (value === gameRoomName) {
                     gameName = rooms[0];
