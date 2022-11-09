@@ -102,7 +102,7 @@ describe('DrawingHandlerService', () => {
 
   it('should verify save on mouse down process ', () => {
     const mockIndex:number = 0;
-    const mockImageData:ImageData[][] = [[contextMock.getImageData(0,0,640,480)],[contextMock.getImageData(0,0,640,480)]];
+    const mockImageData:ImageData[][] = [[contextMock.getImageData(0,0,IMAGE_WIDTH,IMAGE_HEIGHT)],[contextMock.getImageData(0,0,IMAGE_WIDTH,IMAGE_HEIGHT)]];
     
     drawingHistoryServiceSpy.saveCanvas.and.returnValue();
     drawingHistoryServiceSpy.getRedoDrawingHistory.and.returnValue(mockImageData);

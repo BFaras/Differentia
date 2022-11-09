@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommunicationService } from '@app/services/communication.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
-import { ADVERSARY_PLR_USERNAME_POS, LOCAL_PLR_USERNAME_POS, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
+import { ADVERSARY_PLR_USERNAME_POS, IMAGE_HEIGHT, IMAGE_WIDTH, LOCAL_PLR_USERNAME_POS, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { Game } from '@common/game';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Time } from '@common/time';
@@ -22,7 +22,7 @@ export class GamePageComponent {
     nbDifferencesFound: number[] = [0, 0];
 
     constructor(private socketService: SocketClientService, private timeService: TimeService, private communicationService: CommunicationService) {
-        this.images = [new Image(640, 480), new Image(640, 480)];
+        this.images = [new Image(IMAGE_WIDTH, IMAGE_HEIGHT), new Image(IMAGE_WIDTH, IMAGE_HEIGHT)];
     }
 
     ngOnInit() {
