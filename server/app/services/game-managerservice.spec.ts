@@ -1,6 +1,6 @@
 import { ServerIOTestHelper } from '@app/classes/server-io-test-helper';
 import { ServerSocketTestHelper } from '@app/classes/server-socket-test-helper';
-import { NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
+import { GAME_ROOM_GENERAL_ID, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
 import { Game } from '@common/game';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
@@ -57,6 +57,8 @@ describe('GameManagerService tests', () => {
         sinon.stub(gamesService, 'getGameImagesData').callsFake(async (gameName: string) => {
             return Promise.resolve(['', '']);
         });
+
+        gameManagerService.gamesRooms.set(testGameName, [testSocketId1 + GAME_ROOM_GENERAL_ID, testSocketId2 + GAME_ROOM_GENERAL_ID]);
 
         mouseHandlerIsValidClickStub = sinon.stub(MouseHandlerService.prototype, 'isValidClick').callsFake((): GameplayDifferenceInformations => {
             return {
@@ -141,9 +143,10 @@ describe('GameManagerService tests', () => {
     });
 
     it('should call deleteRoom() on handleAbandonEmit()', () => {
-        const stub = sinon.stub(gameManagerService, <any>'deleteRoom').callsFake(() => {});
+        const spy = sinon.spy(gameManagerService, <any>'deleteRoom');
+        serverSocket.join(testSocketId1 + GAME_ROOM_GENERAL_ID);
         gameManagerService.handleAbandonEmit(serverSocket);
-        expect(stub.calledOnce);
+        expect(spy);
     });
 
     it('should call findSocketGameRoomName() on getSocketMouseHandlerService()', () => {
