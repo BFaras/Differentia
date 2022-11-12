@@ -145,4 +145,10 @@ describe('ClueFinderService tests', () => {
         const testDifferenceList: number[][] = [[0]];
         expect(clueFinderService.findClueQuandrantFromClueNumber(SECOND_CLUE_NB + 1, testDifferenceList)).to.equal(INCORRECT_CLUE_NB_ERROR);
     });
+
+    it('should be in quadrant 0 when all differences in list are in quadrant 0', () => {
+        const correctQuadrantNb = 0;
+        const testDifferenceList: number[][] = [[0], [2], [4]];
+        expect(clueFinderService.findClueQuandrantFromClueNumber(FIRST_CLUE_NB, testDifferenceList)).to.equal(correctQuadrantNb);
+    });
 });
