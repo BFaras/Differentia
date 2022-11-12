@@ -4,3 +4,7 @@ export const HOST_PRESENT = true;
 export const HOST_CHOSE_ANOTHER = true;
 export const RESPONSE_DELAY = 200;
 export const ONE_SECOND_DELAY = 1000;
+
+//Constantes des indices
+export const FIRST_CLUE_QUANDRANT_NB = 4;
+export const SECOND_CLUE_QUANDRANT_NB = 16;
