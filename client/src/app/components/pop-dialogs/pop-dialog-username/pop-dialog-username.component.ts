@@ -64,5 +64,12 @@ export class PopDialogUsernameComponent implements OnInit {
         this.socketService.on('username not valid', () => {
             this.usernameNotValid = true;
         });
+        this.socketService.on('close popDialogUsername', (value) => {
+            if (this.gameInfo.nameGame === value) {
+                this.dialog.closeAll();
+                console.log('close --->' + this.gameInfo.nameGame);
+                this.socketService.send('refresh games after closing popDialog', true);
+            }
+        });
     }
 }

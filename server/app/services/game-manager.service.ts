@@ -12,6 +12,7 @@ import { ONE_SECOND_DELAY } from '@app/server-consts';
 @Service()
 export class GameManagerService {
     gamesRooms: Map<string, string[]> = new Map<string, string[]>();
+    allSocketsRooms: string[] = [];
     private readonly timeIntervals: Map<string, NodeJS.Timer> = new Map<string, NodeJS.Timer>();
     private readonly chronometerServices: Map<string, ChronometerService> = new Map<string, ChronometerService>();
     private readonly mouseHandlerServices: Map<string, MouseHandlerService> = new Map<string, MouseHandlerService>();
@@ -123,6 +124,17 @@ export class GameManagerService {
 
     getGameRooms(): Map<string, string[]> {
         return this.gamesRooms;
+    }
+    
+    collectAllSocketsRooms(){
+        for (const rooms of this.getGameRooms().entries()) {
+            if (this.allSocketsRooms.length === 0)
+                rooms[1].forEach((room) => {
+                    this.allSocketsRooms.push(room);
+                });
+            else this.allSocketsRooms = this.allSocketsRooms.concat(rooms[1]);
+        }
+        return this.allSocketsRooms;
     }
 
     private setupNecessaryGameServices(socket: io.Socket) {

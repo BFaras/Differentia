@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { GameFormDescription } from '@app/classes/game-form-description';
+import { CommunicationService } from '@app/services/communication.service';
 import { FormService } from '@app/services/form.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { Constants } from '@common/config';
@@ -14,15 +16,30 @@ export class ListGameFormComponent implements OnInit {
     firstElementIndex: number = 0;
     lastElementIndex: number = 3;
     currentPageGameFormList: GameFormDescription[];
+    gameListToRefresh: boolean = false;
     private messageForUpdate: string = '';
-    horizontalPosition: MatSnackBarHorizontalPosition = 'center';
-    verticalPosition: MatSnackBarVerticalPosition = 'top';
+    private horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+    private verticalPosition: MatSnackBarVerticalPosition = 'top';
+    private durationInSeconds = 4;
+
     @Input() page: string;
 
-    constructor(public formService: FormService, private socketService: SocketClientService, private snackBar: MatSnackBar) {}
+    constructor(
+        public formService: FormService,
+        private socketService: SocketClientService,
+        private snackBar: MatSnackBar,
+        private router: Router,
+        private communicationService: CommunicationService,
+    ) {}
 
     async ngOnInit() {
+        if (this.gameListToRefresh) {
+            this.refreshGames();
+            this.gameListToRefresh = false;
+        }
         this.config(this.messageForUpdate);
+        console.log('TEST --- 3');
+
         await this.formService.receiveGameInformations();
         if (this.formService.gameForms?.length < Constants.MAX_NB_OF_FORMS_PER_PAGE) {
             this.lastElementIndex = this.formService.gameForms?.length - 1;
@@ -62,24 +79,37 @@ export class ListGameFormComponent implements OnInit {
     private config(gameName: string) {
         this.socketService.connect();
         this.socketService.send('Reload game selection page', gameName);
+        this.socketService.on('game list updated', ()=>{
+            this.refreshGames()
+        })
+        this.messageForUpdate = '';
 
         this.socketService.on('Page reloaded', (message) => {
-            if (message) this.messageForUpdate = 'Reload';
-            if (this.messageForUpdate) {
+            if (this.router.url === '/admin' || this.router.url === '/gameSelection') {
                 this.snackBar.open('Le jeu ' + message + ' a été supprimé :(', 'OK', {
                     horizontalPosition: this.horizontalPosition,
                     verticalPosition: this.verticalPosition,
+                    duration: this.durationInSeconds * 1000,
                 });
-                setTimeout(() => {
-                    location.reload();
-                }, 4500);
             }
         });
     }
 
-    deleteGameForm(gameName: string) {
-        this.formService.gameToDelete = gameName;
-        this.formService.deleteGameForm();
-        this.config(gameName);
+    refreshGames() {
+        this.firstElementIndex = 0;
+        this.lastElementIndex = 3;
+        this.config(this.messageForUpdate);
+        console.log('TEST --- 2');
+        setTimeout(() => {
+            this.ngOnInit();
+        }, 1000);
+    }
+
+    deleteAndRefreshGames(gameName: string) {
+        this.communicationService.deleteGame(gameName).subscribe((games) => {
+            this.messageForUpdate = gameName;
+            this.formService.gamelist = games;
+            this.refreshGames();
+        });
     }
 }

@@ -63,17 +63,16 @@ export class SocketManager {
                 this.sio.emit(`${gameName} let me tell you if someone is waiting`, true);
             });
 
-            socket.on('Reload game selection page', (msg: string) => {
-                let roomToKeep: string[] = [];
-                for (const rooms of this.gameManagerService.getGameRooms().entries()) {
-                    if (roomToKeep.length === 0)
-                        rooms[1].forEach((room) => {
-                            roomToKeep.push(room);
-                        });
-                    else roomToKeep = roomToKeep.concat(rooms[1]);
+            socket.on('Reload game selection page', (gameName: string) => {
+                if (gameName) {
+                    this.sio.emit('close popDialogUsername', gameName);
+                    this.sio.except(this.gameManagerService.collectAllSocketsRooms()).emit('Page reloaded', gameName);
                 }
-                this.sio.except(roomToKeep).emit('Page reloaded', msg);
             });
+
+            socket.on('refresh games after closing popDialog',(value)=>{
+                this.sio.emit('game list updated', value)
+            })
 
             socket.on('I left', (gameName: string) => {
                 this.waitingLineHandlerService.deleteCreatorOfGame(gameName);
