@@ -21,14 +21,13 @@ export class ClueFinderService {
 
     private findClueQuadrant(numberOfQuadrants: number, differencesList: number[][]): number {
         const clueDifferenceNb: number = randomInt(differencesList.length);
-        const quadrantsLimits: Positions[] = this.findQuadrantsLimits(numberOfQuadrants);
         const clueDifferencePixelNb: number = differencesList[clueDifferenceNb][FIRST_ARRAY_POSITION];
         const clueDifferencePostion: Position = {
             x: this.findXPositionFromPixelNumber(clueDifferencePixelNb),
             y: this.findYPositionFromPixelNumber(clueDifferencePixelNb),
         };
 
-        return 0;
+        return this.findQuadrantOfPosition(clueDifferencePostion, this.findQuadrantsLimits(numberOfQuadrants));
     }
 
     private findQuadrantsLimits(numberOfQuadrants: number): Positions[] {
@@ -64,7 +63,27 @@ export class ClueFinderService {
         };
     }
 
-    private findPositionQuadrant(position: Position, quadrantsLimits: Positions[]) {}
+    private findQuadrantOfPosition(position: Position, quadrantsLimits: Positions[]): number {
+        let quadrantNb: number = 0;
+
+        for (let i = 0; i < quadrantsLimits.length; i++) {
+            if (this.isPositionInQuadrant(position, quadrantsLimits[i])) {
+                quadrantNb = i;
+                break;
+            }
+        }
+
+        return quadrantNb;
+    }
+
+    private isPositionInQuadrant(position: Position, quadrantLimits: Positions): boolean {
+        return (
+            position.x >= quadrantLimits.beginningPosition.x &&
+            position.y >= quadrantLimits.beginningPosition.y &&
+            position.x <= quadrantLimits.endingPosition.x &&
+            position.y <= quadrantLimits.endingPosition.y
+        );
+    }
 
     private findXPositionFromPixelNumber(pixelNumber: number): number {
         return Math.floor(pixelNumber / IMAGE_WIDTH);
