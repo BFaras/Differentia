@@ -1,5 +1,5 @@
 import { FIRST_CLUE_NB, FIRST_CLUE_QUANDRANT_NB, SECOND_CLUE_NB, SECOND_CLUE_QUANDRANT_NB } from '@app/server-consts';
-import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
+import { FIRST_ARRAY_POSITION, IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
 import { Position } from '@common/position';
 import { randomInt } from 'crypto';
 import { Positions } from 'interfaces/positions';
@@ -20,8 +20,13 @@ export class ClueFinderService {
     }
 
     private findClueQuadrant(numberOfQuadrants: number, differencesList: number[][]): number {
-        const clueDifferenceNumber: number = randomInt(differencesList.length);
+        const clueDifferenceNb: number = randomInt(differencesList.length);
         const quadrantsLimits: Positions[] = this.findQuadrantsLimits(numberOfQuadrants);
+        const clueDifferencePixelNb: number = differencesList[clueDifferenceNb][FIRST_ARRAY_POSITION];
+        const clueDifferencePostion: Position = {
+            x: this.findXPositionFromPixelNumber(clueDifferencePixelNb),
+            y: this.findYPositionFromPixelNumber(clueDifferencePixelNb),
+        };
 
         return 0;
     }
@@ -32,14 +37,14 @@ export class ClueFinderService {
 
         for (let currentWidthPos = 0; currentWidthPos < nbOfLimitsTranslations; currentWidthPos++) {
             for (let currentHeightPos = 0; currentHeightPos < nbOfLimitsTranslations; currentHeightPos++) {
-                quadrantsLimits.push(this.generateQuadrantLimits(nbOfLimitsTranslations, currentWidthPos, currentHeightPos));
+                quadrantsLimits.push(this.findQuadrantLimits(nbOfLimitsTranslations, currentWidthPos, currentHeightPos));
             }
         }
 
         return quadrantsLimits;
     }
 
-    private generateQuadrantLimits(nbOfLimitsTranslations: number, currentWidthPos: number, currentHeightPos: number): Positions {
+    private findQuadrantLimits(nbOfLimitsTranslations: number, currentWidthPos: number, currentHeightPos: number): Positions {
         const quandrantsWidthDistance: number = IMAGE_WIDTH / nbOfLimitsTranslations;
         const quandrantsHeightDistance: number = IMAGE_HEIGHT / nbOfLimitsTranslations;
 
@@ -57,5 +62,13 @@ export class ClueFinderService {
             beginningPosition: beginningQuadrantPos,
             endingPosition: endingQuadrantPos,
         };
+    }
+
+    private findXPositionFromPixelNumber(pixelNumber: number): number {
+        return 0;
+    }
+
+    private findYPositionFromPixelNumber(pixelNumber: number): number {
+        return 0;
     }
 }
