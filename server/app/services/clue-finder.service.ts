@@ -64,11 +64,13 @@ export class ClueFinderService {
         };
     }
 
+    private findPositionQuadrant(position: Position, quadrantsLimits: Positions[]) {}
+
     private findXPositionFromPixelNumber(pixelNumber: number): number {
-        return 0;
+        return Math.floor(pixelNumber / IMAGE_WIDTH);
     }
 
     private findYPositionFromPixelNumber(pixelNumber: number): number {
-        return 0;
+        return pixelNumber % IMAGE_WIDTH;
     }
 }
