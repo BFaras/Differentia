@@ -34,19 +34,19 @@ export class ClueFinderService {
 
         for (let currentWidthPos = 0; currentWidthPos < numberOfLimitsTranslations; currentWidthPos++) {
             for (let currentHeightPos = 0; currentHeightPos < numberOfLimitsTranslations; currentHeightPos++) {
-                const beginningQuandrantPos: Position = {
+                const beginningQuadrantPos: Position = {
                     x: quandrantsWidthDistance * currentWidthPos,
                     y: quandrantsHeightDistance * currentHeightPos,
                 };
 
-                const endingQuandrantPos: Position = {
-                    x: quandrantsWidthDistance * (currentWidthPos + 1) - 1,
-                    y: quandrantsHeightDistance * (currentHeightPos + 1) - 1,
+                const endingQuadrantPos: Position = {
+                    x: quandrantsWidthDistance * (currentWidthPos + 1),
+                    y: quandrantsHeightDistance * (currentHeightPos + 1),
                 };
 
                 quadrantsLimits.push({
-                    beginningPosition: beginningQuandrantPos,
-                    endingPosition: endingQuandrantPos,
+                    beginningPosition: beginningQuadrantPos,
+                    endingPosition: endingQuadrantPos,
                 });
             }
         }
