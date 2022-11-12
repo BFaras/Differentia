@@ -27,6 +27,8 @@ export class ClueFinderService {
             y: this.findYPositionFromPixelNumber(clueDifferencePixelNb),
         };
 
+        console.log(clueDifferencePostion);
+
         return this.findQuadrantOfPosition(clueDifferencePostion, this.findQuadrantsLimits(numberOfQuadrants));
     }
 
@@ -53,8 +55,8 @@ export class ClueFinderService {
         };
 
         const endingQuadrantPos: Position = {
-            x: quandrantsWidthDistance * (currentWidthPos + 1),
-            y: quandrantsHeightDistance * (currentHeightPos + 1),
+            x: quandrantsWidthDistance * (currentWidthPos + 1) - 1,
+            y: quandrantsHeightDistance * (currentHeightPos + 1) - 1,
         };
 
         return {
