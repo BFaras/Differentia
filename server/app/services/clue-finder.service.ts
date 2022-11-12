@@ -13,6 +13,8 @@ export class ClueFinderService {
             return this.findClueQuadrant(FIRST_CLUE_QUANDRANT_NB, differencesList);
         } else if (clueNumber == SECOND_CLUE_NB) {
             return this.findClueQuadrant(SECOND_CLUE_QUANDRANT_NB, differencesList);
+        } else {
+            return -1;
         }
     }
 

@@ -8,3 +8,5 @@ export const ONE_SECOND_DELAY = 1000;
 //Constantes des indices
 export const FIRST_CLUE_QUANDRANT_NB = 4;
 export const SECOND_CLUE_QUANDRANT_NB = 16;
+export const FIRST_CLUE_NB = 1;
+export const SECOND_CLUE_NB = 2;
