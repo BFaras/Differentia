@@ -1,4 +1,4 @@
-import { FIRST_CLUE_NB, FIRST_CLUE_QUANDRANT_NB, SECOND_CLUE_NB, SECOND_CLUE_QUANDRANT_NB } from '@app/server-consts';
+import { FIRST_CLUE_NB, FIRST_CLUE_QUANDRANT_NB, INCORRECT_CLUE_NB_ERROR, SECOND_CLUE_NB, SECOND_CLUE_QUANDRANT_NB } from '@app/server-consts';
 import { FIRST_ARRAY_POSITION, IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
 import { Position } from '@common/position';
 import { randomInt } from 'crypto';
@@ -15,7 +15,7 @@ export class ClueFinderService {
         } else if (clueNumber == SECOND_CLUE_NB) {
             return this.findClueQuadrant(SECOND_CLUE_QUANDRANT_NB, differencesList);
         } else {
-            return -1;
+            return INCORRECT_CLUE_NB_ERROR;
         }
     }
 

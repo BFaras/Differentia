@@ -10,3 +10,4 @@ export const FIRST_CLUE_QUANDRANT_NB = 4;
 export const SECOND_CLUE_QUANDRANT_NB = 16;
 export const FIRST_CLUE_NB = 1;
 export const SECOND_CLUE_NB = 2;
+export const INCORRECT_CLUE_NB_ERROR = -1;
