@@ -20,7 +20,7 @@ export class ClueFinderService {
     }
 
     private findClueQuadrant(numberOfQuadrants: number, differencesList: number[][]): number {
-        const clueDifferenceNb: number = randomInt(differencesList.length);
+        const clueDifferenceNb: number = randomInt(FIRST_ARRAY_POSITION, differencesList.length);
         const clueDifferencePixelNb: number = differencesList[clueDifferenceNb][FIRST_ARRAY_POSITION];
         const clueDifferencePostion: Position = {
             x: this.findXPositionFromPixelNumber(clueDifferencePixelNb),
@@ -86,10 +86,10 @@ export class ClueFinderService {
     }
 
     private findXPositionFromPixelNumber(pixelNumber: number): number {
-        return Math.floor(pixelNumber / IMAGE_WIDTH);
+        return pixelNumber % IMAGE_WIDTH;
     }
 
     private findYPositionFromPixelNumber(pixelNumber: number): number {
-        return pixelNumber % IMAGE_WIDTH;
+        return Math.floor(pixelNumber / IMAGE_WIDTH);
     }
 }
