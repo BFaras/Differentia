@@ -27,30 +27,35 @@ export class ClueFinderService {
     }
 
     private findQuadrantsLimits(numberOfQuadrants: number): Positions[] {
-        const numberOfLimitsTranslations = Math.sqrt(numberOfQuadrants);
-        const quandrantsWidthDistance: number = IMAGE_WIDTH / numberOfLimitsTranslations;
-        const quandrantsHeightDistance: number = IMAGE_HEIGHT / numberOfLimitsTranslations;
+        const nbOfLimitsTranslations = Math.sqrt(numberOfQuadrants);
         const quadrantsLimits: Positions[] = [];
 
-        for (let currentWidthPos = 0; currentWidthPos < numberOfLimitsTranslations; currentWidthPos++) {
-            for (let currentHeightPos = 0; currentHeightPos < numberOfLimitsTranslations; currentHeightPos++) {
-                const beginningQuadrantPos: Position = {
-                    x: quandrantsWidthDistance * currentWidthPos,
-                    y: quandrantsHeightDistance * currentHeightPos,
-                };
-
-                const endingQuadrantPos: Position = {
-                    x: quandrantsWidthDistance * (currentWidthPos + 1),
-                    y: quandrantsHeightDistance * (currentHeightPos + 1),
-                };
-
-                quadrantsLimits.push({
-                    beginningPosition: beginningQuadrantPos,
-                    endingPosition: endingQuadrantPos,
-                });
+        for (let currentWidthPos = 0; currentWidthPos < nbOfLimitsTranslations; currentWidthPos++) {
+            for (let currentHeightPos = 0; currentHeightPos < nbOfLimitsTranslations; currentHeightPos++) {
+                quadrantsLimits.push(this.generateQuadrantLimits(nbOfLimitsTranslations, currentWidthPos, currentHeightPos));
             }
         }
 
         return quadrantsLimits;
+    }
+
+    private generateQuadrantLimits(nbOfLimitsTranslations: number, currentWidthPos: number, currentHeightPos: number): Positions {
+        const quandrantsWidthDistance: number = IMAGE_WIDTH / nbOfLimitsTranslations;
+        const quandrantsHeightDistance: number = IMAGE_HEIGHT / nbOfLimitsTranslations;
+
+        const beginningQuadrantPos: Position = {
+            x: quandrantsWidthDistance * currentWidthPos,
+            y: quandrantsHeightDistance * currentHeightPos,
+        };
+
+        const endingQuadrantPos: Position = {
+            x: quandrantsWidthDistance * (currentWidthPos + 1),
+            y: quandrantsHeightDistance * (currentHeightPos + 1),
+        };
+
+        return {
+            beginningPosition: beginningQuadrantPos,
+            endingPosition: endingQuadrantPos,
+        };
     }
 }
