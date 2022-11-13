@@ -143,7 +143,7 @@ describe('ClueFinderService tests', () => {
 
     it('should return -1 if the clue number is invalid', () => {
         const testDifferenceList: number[][] = [[0]];
-        expect(clueFinderService.findClueQuandrantFromClueNumber(SECOND_CLUE_NB + 1, testDifferenceList)).to.equal(INCORRECT_CLUE_NB_ERROR);
+        expect(clueFinderService.findClueQuandrantFromClueNumber(SECOND_CLUE_NB - 1, testDifferenceList)).to.equal(INCORRECT_CLUE_NB_ERROR);
     });
 
     it('should be in quadrant 0 when all differences in list are in quadrant 0', () => {
