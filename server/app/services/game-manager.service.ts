@@ -1,3 +1,4 @@
+import { ONE_SECOND_DELAY } from '@app/server-consts';
 import { DEFAULT_GAME_ROOM_NAME, GAME_ROOM_GENERAL_ID, MODIFIED_IMAGE_POSITION, NO_OTHER_PLAYER_ROOM, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
@@ -5,9 +6,9 @@ import { Position } from '@common/position';
 import * as io from 'socket.io';
 import Container, { Service } from 'typedi';
 import { ChronometerService } from './chronometer.service';
+import { ClueManagerService } from './clue-manager.service';
 import { GamesService } from './local.games.service';
 import { MouseHandlerService } from './mouse-handler.service';
-import { ONE_SECOND_DELAY } from '@app/server-consts';
 
 @Service()
 export class GameManagerService {
@@ -16,12 +17,16 @@ export class GameManagerService {
     private readonly chronometerServices: Map<string, ChronometerService> = new Map<string, ChronometerService>();
     private readonly mouseHandlerServices: Map<string, MouseHandlerService> = new Map<string, MouseHandlerService>();
     private gamesService = Container.get(GamesService);
+    private clueManagerService: ClueManagerService;
 
-    constructor(private sio: io.Server) {}
+    constructor(private sio: io.Server) {
+        this.clueManagerService = Container.get(ClueManagerService);
+    }
 
     async beginGame(socket: io.Socket, gameName: string, adversarySocket?: io.Socket) {
         this.setupSocketGameRoom(socket, NO_OTHER_PLAYER_ROOM);
         this.setupNecessaryGameServices(socket);
+        this.clueManagerService.resetSocketClueAmount(socket);
 
         await this.getSocketMouseHandlerService(socket).generateDifferencesInformations(gameName);
         this.getSocketMouseHandlerService(socket).addPlayerToGame(socket.id);
@@ -30,6 +35,7 @@ export class GameManagerService {
         if (adversarySocket) {
             this.setupSocketGameRoom(adversarySocket, gameRoomName);
             this.getSocketMouseHandlerService(adversarySocket).addPlayerToGame(adversarySocket.id);
+            this.clueManagerService.resetSocketClueAmount(adversarySocket);
         }
         this.logRoomsWithGames(gameName, gameRoomName);
 
