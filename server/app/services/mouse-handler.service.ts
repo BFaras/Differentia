@@ -38,6 +38,19 @@ export class MouseHandlerService {
         return this.validateDifferencesOnClick(mousePosition, plrSocketID);
     }
 
+    //To test Raph
+    getListOfDifferencesNotFound(): number[][] {
+        const differencesNotFound: number[][] = [];
+
+        for (let i = 0; i < this.differencesList.length; i++) {
+            if (!this.isDifferenceAlreadyFound(i)) {
+                differencesNotFound.push(this.differencesList[i]);
+            }
+        }
+
+        return differencesNotFound;
+    }
+
     async generateDifferencesInformations(gameName: string) {
         const gamesService: GamesService = Container.get(GamesService);
         const hashmapConverter: HashmapConverterService = Container.get(HashmapConverterService);
