@@ -37,8 +37,8 @@ export class ClueManagerService {
                     socket.emit('Clue with difference pixels', radomDiffNotFoundPixels);
                 }
             }
-            this.decrementSocketClueAmount(socket);
         }
+        this.decrementSocketClueAmount(socket);
     }
 
     private areCluesLeftForSocket(socket: io.Socket): boolean {
