@@ -38,7 +38,6 @@ export class MouseHandlerService {
         return this.validateDifferencesOnClick(mousePosition, plrSocketID);
     }
 
-    //To test Raph
     getListOfDifferencesNotFound(): number[][] {
         const differencesNotFound: number[][] = [];
 
