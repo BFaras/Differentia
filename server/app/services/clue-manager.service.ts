@@ -1,6 +1,7 @@
 import { CLUE_AMOUNT_DEFAULT, NO_MORE_CLUES_AMOUNT, SECOND_CLUE_NB } from '@app/server-consts';
 import { ClueInformations } from '@common/clue-informations';
-import { EMPTY_ARRAY_LENGTH } from '@common/const';
+import { EMPTY_ARRAY_LENGTH, FIRST_ARRAY_POSITION } from '@common/const';
+import { randomInt } from 'crypto';
 import * as io from 'socket.io';
 import Container, { Service } from 'typedi';
 import { ClueFinderService } from './clue-finder.service';
@@ -31,6 +32,9 @@ export class ClueManagerService {
                         clueDifferenceQuadrant: clueQuadrantNb,
                     };
                     socket.emit('Clue with quadrant of difference', clueInformations);
+                } else {
+                    const radomDiffNotFoundPixels = differencesNotFoundList[randomInt(FIRST_ARRAY_POSITION, differencesNotFoundList.length)];
+                    socket.emit('Clue with difference pixels', radomDiffNotFoundPixels);
                 }
             }
             this.decrementSocketClueAmount(socket);
