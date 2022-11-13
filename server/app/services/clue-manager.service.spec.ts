@@ -73,4 +73,10 @@ describe('ClueManagerService tests', () => {
         clueManagerService.sendClueToPlayerSocket(serverSocket, mouseHandlerService2);
         expect(spy.notCalled);
     });
+
+    it('should not decrement cluesAmount if there are no clues left', () => {
+        clueManagerService['setSocketClueAmountLeft'](serverSocket, NO_MORE_CLUES_AMOUNT);
+        clueManagerService['decrementSocketClueAmount'](serverSocket);
+        expect(clueManagerService['getSocketClueAmount'](serverSocket)).to.equal(NO_MORE_CLUES_AMOUNT);
+    });
 });
