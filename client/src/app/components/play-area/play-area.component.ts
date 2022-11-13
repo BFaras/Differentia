@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Coordinate } from '@app/interfaces/coordinate';
 import { DifferenceDetectionService } from '@app/services/difference-detection.service';
@@ -20,6 +20,8 @@ import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
 import { PopDialogEndgameComponent } from '../pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
+
+const CHEAT_KEY: string = 'document:keyup.t';
 
 @Component({
     selector: 'app-play-area',
@@ -101,6 +103,12 @@ export class PlayAreaComponent implements OnInit {
         });
     }
 
+    // To test
+    @HostListener(CHEAT_KEY, ['$event'])
+    handleKeyboardCheat() {
+        this.socketService.send('Cheat key pressed');
+    }
+
     private configurePlayAreaSocket(): void {
         this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {
             const isLocalPlayer = differencesInfo.socketId == this.socketService.socket.id;
@@ -131,6 +139,23 @@ export class PlayAreaComponent implements OnInit {
                     this.drawService.context5.canvas.id = 'paused';
                 }, 3000);
             }
+        });
+
+        // To test
+        this.socketService.on('Cheat', (pixelList: number[]) => {
+            this.pixelList = pixelList;
+
+            this.blinkCanvas.nativeElement.getContext('2d')?.putImageData(this.blinkCanvasOrginial, 0, 0);
+            this.drawService.context5 = this.blinkCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+            this.drawService.context5.canvas.id = 'blink';
+            this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
+                this.pixelList,
+                this.modifiedCanvas.nativeElement,
+                this.blinkCanvas.nativeElement,
+            );
+            setTimeout(() => {
+                this.drawService.context5.canvas.id = 'paused';
+            }, 3000);
         });
 
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
