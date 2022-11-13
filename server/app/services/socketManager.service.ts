@@ -6,6 +6,8 @@ import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
 import * as http from 'http';
 import * as io from 'socket.io';
+import Container from 'typedi';
+import { ClueManagerService } from './clue-manager.service';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
 import { MouseHandlerService } from './mouse-handler.service';
@@ -166,6 +168,12 @@ export class SocketManager {
 
             socket.on('playerMessage', (msg: ChatMessage) => {
                 this.sio.to(this.gameManagerService.findSocketGameRoomName(socket)).emit('Send message to opponent', msg);
+            });
+
+            socket.on('get clue for player', () => {
+                const clueManagerService = Container.get(ClueManagerService);
+                const playerMouseHandlerService = this.gameManagerService.getSocketMouseHandlerService(socket);
+                clueManagerService.sendClueToPlayer(socket, playerMouseHandlerService);
             });
         });
     }

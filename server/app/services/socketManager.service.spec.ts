@@ -10,6 +10,7 @@ import * as sinon from 'sinon';
 import * as io from 'socket.io';
 import { io as ioClient, Socket } from 'socket.io-client';
 import { Container } from 'typedi';
+import { ClueManagerService } from './clue-manager.service';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
 import { MouseHandlerService } from './mouse-handler.service';
@@ -375,5 +376,11 @@ describe('SocketManager service tests', () => {
         const position: Position = { x: 0, y: 0 };
         clientSocket.emit('Verify position', position);
         expect(clickResponseStub.calledOnce);
+    });
+
+    it("should handle 'get clue for player' and call sendClueToPlayerSocket() from ClueManagerService", () => {
+        const stub = sinon.stub(ClueManagerService.prototype, 'sendClueToPlayer').callsFake(() => {});
+        clientSocket.emit('get clue for player');
+        expect(stub.calledOnce);
     });
 });

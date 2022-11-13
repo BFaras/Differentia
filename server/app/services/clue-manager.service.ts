@@ -19,7 +19,7 @@ export class ClueManagerService {
         socket.data.amountOfClues = CLUE_AMOUNT_DEFAULT;
     }
 
-    sendClueToPlayerSocket(socket: io.Socket, gameMouseHandlerService: MouseHandlerService) {
+    sendClueToPlayer(socket: io.Socket, gameMouseHandlerService: MouseHandlerService) {
         if (this.areCluesLeftForSocket(socket)) {
             const differencesNotFoundList: number[][] = gameMouseHandlerService.getListOfDifferencesNotFound();
             if (differencesNotFoundList.length > EMPTY_ARRAY_LENGTH) {

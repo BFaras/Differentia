@@ -40,28 +40,28 @@ describe('ClueManagerService tests', () => {
     it('should call emit with event Clue with quadrant of difference when the clues left is 3', () => {
         const spy = sinon.spy(serverSocket, 'emit');
         clueManagerService['setSocketClueAmountLeft'](serverSocket, FIRST_CLUE_NB);
-        clueManagerService.sendClueToPlayerSocket(serverSocket, mouseHandlerService);
+        clueManagerService.sendClueToPlayer(serverSocket, mouseHandlerService);
         expect(spy.calledWith('Clue with quadrant of difference'));
     });
 
     it('should call emit with event Clue with quadrant of difference when the clues left is 2', () => {
         const spy = sinon.spy(serverSocket, 'emit');
         clueManagerService['setSocketClueAmountLeft'](serverSocket, SECOND_CLUE_NB);
-        clueManagerService.sendClueToPlayerSocket(serverSocket, mouseHandlerService);
+        clueManagerService.sendClueToPlayer(serverSocket, mouseHandlerService);
         expect(spy.calledWith('Clue with quadrant of difference'));
     });
 
     it('should call emit with event Clue with difference pixels when the clues left is 1', () => {
         const spy = sinon.spy(serverSocket, 'emit');
         clueManagerService['setSocketClueAmountLeft'](serverSocket, SECOND_CLUE_NB - 1);
-        clueManagerService.sendClueToPlayerSocket(serverSocket, mouseHandlerService);
+        clueManagerService.sendClueToPlayer(serverSocket, mouseHandlerService);
         expect(spy.calledWith('Clue with difference pixels'));
     });
 
     it('should not call emit from socket when clues left is 0', () => {
         const spy = sinon.spy(serverSocket, 'emit');
         clueManagerService['setSocketClueAmountLeft'](serverSocket, NO_MORE_CLUES_AMOUNT);
-        clueManagerService.sendClueToPlayerSocket(serverSocket, mouseHandlerService);
+        clueManagerService.sendClueToPlayer(serverSocket, mouseHandlerService);
         expect(spy.notCalled);
     });
 
@@ -70,7 +70,7 @@ describe('ClueManagerService tests', () => {
         const mouseHandlerService2 = new MouseHandlerService();
         const emptyDifferencesNotFound: number[][] = [];
         sinon.stub(mouseHandlerService2, 'getListOfDifferencesNotFound').returns(emptyDifferencesNotFound);
-        clueManagerService.sendClueToPlayerSocket(serverSocket, mouseHandlerService2);
+        clueManagerService.sendClueToPlayer(serverSocket, mouseHandlerService2);
         expect(spy.notCalled);
     });
 
