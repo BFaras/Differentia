@@ -2,6 +2,14 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { GameFormDescription } from '@app/classes/game-form-description';
+import {
+    EMPTY_MESSAGE,
+    FIRST_GAMEFORMS_INDEX,
+    LAST_GAMEFORMS_INDEX,
+    SNACKBAR_DURATION,
+    SNACKBAR_HORIZONTAL_POSITION,
+    SNACKBAR_VERTICAL_POSITION,
+} from '@app/client-consts';
 import { CommunicationService } from '@app/services/communication.service';
 import { FormService } from '@app/services/form.service';
 import { SocketClientService } from '@app/services/socket-client.service';
@@ -13,14 +21,13 @@ import { Constants } from '@common/config';
     styleUrls: ['./list-game-form.component.scss'],
 })
 export class ListGameFormComponent implements OnInit {
-    firstElementIndex: number = 0;
-    lastElementIndex: number = 3;
+    firstElementIndex: number = FIRST_GAMEFORMS_INDEX;
+    lastElementIndex: number = LAST_GAMEFORMS_INDEX;
     currentPageGameFormList: GameFormDescription[];
     gameListToRefresh: boolean = true;
-    private messageForUpdate: string = '';
-    private horizontalPosition: MatSnackBarHorizontalPosition = 'center';
-    private verticalPosition: MatSnackBarVerticalPosition = 'top';
-    private durationInSeconds = 4;
+    private messageForUpdate: string = EMPTY_MESSAGE;
+    private horizontalPosition: MatSnackBarHorizontalPosition = SNACKBAR_HORIZONTAL_POSITION;
+    private verticalPosition: MatSnackBarVerticalPosition = SNACKBAR_VERTICAL_POSITION;
 
     @Input() page: string;
 
@@ -79,7 +86,7 @@ export class ListGameFormComponent implements OnInit {
                 this.snackBar.open('Le jeu ' + message + ' a été supprimé :(', 'OK', {
                     horizontalPosition: this.horizontalPosition,
                     verticalPosition: this.verticalPosition,
-                    duration: this.durationInSeconds * 1000,
+                    duration: SNACKBAR_DURATION,
                 });
                 await this.refreshGames(this.gameListToRefresh);
                 this.gameListToRefresh = true;
@@ -95,10 +102,10 @@ export class ListGameFormComponent implements OnInit {
     }
 
     private async refreshGames(reload?: boolean) {
-        this.messageForUpdate = '';
+        this.messageForUpdate = EMPTY_MESSAGE;
         this.gameListToRefresh = false;
-        this.firstElementIndex = 0;
-        this.lastElementIndex = 3;
+        this.firstElementIndex = FIRST_GAMEFORMS_INDEX;
+        this.lastElementIndex = LAST_GAMEFORMS_INDEX;
         if (reload) {
             await this.ngOnInit();
         }

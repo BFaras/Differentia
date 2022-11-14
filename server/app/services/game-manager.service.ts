@@ -1,4 +1,12 @@
-import { DEFAULT_GAME_ROOM_NAME, GAME_ROOM_GENERAL_ID, MODIFIED_IMAGE_POSITION, NO_OTHER_PLAYER_ROOM, ORIGINAL_IMAGE_POSITION } from '@common/const';
+import { ONE_SECOND_DELAY } from '@app/server-consts';
+import {
+    DEFAULT_GAME_ROOM_NAME,
+    EMPTY_ARRAY_LENGTH,
+    GAME_ROOM_GENERAL_ID,
+    MODIFIED_IMAGE_POSITION,
+    NO_OTHER_PLAYER_ROOM,
+    ORIGINAL_IMAGE_POSITION,
+} from '@common/const';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
@@ -7,7 +15,6 @@ import Container, { Service } from 'typedi';
 import { ChronometerService } from './chronometer.service';
 import { GamesService } from './local.games.service';
 import { MouseHandlerService } from './mouse-handler.service';
-import { ONE_SECOND_DELAY } from '@app/server-consts';
 
 @Service()
 export class GameManagerService {
@@ -125,8 +132,8 @@ export class GameManagerService {
     getGameRooms(): Map<string, string[]> {
         return this.gamesRooms;
     }
-    
-    collectAllSocketsRooms(){
+
+    collectAllSocketsRooms() {
         for (const rooms of this.getGameRooms().entries()) {
             if (this.allSocketsRooms.length === 0)
                 rooms[1].forEach((room) => {
@@ -183,7 +190,7 @@ export class GameManagerService {
         if (newRoom) {
             this.gamesRooms.set(gameName, newRoom);
         }
-        if (newRoom?.length === 0) this.gamesRooms.delete(gameName);
+        if (newRoom?.length === EMPTY_ARRAY_LENGTH) this.gamesRooms.delete(gameName);
     }
 
     private setupSocketGameRoom(socket: io.Socket, otherPlayerGameRoomId: string) {

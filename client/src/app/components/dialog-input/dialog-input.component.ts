@@ -1,5 +1,15 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+    DEFAULT_INITIAL_TIME,
+    DEFAULT_PENALTY_TIME,
+    DEFAULT_SAVED_TIME,
+    EMPTY_TIME,
+    INITIAL_TIME_INDEX,
+    MINIMUM_TIME_VALUE,
+    PENALTY_TIME_INDEX,
+    SAVED_TIME_INDEX,
+} from '@app/client-consts';
 import { TimeConstants } from '@common/time-constants';
 
 @Component({
@@ -15,16 +25,16 @@ export class DialogInputComponent implements OnInit {
     timeValid: boolean[] = [true, true, true];
     onlyQuitButton: boolean = true;
     timeConstants: TimeConstants = {
-        initialTime: 30,
-        penaltyTime: 5,
-        savedTime: 5,
+        initialTime: DEFAULT_INITIAL_TIME,
+        penaltyTime: DEFAULT_PENALTY_TIME,
+        savedTime: DEFAULT_SAVED_TIME,
     };
     constructor(@Inject(MAT_DIALOG_DATA) public datas: any, public dialogRef: MatDialogRef<DialogInputComponent>) {}
 
     ngOnInit(): void {
-        if (this.initialTimeInput.nativeElement.value !== undefined) this.validateTimeType(this.initialTimeInput, 0);
-        if (this.penaltyTimeInput.nativeElement.value !== undefined) this.validateTimeType(this.penaltyTimeInput, 1);
-        if (this.savedtimeInput.nativeElement.value !== undefined) this.validateTimeType(this.savedtimeInput, 2);
+        if (this.initialTimeInput.nativeElement.value !== undefined) this.validateTimeType(this.initialTimeInput, INITIAL_TIME_INDEX);
+        if (this.penaltyTimeInput.nativeElement.value !== undefined) this.validateTimeType(this.penaltyTimeInput, PENALTY_TIME_INDEX);
+        if (this.savedtimeInput.nativeElement.value !== undefined) this.validateTimeType(this.savedtimeInput, SAVED_TIME_INDEX);
     }
 
     submitTimes() {
@@ -36,13 +46,13 @@ export class DialogInputComponent implements OnInit {
         this.dialogRef.close();
     }
     validateTimeType(time: ElementRef, index: number) {
-        if (time.nativeElement.value > 0 || time.nativeElement.value.type === Number || time.nativeElement.value === '') {
+        if (time.nativeElement.value > MINIMUM_TIME_VALUE || time.nativeElement.value.type === Number || time.nativeElement.value === EMPTY_TIME) {
             this.timeValid[index] = true;
             this.onlyQuitButton = false;
             if (
-                this.initialTimeInput.nativeElement.value === '' &&
-                this.penaltyTimeInput.nativeElement.value === '' &&
-                this.savedtimeInput.nativeElement.value === ''
+                this.initialTimeInput.nativeElement.value === EMPTY_TIME &&
+                this.penaltyTimeInput.nativeElement.value === EMPTY_TIME &&
+                this.savedtimeInput.nativeElement.value === EMPTY_TIME
             ) {
                 this.onlyQuitButton = true;
             }
