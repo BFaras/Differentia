@@ -67,12 +67,13 @@ export class SocketManager {
                 if (gameName) {
                     this.sio.emit('close popDialogUsername', gameName);
                     this.sio.except(this.gameManagerService.collectAllSocketsRooms()).emit('Page reloaded', gameName);
+                    this.gameManagerService.allSocketsRooms = [];
                 }
             });
 
-            socket.on('refresh games after closing popDialog',(value)=>{
-                this.sio.emit('game list updated', value)
-            })
+            socket.on('refresh games after closing popDialog', (value) => {
+                this.sio.to(value).emit('game list updated', value);
+            });
 
             socket.on('I left', (gameName: string) => {
                 this.waitingLineHandlerService.deleteCreatorOfGame(gameName);
