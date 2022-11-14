@@ -104,6 +104,7 @@ export class PlayAreaComponent implements OnInit {
     }
 
     // To test
+    //CHEAT_KEY à mettre dans le document des constantes du client
     @HostListener(CHEAT_KEY, ['$event'])
     handleKeyboardCheat() {
         this.socketService.send('Cheat key pressed');
