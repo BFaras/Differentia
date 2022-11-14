@@ -1,5 +1,6 @@
-import { FIRST_CLUE_NB, FIRST_CLUE_QUANDRANT_NB, INCORRECT_CLUE_NB_ERROR, SECOND_CLUE_NB, SECOND_CLUE_QUANDRANT_NB } from '@app/server-consts';
+import { INCORRECT_CLUE_NB_ERROR } from '@app/server-consts';
 import { ClueFinderService } from '@app/services/clue-finder.service';
+import { FIRST_CLUE_NB, FIRST_CLUE_QUANDRANT_NB, SECOND_CLUE_NB, SECOND_CLUE_QUANDRANT_NB } from '@common/const';
 import { Position } from '@common/position';
 import { expect } from 'chai';
 import { Positions } from 'interfaces/positions';

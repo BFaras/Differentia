@@ -1,5 +1,13 @@
-import { FIRST_CLUE_NB, FIRST_CLUE_QUANDRANT_NB, INCORRECT_CLUE_NB_ERROR, SECOND_CLUE_NB, SECOND_CLUE_QUANDRANT_NB } from '@app/server-consts';
-import { FIRST_ARRAY_POSITION, IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
+import { INCORRECT_CLUE_NB_ERROR } from '@app/server-consts';
+import {
+    FIRST_ARRAY_POSITION,
+    FIRST_CLUE_NB,
+    FIRST_CLUE_QUANDRANT_NB,
+    IMAGE_HEIGHT,
+    IMAGE_WIDTH,
+    SECOND_CLUE_NB,
+    SECOND_CLUE_QUANDRANT_NB,
+} from '@common/const';
 import { Position } from '@common/position';
 import { randomInt } from 'crypto';
 import { Positions } from 'interfaces/positions';

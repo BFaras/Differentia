@@ -88,3 +88,10 @@ export const CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE = 'Vous avez gagnez contre vot
 export const CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE = 'Votre adversaire a abandonné, donc vous avez gagner!';
 export const CLASSIC_MULTIPLAYER_LOST_MESSAGE = 'Vous avez perdu contre votre adversaire :(';
 export const ABANDON_MESSAGE = ' a abandonné la partie';
+
+//Constantes des indices
+export const CLUE_AMOUNT_DEFAULT = 3;
+export const FIRST_CLUE_NB = CLUE_AMOUNT_DEFAULT;
+export const SECOND_CLUE_NB = FIRST_CLUE_NB - 1;
+export const FIRST_CLUE_QUANDRANT_NB = 4;
+export const SECOND_CLUE_QUANDRANT_NB = 16;

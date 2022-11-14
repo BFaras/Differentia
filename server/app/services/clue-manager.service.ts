@@ -1,6 +1,6 @@
-import { CLUE_AMOUNT_DEFAULT, NO_MORE_CLUES_AMOUNT, SECOND_CLUE_NB } from '@app/server-consts';
+import { NO_MORE_CLUES_AMOUNT } from '@app/server-consts';
 import { ClueInformations } from '@common/clue-informations';
-import { EMPTY_ARRAY_LENGTH, FIRST_ARRAY_POSITION } from '@common/const';
+import { CLUE_AMOUNT_DEFAULT, EMPTY_ARRAY_LENGTH, FIRST_ARRAY_POSITION, SECOND_CLUE_NB } from '@common/const';
 import { randomInt } from 'crypto';
 import * as io from 'socket.io';
 import Container, { Service } from 'typedi';

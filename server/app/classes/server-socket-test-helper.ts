@@ -1,4 +1,4 @@
-import { CLUE_AMOUNT_DEFAULT } from '@app/server-consts';
+import { CLUE_AMOUNT_DEFAULT } from '@common/const';
 
 export class ServerSocketTestHelper {
     id: string;

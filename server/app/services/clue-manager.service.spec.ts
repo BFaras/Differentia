@@ -1,5 +1,6 @@
 import { ServerSocketTestHelper } from '@app/classes/server-socket-test-helper';
-import { CLUE_AMOUNT_DEFAULT, FIRST_CLUE_NB, NO_MORE_CLUES_AMOUNT, SECOND_CLUE_NB } from '@app/server-consts';
+import { NO_MORE_CLUES_AMOUNT } from '@app/server-consts';
+import { CLUE_AMOUNT_DEFAULT, FIRST_CLUE_NB, SECOND_CLUE_NB } from '@common/const';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import * as io from 'socket.io';
