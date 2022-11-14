@@ -2,9 +2,13 @@
     <span class="menu-element">
         <p>{{ timeService.showableMinutes }}:{{ timeService.showableSeconds }}</p>
     </span>
-    <span *ngIf="isMultiplayer" class="menu-element">
-        <button>Indice</button>
+    <span *ngIf="!isMultiplayer" class="menu-element">
+        <button mat-raised-button disabled (click)="sendClueEventToServer()">Indice</button>
         <p>{{ clueAmountLeft }}</p>
+    </span>
+    <span *ngIf="isMultiplayer || clueAmountLeft == 0" class="menu-element">
+        <button mat-raised-button disabled>Indice</button>
+        <p>0</p>
     </span>
     <span class="username-element">
         <div *ngFor="let username of playerNames; index as i">
