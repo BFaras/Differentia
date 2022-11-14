@@ -6,6 +6,7 @@ import { DrawService } from '@app/services/draw.service';
 import { ImageGeneratorService } from '@app/services/image-generator.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { SocketClientService } from '@app/services/socket-client.service';
+import { ClueInformations } from '@common/clue-informations';
 import {
     CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE,
     CLASSIC_MULTIPLAYER_LOST_MESSAGE,
@@ -158,6 +159,12 @@ export class PlayAreaComponent implements OnInit {
                 this.drawService.context5.canvas.id = 'paused';
             }, 3000);
         });
+
+        //To test Raph
+        this.socketService.on('Clue with quadrant of difference', (clueInformations: ClueInformations) => {});
+
+        //To test Raph
+        this.socketService.on('Clue with difference pixels', (differenceNotFoundPixels: number[]) => {});
 
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
             let endGameMessage = CLASSIC_SOLO_END_GAME_MESSAGE;
