@@ -16,7 +16,7 @@ export class ListGameFormComponent implements OnInit {
     firstElementIndex: number = 0;
     lastElementIndex: number = 3;
     currentPageGameFormList: GameFormDescription[];
-    gameListToRefresh: boolean = false;
+    gameListToRefresh: boolean = true;
     private messageForUpdate: string = '';
     private horizontalPosition: MatSnackBarHorizontalPosition = 'center';
     private verticalPosition: MatSnackBarVerticalPosition = 'top';
@@ -33,12 +33,8 @@ export class ListGameFormComponent implements OnInit {
     ) {}
 
     async ngOnInit() {
-        if (this.gameListToRefresh) {
-            this.refreshGames();
-            this.gameListToRefresh = false;
-        }
         this.config(this.messageForUpdate);
-        console.log('TEST --- 3');
+        console.log('TEST --- 3', this.messageForUpdate + '\n');
 
         await this.formService.receiveGameInformations();
         if (this.formService.gameForms?.length < Constants.MAX_NB_OF_FORMS_PER_PAGE) {
@@ -79,37 +75,44 @@ export class ListGameFormComponent implements OnInit {
     private config(gameName: string) {
         this.socketService.connect();
         this.socketService.send('Reload game selection page', gameName);
-        this.socketService.on('game list updated', ()=>{
-            this.refreshGames()
-        })
-        this.messageForUpdate = '';
 
-        this.socketService.on('Page reloaded', (message) => {
+        this.socketService.on('Page reloaded', async (message) => {
             if (this.router.url === '/admin' || this.router.url === '/gameSelection') {
                 this.snackBar.open('Le jeu ' + message + ' a été supprimé :(', 'OK', {
                     horizontalPosition: this.horizontalPosition,
                     verticalPosition: this.verticalPosition,
                     duration: this.durationInSeconds * 1000,
                 });
+                await this.refreshGames(this.gameListToRefresh);
+                this.gameListToRefresh = true;
+            }
+        });
+
+        this.socketService.on('game list updated', async (value: string) => {
+            if ((this.router.url === '/admin' || this.router.url === '/gameSelection') && this.socketService.socket.id === value) {
+                this.gameListToRefresh = true;
+                await this.refreshGames();
+                console.log('ahBONN --->', this.socketService.socket.id, this.messageForUpdate + '\n');
             }
         });
     }
 
-    refreshGames() {
+    async refreshGames(reload?: boolean) {
+        this.messageForUpdate = '';
+        this.gameListToRefresh = false;
         this.firstElementIndex = 0;
         this.lastElementIndex = 3;
-        this.config(this.messageForUpdate);
-        console.log('TEST --- 2');
-        setTimeout(() => {
-            this.ngOnInit();
-        }, 1000);
+        console.log('TEST --- 2 ---> ', reload);
+        if (reload) {
+            await this.ngOnInit();
+        }
     }
 
-    deleteAndRefreshGames(gameName: string) {
+    async deleteAndRefreshGames(gameName: string) {
         this.communicationService.deleteGame(gameName).subscribe((games) => {
             this.messageForUpdate = gameName;
             this.formService.gamelist = games;
-            this.refreshGames();
+            this.config(this.messageForUpdate);
         });
     }
 }
