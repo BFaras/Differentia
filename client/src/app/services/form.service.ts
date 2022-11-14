@@ -12,7 +12,6 @@ export class FormService {
     private listImage: string[] = [];
     gamelist: Game[] = [];
     gameForms: GameFormDescription[] = [];
-    gameToDelete: string = '';
 
     constructor(private communicationService: CommunicationService) {}
 

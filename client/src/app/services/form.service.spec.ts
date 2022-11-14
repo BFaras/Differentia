@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { RecordTimesBoard } from '@app/classes/record-times-board';
 import { Game } from '@common/game';
@@ -13,7 +13,7 @@ describe('FormService', () => {
     let gameList: Game[] = [{ name: 'bike', numberOfDifferences: 2, times: [], images: ['img1'], differencesList: [][0] }];
 
     beforeEach(() => {
-        communicationSpy = jasmine.createSpyObj('CommunicationService', ['getGames', 'deleteGame']);
+        communicationSpy = jasmine.createSpyObj('CommunicationService', ['getGames']);
         TestBed.configureTestingModule({
             providers: [{ provide: CommunicationService, useValue: communicationSpy }],
         });
@@ -48,14 +48,6 @@ describe('FormService', () => {
         service['fillListGameName']('img2', listImage);
         expect(service['listImage']).toEqual(['img1', 'img2']);
     });
-
-    it('should delete info', fakeAsync(async () => {
-        service['gamelist'] = gameList;
-        service.gameToDelete = 'Bike';
-        await service.deleteGameForm();
-        tick(1000);
-        expect(communicationSpy['deleteGame']).toHaveBeenCalled();
-    }));
 
     it('should not parse game list', () => {
         const listGameNameSpy = spyOn(service, <any>'fillListGameName');
@@ -104,13 +96,5 @@ describe('FormService', () => {
         expect(service['gamelist']).toEqual([]);
         expect(service['listImage']).toEqual([]);
         expect(service['listName']).toEqual([]);
-    });
-
-    it('should delete the game form', () => {
-        const gameList: GameFormDescription = new GameFormDescription('Bike Game', 'img1', new RecordTimesBoard([], []));
-        service.gameForms.push(gameList);
-        service.gameToDelete = 'Bike Game';
-        service.deleteGameForm();
-        expect(service.gameForms).toEqual([]);
     });
 });

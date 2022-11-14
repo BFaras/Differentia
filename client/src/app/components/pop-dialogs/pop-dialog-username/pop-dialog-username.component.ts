@@ -67,10 +67,7 @@ export class PopDialogUsernameComponent implements OnInit {
         this.socketService.on('close popDialogUsername', (value) => {
             if (this.gameInfo.nameGame === value) {
                 this.socketService.send('refresh games after closing popDialog', this.socketService.socket.id);
-                console.log(this.socketService.socket.id);
-                setTimeout(() => {
-                    this.dialog.closeAll();
-                }, 1000);
+                this.dialog.closeAll();
             }
         });
     }

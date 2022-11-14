@@ -34,8 +34,6 @@ export class ListGameFormComponent implements OnInit {
 
     async ngOnInit() {
         this.config(this.messageForUpdate);
-        console.log('TEST --- 3', this.messageForUpdate + '\n');
-
         await this.formService.receiveGameInformations();
         if (this.formService.gameForms?.length < Constants.MAX_NB_OF_FORMS_PER_PAGE) {
             this.lastElementIndex = this.formService.gameForms?.length - 1;
@@ -89,20 +87,18 @@ export class ListGameFormComponent implements OnInit {
         });
 
         this.socketService.on('game list updated', async (value: string) => {
-            if ((this.router.url === '/admin' || this.router.url === '/gameSelection') && this.socketService.socket.id === value) {
+            if (this.socketService.socket.id === value) {
                 this.gameListToRefresh = true;
                 await this.refreshGames();
-                console.log('ahBONN --->', this.socketService.socket.id, this.messageForUpdate + '\n');
             }
         });
     }
 
-    async refreshGames(reload?: boolean) {
+    private async refreshGames(reload?: boolean) {
         this.messageForUpdate = '';
         this.gameListToRefresh = false;
         this.firstElementIndex = 0;
         this.lastElementIndex = 3;
-        console.log('TEST --- 2 ---> ', reload);
         if (reload) {
             await this.ngOnInit();
         }
