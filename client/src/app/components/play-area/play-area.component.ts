@@ -39,7 +39,6 @@ export class PlayAreaComponent implements OnInit {
     @Input() localPlayerUsername: string;
     @Input() isMultiplayer: boolean;
     mousePosition: Position = { x: 0, y: 0 };
-    private pixelList: number[] = [];
     private blinkCanvasOrginial: ImageData;
     private canvasSize: Coordinate = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
     constructor(
@@ -114,7 +113,6 @@ export class PlayAreaComponent implements OnInit {
     private configurePlayAreaSocket(): void {
         this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {
             const isLocalPlayer = differencesInfo.socketId == this.socketService.socket.id;
-            this.pixelList = differencesInfo.differencePixelsNumbers;
 
             let isDifference: boolean = differencesInfo.isValidDifference;
             this.mouseDetection.playSound(isDifference, isLocalPlayer);
@@ -122,42 +120,19 @@ export class PlayAreaComponent implements OnInit {
             this.mouseDetection.verifyGameFinished(isDifference, this.isMultiplayer, isLocalPlayer);
 
             if (isDifference) {
-                this.blinkCanvas.nativeElement.getContext('2d')?.putImageData(this.blinkCanvasOrginial, 0, 0);
-                this.drawService.context5 = this.blinkCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-                this.drawService.context5.canvas.id = 'blink';
-                this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
-                    this.pixelList,
-                    this.modifiedCanvas.nativeElement,
-                    this.blinkCanvas.nativeElement,
-                );
+                this.makePixelsBlinkOnCanvas(differencesInfo.differencePixelsNumbers, this.modifiedCanvas.nativeElement);
 
                 this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
-                    this.pixelList,
+                    differencesInfo.differencePixelsNumbers,
                     this.originalCanvas.nativeElement,
                     this.modifiedCanvas.nativeElement,
                 );
-
-                setTimeout(() => {
-                    this.drawService.context5.canvas.id = 'paused';
-                }, 3000);
             }
         });
 
         // To test
         this.socketService.on('Cheat', (pixelList: number[]) => {
-            this.pixelList = pixelList;
-
-            this.blinkCanvas.nativeElement.getContext('2d')?.putImageData(this.blinkCanvasOrginial, 0, 0);
-            this.drawService.context5 = this.blinkCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            this.drawService.context5.canvas.id = 'blink';
-            this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
-                this.pixelList,
-                this.modifiedCanvas.nativeElement,
-                this.blinkCanvas.nativeElement,
-            );
-            setTimeout(() => {
-                this.drawService.context5.canvas.id = 'paused';
-            }, 3000);
+            this.makePixelsBlinkOnCanvas(pixelList, this.originalCanvas.nativeElement);
         });
 
         //To test Raph
@@ -177,5 +152,15 @@ export class PlayAreaComponent implements OnInit {
             }
             this.openEndGameDialog(endGameMessage);
         });
+    }
+
+    private makePixelsBlinkOnCanvas(pixelsToBlink: number[], canvasToCopyFrom: HTMLCanvasElement) {
+        this.blinkCanvas.nativeElement.getContext('2d')?.putImageData(this.blinkCanvasOrginial, 0, 0);
+        this.drawService.context5 = this.blinkCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawService.context5.canvas.id = 'blink';
+        this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(pixelsToBlink, canvasToCopyFrom, this.blinkCanvas.nativeElement);
+        setTimeout(() => {
+            this.drawService.context5.canvas.id = 'paused';
+        }, 3000);
     }
 }
