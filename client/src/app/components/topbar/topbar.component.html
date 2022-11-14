@@ -3,7 +3,7 @@
         <p>{{ timeService.showableMinutes }}:{{ timeService.showableSeconds }}</p>
     </span>
     <span *ngIf="!isMultiplayer" class="menu-element">
-        <button mat-raised-button disabled (click)="sendClueEventToServer()">Indice</button>
+        <button mat-raised-button (click)="sendClueEventToServer()">Indice</button>
         <p>{{ clueAmountLeft }}</p>
     </span>
     <span *ngIf="isMultiplayer || clueAmountLeft == 0" class="menu-element">
