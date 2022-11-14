@@ -24,6 +24,7 @@ export class TopbarComponent implements OnInit {
         this.configureTopBarSocket();
     }
 
+    //To test Raph
     private configureTopBarSocket() {
         this.socketService.on('Clue with quadrant of difference', (clueInformations: ClueInformations) => {
             this.clueAmountLeft = clueInformations.clueAmountLeft - 1;
