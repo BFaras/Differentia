@@ -1,6 +1,7 @@
 import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Coordinate } from '@app/interfaces/coordinate';
+import { ClueHandlerService } from '@app/services/clue-handler.service';
 import { DifferenceDetectionService } from '@app/services/difference-detection.service';
 import { DrawService } from '@app/services/draw.service';
 import { ImageGeneratorService } from '@app/services/image-generator.service';
@@ -48,6 +49,7 @@ export class PlayAreaComponent implements OnInit {
         private imageToImageDifferenceService: ImageToImageDifferenceService,
         private dialog: MatDialog,
         private imageGenerator: ImageGeneratorService,
+        private readonly clueHandlerService: ClueHandlerService,
     ) {}
 
     async ngOnInit(): Promise<void> {
@@ -136,10 +138,18 @@ export class PlayAreaComponent implements OnInit {
         });
 
         //To test Raph
-        this.socketService.on('Clue with quadrant of difference', (clueInformations: ClueInformations) => {});
+        this.socketService.on('Clue with quadrant of difference', (clueInformations: ClueInformations) => {
+            const quandrantPixelsNb: number[] = this.clueHandlerService.findClueQuadrantPixels(
+                clueInformations.clueAmountLeft,
+                clueInformations.clueDifferenceQuadrant,
+            );
+            this.makePixelsBlinkOnCanvas(quandrantPixelsNb, this.originalCanvas.nativeElement);
+        });
 
         //To test Raph
-        this.socketService.on('Clue with difference pixels', (differenceNotFoundPixels: number[]) => {});
+        this.socketService.on('Clue with difference pixels', (differenceNotFoundPixels: number[]) => {
+            this.makePixelsBlinkOnCanvas(differenceNotFoundPixels, this.originalCanvas.nativeElement);
+        });
 
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
             let endGameMessage = CLASSIC_SOLO_END_GAME_MESSAGE;
