@@ -9,8 +9,8 @@ import {
     SECOND_CLUE_QUANDRANT_NB,
 } from '@common/const';
 import { Position } from '@common/position';
+import { Positions } from '@common/positions';
 import { randomInt } from 'crypto';
-import { Positions } from 'interfaces/positions';
 import { Service } from 'typedi';
 
 @Service()

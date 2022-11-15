@@ -1,4 +1,4 @@
-import { Position } from '@common/position';
+import { Position } from './position';
 
 export interface Positions {
     beginningPosition: Position;
