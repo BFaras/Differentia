@@ -103,8 +103,8 @@ export class PlayAreaComponent implements OnInit {
         });
     }
 
-    // To test
-    //CHEAT_KEY à mettre dans le document des constantes du client
+    // To test Charles
+    //CHEAT_KEY à mettre dans le document des constantes du client (yeah une fois que ca va marcher for sure ;))
     @HostListener(CHEAT_KEY, ['$event'])
     handleKeyboardCheat() {
         this.socketService.send('Cheat key pressed');
@@ -130,8 +130,8 @@ export class PlayAreaComponent implements OnInit {
             }
         });
 
-        // To test
-        this.socketService.on('Cheat', (pixelList: number[]) => {
+        // To test Charles
+        this.socketService.on('Cheat pixel list', (pixelList: number[]) => {
             this.makePixelsBlinkOnCanvas(pixelList, this.originalCanvas.nativeElement);
         });
 

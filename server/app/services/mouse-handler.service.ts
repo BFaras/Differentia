@@ -34,6 +34,12 @@ export class MouseHandlerService {
         return this.differencesNbFoundByPlayer.get(plrSocketId)!.length;
     }
 
+    // To test Charles
+    getDifferentPixelList(plrSocketID: string, gameName: string) {
+        this.generateDifferencesInformations(gameName); // Est-ce que necessaire
+        return this.differencesList; // ou map
+    }
+
     isValidClick(mousePosition: Position, plrSocketID: string): GameplayDifferenceInformations {
         return this.validateDifferencesOnClick(mousePosition, plrSocketID);
     }

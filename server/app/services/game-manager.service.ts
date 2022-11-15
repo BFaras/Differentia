@@ -73,6 +73,11 @@ export class GameManagerService {
         this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
     }
 
+    sendDifferentPixels(socket: io.Socket, gameName: string) {
+        const differentPixel: number[][] = this.getSocketMouseHandlerService(socket).getDifferentPixelList(socket.id, gameName);
+        this.sio.to(this.findSocketGameRoomName(socket)).emit('Cheat pixel list', differentPixel);
+    }
+
     isGameFinishedSolo(socket: io.Socket) {
         const mouseHandler = this.getSocketMouseHandlerService(socket);
         return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === mouseHandler.nbDifferencesTotal;
@@ -197,7 +202,6 @@ export class GameManagerService {
 
     private async sendImagesToClient(gameName: string, socket: io.Socket) {
         const gameImagesData: string[] = await this.gamesService.getGameImagesData(gameName);
-
         this.sio
             .to(this.findSocketGameRoomName(socket))
             .emit('game images', [gameImagesData[ORIGINAL_IMAGE_POSITION], gameImagesData[MODIFIED_IMAGE_POSITION]]);

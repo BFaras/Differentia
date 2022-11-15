@@ -147,6 +147,11 @@ export class SocketManager {
                 this.gameManagerService.clickResponse(socket, position);
             });
 
+            // To test Charles
+            socket.on('Cheat key pressed', (gameName: string) => {
+                this.gameManagerService.sendDifferentPixels(socket, gameName);
+            });
+
             socket.on('kill the game', () => {
                 this.gameManagerService.handleAbandonEmit(socket);
                 this.gameManagerService.endGame(socket);
