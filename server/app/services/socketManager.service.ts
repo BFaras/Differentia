@@ -91,15 +91,12 @@ export class SocketManager {
                 else this.sio.to(socket.id).emit(`${gameName} response on host presence`, !HOST_PRESENT);
             });
 
-            socket.on('I am trying to join', (gameInfoAndUsername: string[]) => {
-                this.waitingLineHandlerService.addJoiningPlayer(socket.id, gameInfoAndUsername);
-                const waitingSocketId = this.waitingLineHandlerService.getCreatorPlayer(gameInfoAndUsername[0]) as string;
+            socket.on('I am trying to join', (gameName: string) => {
+                this.waitingLineHandlerService.addJoiningPlayer(socket.id, gameName);
+                const waitingSocketId = this.waitingLineHandlerService.getCreatorPlayer(gameName) as string;
                 this.sio
                     .to(waitingSocketId)
-                    .emit(
-                        `${gameInfoAndUsername[0]} someone is trying to join`,
-                        this.waitingLineHandlerService.getUsernameFirstPlayerWaiting(gameInfoAndUsername[0], this.sio),
-                    );
+                    .emit(`${gameName} someone is trying to join`, this.waitingLineHandlerService.getUsernameFirstPlayerWaiting(gameName, this.sio));
             });
 
             socket.on('I dont want to join anymore', (gameName: string) => {

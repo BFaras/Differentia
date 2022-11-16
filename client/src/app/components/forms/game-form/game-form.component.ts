@@ -34,6 +34,7 @@ export class GameFormComponent {
             disableClose: true,
             data: {
                 nameGame: this.gameForm.gameName,
+                classicFlag: true,
                 multiFlag: multiplayerFlag,
                 joinFlag: this.joinFlag,
                 createFlag: this.createFlag,
@@ -45,6 +46,7 @@ export class GameFormComponent {
     deleteGameForm(value: string) {
         this.newItemEvent.emit(value);
     }
+
     setJoinFlag(): void {
         this.joinFlag = true;
         this.createFlag = false;
