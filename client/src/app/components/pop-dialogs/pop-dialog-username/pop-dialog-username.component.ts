@@ -1,5 +1,6 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { PopDialogWaitingForPlayerComponent } from '@app/components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
@@ -21,6 +22,7 @@ export class PopDialogUsernameComponent implements OnInit {
         public startUpGameService: StartUpGameService,
         private dialog: MatDialog,
         public dialogRef: MatDialogRef<PopDialogUsernameComponent>,
+        public router: Router,
     ) {}
 
     ngOnInit(): void {
@@ -32,11 +34,7 @@ export class PopDialogUsernameComponent implements OnInit {
         this.socketService.off('username valid');
     }
 
-    private startWaitingLine(): void {
-        this.startUpGameService.startUpWaitingLine(this.gameInfo, this.username.nativeElement.value);
-    }
-
-    public inputChanged(): void {
+    inputChanged(): void {
         if (this.username.nativeElement.value) this.disabledButton = false;
         else this.disabledButton = true;
     }

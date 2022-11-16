@@ -5,14 +5,13 @@ import { SocketClientService } from './socket-client.service';
   providedIn: 'root'
 })
 export class JoinGameService {
-
   constructor(private socketService: SocketClientService) { }
 
-  public joinGame(gameInfo: any, username: string) {
-    this.socketService.send("I am trying to join", [gameInfo.nameGame, username]);
+  joinGame(gameName: string) {
+    this.socketService.send('I am trying to join', gameName);
   }
 
-  public leaveJoiningProcess(gameName: string) {
+  leaveJoiningProcess(gameName: string) {
     this.socketService.send('I dont want to join anymore', gameName);
     this.socketService.send('need reconnection');
   }
