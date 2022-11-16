@@ -165,7 +165,7 @@ export class SocketManager {
                     isGameFinished = this.gameManagerService.isGameFinishedMulti(socket);
                 }
                 if (isGameFinished) {
-                    mouseHandler.resetData();
+                    mouseHandler.resetDifferencesData();
                     this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
                     this.gameManagerService.endGame(socket);
                 }

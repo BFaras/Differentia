@@ -10,28 +10,30 @@ import { GamesService } from './local.games.service';
 export class MouseHandlerService {
     private differencesHashmap: Map<number, number>;
     private differencesList: number[][];
-    private differencesNbFoundByPlayer: Map<string, number[]>;
+    private differenceAmountFoundByPlayer: Map<string, number>;
+    private differencesNbFound: number[];
     nbDifferencesTotal: number;
 
     constructor() {
         this.differencesHashmap = new Map<number, number>();
         this.differencesList = [];
-        this.differencesNbFoundByPlayer = new Map<string, number[]>();
+        this.differencesNbFound = [];
+        this.differenceAmountFoundByPlayer = new Map<string, number>();
         this.nbDifferencesTotal = 0;
     }
 
-    resetData() {
+    resetDifferencesData() {
         this.differencesHashmap = new Map<number, number>();
-        this.differencesNbFoundByPlayer = new Map<string, number[]>();
         this.differencesList = [];
+        this.nbDifferencesTotal = 0;
     }
 
     addPlayerToGame(plrSocketID: string) {
-        this.differencesNbFoundByPlayer.set(plrSocketID, []);
+        this.differenceAmountFoundByPlayer.set(plrSocketID, 0);
     }
 
     getNumberOfDifferencesFoundByPlayer(plrSocketId: string): number {
-        return this.differencesNbFoundByPlayer.get(plrSocketId)!.length;
+        return this.differenceAmountFoundByPlayer.get(plrSocketId)!;
     }
 
     // To test Charles
@@ -84,18 +86,15 @@ export class MouseHandlerService {
     }
 
     private isDifferenceAlreadyFound(differenceNb: number): boolean {
-        let isAlreadyFound: boolean = false;
-        this.differencesNbFoundByPlayer.forEach((differencesFound: number[]) => {
-            if (differencesFound.includes(differenceNb)) {
-                isAlreadyFound = true;
-            }
-        });
-
-        return isAlreadyFound;
+        return this.differencesNbFound.includes(differenceNb);
     }
 
     private convertMousePositionToPixelNumber(mousePosition: Position): number {
         return (mousePosition.y + 1) * IMAGE_WIDTH + mousePosition.x - IMAGE_WIDTH;
+    }
+
+    private incrementDifferenceAmountFoundForPlayer(plrSocketID: string) {
+        this.differenceAmountFoundByPlayer.set(plrSocketID, this.getNumberOfDifferencesFoundByPlayer(plrSocketID) + 1);
     }
 
     private validateDifferencesOnClick(mousePosition: Position, plrSocketID: string): GameplayDifferenceInformations {
@@ -111,7 +110,8 @@ export class MouseHandlerService {
             let differencesNumber = this.differencesHashmap.get(pixelNumber)!;
 
             if (!this.isDifferenceAlreadyFound(differencesNumber)) {
-                this.differencesNbFoundByPlayer.get(plrSocketID)!.push(differencesNumber);
+                this.differencesNbFound.push(differencesNumber);
+                this.incrementDifferenceAmountFoundForPlayer(plrSocketID);
                 differenceInformation.differencePixelsNumbers = this.differencesList[differencesNumber];
                 differenceInformation.isValidDifference = true;
             }

@@ -334,8 +334,8 @@ describe('SocketManager service tests', () => {
         }); // 1 seconde
     });
 
-    it("should handle 'Check if game is finished' on finished game and call resetData", (done) => {
-        const spy = sinon.spy(mouseHandlerService, 'resetData');
+    it("should handle 'Check if game is finished' on finished game and call resetDifferencesData", (done) => {
+        const spy = sinon.spy(mouseHandlerService, 'resetDifferencesData');
         mouseHandlerService.addPlayerToGame(clientSocket.id);
         clientSocket.emit('Check if game is finished', true);
         setTimeout(() => {
