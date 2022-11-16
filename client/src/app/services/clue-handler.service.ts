@@ -9,6 +9,7 @@ import { Positions } from '@common/positions';
 export class ClueHandlerService {
     constructor() {}
 
+    //To test Raph
     findClueQuadrantPixels(clueNb: number, quadrantNb: number): number[] {
         const quadrantPixelsNb: number[] = [];
         const quadrantLimits = this.findQuadrantLimitsFromClueNb(clueNb, quadrantNb);
