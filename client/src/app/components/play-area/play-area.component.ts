@@ -143,7 +143,7 @@ export class PlayAreaComponent implements OnInit {
                 clueInformations.clueAmountLeft,
                 clueInformations.clueDifferenceQuadrant,
             );
-            this.makePixelsBlinkOnCanvas(quandrantPixelsNb, this.originalCanvas.nativeElement);
+            this.makePixelsBlinkOnCanvas(quandrantPixelsNb, this.modifiedCanvas.nativeElement, true);
         });
 
         //To test Raph
@@ -164,11 +164,11 @@ export class PlayAreaComponent implements OnInit {
         });
     }
 
-    private makePixelsBlinkOnCanvas(pixelsToBlink: number[], canvasToCopyFrom: HTMLCanvasElement) {
+    private makePixelsBlinkOnCanvas(pixelsToBlink: number[], canvasToCopyFrom: HTMLCanvasElement, invertColors?: boolean) {
         this.blinkCanvas.nativeElement.getContext('2d')?.putImageData(this.blinkCanvasOrginial, 0, 0);
         this.drawService.context5 = this.blinkCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.drawService.context5.canvas.id = 'blink';
-        this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(pixelsToBlink, canvasToCopyFrom, this.blinkCanvas.nativeElement);
+        this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(pixelsToBlink, canvasToCopyFrom, this.blinkCanvas.nativeElement, invertColors);
         setTimeout(() => {
             this.drawService.context5.canvas.id = 'paused';
         }, 3000);
