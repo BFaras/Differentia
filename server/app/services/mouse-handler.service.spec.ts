@@ -91,21 +91,30 @@ describe('MouseHandlerService', () => {
 
     it('should reset differencesHashmap and differencesFound array on resetData() call', () => {
         let differencesHashmapTest: Map<number, number> = new Map<number, number>();
-        let differencesNbFoundByPlayerTest: Map<string, number> = new Map<string, number>();
+        let resetedDifferencesNbFound: Map<string, number> = new Map<string, number>();
 
-        mouseService['differencesNbFoundByPlayer'].set(testSocketID, testDifferencesFoundArray);
-        mouseService.resetData();
+        mouseService['differencesNbFound'] = testDifferencesFoundArray;
+        mouseService.resetDifferencesData();
         expect(mouseService['differencesHashmap']).to.deep.equals(differencesHashmapTest);
-        expect(mouseService['differencesNbFoundByPlayer']).to.deep.equals(differencesNbFoundByPlayerTest);
+        expect(mouseService['differencesNbFound']).to.deep.equals(resetedDifferencesNbFound);
     });
 
     it('should add a socketID to the differencesNbFoundByPLayerMap on addPlayerToGame()', () => {
         mouseService.addPlayerToGame(testSocketID);
-        expect(mouseService['differencesNbFoundByPlayer'].get(testSocketID)).to.deep.equals([]);
+        expect(mouseService['differenceAmountFoundByPlayer'].get(testSocketID)).to.deep.equals(0);
     });
 
     it('should return the number of differences found by a player on getNumberOfDifferencesFoundByPlayer()', () => {
-        mouseService['differencesNbFoundByPlayer'].set(testSocketID, testDifferencesFoundArray);
-        expect(mouseService.getNumberOfDifferencesFoundByPlayer(testSocketID)).to.equal(testDifferencesFoundArray.length);
+        const testNumberDiffFound = 2;
+        mouseService['differencesNbFoundByPlayer'].set(testSocketID, testNumberDiffFound);
+        expect(mouseService.getNumberOfDifferencesFoundByPlayer(testSocketID)).to.equal(testNumberDiffFound);
+    });
+
+    it('should return a list of pixel positions with differences not found on getListOfDifferencesNotFound()', () => {
+        const differencesNotFound = [[0], [12], [15, 16, 17]];
+        const bigDifferencesList = [[0], [5], [7], [9], [12], [15, 16, 17]];
+        mouseService['differencesNbFound'] = testDifferencesFoundArray;
+        mouseService['differencesList'] = bigDifferencesList;
+        expect(mouseService.getListOfDifferencesNotFound()).to.deep.equal(differencesNotFound);
     });
 });
