@@ -3,6 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { PopDialogWaitingForPlayerComponent } from '@app/components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
+import { PopDialogLimitedTimeModeComponent } from '../pop-dialog-limited-time-mode/pop-dialog-limited-time-mode.component';
 
 @Component({
     selector: 'app-pop-dialog-username',
@@ -40,7 +41,11 @@ export class PopDialogUsernameComponent implements OnInit {
         else this.disabledButton = true;
     }
 
-    private openDialog(): void {
+    private startWaitingLine(): void {
+        this.startUpGameService.startUpWaitingLine(this.gameInfo);
+    }
+
+    private openClassicDialog(): void {
         this.dialog.open(PopDialogWaitingForPlayerComponent, {
             height: '400px',
             width: '600px',
@@ -54,15 +59,37 @@ export class PopDialogUsernameComponent implements OnInit {
         });
     }
 
+    private openLimitedTimeDialog(): void {
+        this.dialog.open(PopDialogLimitedTimeModeComponent, {
+            height: '400px',
+            width: '600px',
+            disableClose: true,
+        });
+    }
+
+    private closeDialog(): void {
+        this.dialogRef.close();
+    }
+
     private configureUsernamePopUpSocketFeatures(): void {
         this.socketService.on('username valid', () => {
             this.startWaitingLine();
-            this.dialogRef.close();
-            if (this.gameInfo.multiFlag) this.openDialog();
+            this.closeDialog();
+            if (this.gameInfo.multiFlag) {
+                this.openClassicDialog();
+            }
+            else {
+                this.router.navigate(['/game']);
+            }
         });
 
         this.socketService.on('username not valid', () => {
             this.usernameNotValid = true;
+        });
+
+        this.socketService.on('open limited time pop-dialog', () => { // À GÉRER DANS SOCKER MANAGER
+            this.closeDialog();
+            this.openLimitedTimeDialog();
         });
     }
 }
