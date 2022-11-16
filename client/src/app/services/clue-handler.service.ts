@@ -37,13 +37,16 @@ export class ClueHandlerService {
         const quadrantWidthPos = Math.floor(quadrantNb / nbOfLimitsTranslations);
         const quadrantHeightPos = quadrantNb % nbOfLimitsTranslations;
 
+        console.log(quadrantWidthPos);
+        console.log(quadrantHeightPos);
+
         const beginningQuadrantPos: Position = {
             x: quandrantsWidthDistance * quadrantWidthPos,
             y: quandrantsHeightDistance * quadrantHeightPos,
         };
 
         const endingQuadrantPos: Position = {
-            x: quandrantsWidthDistance * (quadrantHeightPos + 1) - 1,
+            x: quandrantsWidthDistance * (quadrantWidthPos + 1) - 1,
             y: quandrantsHeightDistance * (quadrantHeightPos + 1) - 1,
         };
 
