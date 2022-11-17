@@ -4,6 +4,7 @@ import { CLUE_AMOUNT_DEFAULT, FIRST_CLUE_NB, SECOND_CLUE_NB } from '@common/cons
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import * as io from 'socket.io';
+import { ChronometerService } from './chronometer.service';
 import { ClueFinderService } from './clue-finder.service';
 import { ClueManagerService } from './clue-manager.service';
 import { MouseHandlerService } from './mouse-handler.service';
@@ -18,11 +19,13 @@ describe('ClueManagerService tests', () => {
     const differenceQuadrantTest = 2;
     let clueManagerService: ClueManagerService;
     let mouseHandlerService: MouseHandlerService;
+    let chronometerService: ChronometerService;
     let serverSocket: io.Socket;
 
     beforeEach(() => {
         clueManagerService = new ClueManagerService();
         mouseHandlerService = new MouseHandlerService();
+        chronometerService = new ChronometerService();
         serverSocket = new ServerSocketTestHelper(testSocketId) as unknown as io.Socket;
 
         sinon.stub(mouseHandlerService, 'getListOfDifferencesNotFound').returns(differencesNotFound);
@@ -41,28 +44,28 @@ describe('ClueManagerService tests', () => {
     it('should call emit with event Clue with quadrant of difference when the clues left is 3', () => {
         const spy = sinon.spy(serverSocket, 'emit');
         clueManagerService['setSocketClueAmountLeft'](serverSocket, FIRST_CLUE_NB);
-        clueManagerService.sendClueToPlayer(serverSocket, mouseHandlerService);
+        clueManagerService.sendClueToPlayer(serverSocket, mouseHandlerService, chronometerService);
         expect(spy.calledWith('Clue with quadrant of difference'));
     });
 
     it('should call emit with event Clue with quadrant of difference when the clues left is 2', () => {
         const spy = sinon.spy(serverSocket, 'emit');
         clueManagerService['setSocketClueAmountLeft'](serverSocket, SECOND_CLUE_NB);
-        clueManagerService.sendClueToPlayer(serverSocket, mouseHandlerService);
+        clueManagerService.sendClueToPlayer(serverSocket, mouseHandlerService, chronometerService);
         expect(spy.calledWith('Clue with quadrant of difference'));
     });
 
     it('should call emit with event Clue with difference pixels when the clues left is 1', () => {
         const spy = sinon.spy(serverSocket, 'emit');
         clueManagerService['setSocketClueAmountLeft'](serverSocket, SECOND_CLUE_NB - 1);
-        clueManagerService.sendClueToPlayer(serverSocket, mouseHandlerService);
+        clueManagerService.sendClueToPlayer(serverSocket, mouseHandlerService, chronometerService);
         expect(spy.calledWith('Clue with difference pixels'));
     });
 
     it('should not call emit from socket when clues left is 0', () => {
         const spy = sinon.spy(serverSocket, 'emit');
         clueManagerService['setSocketClueAmountLeft'](serverSocket, NO_MORE_CLUES_AMOUNT);
-        clueManagerService.sendClueToPlayer(serverSocket, mouseHandlerService);
+        clueManagerService.sendClueToPlayer(serverSocket, mouseHandlerService, chronometerService);
         expect(spy.notCalled);
     });
 
@@ -71,7 +74,7 @@ describe('ClueManagerService tests', () => {
         const mouseHandlerService2 = new MouseHandlerService();
         const emptyDifferencesNotFound: number[][] = [];
         sinon.stub(mouseHandlerService2, 'getListOfDifferencesNotFound').returns(emptyDifferencesNotFound);
-        clueManagerService.sendClueToPlayer(serverSocket, mouseHandlerService2);
+        clueManagerService.sendClueToPlayer(serverSocket, mouseHandlerService2, chronometerService);
         expect(spy.notCalled);
     });
 
