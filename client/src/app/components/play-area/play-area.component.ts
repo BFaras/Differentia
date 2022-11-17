@@ -24,6 +24,7 @@ import { Position } from '@common/position';
 import { PopDialogEndgameComponent } from '../pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
 
 const CHEAT_KEY: string = 'document:keyup.t';
+const CLUE_KEY: string = 'document:keyup.i';
 
 @Component({
     selector: 'app-play-area',
@@ -123,6 +124,12 @@ export class PlayAreaComponent implements OnInit {
             this.socketService.send('Cheat key pressed');
             this.isCheatActivated = !this.isCheatActivated;
         }
+    }
+
+    //To test Raph
+    @HostListener(CLUE_KEY, ['$event'])
+    handleKeyboardClue() {
+        this.socketService.send('get clue for player');
     }
 
     private configurePlayAreaSocket(): void {

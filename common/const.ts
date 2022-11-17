@@ -81,6 +81,7 @@ export const MESSAGE_DIFFERENCE_FOUND_SOLO = 'Vous avez trouver une différence!
 export const MESSAGE_DIFFERENCE_FOUND_MULTI = 'Différence trouvée par ';
 export const MESSAGE_ERROR_DIFFERENCE_MULTI = 'Erreur par ';
 export const TWO_DIGIT_TIME_VALUE = '2-digit';
+export const MESSAGE_INDICE = 'Indice utilisé';
 
 //End game messages
 export const CLASSIC_SOLO_END_GAME_MESSAGE = 'Vous avez trouvé toutes les différences!';
