@@ -10,6 +10,7 @@ import {
     PENALTY_TIME_INDEX,
     SAVED_TIME_INDEX,
 } from '@app/client-consts';
+import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeConstants } from '@common/time-constants';
 
 @Component({
@@ -29,7 +30,11 @@ export class DialogInputComponent implements OnInit {
         penaltyTime: DEFAULT_PENALTY_TIME,
         savedTime: DEFAULT_SAVED_TIME,
     };
-    constructor(@Inject(MAT_DIALOG_DATA) public datas: any, public dialogRef: MatDialogRef<DialogInputComponent>) {}
+    constructor(
+        @Inject(MAT_DIALOG_DATA) public datas: any,
+        public dialogRef: MatDialogRef<DialogInputComponent>,
+        private socketService: SocketClientService,
+    ) {}
 
     ngOnInit(): void {
         if (this.initialTimeInput.nativeElement.value !== undefined) this.validateTimeType(this.initialTimeInput, INITIAL_TIME_INDEX);
@@ -37,14 +42,29 @@ export class DialogInputComponent implements OnInit {
         if (this.savedtimeInput.nativeElement.value !== undefined) this.validateTimeType(this.savedtimeInput, SAVED_TIME_INDEX);
     }
 
-    submitTimes() {
+    async submitTimes() {
+        this.setDefaultValue();
         this.timeConstants = {
             initialTime: this.initialTimeInput.nativeElement.value,
             penaltyTime: this.penaltyTimeInput.nativeElement.value,
             savedTime: this.savedtimeInput.nativeElement.value,
         };
+        this.socketService.send('Set time constants', this.timeConstants);
         this.dialogRef.close();
     }
+
+    private setDefaultValue() {
+        if (this.initialTimeInput.nativeElement.value === EMPTY_TIME) {
+            this.initialTimeInput.nativeElement.value = DEFAULT_INITIAL_TIME;
+        }
+        if (this.penaltyTimeInput.nativeElement.value === EMPTY_TIME) {
+            this.penaltyTimeInput.nativeElement.value = DEFAULT_PENALTY_TIME;
+        }
+        if (this.savedtimeInput.nativeElement.value === EMPTY_TIME) {
+            this.savedtimeInput.nativeElement.value = DEFAULT_SAVED_TIME;
+        }
+    }
+
     validateTimeType(time: ElementRef, index: number) {
         if (time.nativeElement.value > MINIMUM_TIME_VALUE || time.nativeElement.value.type === Number || time.nativeElement.value === EMPTY_TIME) {
             this.timeValid[index] = true;
