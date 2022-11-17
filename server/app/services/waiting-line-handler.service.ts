@@ -17,8 +17,8 @@ export class WaitingLineHandlerService {
         return this.playersCreatingAGame.get(gameName) as string;
     }
 
-    addJoiningPlayer(socketId: string, gameName: string): void {
-        this.addJoiningPlayerId(socketId, gameName);
+    addJoiningPlayer(socketId: string, gameInfo: string[]): void {
+        this.addJoiningPlayerId(socketId, gameInfo[0]);
     }
 
     updateJoiningPlayer(server: io.Server, gameName: string, event: string): void {
