@@ -72,6 +72,13 @@ export class PlayAreaComponent implements OnInit {
         this.blinkCanvasOrginial = this.blinkModifiedCanvas.nativeElement
             .getContext('2d')!
             .getImageData(0, 0, this.blinkModifiedCanvas.nativeElement.width, this.blinkModifiedCanvas.nativeElement.height);
+
+        this.setClickCanvasesTransparent();
+    }
+
+    private setClickCanvasesTransparent() {
+        this.drawService.setCanvasTransparent(this.clickOriginalCanvas.nativeElement);
+        this.drawService.setCanvasTransparent(this.clickModifiedCanvas.nativeElement);
     }
 
     private displayImages() {

@@ -23,4 +23,10 @@ export class DrawService {
             context.canvas.id = 'click';
         }, 1000);
     }
+
+    //To test Raph
+    setCanvasTransparent(canvas: HTMLCanvasElement) {
+        const canvasContext = canvas.getContext('2d')!;
+        canvasContext.clearRect(0, 0, canvasContext.canvas.width, canvasContext.canvas.height);
+    }
 }
