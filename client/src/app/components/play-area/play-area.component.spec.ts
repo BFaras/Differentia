@@ -93,8 +93,8 @@ describe('PlayAreaComponent', () => {
 
     it('should set the canvas when displaying images ', () => {
         const originalSpy = spyOn(component.originalCanvas.nativeElement, 'focus');
-        const clickCanvas1Spy = spyOn(component.clickCanvas1.nativeElement, 'focus');
-        const clickCanvas2Spy = spyOn(component.clickCanvas2.nativeElement, 'focus');
+        const clickCanvas1Spy = spyOn(component.clickOriginalCanvas.nativeElement, 'focus');
+        const clickCanvas2Spy = spyOn(component.clickModifiedCanvas.nativeElement, 'focus');
         const modifiedCanvasSpy = spyOn(component.modifiedCanvas.nativeElement, 'focus');
 
         component['displayImages']();
@@ -146,9 +146,9 @@ describe('PlayAreaComponent', () => {
         differencesFoundInfo.differencePixelsNumbers = [];
         socketTestHelper.peerSideEmit('Valid click', differencesFoundInfo);
         component['configurePlayAreaSocket']();
-        expect(drawServiceSpy['context5'].canvas.id).toEqual('blink');
+        expect(drawServiceSpy['contextBlinkModified'].canvas.id).toEqual('blink');
         jasmine.clock().tick(3000);
-        expect(drawServiceSpy['context5'].canvas.id).toEqual('paused');
+        expect(drawServiceSpy['contextBlinkModified'].canvas.id).toEqual('paused');
     });
 
     it('should call end game event when the user win', () => {

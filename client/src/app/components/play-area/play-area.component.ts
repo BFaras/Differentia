@@ -33,13 +33,15 @@ const CHEAT_KEY: string = 'document:keyup.t';
 export class PlayAreaComponent implements OnInit {
     @ViewChild('originalCanvas', { static: false }) originalCanvas!: ElementRef<HTMLCanvasElement>;
     @ViewChild('modifiedCanvas', { static: false }) modifiedCanvas!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('clickCanvas1', { static: false }) clickCanvas1!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('clickCanvas2', { static: false }) clickCanvas2!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('blinkCanvas', { static: false }) blinkCanvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('clickCanvas1', { static: false }) clickOriginalCanvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('clickCanvas2', { static: false }) clickModifiedCanvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('blinkCanvas2', { static: false }) blinkModifiedCanvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('blinkCanvas1', { static: false }) blinkOriginalCanvas!: ElementRef<HTMLCanvasElement>;
     @Input() differentImages: HTMLImageElement[];
     @Input() localPlayerUsername: string;
     @Input() isMultiplayer: boolean;
     mousePosition: Position = { x: 0, y: 0 };
+    private isCheatActivated = false;
     private blinkCanvasOrginial: ImageData;
     private canvasSize: Coordinate = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
     constructor(
@@ -61,19 +63,21 @@ export class PlayAreaComponent implements OnInit {
 
         this.displayImages();
 
-        this.blinkCanvasOrginial = this.blinkCanvas.nativeElement
+        // Raph : mettre le blink canvas blanc
+
+        this.blinkCanvasOrginial = this.blinkModifiedCanvas.nativeElement
             .getContext('2d')!
-            .getImageData(0, 0, this.blinkCanvas.nativeElement.width, this.blinkCanvas.nativeElement.height);
+            .getImageData(0, 0, this.blinkModifiedCanvas.nativeElement.width, this.blinkModifiedCanvas.nativeElement.height);
     }
 
     private displayImages() {
-        this.drawService.context1 = this.clickCanvas1.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawService.context1 = this.clickOriginalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.drawService.context1.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);
-        this.clickCanvas1.nativeElement.focus();
+        this.clickOriginalCanvas.nativeElement.focus();
 
-        this.drawService.context2 = this.clickCanvas2.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawService.context2 = this.clickModifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.drawService.context2.drawImage(this.differentImages[MODIFIED_IMAGE_POSITION], 0, 0);
-        this.clickCanvas2.nativeElement.focus();
+        this.clickModifiedCanvas.nativeElement.focus();
 
         this.drawService.context3 = this.originalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.drawService.context3.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);
@@ -109,7 +113,16 @@ export class PlayAreaComponent implements OnInit {
     //CHEAT_KEY à mettre dans le document des constantes du client (yeah une fois que ca va marcher for sure ;))
     @HostListener(CHEAT_KEY, ['$event'])
     handleKeyboardCheat() {
-        this.socketService.send('Cheat key pressed');
+        if (this.isCheatActivated) {
+            const originalContext = this.blinkOriginalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D; // Changer les noms
+            originalContext.canvas.id = 'paused';
+            const modifiedContext = this.blinkModifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D; // Changer les noms
+            modifiedContext.canvas.id = 'paused';
+            this.isCheatActivated = !this.isCheatActivated;
+        } else {
+            this.socketService.send('Cheat key pressed');
+            this.isCheatActivated = !this.isCheatActivated;
+        }
     }
 
     private configurePlayAreaSocket(): void {
@@ -122,19 +135,26 @@ export class PlayAreaComponent implements OnInit {
             this.mouseDetection.verifyGameFinished(isDifference, this.isMultiplayer, isLocalPlayer);
 
             if (isDifference) {
-                this.makePixelsBlinkOnCanvas(differencesInfo.differencePixelsNumbers, this.modifiedCanvas.nativeElement);
+                if (!this.isCheatActivated) this.makePixelsBlinkOnCanvas(differencesInfo.differencePixelsNumbers, this.modifiedCanvas.nativeElement);
 
                 this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
                     differencesInfo.differencePixelsNumbers,
                     this.originalCanvas.nativeElement,
                     this.modifiedCanvas.nativeElement,
                 );
+
+                this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
+                    differencesInfo.differencePixelsNumbers,
+                    this.originalCanvas.nativeElement,
+                    this.blinkOriginalCanvas.nativeElement,
+                );
             }
         });
 
         // To test Charles
         this.socketService.on('Cheat pixel list', (pixelList: number[]) => {
-            this.makePixelsBlinkOnCanvas(pixelList, this.originalCanvas.nativeElement);
+            this.makePixelsBlinkOnCanvasCheat(pixelList, this.originalCanvas.nativeElement, this.blinkModifiedCanvas.nativeElement);
+            this.makePixelsBlinkOnCanvasCheat(pixelList, this.modifiedCanvas.nativeElement, this.blinkOriginalCanvas.nativeElement);
         });
 
         //To test Raph
@@ -165,12 +185,24 @@ export class PlayAreaComponent implements OnInit {
     }
 
     private makePixelsBlinkOnCanvas(pixelsToBlink: number[], canvasToCopyFrom: HTMLCanvasElement, invertColors?: boolean) {
-        this.blinkCanvas.nativeElement.getContext('2d')?.putImageData(this.blinkCanvasOrginial, 0, 0);
-        this.drawService.context5 = this.blinkCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.drawService.context5.canvas.id = 'blink';
-        this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(pixelsToBlink, canvasToCopyFrom, this.blinkCanvas.nativeElement, invertColors);
+        this.blinkModifiedCanvas.nativeElement.getContext('2d')?.putImageData(this.blinkCanvasOrginial, 0, 0);
+        const context = this.blinkModifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        context.canvas.id = 'blink';
+        this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
+            pixelsToBlink,
+            canvasToCopyFrom,
+            this.blinkModifiedCanvas.nativeElement,
+            invertColors,
+        );
         setTimeout(() => {
-            this.drawService.context5.canvas.id = 'paused';
+            context.canvas.id = 'paused';
         }, 3000);
+    }
+
+    private makePixelsBlinkOnCanvasCheat(pixelsToBlink: number[], canvasToCopyFrom: HTMLCanvasElement, canvasToCopyOn: HTMLCanvasElement) {
+        canvasToCopyOn.getContext('2d')?.putImageData(this.blinkCanvasOrginial, 0, 0);
+        const context = canvasToCopyOn.getContext('2d') as CanvasRenderingContext2D;
+        context.canvas.id = 'blink';
+        this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(pixelsToBlink, canvasToCopyFrom, canvasToCopyOn, false);
     }
 }

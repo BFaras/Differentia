@@ -148,8 +148,8 @@ export class SocketManager {
             });
 
             // To test Charles
-            socket.on('Cheat key pressed', (gameName: string) => {
-                this.gameManagerService.sendDifferentPixels(socket, gameName);
+            socket.on('Cheat key pressed', () => {
+                this.gameManagerService.sendDifferentPixelsNotFound(socket);
             });
 
             socket.on('kill the game', () => {

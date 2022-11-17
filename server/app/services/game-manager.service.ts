@@ -73,9 +73,9 @@ export class GameManagerService {
         this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
     }
 
-    sendDifferentPixels(socket: io.Socket, gameName: string) {
-        const differentPixel: number[][] = this.getSocketMouseHandlerService(socket).getDifferentPixelList(socket.id, gameName);
-        this.sio.to(this.findSocketGameRoomName(socket)).emit('Cheat pixel list', differentPixel);
+    sendDifferentPixelsNotFound(socket: io.Socket) {
+        const differentPixel: number[] = this.getSocketMouseHandlerService(socket).getDifferentPixelListNotFound();
+        socket.emit('Cheat pixel list', differentPixel);
     }
 
     isGameFinishedSolo(socket: io.Socket) {

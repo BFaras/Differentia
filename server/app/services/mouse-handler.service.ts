@@ -37,14 +37,21 @@ export class MouseHandlerService {
     }
 
     // To test Charles
-    //T'as pas de type de retour pour la fonction ici
-    getDifferentPixelList(plrSocketID: string, gameName: string) {
-        //Non, pas nécessaire, la liste de différence est déjà présente quand on a initialisé le jeu
-        this.generateDifferencesInformations(gameName); // Est-ce que necessaire
-        return this.differencesList; // ou map (La liste, pas la map)
-        //Il faudra que tu linéarise le tableau pour que ce soit un tableau 1D au lieu de 2D
-        //Il faudra que t'utilise ma fonction getListOfDifferencesNotFound() et non la liste de différence directe,
-        //car il faut juste que tu fasse clignoter les différences restante! (c'est ça qui ets écrit)
+    getDifferentPixelListNotFound(): number[] {
+        return this.doubleArrayToArray(this.getListOfDifferencesNotFound());
+    }
+
+    // To test Charles
+    doubleArrayToArray(doubleArray: number[][]): number[] {
+        const linearizedArray: number[] = [];
+
+        for (let i = 0; i < doubleArray.length; i++) {
+            for (let j = 0; j < doubleArray[i].length; j++) {
+                linearizedArray.push(doubleArray[i][j]);
+            }
+        }
+
+        return linearizedArray;
     }
 
     isValidClick(mousePosition: Position, plrSocketID: string): GameplayDifferenceInformations {

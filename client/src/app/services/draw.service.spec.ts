@@ -17,7 +17,7 @@ describe('DrawService', () => {
         service.context2 = ctxStub;
         service.context3 = ctxStub;
         service.context4 = ctxStub;
-        service.context5 = ctxStub;
+        service.contextBlinkModified = ctxStub;
     });
 
     it('should be created', () => {
@@ -29,7 +29,7 @@ describe('DrawService', () => {
         expect(service.context2.canvas.width).toEqual(CANVAS_WIDTH);
         expect(service.context3.canvas.width).toEqual(CANVAS_WIDTH);
         expect(service.context4.canvas.width).toEqual(CANVAS_WIDTH);
-        expect(service.context5.canvas.width).toEqual(CANVAS_WIDTH);
+        expect(service.contextBlinkModified.canvas.width).toEqual(CANVAS_WIDTH);
     });
 
     it(' height should return the height of the grid canvas', () => {
@@ -37,7 +37,7 @@ describe('DrawService', () => {
         expect(service.context2.canvas.height).toEqual(CANVAS_HEIGHT);
         expect(service.context3.canvas.height).toEqual(CANVAS_HEIGHT);
         expect(service.context4.canvas.height).toEqual(CANVAS_HEIGHT);
-        expect(service.context5.canvas.height).toEqual(CANVAS_HEIGHT);
+        expect(service.contextBlinkModified.canvas.height).toEqual(CANVAS_HEIGHT);
     });
 
     it(' drawWord should call fillText on the canvas', () => {
