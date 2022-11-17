@@ -28,7 +28,7 @@ describe('PopDialogUsernameComponent', () => {
         socketClientServiceMock.socket = socketTestHelper as unknown as Socket;
 
         startUpGameServiceSpy = jasmine.createSpyObj('StartUpGameService', ['startUpWaitingLine']);
-        dialog = jasmine.createSpyObj('MatDialog', ['open']);
+        dialog = jasmine.createSpyObj('MatDialog', ['open', 'closeAll']);
         dialogRef = jasmine.createSpyObj('MatDialogRef', ['close']);
     });
 
@@ -94,6 +94,24 @@ describe('PopDialogUsernameComponent', () => {
         socketTestHelper.peerSideEmit('username valid');
         component['configureUsernamePopUpSocketFeatures']();
         expect(spy).toHaveBeenCalled();
+    });
+
+    it('should close dialog if the game is deleted', () => {
+        const gameName = 'car game';
+        component.gameInfo.nameGame = gameName;
+        const spy = spyOn(socketClientServiceMock, 'send');
+        socketTestHelper.peerSideEmit('close popDialogUsername', gameName);
+        component['configureUsernamePopUpSocketFeatures']();
+        expect(dialog['closeAll']).toHaveBeenCalled();
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('should not close dialog another game is deleted', () => {
+        const gameName = 'car game';
+        component.gameInfo.nameGame = 'blue game';
+        socketTestHelper.peerSideEmit('close popDialogUsername', gameName);
+        component['configureUsernamePopUpSocketFeatures']();
+        expect(dialog['closeAll']).not.toHaveBeenCalled();
     });
 
     it('should open the dialog when calling openDialog', () => {

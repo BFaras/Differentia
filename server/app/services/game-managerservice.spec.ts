@@ -187,4 +187,27 @@ describe('GameManagerService tests', () => {
         expect(gameManagerService.isGameFinishedMulti(serverSocket)).to.be.true;
         expect(stub.calledOnce);
     });
+
+    it('should logRoomsWithGames()', () => {
+        const gameName = 'car';
+        const roomName = 'room1';
+        gameManagerService['logRoomsWithGames'](gameName, roomName);
+        expect(gameManagerService.gamesRooms.has(gameName)).to.be.true;
+    });
+
+    it('should getGameRooms()', () => {
+        gameManagerService.getGameRooms();
+        expect(gameManagerService.gamesRooms.has(testGameName)).to.be.true;
+    });
+
+    it('should deleteRoom()', () => {
+        gameManagerService.gamesRooms.get(testGameName)?.pop();
+        gameManagerService.gamesRooms.get(testGameName)?.pop();
+
+        const spy = sinon.spy(gameManagerService.gamesRooms, 'delete');
+        const stub = sinon.stub(gameManagerService, 'findSocketGameRoomName');
+        gameManagerService['deleteRoom'](serverSocket);
+        expect(stub.calledOnce);
+        expect(spy.calledOnceWith(testGameName));
+    });
 });

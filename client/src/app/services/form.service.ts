@@ -10,9 +10,8 @@ import { CommunicationService } from './communication.service';
 export class FormService {
     private listName: string[] = [];
     private listImage: string[] = [];
-    private gamelist: Game[] = [];
+    gamelist: Game[] = [];
     gameForms: GameFormDescription[] = [];
-    gameToDelete: string = '';
 
     constructor(private communicationService: CommunicationService) {}
 
@@ -51,12 +50,5 @@ export class FormService {
         this.gamelist = [];
         this.listImage = [];
         this.listName = [];
-    }
-
-    deleteGameForm() {
-        this.communicationService.deleteGame(this.gameToDelete).subscribe(async (games) => {
-            this.gamelist = games;
-            location.reload();
-        });
     }
 }

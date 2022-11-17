@@ -19,6 +19,9 @@ export class AdminPageComponent {
 
     openDialog() {
         this.dialog.open(DialogInputComponent, {
+            height: '540px',
+            width: '580px',
+            disableClose: true,
             data: this.gameTimeSettings,
         });
     }
