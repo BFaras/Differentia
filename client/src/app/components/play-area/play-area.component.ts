@@ -67,8 +67,6 @@ export class PlayAreaComponent implements OnInit {
 
         this.displayImages();
 
-        // Raph : mettre le blink canvas blanc
-
         this.blinkCanvasOrginial = this.blinkModifiedCanvas.nativeElement
             .getContext('2d')!
             .getImageData(0, 0, this.blinkModifiedCanvas.nativeElement.width, this.blinkModifiedCanvas.nativeElement.height);
