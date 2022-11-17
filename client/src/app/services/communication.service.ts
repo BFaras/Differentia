@@ -1,7 +1,6 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Game } from '@common/game';
-import { TimeConstants } from '@common/time-constants';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -35,8 +34,5 @@ export class CommunicationService {
 
     uploadFiles(formData: FormData): Observable<Object> {
         return this.http.post(`${this.baseUrl}/images`, formData).pipe(catchError(this.handleError<Object>('uploadFiles')));
-    }
-    addTimeConstants(time: TimeConstants): Observable<Object> {
-        return this.http.post(`${this.baseUrl}/times`, time).pipe(catchError(this.handleError<Object>('addTimeConstants')));
     }
 }

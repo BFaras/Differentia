@@ -9,6 +9,7 @@ import * as io from 'socket.io';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
 import { MouseHandlerService } from './mouse-handler.service';
+import { TimeConstantsService } from './time-constants.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
 
 export class SocketManager {
@@ -16,6 +17,7 @@ export class SocketManager {
     private sio: io.Server;
     private waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
     private gameManagerService: GameManagerService;
+    private timeConstantsService: TimeConstantsService = new TimeConstantsService();
 
     constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] }, maxHttpBufferSize: 1e7 });
@@ -73,6 +75,12 @@ export class SocketManager {
 
             socket.on('refresh games after closing popDialog', (value) => {
                 this.sio.to(value).emit('game list updated', value);
+            });
+
+            socket.on('Set time constants', (timeConstants) => {
+                this.timeConstantsService.setTimes(timeConstants).then((value) => {
+                    console.log(value);
+                });
             });
 
             socket.on('I left', (gameName: string) => {
