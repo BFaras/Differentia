@@ -155,11 +155,22 @@ describe('SocketManager service tests', () => {
         });
     });
 
+    it("should handle 'refresh games after closing popDialog' event", (done) => {
+        const value = 'Blue';
+        clientSocket.emit('refresh games after closing popDialog', value);
+        clientSocket.once('game list updated', (message: string) => {
+            expect(message).to.equal(value);
+            done();
+        });
+    });
+
     it("should handle 'Reload game selection page' event", (done) => {
         const testMsg = 'Hello';
+        const gameManagerServiceSPy = sinon.spy(GameManagerService.prototype, <any>'collectAllSocketsRooms');
         clientSocket.emit('Reload game selection page', testMsg);
         clientSocket.once('Page reloaded', (message: string) => {
             expect(message).to.equal(testMsg);
+            expect(gameManagerServiceSPy.calledOnce);
             done();
         });
     });

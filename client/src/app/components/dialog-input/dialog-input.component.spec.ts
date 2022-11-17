@@ -10,6 +10,7 @@ import { DialogInputComponent } from './dialog-input.component';
 describe('DialogInputComponent', () => {
     let component: DialogInputComponent;
     let fixture: ComponentFixture<DialogInputComponent>;
+    let dialogRef: jasmine.SpyObj<MatDialogRef<DialogInputComponent, any>>;
     let gameSettings: GameTimeSetting[];
 
     beforeEach(async () => {
@@ -18,11 +19,13 @@ describe('DialogInputComponent', () => {
             { inputName: 'Temps de pénalité', defaultTime: 5, placeHolder: 'Temps par défaut: 5s', valueUnit: 'secondes' },
             { inputName: 'Temps gagné', defaultTime: 5, placeHolder: 'Temps par défaut: 5s', valueUnit: 'secondes' },
         ];
+        dialogRef = jasmine.createSpyObj('MatDialogRef', ['close']);
+
         await TestBed.configureTestingModule({
             declarations: [DialogInputComponent],
             imports: [MatFormFieldModule, MatInputModule, MatDialogModule, BrowserAnimationsModule],
             providers: [
-                { provide: MatDialogRef, useValue: {} },
+                { provide: MatDialogRef, useValue: dialogRef },
                 { provide: MAT_DIALOG_DATA, useValue: gameSettings },
             ],
         }).compileComponents();
@@ -35,5 +38,37 @@ describe('DialogInputComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('should submit Times', () => {
+        let initialTime = component.initialTimeInput.nativeElement.value;
+        let penaltyTime = component.penaltyTimeInput.nativeElement.value;
+        let savedTime = component.savedtimeInput.nativeElement.value;
+        component.submitTimes();
+        expect(component.timeConstants).toEqual({ initialTime, penaltyTime, savedTime });
+        expect(dialogRef['close']).toHaveBeenCalled();
+    });
+
+    it('should validate the time if its a number above 0', () => {
+        component.initialTimeInput.nativeElement.value = 40;
+        component.validateTimeType(component.initialTimeInput, 0);
+        expect(component.timeValid[0]).toBeTrue();
+        expect(component.onlyQuitButton).toBeFalse();
+    });
+
+    it('should not validate the time ', () => {
+        component.initialTimeInput.nativeElement.value = 'bluee';
+        component.validateTimeType(component.initialTimeInput, 0);
+        expect(component.timeValid[0]).toBeFalse();
+        expect(component.onlyQuitButton).toBeTrue();
+    });
+
+    it('should not validate the time ', () => {
+        component.initialTimeInput.nativeElement.value = '';
+        component.penaltyTimeInput.nativeElement.value = '';
+        component.savedtimeInput.nativeElement.value = '';
+
+        component.validateTimeType(component.initialTimeInput, 0);
+        expect(component.onlyQuitButton).toBeTrue();
     });
 });
