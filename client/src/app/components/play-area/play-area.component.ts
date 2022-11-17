@@ -9,10 +9,12 @@ import { ImageToImageDifferenceService } from '@app/services/image-to-image-diff
 import { SocketClientService } from '@app/services/socket-client.service';
 import { ClueInformations } from '@common/clue-informations';
 import {
+    CHEAT_KEY,
     CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE,
     CLASSIC_MULTIPLAYER_LOST_MESSAGE,
     CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE,
     CLASSIC_SOLO_END_GAME_MESSAGE,
+    CLUE_KEY,
     DEFAULT_HEIGHT_CANVAS,
     DEFAULT_WIDTH_CANVAs,
     MODIFIED_IMAGE_POSITION,
@@ -22,9 +24,6 @@ import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
 import { PopDialogEndgameComponent } from '../pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
-
-const CHEAT_KEY: string = 'document:keyup.t';
-const CLUE_KEY: string = 'document:keyup.i';
 
 @Component({
     selector: 'app-play-area',
@@ -111,13 +110,12 @@ export class PlayAreaComponent implements OnInit {
     }
 
     // To test Charles
-    //CHEAT_KEY à mettre dans le document des constantes du client (yeah une fois que ca va marcher for sure ;))
     @HostListener(CHEAT_KEY, ['$event'])
     handleKeyboardCheat() {
         if (this.isCheatActivated) {
-            const originalContext = this.blinkOriginalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D; // Changer les noms
+            const originalContext = this.blinkOriginalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             originalContext.canvas.id = 'paused';
-            const modifiedContext = this.blinkModifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D; // Changer les noms
+            const modifiedContext = this.blinkModifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             modifiedContext.canvas.id = 'paused';
             this.isCheatActivated = !this.isCheatActivated;
         } else {
@@ -210,6 +208,6 @@ export class PlayAreaComponent implements OnInit {
         canvasToCopyOn.getContext('2d')?.putImageData(this.blinkCanvasOrginial, 0, 0);
         const context = canvasToCopyOn.getContext('2d') as CanvasRenderingContext2D;
         context.canvas.id = 'blink';
-        this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(pixelsToBlink, canvasToCopyFrom, canvasToCopyOn, false);
+        this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(pixelsToBlink, canvasToCopyFrom, canvasToCopyOn);
     }
 }

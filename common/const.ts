@@ -96,3 +96,12 @@ export const FIRST_CLUE_NB = CLUE_AMOUNT_DEFAULT;
 export const SECOND_CLUE_NB = FIRST_CLUE_NB - 1;
 export const FIRST_CLUE_QUANDRANT_NB = 4;
 export const SECOND_CLUE_QUANDRANT_NB = 16;
+
+// Constantes de touches
+export const CHEAT_KEY: string = 'document:keyup.t';
+export const CLUE_KEY: string = 'document:keyup.i';
+export const CONTROL_Z_SHORTCUT: string = 'document:keyup.control.z';
+export const CONTROL_SHIFT_Z_SHORTCUT: string = 'document:keyup.control.shift.z';
+
+// Write constante
+export const WRITE_MODE: string = 'write';
