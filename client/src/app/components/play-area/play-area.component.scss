@@ -53,6 +53,11 @@ canvas {
     pointer-events: none;
 }
 
+#blinkCheat {
+    animation: blink 4s infinite;
+    pointer-events: none;
+}
+
 @keyframes blink {
     0% {
         opacity: 1;
