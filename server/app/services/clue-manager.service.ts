@@ -4,6 +4,7 @@ import { CLUE_AMOUNT_DEFAULT, EMPTY_ARRAY_LENGTH, FIRST_ARRAY_POSITION, SECOND_C
 import { randomInt } from 'crypto';
 import * as io from 'socket.io';
 import Container, { Service } from 'typedi';
+import { ChronometerService } from './chronometer.service';
 import { ClueFinderService } from './clue-finder.service';
 import { MouseHandlerService } from './mouse-handler.service';
 
@@ -19,7 +20,7 @@ export class ClueManagerService {
         socket.data.amountOfClues = CLUE_AMOUNT_DEFAULT;
     }
 
-    sendClueToPlayer(socket: io.Socket, gameMouseHandlerService: MouseHandlerService) {
+    sendClueToPlayer(socket: io.Socket, gameMouseHandlerService: MouseHandlerService, gameChronometerService: ChronometerService) {
         if (this.areCluesLeftForSocket(socket)) {
             const differencesNotFoundList: number[][] = gameMouseHandlerService.getListOfDifferencesNotFound();
             if (differencesNotFoundList.length > EMPTY_ARRAY_LENGTH) {
@@ -38,6 +39,8 @@ export class ClueManagerService {
                 }
             }
             this.decrementSocketClueAmount(socket);
+            //To change for saved game constant for the current game
+            gameChronometerService.increaseTimeByXSeconds(5);
         }
     }
 

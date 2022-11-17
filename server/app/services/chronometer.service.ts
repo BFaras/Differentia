@@ -38,6 +38,13 @@ export class ChronometerService {
         }
     }
 
+    //To test Raph
+    increaseTimeByXSeconds(amountToIncrease: number) {
+        for (let i = 0; i < amountToIncrease; i++) {
+            this.increaseTime();
+        }
+    }
+
     resetChrono() {
         this.time.minutes = RESET_VALUE;
         this.time.seconds = RESET_VALUE;

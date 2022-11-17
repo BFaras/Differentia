@@ -226,7 +226,7 @@ export class GameManagerService {
             .emit('game images', [gameImagesData[ORIGINAL_IMAGE_POSITION], gameImagesData[MODIFIED_IMAGE_POSITION]]);
     }
 
-    private getSocketChronometerService(socket: io.Socket): ChronometerService {
+    getSocketChronometerService(socket: io.Socket): ChronometerService {
         const gameRoomName = this.findSocketGameRoomName(socket);
         return this.chronometerServices.get(gameRoomName) as ChronometerService;
     }

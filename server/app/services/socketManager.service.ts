@@ -178,7 +178,9 @@ export class SocketManager {
             socket.on('get clue for player', () => {
                 const clueManagerService = Container.get(ClueManagerService);
                 const playerMouseHandlerService = this.gameManagerService.getSocketMouseHandlerService(socket);
-                clueManagerService.sendClueToPlayer(socket, playerMouseHandlerService);
+                const playerChronometerService = this.gameManagerService.getSocketChronometerService(socket);
+                clueManagerService.sendClueToPlayer(socket, playerMouseHandlerService, playerChronometerService);
+                this.sio.to(this.gameManagerService.findSocketGameRoomName(socket)).emit('time', playerChronometerService.time);
             });
         });
     }
