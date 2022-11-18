@@ -1,6 +1,6 @@
 <div class="container-view">
-    <button mat-mini-fab aria-label>
-        <mat-icon routerLink="/admin">home</mat-icon>
+    <button mat-mini-fab aria-label routerLink="/admin">
+        <mat-icon >home</mat-icon>
     </button>
     <div class="container-images-paint">
         <app-list-images-rendered class="container-images" ></app-list-images-rendered>
@@ -10,7 +10,9 @@
         </div>
     </div>
     <div class="container-buttons">
-        <button id="download" mat-raised-button (click)="onCreateDownloadPopDialog()">Download</button>
+        <button id="download" mat-raised-button (click)="onCreateDownloadPopDialog()">
+            <i class="material-icons">upload_file</i>
+        </button>
         <button id="validate" [disabled]="verifyTwoImagesUploaded()" mat-raised-button (click)="onCreateValidatePopDialog()">Valider</button>
     </div>
 </div>

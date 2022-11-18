@@ -9,7 +9,7 @@ import { PopDialogCreateGameComponent } from '../pop-dialog-create-game/pop-dial
 })
 export class PopDialogValidateGameComponent implements OnDestroy  {
     areImageDifferenceAndNumberDifferenceReady:boolean = false;
-    isChecked = false
+    isChecked = true
     isDisabled:boolean ;
     valueChosen:number = 3;
     numberDifference:number;
@@ -30,6 +30,7 @@ export class PopDialogValidateGameComponent implements OnDestroy  {
     startsGeneratingImageDifferenceAndNumberDifference(){
         if(this.valueChosen ){
             this.areImageDifferenceAndNumberDifferenceReady = true;
+            this.isChecked = false
         }
     }
 

@@ -1,13 +1,13 @@
 <div class="container justified">
     <div class="logo-name-container">
         <div class="header-item">{{ title }}</div>
-        <img src="https://bit.ly/3QofL1J" alt="Logo Projet" />
+        <img src="../../../assets/difference-logo.png" alt="Logo Projet" />
     </div>
     <section id="server-message" class="justified">
         <div class="group-button-homepage justified">
-            <button class="button button-homepage" routerLink="/gameSelection">{{ buttonName[0] }}</button>
-            <button class="button button-homepage">{{ buttonName[1] }}</button>
-            <button class="button button-homepage" routerLink="/admin">{{ buttonName[2] }}</button>
+            <button mat-flat-button color="primary" class="button button-homepage" routerLink="/gameSelection">{{ buttonName[0] }}</button>
+            <button mat-flat-button color="primary" class="button button-homepage">{{ buttonName[1] }}</button>
+            <button mat-flat-button color="primary"class="button button-homepage" routerLink="/admin">{{ buttonName[2] }}</button>
         </div>
     </section>
     <hr />

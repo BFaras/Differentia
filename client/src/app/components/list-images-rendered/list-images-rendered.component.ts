@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MODIFIED_IMAGE_NAME, ORIGINAL_IMAGE_NAME } from '@common/const';
 @Component({
     selector: 'app-list-images-rendered',
     templateUrl: './list-images-rendered.component.html',
@@ -6,5 +7,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ListImagesRenderedComponent implements OnInit {
     imagesIndex: number[] = [0, 1];
+    nameImageList: string[] = [ORIGINAL_IMAGE_NAME,MODIFIED_IMAGE_NAME]
     ngOnInit(): void {}
 }

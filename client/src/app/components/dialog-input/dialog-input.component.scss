@@ -1,5 +1,23 @@
+h1 {
+    font-size: 28px;
+}
 .inputs {
+    font-size: large;
     display: grid;
     grid-row: auto;
     gap: 20px;
+}
+.mat-flat-button.mat-warn,
+.mat-raised-button.mat-warn,
+.mat-fab.mat-warn,
+.mat-mini-fab.mat-warn {
+    margin-left: 480px;
+}
+
+#submitButton {
+    margin-top: 35px;
+    width: 90px;
+    margin-left: 221px;
+    height: 40px;
+    font-size: large;
 }
