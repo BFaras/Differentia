@@ -37,11 +37,18 @@ export class SocketManager {
             });
 
             socket.on('solo classic mode', async (gameName: string) => {
-                socket.emit('classic mode');
-                socket.emit('The game is', gameName);
+                this.sio.to(socket.id).emit('classic mode');
+                this.sio.to(socket.id).emit('The game is', gameName);
                 const username = this.waitingLineHandlerService.getUsernamePlayer(socket.id, this.sio);
-                socket.emit('show the username', username);
+                this.sio.to(socket.id).emit('show the username', username);
                 await this.gameManagerService.beginGame(socket, gameName);
+            });
+
+            socket.on('solo limited time mode', async () => {
+                this.sio.to(socket.id).emit('limited time mode');
+                const username = this.waitingLineHandlerService.getUsernamePlayer(socket.id, this.sio);
+                //MANQUE GÉRER LES FONCTIONS DE GAME MANAGER
+                this.sio.to(socket.id).emit('show the username', username);
             });
 
             socket.on('is there someone waiting', (gameName: string) => {
@@ -56,6 +63,11 @@ export class SocketManager {
                     this.waitingLineHandlerService.setUsernamePlayer(socket.id, username, this.sio);
                     this.sio.to(socket.id).emit('username valid');
                 } else this.sio.to(socket.id).emit('username not valid');
+            });
+
+            socket.on('gameMode is', (classicFlag: boolean) => {
+                if (classicFlag) this.sio.to(socket.id).emit('classic mode');
+                else this.sio.to(socket.id).emit('open the limited time pop-dialog');
             });
 
             socket.on('I am waiting', (gameName: string) => {

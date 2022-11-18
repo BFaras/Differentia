@@ -6,7 +6,7 @@
     <section id="server-message" class="justified">
         <div class="group-button-homepage justified">
             <button class="button button-homepage" routerLink="/gameSelection">{{ buttonName[0] }}</button>
-            <button class="button button-homepage">{{ buttonName[1] }}</button>
+            <button class="button button-homepage" (click)="openDialog()">{{ buttonName[1] }}</button>
             <button class="button button-homepage" routerLink="/admin">{{ buttonName[2] }}</button>
         </div>
     </section>

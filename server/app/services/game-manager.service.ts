@@ -136,7 +136,7 @@ export class GameManagerService {
         this.timeIntervals.set(
             gameRoomName,
             setInterval(() => {
-                this.emitTime(socket, this.getSocketChronometerService(socket), gameRoomName);
+                this.emitTime(this.getSocketChronometerService(socket), gameRoomName);
             }, ONE_SECOND_DELAY),
         );
     }
@@ -184,7 +184,7 @@ export class GameManagerService {
         }
     }
 
-    private emitTime(socket: io.Socket, chronometerService: ChronometerService, gameRoomName: string) {
+    private emitTime(chronometerService: ChronometerService, gameRoomName: string) {
         chronometerService.increaseTime();
         this.sio.to(gameRoomName).emit('time', chronometerService.time);
     }

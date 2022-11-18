@@ -19,7 +19,7 @@ export class StartUpGameService {
         if (gameInfo.classicFlag) {
             this.startUpClassicWaitingLine(gameInfo);
         } else {
-            this.startUpLimitedTimeWaitingLine(gameInfo);
+            this.startUpLimitedTimeWaitingLine();
         }
     }
 
@@ -35,8 +35,11 @@ export class StartUpGameService {
     sendUsername(username: string): void {
         this.socketService.send('my username is', username);
     }
-
-    // pt les 2 ifs dans les 2 prochaines fonctions peuvent etre mises dans une autre fonction?? esq c de la duplication de code????
+    
+    soloLimitedTimeGame(): void {
+        this.socketService.send('solo limited time mode'); // À gérer dans socket Manager
+    }
+    
     private startUpLimitedTimeWaitingLine(): void {
         this.createGameService.createLimitedTimeGame();
     }
@@ -53,9 +56,6 @@ export class StartUpGameService {
     //     this.createGameService.createLimitedTimeGame();
     // }
     
-    // private soloLimitedTimeGame(): void {
-    //     this.socketService.send('solo limited time mode'); // À gérer dans socket Manager
-    // }
 
     private multiplayerClassicGame(gameInfo: any): void {
         if (gameInfo.isPlayerWaiting) this.joinGameService.joinGame(gameInfo.nameGame);

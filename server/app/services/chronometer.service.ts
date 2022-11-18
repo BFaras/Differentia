@@ -15,20 +15,8 @@ export class ChronometerService {
     };
     intervalForTimer: any;
     intervalToCheckTime: any;
-
+    
     constructor() {}
-
-    private increaseSeconds() {
-        this.time.seconds += 1;
-    }
-
-    private increaseMinutes() {
-        this.time.minutes += 1;
-    }
-
-    private resetSeconds() {
-        this.time.seconds = 0;
-    }
 
     increaseTime() {
         if (this.time.seconds !== MAX_TIME) this.increaseSeconds();
@@ -38,8 +26,51 @@ export class ChronometerService {
         }
     }
 
+    decreaseTime() {
+        if (this.time.seconds !== RESET_VALUE) this.decreaseSeconds();
+        else {
+            this.decreaseMinutes();
+            this.setSeconds();
+        }
+    }
+
+    getMinutesFromDatabase(): number {
+        // GET MINUTES FROM DTABASE
+        return 0;
+    }
+
+    getSecondsFromDatabase(): number {
+        // GET SECONDS FROM DATABASE
+        return 0;
+    }
+
     resetChrono() {
         this.time.minutes = RESET_VALUE;
         this.time.seconds = RESET_VALUE;
     }
+
+    private increaseSeconds() {
+        this.time.seconds += 1;
+    }
+
+    private increaseMinutes() {
+        this.time.minutes += 1;
+    }
+
+    private decreaseSeconds() {
+        this.time.seconds -= 1;
+    }
+
+    private decreaseMinutes() {
+        this.time.minutes -= 1;
+    }
+
+    private resetSeconds() {
+        this.time.seconds = 0;
+    }
+
+    private setSeconds() {
+        this.time.seconds = MAX_TIME;
+    }
+
 }

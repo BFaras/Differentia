@@ -1,10 +1,11 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { PopDialogWaitingForPlayerComponent } from '@app/components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
+import { PopDialogWaitingForPlayerComponent } from 
+'@app/components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
-import { PopDialogLimitedTimeModeComponent } from '../pop-dialog-limited-time-mode/pop-dialog-limited-time-mode.component';
+import { PopDialogLimitedTimeModeComponent } from '@app/components/pop-dialogs/pop-dialog-limited-time-mode/pop-dialog-limited-time-mode.component';
 
 @Component({
     selector: 'app-pop-dialog-username',
@@ -73,6 +74,14 @@ export class PopDialogUsernameComponent implements OnInit {
         this.socketService.on('username valid', () => {
             this.startWaitingLine();
             this.closeDialog();
+            this.socketService.send('gameMode is', this.gameInfo.classicFlag);
+        });
+
+        this.socketService.on('username not valid', () => {
+            this.usernameNotValid = true;
+        });
+
+        this.socketService.on('classic mode', () => {
             if (this.gameInfo.multiFlag) {
                 this.openClassicDialog();
             }
@@ -81,12 +90,8 @@ export class PopDialogUsernameComponent implements OnInit {
             }
         });
 
-        this.socketService.on('username not valid', () => {
-            this.usernameNotValid = true;
-        });
-
-        this.socketService.on('open limited time pop-dialog', () => { // À GÉRER DANS SOCKER MANAGER
-            this.closeDialog();
+        this.socketService.on('open the limited time pop-dialog', () => { // À GÉRER DANS SOCKER MANAGER
+            console.log('negga why');
             this.openLimitedTimeDialog();
         });
     }

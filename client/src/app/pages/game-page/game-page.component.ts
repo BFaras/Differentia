@@ -39,6 +39,9 @@ export class GamePageComponent {
         this.socketService.on('classic mode', () => {
             this.timeService.classicMode();
         });
+        this.socketService.on('limited time mode', () => {
+            this.timeService.limitedTimeMode();
+        })
         this.socketService.on('time', (time: Time) => {
             this.timeService.changeTime(time);
         });

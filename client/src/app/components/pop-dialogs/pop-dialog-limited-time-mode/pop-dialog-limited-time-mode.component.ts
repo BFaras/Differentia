@@ -5,32 +5,31 @@ import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
 
 @Component({
-    selector: 'app-pop-dialog-limited-time-mode',
-    templateUrl: './pop-dialog-limited-time-mode.component.html',
-    styleUrls: ['./pop-dialog-limited-time-mode.component.scss'],
+  selector: 'app-pop-dialog-limited-time-mode',
+  templateUrl: './pop-dialog-limited-time-mode.component.html',
+  styleUrls: ['./pop-dialog-limited-time-mode.component.scss']
 })
-export class PopDialogUsernameComponent implements OnInit {
-    constructor(
-        private socketService: SocketClientService,
-        public startUpGameService: StartUpGameService,
-        public dialogRef: MatDialogRef<PopDialogUsernameComponent>,
-        public router: Router,
-    ) {}
+export class PopDialogLimitedTimeModeComponent implements OnInit {
+  constructor(
+    private socketService: SocketClientService,
+    public startUpGameService: StartUpGameService,
+    public dialogRef: MatDialogRef<PopDialogLimitedTimeModeComponent>,
+    public router: Router,
+  ) {}
 
-    ngOnInit(): void {
-        this.socketService.connect();
-        this.configureUsernamePopUpSocketFeatures();
-    }
+  ngOnInit(): void {
+    this.socketService.connect();
+    this.configureLimitedTimePopUpSocketFeatures();
+  }
 
-    ngOnDestroy(): void {
-        this.socketService.off('username valid');
-    }
+  ngOnDestroy(): void {
+    this.socketService.off('username valid');
+  }
+// private closeDialog(): void {
+//     this.dialogRef.close();
+// }
 
-    private closeDialog(): void {
-        this.dialogRef.close();
-    }
-
-    private configureUsernamePopUpSocketFeatures(): void {
-
-    }
+  private configureLimitedTimePopUpSocketFeatures(): void {
+    console.log('salut');
+  }
 }
