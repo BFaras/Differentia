@@ -7,7 +7,7 @@ import { SocketClientService } from '@app/services/socket-client.service';
     styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent {
-    readonly title: string = 'Jeu de Différence';
+    readonly title: string = 'Peux-tu trouver les différences ?';
     readonly buttonName: String[] = ['Mode classique', 'Temps limité', 'Administration'];
 
     constructor(private socketService: SocketClientService) {}

@@ -3,9 +3,11 @@
         <mat-icon >home</mat-icon>
     </button>
     <div class="container-images-paint">
-        <app-list-images-rendered class="container-images" ></app-list-images-rendered>
         <div class = "container-tools">
             <app-tool-setting [indexTool] = "0" class="container-paint"></app-tool-setting>
+        </div>
+        <app-list-images-rendered class="container-images" ></app-list-images-rendered>
+        <div class = "container-tools">
             <app-tool-setting [indexTool] = "1" class="container-paint" ></app-tool-setting>
         </div>
     </div>

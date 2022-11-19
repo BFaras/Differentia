@@ -1,6 +1,12 @@
 mat-grid-tile {
-    border: solid black;
+    border: solid black  1px;
     border-radius: 10px;
+}
+
+.mat-grid-list{
+    position: relative;
+    left:50px;
+    width:1460px;
 }
 
 mat-card {
