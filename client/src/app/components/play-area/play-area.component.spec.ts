@@ -22,9 +22,6 @@ import { Position } from '@common/position';
 import { Socket } from 'socket.io-client';
 import { PlayAreaComponent } from './play-area.component';
 import SpyObj = jasmine.SpyObj;
-export class SocketClientServiceMock extends SocketClientService {
-    override connect() {}
-}
 
 class HTMLElementRefCanvasMock {
     nativeElement: HTMLCanvasElement;
@@ -33,10 +30,10 @@ class HTMLElementRefCanvasMock {
     }
 }
 
-describe('PlayAreaComponent', () => {
+fdescribe('PlayAreaComponent', () => {
     let component: PlayAreaComponent;
     let fixture: ComponentFixture<PlayAreaComponent>;
-    let socketClientServiceMock: SocketClientServiceMock;
+    let socketClientService: SocketClientService;
     let differenceServiceSpy: SpyObj<DifferenceDetectionService>;
     let drawServiceSpy: SpyObj<DrawService>;
     let matDialogSpy: SpyObj<MatDialog>;
@@ -58,12 +55,17 @@ describe('PlayAreaComponent', () => {
 
     beforeAll(async () => {
         socketTestHelper = new SocketTestHelper();
-        socketClientServiceMock = new SocketClientServiceMock();
-        socketClientServiceMock.socket = socketTestHelper as unknown as Socket;
+        socketClientService = new SocketClientService();
+        socketClientService.socket = socketTestHelper as unknown as Socket;
 
         differenceServiceSpy = jasmine.createSpyObj('MouseDetectionService', ['mouseHitDetect', 'clickMessage', 'verifyGameFinished', 'playSound']);
         matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
-        drawServiceSpy = jasmine.createSpyObj('DrawService', ['contextClickOriginalCanvas', 'contextClickModifiedCanvas', 'drawWord']);
+        drawServiceSpy = jasmine.createSpyObj('DrawService', [
+            'contextClickOriginalCanvas',
+            'contextClickModifiedCanvas',
+            'drawWord',
+            'setCanvasTransparent',
+        ]);
         imageGeneratorSpy = jasmine.createSpyObj('ImageGeneratorService', ['copyCertainPixelsFromOneImageToACanvas']);
         imageDifferenceSpy = jasmine.createSpyObj('ImageToImageDifferenceService', ['waitForImageToLoad']);
     });
@@ -72,7 +74,7 @@ describe('PlayAreaComponent', () => {
         await TestBed.configureTestingModule({
             declarations: [PlayAreaComponent],
             providers: [
-                { provide: SocketClientService, useValue: socketClientServiceMock },
+                { provide: SocketClientService, useValue: socketClientService },
                 { provide: DrawService, useValue: drawServiceSpy },
                 { provide: DifferenceDetectionService, useValue: differenceServiceSpy },
                 { provide: ImageToImageDifferenceService, useValue: imageDifferenceSpy },
@@ -196,10 +198,21 @@ describe('PlayAreaComponent', () => {
             isGameWon: false,
         };
         const spy = spyOn(component, <any>'openEndGameDialog');
-        socketTestHelper.peerSideEmit('End game', endGameInfos);
         component['configurePlayAreaSocket']();
+        socketTestHelper.peerSideEmit('End game', endGameInfos);
 
         expect(spy).toHaveBeenCalledWith(CLASSIC_MULTIPLAYER_LOST_MESSAGE);
+    });
+
+    it('should call end game event when the user lose', () => {
+        endGameInfos = {
+            isMultiplayer: true,
+            isAbandon: false,
+            isGameWon: false,
+        };
+        const spy = spyOn(socketClientService, 'send');
+        component.handleKeyboardClue();
+        expect(spy).toHaveBeenCalledWith('get clue for player');
     });
 
     afterEach(() => {

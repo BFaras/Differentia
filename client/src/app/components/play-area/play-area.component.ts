@@ -133,7 +133,6 @@ export class PlayAreaComponent implements OnInit {
         }
     }
 
-    //To test Raph
     @HostListener(CLUE_KEY, ['$event'])
     handleKeyboardClue() {
         this.socketService.send('get clue for player');
