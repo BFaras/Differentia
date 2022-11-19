@@ -19,11 +19,10 @@ export class GameManagerService {
 
     constructor(private sio: io.Server) {}
 
-    async beginGame(socket: io.Socket, gameName: string, adversarySocket?: io.Socket) {
+    async beginGame(socket: io.Socket, gameInfo: string[], adversarySocket?: io.Socket) {
         this.setupSocketGameRoom(socket, NO_OTHER_PLAYER_ROOM);
-        this.setupNecessaryGameServices(socket);
-
-        await this.getSocketMouseHandlerService(socket).generateDifferencesInformations(gameName);
+        this.setupNecessaryGameServices(socket, gameInfo[1]);
+        await this.getSocketMouseHandlerService(socket).generateDifferencesInformations(gameInfo[0]);
         this.getSocketMouseHandlerService(socket).addPlayerToGame(socket.id);
         const gameRoomName = this.findSocketGameRoomName(socket);
 
@@ -31,14 +30,14 @@ export class GameManagerService {
             this.setupSocketGameRoom(adversarySocket, gameRoomName);
             this.getSocketMouseHandlerService(adversarySocket).addPlayerToGame(adversarySocket.id);
         }
-        this.logRoomsWithGames(gameName, gameRoomName);
+        this.logRoomsWithGames(gameInfo[0], gameRoomName);
 
-        await this.sendImagesToClient(gameName, socket);
+        await this.sendImagesToClient(gameInfo[0], socket);
     }
 
-    async startMultiplayerMatch(socket: io.Socket, adversarySocket: io.Socket, gameName: string) {
-        adversarySocket.emit(`${gameName} you have been accepted`);
-        await this.beginGame(socket, gameName, adversarySocket);
+    async startMultiplayerMatch(socket: io.Socket, adversarySocket: io.Socket, gameInfo: string[]) {
+        adversarySocket.emit(`${gameInfo[0]} you have been accepted`);
+        await this.beginGame(socket, gameInfo, adversarySocket);
 
         socket.emit('show the username', this.getSocketUsername(socket));
         adversarySocket.emit('show the username', this.getSocketUsername(adversarySocket));
@@ -46,8 +45,8 @@ export class GameManagerService {
         adversarySocket.emit('The adversary username is', this.getSocketUsername(socket));
 
         const gameRoomName = this.findSocketGameRoomName(socket);
-        this.sio.to(gameRoomName).emit('classic mode');
-        this.sio.to(gameRoomName).emit('The game is', gameName);
+        this.sio.to(gameRoomName).emit(gameInfo[1]);
+        this.sio.to(gameRoomName).emit('The game is', gameInfo[0]);
     }
 
     endGame(socket: io.Socket) {
@@ -125,9 +124,10 @@ export class GameManagerService {
         return this.gamesRooms;
     }
 
-    private setupNecessaryGameServices(socket: io.Socket) {
+    private setupNecessaryGameServices(socket: io.Socket, gameMode: string) {
         const mouseHandler: MouseHandlerService = new MouseHandlerService();
         const chronometerService: ChronometerService = new ChronometerService();
+        chronometerService.setChronometerMode(gameMode);
 
         const gameRoomName = this.findSocketGameRoomName(socket);
 
@@ -185,7 +185,7 @@ export class GameManagerService {
     }
 
     private emitTime(chronometerService: ChronometerService, gameRoomName: string) {
-        chronometerService.increaseTime();
+        chronometerService.changeTime();
         this.sio.to(gameRoomName).emit('time', chronometerService.time);
     }
 

@@ -13,11 +13,20 @@ export class ChronometerService {
         minutes: 0,
         seconds: 0,
     };
+    mode: string;
     intervalForTimer: any;
     intervalToCheckTime: any;
     
     constructor() {}
 
+    setChronometerMode(gameMode: string): void {
+        if (gameMode === 'limited time') {
+            this.limitedTimeMode();
+        } else {
+            this.classicMode();
+        }
+    }
+    
     increaseTime() {
         if (this.time.seconds !== MAX_TIME) this.increaseSeconds();
         else {
@@ -29,24 +38,47 @@ export class ChronometerService {
     decreaseTime() {
         if (this.time.seconds !== RESET_VALUE) this.decreaseSeconds();
         else {
-            this.decreaseMinutes();
             this.setSeconds();
+            this.decreaseMinutes();
         }
     }
 
-    getMinutesFromDatabase(): number {
-        // GET MINUTES FROM DTABASE
-        return 0;
+    hasTheChronoHitZero(): boolean {
+        return this.time.minutes === RESET_VALUE && this.time.seconds === RESET_VALUE;
     }
-
-    getSecondsFromDatabase(): number {
-        // GET SECONDS FROM DATABASE
-        return 0;
-    }
-
+    
     resetChrono() {
         this.time.minutes = RESET_VALUE;
         this.time.seconds = RESET_VALUE;
+    }
+
+    changeTime(): void {
+        if (this.mode === 'classic mode') {
+            this.increaseTime();
+        } else {
+            this.decreaseTime();
+        }
+    }
+    
+    private classicMode(): void {
+        this.resetChrono();
+        this.mode = 'classic mode';
+    }
+
+    private limitedTimeMode(): void {
+        this.time.minutes = this.getMinutesFromDatabase();
+        this.time.seconds = this.getSecondsFromDatabase();
+        this.mode = 'limited time mode';
+    }
+
+    private getMinutesFromDatabase(): number {
+        // GET MINUTES FROM DTABASE
+        return 1;
+    }
+
+    private getSecondsFromDatabase(): number {
+        // GET SECONDS FROM DATABASE
+        return 0;
     }
 
     private increaseSeconds() {
@@ -62,7 +94,9 @@ export class ChronometerService {
     }
 
     private decreaseMinutes() {
-        this.time.minutes -= 1;
+        if (this.time.minutes !== RESET_VALUE) {
+            this.time.minutes -= 1;
+        }
     }
 
     private resetSeconds() {
@@ -70,7 +104,9 @@ export class ChronometerService {
     }
 
     private setSeconds() {
-        this.time.seconds = MAX_TIME;
+        if (this.time.minutes !== RESET_VALUE) {
+            this.time.seconds = MAX_TIME;
+        }
     }
 
 }

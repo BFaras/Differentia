@@ -91,7 +91,6 @@ export class PopDialogUsernameComponent implements OnInit {
         });
 
         this.socketService.on('open the limited time pop-dialog', () => { // À GÉRER DANS SOCKER MANAGER
-            console.log('negga why');
             this.openLimitedTimeDialog();
         });
     }

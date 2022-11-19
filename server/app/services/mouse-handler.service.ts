@@ -8,11 +8,12 @@ import { GamesService } from './local.games.service';
 
 @Service()
 export class MouseHandlerService {
+    nbDifferencesTotal: number;
     private differencesHashmap: Map<number, number>;
     private differencesList: number[][];
     private differenceAmountFoundByPlayer: Map<string, number>;
     private differencesNbFound: number[];
-    nbDifferencesTotal: number;
+    // private localGamesService: GamesService = new GamesService();
 
     constructor() {
         this.differencesHashmap = new Map<number, number>();
@@ -33,7 +34,7 @@ export class MouseHandlerService {
     }
 
     getNumberOfDifferencesFoundByPlayer(plrSocketId: string): number {
-        return this.differenceAmountFoundByPlayer.get(plrSocketId)!;
+        return this.differenceAmountFoundByPlayer.get(plrSocketId) as number;
     }
 
     isValidClick(mousePosition: Position, plrSocketID: string): GameplayDifferenceInformations {
@@ -55,6 +56,12 @@ export class MouseHandlerService {
     async generateDifferencesInformations(gameName: string) {
         const gamesService: GamesService = Container.get(GamesService);
         const hashmapConverter: HashmapConverterService = Container.get(HashmapConverterService);
+        // let game: Game;
+        // if (gameName === 'limited time') {
+        //     game = await gamesService.generateRandomGame();
+        // } else {
+        //     game = await gamesService.getGame(gameName);
+        // }
         const game: Game = await gamesService.getGame(gameName);
 
         this.nbDifferencesTotal = game.numberOfDifferences;
@@ -88,7 +95,7 @@ export class MouseHandlerService {
 
     private validateDifferencesOnClick(mousePosition: Position, plrSocketID: string): GameplayDifferenceInformations {
         const pixelNumber = this.convertMousePositionToPixelNumber(mousePosition);
-        let differenceInformation: GameplayDifferenceInformations = {
+        const differenceInformation: GameplayDifferenceInformations = {
             differencePixelsNumbers: NO_DIFFERENCE_FOUND_ARRAY,
             isValidDifference: false,
             socketId: plrSocketID,
@@ -96,7 +103,7 @@ export class MouseHandlerService {
         };
 
         if (this.differencesHashmap.has(pixelNumber)) {
-            let differencesNumber = this.differencesHashmap.get(pixelNumber)!;
+            const differencesNumber = this.differencesHashmap.get(pixelNumber) as number;
 
             if (!this.isDifferenceAlreadyFound(differencesNumber)) {
                 this.differencesNbFound.push(differencesNumber);

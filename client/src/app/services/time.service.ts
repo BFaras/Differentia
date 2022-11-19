@@ -27,22 +27,22 @@ export class TimeService {
 
     limitedTimeMode() {
         this.time = {
-            minutes: this.getMinutesFromDatabase(),
-            seconds: this.getSecondsFromDatabase(),
+            minutes: 0,
+            seconds: 0,
         };
         this.showableMinutes = '00';
         this.showableSeconds = '00';
     }
 
-    getMinutesFromDatabase(): number {
-        // GET MINUTES FROM DTABASE
-        return 0;
-    }
+    // getMinutesFromDatabase(): number {
+    //     // GET MINUTES FROM DTABASE
+    //     return 1;
+    // }
 
-    getSecondsFromDatabase(): number {
-        // GET SECONDS FROM DATABASE
-        return 0;
-    }
+    // getSecondsFromDatabase(): number {
+    //     // GET SECONDS FROM DATABASE
+    //     return 0;
+    // }
 
     changeTime(newTime: Time) {
         this.time = newTime;

@@ -28,6 +28,9 @@ export class PopDialogLimitedTimeModeComponent implements OnInit {
 // private closeDialog(): void {
 //     this.dialogRef.close();
 // }
+  close(): void {
+    this.dialogRef.close();
+  }
 
   private configureLimitedTimePopUpSocketFeatures(): void {
     console.log('salut');

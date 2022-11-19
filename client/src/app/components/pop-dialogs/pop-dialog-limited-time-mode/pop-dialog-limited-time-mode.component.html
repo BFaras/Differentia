@@ -7,7 +7,7 @@
     <mat-dialog-content class="dialog-content">
         <h1>Voulez-vous jouer en solo ou en multijoueur?</h1>
         <mat-dialog-actions>
-            <button mat-raised-button (click)="startUpGameService.soloLimitedTimeGame()" routerLink="/game">Solo</button>
+            <button mat-raised-button (click)="startUpGameService.soloLimitedTimeGame()" (click)="close()" routerLink="/game">Solo</button>
             <button mat-raised-button>Multijoueur</button>
         </mat-dialog-actions>
     </mat-dialog-content>
