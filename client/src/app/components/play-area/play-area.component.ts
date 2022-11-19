@@ -17,7 +17,6 @@ import {
     CLUE_KEY,
     DEFAULT_HEIGHT_CANVAS,
     DEFAULT_WIDTH_CANVAs,
-    EMPTY_ARRAY_LENGTH,
     MODIFIED_IMAGE_POSITION,
     ORIGINAL_IMAGE_POSITION,
 } from '@common/const';
@@ -45,7 +44,7 @@ export class PlayAreaComponent implements OnInit {
     private isCheatActivated = false;
     private blinkCanvasOrginial: ImageData;
     private canvasSize: Coordinate = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
-    private canStopBlinkingWaitingLine: boolean[];
+    private numberOfBlinkCalls = 0;
     constructor(
         private socketService: SocketClientService,
         private readonly drawService: DrawService,
@@ -54,9 +53,7 @@ export class PlayAreaComponent implements OnInit {
         private dialog: MatDialog,
         private imageGenerator: ImageGeneratorService,
         private readonly clueHandlerService: ClueHandlerService,
-    ) {
-        this.canStopBlinkingWaitingLine = [];
-    }
+    ) {}
 
     async ngOnInit(): Promise<void> {
         this.socketService.connect();
@@ -206,11 +203,11 @@ export class PlayAreaComponent implements OnInit {
             invertColors,
         );
 
-        this.canStopBlinkingWaitingLine.push(true);
+        this.numberOfBlinkCalls++;
         setTimeout(() => {
             //To test Raph
-            this.canStopBlinkingWaitingLine.pop();
-            if (this.canStopBlinkingWaitingLine.length == EMPTY_ARRAY_LENGTH) {
+            this.numberOfBlinkCalls--;
+            if (this.numberOfBlinkCalls <= 0) {
                 context.canvas.id = 'paused';
             }
         }, 3000);
