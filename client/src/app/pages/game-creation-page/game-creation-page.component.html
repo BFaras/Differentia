@@ -12,10 +12,10 @@
         </div>
     </div>
     <div class="container-buttons">
-        <button id="download" mat-raised-button (click)="onCreateDownloadPopDialog()">
+        <button id="download"  matTooltip="Téléverser l'image modifié et l'image original"  mat-raised-button (click)="onCreateDownloadPopDialog()">
             <i class="material-icons">upload_file</i>
         </button>
-        <button id="validate" [disabled]="verifyTwoImagesUploaded()" mat-raised-button (click)="onCreateValidatePopDialog()">Valider</button>
+        <button id="validate"[disabled]="verifyTwoImagesUploaded()" mat-raised-button (click)="onCreateValidatePopDialog()">Valider</button>
     </div>
 </div>
 
