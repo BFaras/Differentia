@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommunicationService } from '@app/services/communication.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
-import { ADVERSARY_PLR_USERNAME_POS, IMAGE_HEIGHT, IMAGE_WIDTH, LOCAL_PLR_USERNAME_POS, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
+import { ADVERSARY_PLR_USERNAME_POS, CLASSIC_MODE, IMAGE_HEIGHT, IMAGE_WIDTH, LIMITED_TIME_MODE, LOCAL_PLR_USERNAME_POS, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { Game } from '@common/game';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Time } from '@common/time';
@@ -26,7 +26,6 @@ export class GamePageComponent {
     }
 
     ngOnInit() {
-        this.socketService.connect();
         this.configureGamePageSocketFeatures();
     }
 
@@ -35,22 +34,48 @@ export class GamePageComponent {
         this.socketService.disconnect();
     }
 
+    private incrementPlayerNbOfDifferencesFound(socketId: string) {
+        if (socketId === this.socketService.socket.id) {
+            this.nbDifferencesFound[LOCAL_PLR_USERNAME_POS] += 1;
+        } else {
+            this.nbDifferencesFound[ADVERSARY_PLR_USERNAME_POS] += 1;
+        }
+    }
+
+    private receiveNumberOfDifferences(nameGame: string): void {
+        firstValueFrom(this.communicationService.getGames()).then((array: Game[]) => {
+            const gameWanted = array.find((x) => x.name === nameGame);
+            // gameWanted ne sera jamais undefined car le nom utilisé dans le .find est d'un jeu qui
+            // existe forcément (il est dans la page de sélection )
+            this.nbDifferences = gameWanted ? gameWanted.numberOfDifferences : -1; // METTRE LE -1 DANS UNE CONSTANTE
+        });
+    }
+
     private configureGamePageSocketFeatures() {
-        this.socketService.on('classic mode', () => {
-            this.timeService.classicMode();
+        // this.socketService.on('time hit zero', () => {
+        // });
+
+        this.socketService.on(CLASSIC_MODE, () => {
+            console.log('test'); // mettre le nom du mode dans le side bar
         });
-        this.socketService.on('limited time mode', () => {
-            this.timeService.limitedTimeMode();
-        });
+
+        this.socketService.on(LIMITED_TIME_MODE, () => {
+            console.log('test'); // mettre le nom du mode dans le side bar
+        })
+
         this.socketService.on('time', (time: Time) => {
+            console.log(time);
             this.timeService.changeTime(time);
         });
+
         this.socketService.on('The game is', (message: string) => {
             this.receiveNumberOfDifferences(message);
+            console.log('game is' + message);
             this.gameName = message;
         });
 
         this.socketService.on('show the username', (username: string) => {
+            console.log('jai recu le username');
             this.usernames[LOCAL_PLR_USERNAME_POS] = username;
         });
 
@@ -67,23 +92,6 @@ export class GamePageComponent {
         this.socketService.on('game images', (imagesData: string[]) => {
             this.images[ORIGINAL_IMAGE_POSITION].src = imagesData[ORIGINAL_IMAGE_POSITION];
             this.images[MODIFIED_IMAGE_POSITION].src = imagesData[MODIFIED_IMAGE_POSITION];
-        });
-    }
-
-    private incrementPlayerNbOfDifferencesFound(socketId: string) {
-        if (socketId == this.socketService.socket.id) {
-            this.nbDifferencesFound[LOCAL_PLR_USERNAME_POS] += 1;
-        } else {
-            this.nbDifferencesFound[ADVERSARY_PLR_USERNAME_POS] += 1;
-        }
-    }
-
-    private receiveNumberOfDifferences(nameGame: string): void {
-        firstValueFrom(this.communicationService.getGames()).then((array: Game[]) => {
-            let gameWanted = array.find((x) => x.name === nameGame);
-            // gameWanted ne sera jamais undefined car le nom utilisé dans le .find est d'un jeu qui
-            // existe forcément (il est dans la page de sélection )
-            this.nbDifferences = gameWanted ? gameWanted.numberOfDifferences : -1;
         });
     }
 }

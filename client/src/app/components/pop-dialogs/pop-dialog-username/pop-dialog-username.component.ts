@@ -1,11 +1,12 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { PopDialogWaitingForPlayerComponent } from 
+import { PopDialogWaitingForPlayerComponent } from
 '@app/components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
 import { PopDialogLimitedTimeModeComponent } from '@app/components/pop-dialogs/pop-dialog-limited-time-mode/pop-dialog-limited-time-mode.component';
+import { CLASSIC_MODE, LIMITED_TIME_MODE } from '@common/const';
 
 @Component({
     selector: 'app-pop-dialog-username',
@@ -81,16 +82,15 @@ export class PopDialogUsernameComponent implements OnInit {
             this.usernameNotValid = true;
         });
 
-        this.socketService.on('classic mode', () => {
+        this.socketService.on(`${CLASSIC_MODE}`, () => {
             if (this.gameInfo.multiFlag) {
                 this.openClassicDialog();
-            }
-            else {
+            } else {
                 this.router.navigate(['/game']);
             }
         });
 
-        this.socketService.on('open the limited time pop-dialog', () => { // À GÉRER DANS SOCKER MANAGER
+        this.socketService.on(`open the ${LIMITED_TIME_MODE} pop-dialog`, () => {
             this.openLimitedTimeDialog();
         });
     }

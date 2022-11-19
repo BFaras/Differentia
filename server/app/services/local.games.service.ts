@@ -124,7 +124,7 @@ export class GamesService {
     private async getGameImagesNames(gameName: string): Promise<string[]> {
         return (await this.getGame(gameName)).images;
     }
-    
+
     private async getGameImageData(imageName: string): Promise<Buffer> {
         try {
             const imageData: Buffer = await fs.promises.readFile(IMAGES_PATH + imageName);

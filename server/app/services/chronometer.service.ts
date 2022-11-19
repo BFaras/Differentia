@@ -3,9 +3,10 @@
 /* eslint-disable no-restricted-imports */
 /* eslint-disable prettier/prettier */
 
-import { MAX_TIME, RESET_VALUE } from '@common/const';
+import { MAX_TIME, RESET_VALUE, CLASSIC_MODE, LIMITED_TIME_MODE } from '@common/const';
 import { Time } from '@common/time';
 import { Service } from 'typedi';
+import * as io from 'socket.io';
 
 @Service()
 export class ChronometerService {
@@ -13,36 +14,18 @@ export class ChronometerService {
         minutes: 0,
         seconds: 0,
     };
-    mode: string;
-    intervalForTimer: any;
-    intervalToCheckTime: any;
+    private mode: string;
     
     constructor() {}
 
-    setChronometerMode(gameMode: string): void {
-        if (gameMode === 'limited time') {
-            this.limitedTimeMode();
+    setChronometerMode(gameMode: string, socket: io.Socket): void {
+        if (gameMode === LIMITED_TIME_MODE) {
+            this.limitedTimeMode(socket);
         } else {
-            this.classicMode();
+            this.classicMode(socket);
         }
     }
     
-    increaseTime() {
-        if (this.time.seconds !== MAX_TIME) this.increaseSeconds();
-        else {
-            this.increaseMinutes();
-            this.resetSeconds();
-        }
-    }
-
-    decreaseTime() {
-        if (this.time.seconds !== RESET_VALUE) this.decreaseSeconds();
-        else {
-            this.setSeconds();
-            this.decreaseMinutes();
-        }
-    }
-
     hasTheChronoHitZero(): boolean {
         return this.time.minutes === RESET_VALUE && this.time.seconds === RESET_VALUE;
     }
@@ -53,22 +36,40 @@ export class ChronometerService {
     }
 
     changeTime(): void {
-        if (this.mode === 'classic mode') {
+        if (this.mode === CLASSIC_MODE) {
             this.increaseTime();
         } else {
             this.decreaseTime();
         }
     }
-    
-    private classicMode(): void {
-        this.resetChrono();
-        this.mode = 'classic mode';
+
+    private increaseTime() {
+        if (this.time.seconds !== MAX_TIME) this.increaseSeconds();
+        else {
+            this.increaseMinutes();
+            this.resetSeconds();
+        }
     }
 
-    private limitedTimeMode(): void {
+    private decreaseTime() {
+        if (this.time.seconds !== RESET_VALUE) this.decreaseSeconds();
+        else {
+            this.setSeconds();
+            this.decreaseMinutes();
+        }
+    }
+    
+    private classicMode(socket: io.Socket): void {
+        this.resetChrono();
+        this.mode = CLASSIC_MODE;
+        socket.data.gameMode = CLASSIC_MODE;
+    }
+
+    private limitedTimeMode(socket: io.Socket): void {
         this.time.minutes = this.getMinutesFromDatabase();
         this.time.seconds = this.getSecondsFromDatabase();
-        this.mode = 'limited time mode';
+        this.mode = LIMITED_TIME_MODE;
+        socket.data.gameMode = LIMITED_TIME_MODE;
     }
 
     private getMinutesFromDatabase(): number {

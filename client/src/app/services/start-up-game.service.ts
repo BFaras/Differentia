@@ -64,5 +64,6 @@ export class StartUpGameService {
     
     private soloClassicGame(gameName: string): void {
         this.socketService.send('solo classic mode', gameName);
+        console.log('jai send solo classic mode' + gameName);
     }
 }

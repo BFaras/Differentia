@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { HOST_CHOSE_ANOTHER, HOST_PRESENT } from '@app/server-consts';
+import { CLASSIC_MODE, LIMITED_TIME_MODE } from '@common/const';
 import { ChatMessage } from '@common/chat-message';
 import { DifferencesInformations } from '@common/differences-informations';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
@@ -40,20 +41,23 @@ export class SocketManager {
             });
 
             socket.on('solo classic mode', async (gameName: string) => {
-                this.sio.to(socket.id).emit('classic mode');
+                this.sio.to(socket.id).emit(CLASSIC_MODE);
                 this.sio.to(socket.id).emit('The game is', gameName);
                 const username = this.waitingLineHandlerService.getUsernamePlayer(socket.id, this.sio);
                 this.sio.to(socket.id).emit('show the username', username);
-                await this.gameManagerService.beginGame(socket, [gameName, 'classic mode']);
+                await this.gameManagerService.beginGame(socket, [gameName, CLASSIC_MODE]);
+
             });
 
             socket.on('solo limited time mode', async () => {
-                this.sio.to(socket.id).emit('limited time mode');
+                this.sio.to(socket.id).emit(LIMITED_TIME_MODE);
                 const username = this.waitingLineHandlerService.getUsernamePlayer(socket.id, this.sio);
                 const gameName = (await this.gamesService.generateRandomGame()).name;
+                this.gameManagerService.initializeSocketGameHistoryLimitedTimeMode(socket);
+                this.gameManagerService.addGameToHistoryLimitedTimeMode(socket, gameName);
                 this.sio.to(socket.id).emit('The game is', gameName);
                 this.sio.to(socket.id).emit('show the username', username);
-                await this.gameManagerService.beginGame(socket, [gameName, 'limited time']);
+                await this.gameManagerService.beginGame(socket, [gameName, LIMITED_TIME_MODE]);
             });
 
             socket.on('is there someone waiting', (gameName: string) => {
@@ -71,8 +75,8 @@ export class SocketManager {
             });
 
             socket.on('gameMode is', (classicFlag: boolean) => {
-                if (classicFlag) this.sio.to(socket.id).emit('classic mode');
-                else this.sio.to(socket.id).emit('open the limited time pop-dialog');
+                if (classicFlag) this.sio.to(socket.id).emit(CLASSIC_MODE);
+                else this.sio.to(socket.id).emit(`open the ${LIMITED_TIME_MODE} pop-dialog`);
             });
 
             socket.on('I am waiting', (gameName: string) => {
