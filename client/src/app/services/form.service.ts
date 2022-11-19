@@ -4,6 +4,8 @@ import { RecordTimesBoard } from '@app/classes/record-times-board';
 import { Game } from '@common/game';
 import { firstValueFrom } from 'rxjs';
 import { CommunicationService } from './communication.service';
+//import { SocketClientService } from './socket-client.service';
+
 @Injectable({
     providedIn: 'root',
 })
@@ -43,6 +45,10 @@ export class FormService {
     }
 
     private initializeGameForm(index: number) {
+        // this.socketService.send('Need recordTimes', this.listName[index]);
+        // this.socketService.on('Send Record times', (gameRecordTimes: GameModeTimes) => {
+        //     this.gameForms.push(new GameFormDescription(this.listName[index], this.listImage[index], new RecordTimesBoard(gameRecordTimes.soloGameTimes, gameRecordTimes.multiplayerGameTimes)));
+        // });
         this.gameForms.push(new GameFormDescription(this.listName[index], this.listImage[index], new RecordTimesBoard([], [])));
     }
 
