@@ -3,11 +3,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
+import { ClueHandlerService } from '@app/services/clue-handler.service';
 import { DifferenceDetectionService } from '@app/services/difference-detection.service';
 import { DrawService } from '@app/services/draw.service';
 import { ImageGeneratorService } from '@app/services/image-generator.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { SocketClientService } from '@app/services/socket-client.service';
+import { ClueInformations } from '@common/clue-informations';
 import {
     CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE,
     CLASSIC_MULTIPLAYER_LOST_MESSAGE,
@@ -39,6 +41,7 @@ fdescribe('PlayAreaComponent', () => {
     let matDialogSpy: SpyObj<MatDialog>;
     let imageGeneratorSpy: SpyObj<ImageGeneratorService>;
     let imageDifferenceSpy: SpyObj<ImageToImageDifferenceService>;
+    let clueHandlerServiceMock: SpyObj<ClueHandlerService>;
     let mouseEvent: MouseEvent;
     let position: Position = { x: 10, y: 20 };
     let socketTestHelper: SocketTestHelper;
@@ -68,6 +71,7 @@ fdescribe('PlayAreaComponent', () => {
         ]);
         imageGeneratorSpy = jasmine.createSpyObj('ImageGeneratorService', ['copyCertainPixelsFromOneImageToACanvas']);
         imageDifferenceSpy = jasmine.createSpyObj('ImageToImageDifferenceService', ['waitForImageToLoad']);
+        clueHandlerServiceMock = jasmine.createSpyObj('ClueHandlerService', ['findClueQuadrantPixels']);
     });
 
     beforeEach(async () => {
@@ -80,6 +84,7 @@ fdescribe('PlayAreaComponent', () => {
                 { provide: ImageToImageDifferenceService, useValue: imageDifferenceSpy },
                 { provide: MatDialog, useValue: matDialogSpy },
                 { provide: ImageGeneratorService, useValue: imageGeneratorSpy },
+                { provide: ClueHandlerService, useValue: clueHandlerServiceMock },
             ],
         }).compileComponents();
 
@@ -205,14 +210,28 @@ fdescribe('PlayAreaComponent', () => {
     });
 
     it('should call end game event when the user lose', () => {
-        endGameInfos = {
-            isMultiplayer: true,
-            isAbandon: false,
-            isGameWon: false,
-        };
         const spy = spyOn(socketClientService, 'send');
         component.handleKeyboardClue();
         expect(spy).toHaveBeenCalledWith('get clue for player');
+    });
+
+    it('should handle a Clue with quadrant of difference event and call makePixelsBlinkOnCanvas()', () => {
+        const clueInfos: ClueInformations = {
+            clueAmountLeft: 2,
+            clueDifferenceQuadrant: 6,
+        };
+        const spy = spyOn(component, <any>'makePixelsBlinkOnCanvas').and.callFake(() => {});
+        component['configurePlayAreaSocket']();
+        socketTestHelper.peerSideEmit('Clue with quadrant of difference', clueInfos);
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('should handle a Clue with difference pixels event and call makePixelsBlinkOnCanvas()', () => {
+        const cluePixels = [1, 2, 3];
+        const spy = spyOn(component, <any>'makePixelsBlinkOnCanvas').and.callFake(() => {});
+        component['configurePlayAreaSocket']();
+        socketTestHelper.peerSideEmit('Clue with difference pixels', cluePixels);
+        expect(spy).toHaveBeenCalled();
     });
 
     afterEach(() => {

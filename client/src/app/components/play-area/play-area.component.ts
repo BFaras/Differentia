@@ -170,7 +170,6 @@ export class PlayAreaComponent implements OnInit {
             this.makePixelsBlinkOnCanvasCheat(pixelList, this.modifiedCanvas.nativeElement, this.blinkOriginalCanvas.nativeElement);
         });
 
-        //To test Raph
         this.socketService.on('Clue with quadrant of difference', (clueInformations: ClueInformations) => {
             const quandrantPixelsNb: number[] = this.clueHandlerService.findClueQuadrantPixels(
                 clueInformations.clueAmountLeft,
@@ -179,7 +178,6 @@ export class PlayAreaComponent implements OnInit {
             this.makePixelsBlinkOnCanvas(quandrantPixelsNb, this.modifiedCanvas.nativeElement, true);
         });
 
-        //To test Raph
         this.socketService.on('Clue with difference pixels', (differenceNotFoundPixels: number[]) => {
             this.makePixelsBlinkOnCanvas(differenceNotFoundPixels, this.originalCanvas.nativeElement);
         });
