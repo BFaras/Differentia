@@ -20,8 +20,12 @@
     </mat-select>
 </mat-form-field>
 <div class ="group-buttons">
-  <button mat-mini-fab [disabled]="checkIfThereAreSavedDrawnLines()" (click) = "cancelActionDrawnLine()"><--</button>
-  <button mat-mini-fab [disabled]="checkIfThereAreSavedDeletedDrawnLines()" (click) = "cancelActionDeletedDrawnLine()" >--></button>
+  <button mat-mini-fab [disabled]="checkIfThereAreSavedDrawnLines()" (click) = "cancelActionDrawnLine()">
+    <mat-icon>undo</mat-icon>
+  </button>
+  <button mat-mini-fab [disabled]="checkIfThereAreSavedDeletedDrawnLines()" (click) = "cancelActionDeletedDrawnLine()" >
+    <mat-icon>redo</mat-icon>
+  </button>
 </div>
 <button  mat-raised-button (click) = "clearCanvas()"> 
   <i class="material-icons">delete</i>
