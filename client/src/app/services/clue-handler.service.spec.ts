@@ -5,7 +5,7 @@ import { Positions } from '@common/positions';
 
 import { ClueHandlerService } from './clue-handler.service';
 
-fdescribe('ClueHandlerService', () => {
+describe('ClueHandlerService', () => {
     let service: ClueHandlerService;
 
     beforeEach(() => {

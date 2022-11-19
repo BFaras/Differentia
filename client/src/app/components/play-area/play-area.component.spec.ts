@@ -1,5 +1,7 @@
+import { ElementRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
+import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { DifferenceDetectionService } from '@app/services/difference-detection.service';
 import { DrawService } from '@app/services/draw.service';
@@ -23,6 +25,14 @@ import SpyObj = jasmine.SpyObj;
 export class SocketClientServiceMock extends SocketClientService {
     override connect() {}
 }
+
+class HTMLElementRefCanvasMock {
+    nativeElement: HTMLCanvasElement;
+    constructor() {
+        this.nativeElement = CanvasTestHelper.createCanvas(IMAGE_WIDTH, IMAGE_HEIGHT);
+    }
+}
+
 describe('PlayAreaComponent', () => {
     let component: PlayAreaComponent;
     let fixture: ComponentFixture<PlayAreaComponent>;
@@ -42,8 +52,8 @@ describe('PlayAreaComponent', () => {
         socketId: 'socket1',
         playerUsername: DEFAULT_USERNAME,
     };
-    let firstImage: HTMLImageElement = new Image(IMAGE_HEIGHT, IMAGE_WIDTH);
-    let secondImage: HTMLImageElement = new Image(IMAGE_HEIGHT, IMAGE_WIDTH);
+    let firstImage: HTMLImageElement = new Image(IMAGE_WIDTH, IMAGE_HEIGHT);
+    let secondImage: HTMLImageElement = new Image(IMAGE_WIDTH, IMAGE_HEIGHT);
     let differenceImage: HTMLImageElement[] = [firstImage, secondImage];
 
     beforeAll(async () => {
@@ -53,7 +63,7 @@ describe('PlayAreaComponent', () => {
 
         differenceServiceSpy = jasmine.createSpyObj('MouseDetectionService', ['mouseHitDetect', 'clickMessage', 'verifyGameFinished', 'playSound']);
         matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
-        drawServiceSpy = jasmine.createSpyObj('DrawService', ['context1', 'context2', 'context3', 'context4', 'context5', 'drawWord']);
+        drawServiceSpy = jasmine.createSpyObj('DrawService', ['contextClickOriginalCanvas', 'contextClickModifiedCanvas', 'drawWord']);
         imageGeneratorSpy = jasmine.createSpyObj('ImageGeneratorService', ['copyCertainPixelsFromOneImageToACanvas']);
         imageDifferenceSpy = jasmine.createSpyObj('ImageToImageDifferenceService', ['waitForImageToLoad']);
     });
@@ -79,6 +89,8 @@ describe('PlayAreaComponent', () => {
         TestBed.inject(SocketClientService);
 
         spyOn(CanvasRenderingContext2D.prototype, 'putImageData').and.callFake(() => {});
+        component['blinkModifiedCanvas'] = new HTMLElementRefCanvasMock() as ElementRef<HTMLCanvasElement>;
+        component['blinkOriginalCanvas'] = new HTMLElementRefCanvasMock() as ElementRef<HTMLCanvasElement>;
     });
 
     it('should create', () => {
@@ -146,9 +158,9 @@ describe('PlayAreaComponent', () => {
         differencesFoundInfo.differencePixelsNumbers = [];
         socketTestHelper.peerSideEmit('Valid click', differencesFoundInfo);
         component['configurePlayAreaSocket']();
-        expect(drawServiceSpy['contextBlinkModified'].canvas.id).toEqual('blink');
+        expect(component['blinkModifiedCanvas'].nativeElement.id).toEqual('blink');
         jasmine.clock().tick(3000);
-        expect(drawServiceSpy['contextBlinkModified'].canvas.id).toEqual('paused');
+        expect(component['blinkModifiedCanvas'].nativeElement.id).toEqual('paused');
     });
 
     it('should call end game event when the user win', () => {

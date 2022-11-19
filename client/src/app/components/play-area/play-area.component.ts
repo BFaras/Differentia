@@ -80,20 +80,20 @@ export class PlayAreaComponent implements OnInit {
     }
 
     private displayImages() {
-        this.drawService.context1 = this.clickOriginalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.drawService.context1.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);
+        this.drawService.contextClickOriginalCanvas = this.clickOriginalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawService.contextClickOriginalCanvas.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);
         this.clickOriginalCanvas.nativeElement.focus();
 
-        this.drawService.context2 = this.clickModifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.drawService.context2.drawImage(this.differentImages[MODIFIED_IMAGE_POSITION], 0, 0);
+        this.drawService.contextClickModifiedCanvas = this.clickModifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawService.contextClickModifiedCanvas.drawImage(this.differentImages[MODIFIED_IMAGE_POSITION], 0, 0);
         this.clickModifiedCanvas.nativeElement.focus();
 
-        this.drawService.context3 = this.originalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.drawService.context3.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);
+        const originalCanavasContext = this.originalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        originalCanavasContext.drawImage(this.differentImages[ORIGINAL_IMAGE_POSITION], 0, 0);
         this.originalCanvas.nativeElement.focus();
 
-        this.drawService.context4 = this.modifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.drawService.context4.drawImage(this.differentImages[MODIFIED_IMAGE_POSITION], 0, 0);
+        const modifiedCanvasContext = this.modifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        modifiedCanvasContext.drawImage(this.differentImages[MODIFIED_IMAGE_POSITION], 0, 0);
         this.modifiedCanvas.nativeElement.focus();
     }
 

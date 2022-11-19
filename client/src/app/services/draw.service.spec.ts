@@ -13,11 +13,8 @@ describe('DrawService', () => {
         TestBed.configureTestingModule({});
         service = TestBed.inject(DrawService);
         ctxStub = CanvasTestHelper.createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT).getContext('2d') as CanvasRenderingContext2D;
-        service.context1 = ctxStub;
-        service.context2 = ctxStub;
-        service.context3 = ctxStub;
-        service.context4 = ctxStub;
-        service.contextBlinkModified = ctxStub;
+        service.contextClickOriginalCanvas = ctxStub;
+        service.contextClickModifiedCanvas = ctxStub;
     });
 
     it('should be created', () => {
@@ -25,23 +22,17 @@ describe('DrawService', () => {
     });
 
     it(' width should return the width of the grid canvas', () => {
-        expect(service.context1.canvas.width).toEqual(CANVAS_WIDTH);
-        expect(service.context2.canvas.width).toEqual(CANVAS_WIDTH);
-        expect(service.context3.canvas.width).toEqual(CANVAS_WIDTH);
-        expect(service.context4.canvas.width).toEqual(CANVAS_WIDTH);
-        expect(service.contextBlinkModified.canvas.width).toEqual(CANVAS_WIDTH);
+        expect(service.contextClickOriginalCanvas.canvas.width).toEqual(CANVAS_WIDTH);
+        expect(service.contextClickModifiedCanvas.canvas.width).toEqual(CANVAS_WIDTH);
     });
 
     it(' height should return the height of the grid canvas', () => {
-        expect(service.context1.canvas.height).toEqual(CANVAS_HEIGHT);
-        expect(service.context2.canvas.height).toEqual(CANVAS_HEIGHT);
-        expect(service.context3.canvas.height).toEqual(CANVAS_HEIGHT);
-        expect(service.context4.canvas.height).toEqual(CANVAS_HEIGHT);
-        expect(service.contextBlinkModified.canvas.height).toEqual(CANVAS_HEIGHT);
+        expect(service.contextClickOriginalCanvas.canvas.height).toEqual(CANVAS_HEIGHT);
+        expect(service.contextClickModifiedCanvas.canvas.height).toEqual(CANVAS_HEIGHT);
     });
 
     it(' drawWord should call fillText on the canvas', () => {
-        const fillTextSpy = spyOn(service.context1, 'fillText').and.callThrough();
+        const fillTextSpy = spyOn(service.contextClickOriginalCanvas, 'fillText').and.callThrough();
         const message = 'text';
         const expectedCallTimes = message.length;
         service.drawWord(message, { x: 0, y: 0 }, ctxStub);
@@ -50,7 +41,7 @@ describe('DrawService', () => {
     });
 
     it(' drawWord should call fillText on the canvas', fakeAsync(() => {
-        const eraseTextSpy = spyOn(service.context1, 'clearRect').and.callThrough();
+        const eraseTextSpy = spyOn(service.contextClickOriginalCanvas, 'clearRect').and.callThrough();
         const message = 'text';
         service.drawWord(message, { x: 0, y: 0 }, ctxStub);
         tick(1500);

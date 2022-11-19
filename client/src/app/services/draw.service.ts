@@ -5,11 +5,8 @@ import { Position } from '@common/position';
     providedIn: 'root',
 })
 export class DrawService {
-    context1: CanvasRenderingContext2D;
-    context2: CanvasRenderingContext2D;
-    context3: CanvasRenderingContext2D;
-    context4: CanvasRenderingContext2D;
-    context5: CanvasRenderingContext2D;
+    contextClickOriginalCanvas: CanvasRenderingContext2D;
+    contextClickModifiedCanvas: CanvasRenderingContext2D;
 
     drawWord(word: string, mousePosition: Position, context: CanvasRenderingContext2D) {
         const startPosition: Position = { x: mousePosition.x, y: mousePosition.y };
