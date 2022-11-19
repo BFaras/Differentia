@@ -47,4 +47,11 @@ describe('DrawService', () => {
         tick(1500);
         expect(eraseTextSpy).toHaveBeenCalled();
     }));
+
+    it('should call clearRect from the canvas context', fakeAsync(() => {
+        const canvasMock = CanvasTestHelper.createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+        const spy = spyOn(canvasMock.getContext('2d')!, 'clearRect');
+        service.setCanvasTransparent(canvasMock);
+        expect(spy).toHaveBeenCalled();
+    }));
 });
