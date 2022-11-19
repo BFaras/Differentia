@@ -25,6 +25,7 @@ export class ListGameFormComponent implements OnInit {
     lastElementIndex: number = LAST_GAMEFORMS_INDEX;
     currentPageGameFormList: GameFormDescription[];
     gameListToRefresh: boolean = true;
+    numberOfGames:number;
     reloadState: boolean = true
     private messageForUpdate: string = EMPTY_MESSAGE;
     private horizontalPosition: MatSnackBarHorizontalPosition = SNACKBAR_HORIZONTAL_POSITION;
@@ -61,8 +62,11 @@ export class ListGameFormComponent implements OnInit {
                 this.lastElementIndex = this.formService.gameForms.length - 1;
             }
 
+           
+
             this.addCurrentPageGameForms();
         }
+
     }
 
     previousPageGameForms() {
@@ -80,6 +84,7 @@ export class ListGameFormComponent implements OnInit {
         for (let index: number = 0; index < this.currentPageGameFormList.length; index++) {
             this.currentPageGameFormList[index] = this.formService.gameForms[index + this.firstElementIndex];
         }
+        this.numberOfGames = this.currentPageGameFormList.length
     }
     private config(gameName: string) {
         this.socketService.connect();

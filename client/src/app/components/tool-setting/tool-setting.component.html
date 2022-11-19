@@ -1,7 +1,10 @@
+
 <div> Canvas  {{indexTool}}</div>
 
 <div class = "mouse-mode-container">
-  <button mat-mini-fab id = "{{indexTool}}" value= "write"(click)="setPencilMode($event)">W</button>
+  <button mat-mini-fab id = "{{indexTool}}" value= "write"(click)="setPencilMode($event)">
+    <mat-icon>create</mat-icon>
+  </button>
   <button mat-mini-fab id = "{{indexTool}}" value= "erase"(click)="setPencilMode($event)">E</button>
 </div>
 <div >
