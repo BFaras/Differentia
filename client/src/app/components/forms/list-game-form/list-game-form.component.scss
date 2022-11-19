@@ -6,6 +6,20 @@
     width: 100%;
 }
 
+.mat-progress-spinner{
+    position:relative;
+    left:95%;
+    top:95%;
+    height: 300px;
+
+    
+}
+
+:host ::ng-deep .mat-progress-spinner circle, .mat-spinner circle{
+    stroke: rgb(214, 169, 143);
+    
+}
+
 // percentage marche pas , meme si parent a une height!!!
 .gameFormsContainer {
     display: grid;

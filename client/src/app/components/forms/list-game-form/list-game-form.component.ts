@@ -8,7 +8,7 @@ import {
     LAST_GAMEFORMS_INDEX,
     SNACKBAR_DURATION,
     SNACKBAR_HORIZONTAL_POSITION,
-    SNACKBAR_VERTICAL_POSITION,
+    SNACKBAR_VERTICAL_POSITION
 } from '@app/client-consts';
 import { CommunicationService } from '@app/services/communication.service';
 import { FormService } from '@app/services/form.service';
@@ -25,9 +25,11 @@ export class ListGameFormComponent implements OnInit {
     lastElementIndex: number = LAST_GAMEFORMS_INDEX;
     currentPageGameFormList: GameFormDescription[];
     gameListToRefresh: boolean = true;
+    reloadState: boolean = true
     private messageForUpdate: string = EMPTY_MESSAGE;
     private horizontalPosition: MatSnackBarHorizontalPosition = SNACKBAR_HORIZONTAL_POSITION;
     private verticalPosition: MatSnackBarVerticalPosition = SNACKBAR_VERTICAL_POSITION;
+
 
     @Input() page: string;
 
@@ -42,6 +44,7 @@ export class ListGameFormComponent implements OnInit {
     async ngOnInit() {
         this.config(this.messageForUpdate);
         await this.formService.receiveGameInformations();
+        this.reloadState = false
         if (this.formService.gameForms?.length < Constants.MAX_NB_OF_FORMS_PER_PAGE) {
             this.lastElementIndex = this.formService.gameForms?.length - 1;
         }
@@ -73,6 +76,7 @@ export class ListGameFormComponent implements OnInit {
 
     private addCurrentPageGameForms() {
         this.currentPageGameFormList = new Array(this.lastElementIndex - this.firstElementIndex + 1);
+        console.log('fdsdf')
         for (let index: number = 0; index < this.currentPageGameFormList.length; index++) {
             this.currentPageGameFormList[index] = this.formService.gameForms[index + this.firstElementIndex];
         }
