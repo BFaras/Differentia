@@ -2,14 +2,15 @@
     <h1>{{ gameForm.gameName }}</h1>
     <div class="infoGameForm">
         <img class="imageGameForm" src="{{ gameForm.gameImage }}" />
+
         <div class="dataGameForm">
             <ol class="recordTimeSolo">
-                <h3>Solo</h3>
-                <li *ngFor="let records of gameForm.recordTimesBoard.recordTimesSolo">{{ records.time }} by {{ records.playerName }}</li>
+                <h3>Individuel</h3>
+                <li *ngFor="let records of gameForm.recordTimesBoard.recordTimesSolo">{{ records.time }} par{{ records.playerName }}</li>
             </ol>
             <ol class="recordTimeVersus">
-                <h3>Versus</h3>
-                <li *ngFor="let records of gameForm.recordTimesBoard.recordTimesVersus">{{ records.time }} by {{ records.playerName }}</li>
+                <h3>Multijoueur</h3>
+                <li *ngFor="let records of gameForm.recordTimesBoard.recordTimesVersus">{{ records.time }} par {{ records.playerName }}</li>
             </ol>
         </div>
     </div>
@@ -21,7 +22,7 @@
         </ng-container>
         <ng-container *ngIf="buttonPage == 'GameSelection'">
             <ng-container *ngIf="isPlayerWaiting; else noOneIsWaiting">
-                <button mat-stroked-button(click)="setJoinFlag()" (click)="openDialog(multiplayerFlag)">{{ selectionGameFormsButton[2] }}</button>
+                <button matTooltip="Rejoindre une partie multijoueur" mat-stroked-button (click)="setJoinFlag()" (click)="openDialog(multiplayerFlag)">{{ selectionGameFormsButton[2] }}</button>
             </ng-container>
             <ng-template #noOneIsWaiting>
                 <button mat-stroked-button matTooltip="Commencer une partie multijoueur"  (click)="setCreateFlag()" (click)="openDialog(multiplayerFlag)">{{ selectionGameFormsButton[0] }}</button>

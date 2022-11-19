@@ -2,11 +2,14 @@
 .mat-mini-fab{
     height: 35px;
     width: 35px;
-    background-color: green;
+    background-color: #ebcdb9;
+    color: black;
 }
-.mat-form-field {
-    color:white
+mat-label , :host ::ng-deep .mat-select-value {
+    color: white;
 }
+
+
 div{
     color:white
 }
@@ -18,4 +21,8 @@ div{
     display:flex;
     flex-direction:row;
     gap: 5px;
+}
+
+button{
+    background-color: #ebcdb9;
 }

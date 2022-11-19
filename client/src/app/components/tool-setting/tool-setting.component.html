@@ -11,9 +11,9 @@
     <label>Couleur : </label>
     <input (change) = "onChangeColor()" [(ngModel)]="color" type="color" />
   </div>
-<mat-form-field appearance="fill">
+<mat-form-field >
     <mat-label>Width</mat-label>
-    <mat-select [(value)] ="widths[0]" >
+    <mat-select [value] ="widths[0]" >
       <mat-option *ngFor="let width of widths"  (click) ="onChangeWidth(width)" [value]="width" #chosenWidth>
         {{width}}
       </mat-option>

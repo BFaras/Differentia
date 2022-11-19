@@ -1,12 +1,11 @@
 .container-view {
     display: grid;
     grid-template-rows: auto 1fr auto;
-    max-width: 1920px;
-    max-height: 1080px;
+    min-width: 1920px;
+    min-height: 1080px;
     gap: 40px;
     background: url(../../../assets/bob.jpg)
 }
-
 
 .container-paint {
     display: flex;
@@ -19,6 +18,9 @@
     border-radius: 5px;
 }
 
+app-tool-setting{
+    background-color: rgba(0, 0, 0, 0.2);
+}
 
 .container-images-paint {
     display: grid;
@@ -38,12 +40,12 @@
 
 #validate {
     width: 180px;
-    right: 3%;
+
 }
 
 #download {
     width: 120px;
-    right: 3%;
+
 }
 
 .mat-mini-fab{
