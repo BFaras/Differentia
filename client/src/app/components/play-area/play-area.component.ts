@@ -205,7 +205,6 @@ export class PlayAreaComponent implements OnInit {
 
         this.numberOfBlinkCalls++;
         setTimeout(() => {
-            //To test Raph
             this.numberOfBlinkCalls--;
             if (this.numberOfBlinkCalls <= 0) {
                 context.canvas.id = 'paused';

@@ -32,7 +32,7 @@ class HTMLElementRefCanvasMock {
     }
 }
 
-fdescribe('PlayAreaComponent', () => {
+describe('PlayAreaComponent', () => {
     let component: PlayAreaComponent;
     let fixture: ComponentFixture<PlayAreaComponent>;
     let socketClientService: SocketClientService;
@@ -232,6 +232,15 @@ fdescribe('PlayAreaComponent', () => {
         component['configurePlayAreaSocket']();
         socketTestHelper.peerSideEmit('Clue with difference pixels', cluePixels);
         expect(spy).toHaveBeenCalled();
+    });
+
+    it('should change the canvas id to paused even if makePixelsBlinkOnCanvas is called two times', () => {
+        const pixelsToBlink = [1, 2, 3];
+        component['makePixelsBlinkOnCanvas'](pixelsToBlink, component['blinkOriginalCanvas'].nativeElement);
+        jasmine.clock().tick(1000);
+        component['makePixelsBlinkOnCanvas'](pixelsToBlink, component['blinkOriginalCanvas'].nativeElement);
+        jasmine.clock().tick(3000);
+        expect(component['blinkModifiedCanvas'].nativeElement.id).toEqual('paused');
     });
 
     afterEach(() => {
