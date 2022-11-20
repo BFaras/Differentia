@@ -48,6 +48,14 @@ export class PlayAreaComponent implements OnInit {
         private imageGenerator: ImageGeneratorService,
     ) {}
 
+    get width(): number {
+        return this.canvasSize.x;
+    }
+
+    get height(): number {
+        return this.canvasSize.y;
+    }
+
     async ngOnInit(): Promise<void> {
         this.socketService.connect();
         this.configurePlayAreaSocket();
@@ -58,8 +66,12 @@ export class PlayAreaComponent implements OnInit {
         this.displayImages();
 
         this.blinkCanvasOrginial = this.blinkCanvas.nativeElement
-            .getContext('2d')!
-            .getImageData(0, 0, this.blinkCanvas.nativeElement.width, this.blinkCanvas.nativeElement.height);
+        .getContext('2d')!
+        .getImageData(0, 0, this.blinkCanvas.nativeElement.width, this.blinkCanvas.nativeElement.height);
+    }
+
+    detectDifference(event: MouseEvent) {
+        this.mouseDetection.mouseHitDetect(event);
     }
 
     private displayImages() {
@@ -80,33 +92,24 @@ export class PlayAreaComponent implements OnInit {
         this.modifiedCanvas.nativeElement.focus();
     }
 
-    get width(): number {
-        return this.canvasSize.x;
-    }
-
-    get height(): number {
-        return this.canvasSize.y;
-    }
-
-    detectDifference(event: MouseEvent) {
-        this.mouseDetection.mouseHitDetect(event);
-    }
-
     private openEndGameDialog(messageToDisplay: string) {
         this.dialog.open(PopDialogEndgameComponent, {
             height: '400px',
             width: '600px',
-            data: messageToDisplay,
+            data: {
+                message: messageToDisplay,
+                winFlag: true,
+            },
             disableClose: true,
         });
     }
 
     private configurePlayAreaSocket(): void {
         this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {
-            const isLocalPlayer = differencesInfo.socketId == this.socketService.socket.id;
+            const isLocalPlayer = differencesInfo.socketId === this.socketService.socket.id;
             this.pixelList = differencesInfo.differencePixelsNumbers;
 
-            let isDifference: boolean = differencesInfo.isValidDifference;
+            const isDifference: boolean = differencesInfo.isValidDifference;
             this.mouseDetection.playSound(isDifference, isLocalPlayer);
             this.mouseDetection.clickMessage(isDifference, isLocalPlayer);
             this.mouseDetection.verifyGameFinished(isDifference, this.isMultiplayer, isLocalPlayer);
@@ -129,7 +132,7 @@ export class PlayAreaComponent implements OnInit {
 
                 setTimeout(() => {
                     this.drawService.context5.canvas.id = 'paused';
-                }, 3000);
+                }, 3000); // CRÉER UNE CONSTANTE DANS LE FICHIER CONSANTES DANS LE COTE CLIENT
             }
         });
 

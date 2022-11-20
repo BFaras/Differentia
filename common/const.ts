@@ -14,8 +14,8 @@ export const ZERO_RADIUS = 0;
 export const FIFTEEN_RADUIS = 15;
 
 // Constantes concernant les différents modes de jeu
-export const CLASSIC_MODE = 'classic mode';
-export const LIMITED_TIME_MODE = 'limited time mode';
+export const CLASSIC_MODE = 'Classic mode';
+export const LIMITED_TIME_MODE = 'Limited time mode';
 
 // Differences constants
 export const NB_BIT_PER_PIXEL = 4;

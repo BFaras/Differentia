@@ -8,7 +8,6 @@ export class WaitingLineHandlerService {
     private playersJoiningAGame: Map<string, string[]> = new Map<string, string[]>();
     constructor() {}
 
-
     addCreatingPlayer(gameName: string, socketId: string): void {
         this.playersCreatingAGame.set(gameName, socketId);
     }

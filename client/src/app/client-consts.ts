@@ -9,3 +9,6 @@ export const MAXIMUM_NB_DIFFERENCES = 9;
 
 // Constantes pour drawWord
 export const STEP = 20;
+
+// Constantes concernant la fin de partie
+export const TIMER_HIT_ZERO_MESSAGE = 'Le temps est arrivé à zéro, vous avez perdu...';

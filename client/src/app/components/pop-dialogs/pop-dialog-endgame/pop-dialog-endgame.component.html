@@ -5,9 +5,14 @@
         </button>
     </div>
     <mat-dialog-content class="dialog-content">
-        <h1>Bravo!</h1>
+        <ng-container *ngIf="data.winFlag; else userLost">
+            <h1>Bravo!</h1>
+        </ng-container>
+        <ng-template #userLost>
+            <h1>Oops..</h1>
+        </ng-template>
         <div class="form-radius-container">
-            <p>{{ messageToDisplay }}</p>
+            <p>{{ data.message }}</p>
         </div>
         <mat-dialog-actions>
             <button mat-raised-button mat-dialog-close routerLink="/home">Ok</button>

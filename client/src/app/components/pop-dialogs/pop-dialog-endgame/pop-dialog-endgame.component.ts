@@ -7,5 +7,5 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
     styleUrls: ['./pop-dialog-endgame.component.scss'],
 })
 export class PopDialogEndgameComponent {
-    constructor(@Inject(MAT_DIALOG_DATA) public messageToDisplay: string) {}
+    constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
 }
