@@ -13,6 +13,7 @@ import { Position } from '@common/position';
 import * as io from 'socket.io';
 import Container, { Service } from 'typedi';
 import { ChronometerService } from './chronometer.service';
+import { ClueManagerService } from './clue-manager.service';
 import { GamesService } from './local.games.service';
 import { MouseHandlerService } from './mouse-handler.service';
 
@@ -24,12 +25,16 @@ export class GameManagerService {
     private readonly chronometerServices: Map<string, ChronometerService> = new Map<string, ChronometerService>();
     private readonly mouseHandlerServices: Map<string, MouseHandlerService> = new Map<string, MouseHandlerService>();
     private gamesService = Container.get(GamesService);
+    private clueManagerService: ClueManagerService;
 
-    constructor(private sio: io.Server) {}
+    constructor(private sio: io.Server) {
+        this.clueManagerService = Container.get(ClueManagerService);
+    }
 
     async beginGame(socket: io.Socket, gameName: string, adversarySocket?: io.Socket) {
         this.setupSocketGameRoom(socket, NO_OTHER_PLAYER_ROOM);
         this.setupNecessaryGameServices(socket);
+        this.clueManagerService.resetSocketClueAmount(socket);
 
         await this.getSocketMouseHandlerService(socket).generateDifferencesInformations(gameName);
         this.getSocketMouseHandlerService(socket).addPlayerToGame(socket.id);
@@ -38,6 +43,7 @@ export class GameManagerService {
         if (adversarySocket) {
             this.setupSocketGameRoom(adversarySocket, gameRoomName);
             this.getSocketMouseHandlerService(adversarySocket).addPlayerToGame(adversarySocket.id);
+            this.clueManagerService.resetSocketClueAmount(adversarySocket);
         }
         this.logRoomsWithGames(gameName, gameRoomName);
 
@@ -73,6 +79,11 @@ export class GameManagerService {
         differencesInfo.socketId = socket.id;
         differencesInfo.playerUsername = this.getSocketUsername(socket);
         this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
+    }
+
+    sendDifferentPixelsNotFound(socket: io.Socket) {
+        const differentPixel: number[] = this.getSocketMouseHandlerService(socket).getDifferentPixelListNotFound();
+        socket.emit('Cheat pixel list', differentPixel);
     }
 
     isGameFinishedSolo(socket: io.Socket) {
@@ -124,6 +135,7 @@ export class GameManagerService {
         return gameRoomName;
     }
 
+    // To test
     getSocketMouseHandlerService(socket: io.Socket): MouseHandlerService {
         const gameRoomName = this.findSocketGameRoomName(socket);
         return this.mouseHandlerServices.get(gameRoomName) as MouseHandlerService;
@@ -210,13 +222,12 @@ export class GameManagerService {
 
     private async sendImagesToClient(gameName: string, socket: io.Socket) {
         const gameImagesData: string[] = await this.gamesService.getGameImagesData(gameName);
-
         this.sio
             .to(this.findSocketGameRoomName(socket))
             .emit('game images', [gameImagesData[ORIGINAL_IMAGE_POSITION], gameImagesData[MODIFIED_IMAGE_POSITION]]);
     }
 
-    private getSocketChronometerService(socket: io.Socket): ChronometerService {
+    getSocketChronometerService(socket: io.Socket): ChronometerService {
         const gameRoomName = this.findSocketGameRoomName(socket);
         return this.chronometerServices.get(gameRoomName) as ChronometerService;
     }

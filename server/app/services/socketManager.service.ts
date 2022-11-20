@@ -6,6 +6,8 @@ import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
 import * as http from 'http';
 import * as io from 'socket.io';
+import Container from 'typedi';
+import { ClueManagerService } from './clue-manager.service';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
 import { MouseHandlerService } from './mouse-handler.service';
@@ -153,6 +155,10 @@ export class SocketManager {
                 this.gameManagerService.clickResponse(socket, position);
             });
 
+            socket.on('Cheat key pressed', () => {
+                this.gameManagerService.sendDifferentPixelsNotFound(socket);
+            });
+
             socket.on('kill the game', () => {
                 this.gameManagerService.handleAbandonEmit(socket);
                 this.gameManagerService.endGame(socket);
@@ -166,7 +172,7 @@ export class SocketManager {
                     isGameFinished = this.gameManagerService.isGameFinishedMulti(socket);
                 }
                 if (isGameFinished) {
-                    mouseHandler.resetData();
+                    mouseHandler.resetDifferencesData();
                     this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
                     this.gameManagerService.endGame(socket);
                 }
@@ -174,6 +180,14 @@ export class SocketManager {
 
             socket.on('playerMessage', (msg: ChatMessage) => {
                 this.sio.to(this.gameManagerService.findSocketGameRoomName(socket)).emit('Send message to opponent', msg);
+            });
+
+            socket.on('get clue for player', () => {
+                const clueManagerService = Container.get(ClueManagerService);
+                const playerMouseHandlerService = this.gameManagerService.getSocketMouseHandlerService(socket);
+                const playerChronometerService = this.gameManagerService.getSocketChronometerService(socket);
+                clueManagerService.sendClueToPlayer(socket, playerMouseHandlerService, playerChronometerService);
+                this.sio.to(this.gameManagerService.findSocketGameRoomName(socket)).emit('time', playerChronometerService.time);
             });
         });
     }

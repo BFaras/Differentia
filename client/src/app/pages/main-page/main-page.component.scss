@@ -1,6 +1,7 @@
 .container {
     min-height: 100vh;
     height: auto;
+    background: url(../../../assets/bob.jpg)
 }
 
 .justified {
@@ -10,10 +11,13 @@
     align-items: center;
 }
 
-.button {
-    margin-top: 10px;
-    text-align: center;
+
+.header-item {
+    font-family: The Father;
+    color: #ebcdb9;
+    font-size: 40px;
 }
+
 
 .team-name {
     margin-top: 0.25em;
@@ -67,7 +71,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 36px;
+    font-size: 40px;
 }
 .group-button-homepage {
     position: relative;
@@ -76,15 +80,13 @@
 }
 
 .button-homepage {
-    top: 349px;
-    left: 663px;
     width: 594px;
-    height: 89px;
-    border-radius: 10px;
-    font-size: 25px;
-}
-
-.button-homepage:hover {
-    background-color: #b8b8b8;
-    cursor: pointer;
+    height: 100px;
+    font-size: 35px;
+    border-radius: 20px;
+    z-index: 20;
+    font-family: The Father;
+    background-color: rgb(214, 169, 143);
+    color : black
+    
 }

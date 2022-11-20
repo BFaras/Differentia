@@ -20,6 +20,12 @@
   <button mat-mini-fab [disabled]="checkIfThereAreSavedDrawnLines()" (click) = "cancelActionDrawnLine()"><--</button>
   <button mat-mini-fab [disabled]="checkIfThereAreSavedDeletedDrawnLines()" (click) = "cancelActionDeletedDrawnLine()" >--></button>
 </div>
-<button  mat-raised-button (click) = "clearCanvas()"> Effacer Canvas</button>
-<button  mat-raised-button (click) = "copyOtherCanvas()"> Copier autre Canvas</button>
-<button  mat-raised-button (click) = "shareDataWithOtherCanvas()"> Partager autre Canvas</button>
+<button  mat-raised-button (click) = "clearCanvas()"> 
+  <i class="material-icons">delete</i>
+</button>
+<button  mat-raised-button (click) = "copyOtherCanvas()">
+  <i class="material-icons">content_copy</i>
+</button>
+<button  mat-raised-button (click) = "shareDataWithOtherCanvas()">
+  <i class="material-icons">swap_horiz</i>
+</button>

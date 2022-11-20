@@ -3,11 +3,8 @@ import { CanvasDataHandlerService } from '@app/services/canvas-data-handler.serv
 import { DrawingHistoryService } from '@app/services/drawing-history.service';
 import { KeyEventHandlerService } from '@app/services/key-event-handler.service';
 import { PencilService } from '@app/services/pencil.service';
-import { BIG, BLACK_COLOR, MEDIUM, SMALL, VERY_BIG, VERY_SMALL } from '@common/const';
+import { BIG, BLACK_COLOR, CONTROL_SHIFT_Z_SHORTCUT, CONTROL_Z_SHORTCUT, MEDIUM, SMALL, VERY_BIG, VERY_SMALL, WRITE_MODE } from '@common/const';
 
-const WRITE_MODE: string = 'write';
-const CONTROL_Z_SHORTCUT: string = 'document:keyup.control.z';
-const CONTROL_SHIFT_Z_SHORTCUT: string = 'document:keyup.control.shift.z';
 @Component({
     selector: 'app-tool-setting',
     templateUrl: './tool-setting.component.html',

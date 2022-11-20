@@ -49,6 +49,10 @@ export const MESSAGE_NOMBRE_DIFFERENCE_ERREUR = "Attention!! le nombre de differ
 export const ORIGINAL_IMAGE_POSITION = 0;
 export const MODIFIED_IMAGE_POSITION = 1;
 
+//nom image
+export const ORIGINAL_IMAGE_NAME:string = "Image Original"
+export const MODIFIED_IMAGE_NAME:string = "Image Modifié "
+
 //Arrays constants
 export const EMPTY_ARRAY_LENGTH = 0;
 export const FIRST_ARRAY_POSITION = 0;
@@ -81,6 +85,7 @@ export const MESSAGE_DIFFERENCE_FOUND_SOLO = 'Vous avez trouver une différence!
 export const MESSAGE_DIFFERENCE_FOUND_MULTI = 'Différence trouvée par ';
 export const MESSAGE_ERROR_DIFFERENCE_MULTI = 'Erreur par ';
 export const TWO_DIGIT_TIME_VALUE = '2-digit';
+export const MESSAGE_INDICE = 'Indice utilisé';
 
 //End game messages
 export const CLASSIC_SOLO_END_GAME_MESSAGE = 'Vous avez trouvé toutes les différences!';
@@ -88,3 +93,19 @@ export const CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE = 'Vous avez gagnez contre vot
 export const CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE = 'Votre adversaire a abandonné, donc vous avez gagner!';
 export const CLASSIC_MULTIPLAYER_LOST_MESSAGE = 'Vous avez perdu contre votre adversaire :(';
 export const ABANDON_MESSAGE = ' a abandonné la partie';
+
+//Constantes des indices
+export const CLUE_AMOUNT_DEFAULT = 3;
+export const FIRST_CLUE_NB = CLUE_AMOUNT_DEFAULT;
+export const SECOND_CLUE_NB = FIRST_CLUE_NB - 1;
+export const FIRST_CLUE_QUANDRANT_NB = 4;
+export const SECOND_CLUE_QUANDRANT_NB = 16;
+
+// Constantes de touches
+export const CHEAT_KEY: string = 'document:keyup.t';
+export const CLUE_KEY: string = 'document:keyup.i';
+export const CONTROL_Z_SHORTCUT: string = 'document:keyup.control.z';
+export const CONTROL_SHIFT_Z_SHORTCUT: string = 'document:keyup.control.shift.z';
+
+// Write constante
+export const WRITE_MODE: string = 'write';
