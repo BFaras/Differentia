@@ -115,7 +115,6 @@ export class PlayAreaComponent implements OnInit {
         });
     }
 
-    // To test Charles
     @HostListener(CHEAT_KEY, ['$event'])
     handleKeyboardCheat() {
         if (this.isCheatActivated) {
@@ -161,7 +160,6 @@ export class PlayAreaComponent implements OnInit {
             }
         });
 
-        // To test Charles
         this.socketService.on('Cheat pixel list', (pixelList: number[]) => {
             this.makePixelsBlinkOnCanvasCheat(pixelList, this.originalCanvas.nativeElement, this.blinkModifiedCanvas.nativeElement);
             this.makePixelsBlinkOnCanvasCheat(pixelList, this.modifiedCanvas.nativeElement, this.blinkOriginalCanvas.nativeElement);

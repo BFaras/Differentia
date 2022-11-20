@@ -209,10 +209,22 @@ describe('PlayAreaComponent', () => {
         expect(spy).toHaveBeenCalledWith(CLASSIC_MULTIPLAYER_LOST_MESSAGE);
     });
 
-    it('should call end game event when the user lose', () => {
+    it('should handle clue key pressed and send get clue for player', () => {
         const spy = spyOn(socketClientService, 'send');
         component.handleKeyboardClue();
         expect(spy).toHaveBeenCalledWith('get clue for player');
+    });
+
+    it('should handle cheat key pressed and send Cheat key pressed', () => {
+        const spy = spyOn(socketClientService, 'send');
+        component.handleKeyboardCheat();
+        expect(spy).toHaveBeenCalledWith('Cheat key pressed');
+    });
+
+    it('should handle cheat key pressed and stop the blinking', () => {
+        component['isCheatActivated'] = true;
+        component.handleKeyboardCheat();
+        expect(component['isCheatActivated']).toEqual(false);
     });
 
     it('should handle a Clue with quadrant of difference event and call makePixelsBlinkOnCanvas()', () => {
@@ -223,6 +235,14 @@ describe('PlayAreaComponent', () => {
         const spy = spyOn(component, <any>'makePixelsBlinkOnCanvas').and.callFake(() => {});
         component['configurePlayAreaSocket']();
         socketTestHelper.peerSideEmit('Clue with quadrant of difference', clueInfos);
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('should handle a Cheat pixel list event and call makePixelsBlinkOnCanvasCheat()', () => {
+        const pixelList = [0, 9, 12];
+        const spy = spyOn(component, <any>'makePixelsBlinkOnCanvasCheat').and.callFake(() => {});
+        component['configurePlayAreaSocket']();
+        socketTestHelper.peerSideEmit('Cheat pixel list', pixelList);
         expect(spy).toHaveBeenCalled();
     });
 

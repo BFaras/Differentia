@@ -135,6 +135,7 @@ export class GameManagerService {
         return gameRoomName;
     }
 
+    // To test
     getSocketMouseHandlerService(socket: io.Socket): MouseHandlerService {
         const gameRoomName = this.findSocketGameRoomName(socket);
         return this.mouseHandlerServices.get(gameRoomName) as MouseHandlerService;

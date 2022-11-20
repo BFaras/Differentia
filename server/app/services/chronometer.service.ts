@@ -38,7 +38,6 @@ export class ChronometerService {
         }
     }
 
-    //To test Raph
     increaseTimeByXSeconds(amountToIncrease: number) {
         for (let i = 0; i < amountToIncrease; i++) {
             this.increaseTime();

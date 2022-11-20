@@ -364,6 +364,15 @@ describe('SocketManager service tests', () => {
         }, RESPONSE_DELAY * 5);
     });
 
+    it("should handle 'Cheat key pressed' and call sendDifferentPixelsNotFound", (done) => {
+        const stubDifference = sinon.stub(GameManagerService.prototype, <any>'sendDifferentPixelsNotFound').callsFake(() => {});
+        clientSocket.emit('Cheat key pressed');
+        setTimeout(() => {
+            expect(stubDifference.calledOnce);
+            done();
+        }, RESPONSE_DELAY * 5);
+    });
+
     it("should handle 'Check if game is finished' and end the game", () => {
         const stub = sinon.stub(GameManagerService.prototype, <any>'isGameFinishedMulti').callsFake(() => {
             return true;

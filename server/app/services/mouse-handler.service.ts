@@ -36,12 +36,10 @@ export class MouseHandlerService {
         return this.differenceAmountFoundByPlayer.get(plrSocketId)!;
     }
 
-    // To test Charles
     getDifferentPixelListNotFound(): number[] {
         return this.doubleArrayToArray(this.getListOfDifferencesNotFound());
     }
 
-    // To test Charles
     doubleArrayToArray(doubleArray: number[][]): number[] {
         const linearizedArray: number[] = [];
 
@@ -104,6 +102,7 @@ export class MouseHandlerService {
         this.differenceAmountFoundByPlayer.set(plrSocketID, this.getNumberOfDifferencesFoundByPlayer(plrSocketID) + 1);
     }
 
+    // Ligne 119 pas couverte?
     private validateDifferencesOnClick(mousePosition: Position, plrSocketID: string): GameplayDifferenceInformations {
         const pixelNumber = this.convertMousePositionToPixelNumber(mousePosition);
         let differenceInformation: GameplayDifferenceInformations = {
