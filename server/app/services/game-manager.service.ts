@@ -81,6 +81,7 @@ export class GameManagerService {
         this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
     }
 
+    // To test Charles
     sendDifferentPixelsNotFound(socket: io.Socket) {
         const differentPixel: number[] = this.getSocketMouseHandlerService(socket).getDifferentPixelListNotFound();
         socket.emit('Cheat pixel list', differentPixel);
@@ -135,6 +136,7 @@ export class GameManagerService {
         return gameRoomName;
     }
 
+    // To test
     getSocketMouseHandlerService(socket: io.Socket): MouseHandlerService {
         const gameRoomName = this.findSocketGameRoomName(socket);
         return this.mouseHandlerServices.get(gameRoomName) as MouseHandlerService;

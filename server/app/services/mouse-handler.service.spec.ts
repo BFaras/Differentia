@@ -115,7 +115,7 @@ describe('MouseHandlerService', () => {
         const bigDifferencesList = [[0], [9, 12], [15, 16, 17]];
         mouseService['differencesList'] = bigDifferencesList;
         mouseService['differencesNbFound'] = [];
-        expect(mouseService.getDifferentPixelListNotFound()).to.equal(differencesNotFound);
+        expect(mouseService.getDifferentPixelListNotFound()).to.deep.equal(differencesNotFound);
     });
 
     it('should return a list of pixel positions with differences not found on getListOfDifferencesNotFound()', () => {
