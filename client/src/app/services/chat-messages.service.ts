@@ -7,6 +7,7 @@ import {
     MESSAGE_DIFFERENCE_FOUND_SOLO,
     MESSAGE_ERROR_DIFFERENCE_MULTI,
     MESSAGE_ERROR_DIFFERENCE_SOLO,
+    MESSAGE_INDICE,
     TWO_DIGIT_TIME_VALUE,
 } from '@common/const';
 import { EndGameInformations } from '@common/end-game-informations';
@@ -74,6 +75,16 @@ export class ChatMessagesService {
             if (endGameInfos.isMultiplayer && endGameInfos.isAbandon) {
                 observer.next(this.generateChatMessageFromGame(this.adversaryUsername + ABANDON_MESSAGE));
             }
+        });
+
+        //To test Raph
+        this.socketService.on('Clue with quadrant of difference', (endGameInfos: EndGameInformations) => {
+            observer.next(this.generateChatMessageFromGame(MESSAGE_INDICE));
+        });
+
+        //To test Raph
+        this.socketService.on('Clue with difference pixels', (endGameInfos: EndGameInformations) => {
+            observer.next(this.generateChatMessageFromGame(MESSAGE_INDICE));
         });
     }
 

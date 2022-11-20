@@ -18,12 +18,22 @@ export class ImageGeneratorService {
         return generatedImageData;
     }
 
-    copyCertainPixelsFromOneImageToACanvas(pixelPositionsArray: number[], canvasToCopyFrom: HTMLCanvasElement, canvasToDrawOn: HTMLCanvasElement) {
+    copyCertainPixelsFromOneImageToACanvas(
+        pixelPositionsArray: number[],
+        canvasToCopyFrom: HTMLCanvasElement,
+        canvasToDrawOn: HTMLCanvasElement,
+        invertColors?: boolean,
+    ) {
         const imageToDrawOnData: ImageData = canvasToDrawOn.getContext('2d')!.getImageData(0, 0, canvasToDrawOn.width, canvasToDrawOn.height);
         const imageToCopyData: ImageData = canvasToCopyFrom.getContext('2d')!.getImageData(0, 0, canvasToCopyFrom.width, canvasToCopyFrom.height);
 
         for (let pixelPosition = 0; pixelPosition < pixelPositionsArray.length; pixelPosition++) {
-            this.putPixelFromOneImageToAnother(pixelPositionsArray[pixelPosition] * NB_BIT_PER_PIXEL, imageToCopyData, imageToDrawOnData);
+            this.putPixelFromOneImageToAnother(
+                pixelPositionsArray[pixelPosition] * NB_BIT_PER_PIXEL,
+                imageToCopyData,
+                imageToDrawOnData,
+                invertColors,
+            );
         }
 
         canvasToDrawOn.getContext('2d')!.putImageData(imageToDrawOnData, 0, 0);
@@ -42,10 +52,21 @@ export class ImageGeneratorService {
         generatedImageData.data[pixelPositionInImage + ALPHA_POS] = ALPHA_OPAQUE;
     }
 
-    private putPixelFromOneImageToAnother(pixelPositionInImage: number, imageDataToCopy: ImageData, imageDataToDrawOn: ImageData) {
+    private putPixelFromOneImageToAnother(
+        pixelPositionInImage: number,
+        imageDataToCopy: ImageData,
+        imageDataToDrawOn: ImageData,
+        invertColors?: boolean,
+    ) {
         for (let currentRGBIndex = 0; currentRGBIndex <= ALPHA_POS; currentRGBIndex++) {
             const positionInDataArray = pixelPositionInImage + currentRGBIndex;
-            imageDataToDrawOn.data[positionInDataArray] = imageDataToCopy.data[positionInDataArray];
+
+            //To test
+            if (!invertColors || currentRGBIndex == ALPHA_POS) {
+                imageDataToDrawOn.data[positionInDataArray] = imageDataToCopy.data[positionInDataArray];
+            } else {
+                imageDataToDrawOn.data[positionInDataArray] = 255 - imageDataToCopy.data[positionInDataArray];
+            }
         }
     }
 }

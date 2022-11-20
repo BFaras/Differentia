@@ -24,13 +24,11 @@ describe('DifferenceDetectionService', () => {
             ],
         });
 
-        drawServiceSpy.context1 = {} as CanvasRenderingContext2D;
-        drawServiceSpy.context2 = {} as CanvasRenderingContext2D;
-        drawServiceSpy.context3 = {} as CanvasRenderingContext2D;
-        drawServiceSpy.context4 = {} as CanvasRenderingContext2D;
+        drawServiceSpy.contextClickOriginalCanvas = {} as CanvasRenderingContext2D;
+        drawServiceSpy.contextClickModifiedCanvas = {} as CanvasRenderingContext2D;
 
         socketSpy.connect();
-        drawServiceSpy.drawWord('hello', position, drawServiceSpy.context1);
+        drawServiceSpy.drawWord('hello', position, drawServiceSpy.contextClickOriginalCanvas);
         service = TestBed.inject(DifferenceDetectionService);
         service['mousePosition'] = position;
     });
@@ -68,9 +66,9 @@ describe('DifferenceDetectionService', () => {
     });
 
     it('should verify if game sound has been called', () => {
-        const audioSourceMock:string = "mock"
+        const audioSourceMock: string = 'mock';
         const spyLoad = spyOn(HTMLAudioElement.prototype, 'load');
-        const spyPlay= spyOn(HTMLAudioElement.prototype, 'play');
+        const spyPlay = spyOn(HTMLAudioElement.prototype, 'play');
         service['playAudio'](audioSourceMock);
         expect(spyLoad).toHaveBeenCalled();
         expect(spyPlay).toHaveBeenCalled();
@@ -90,20 +88,17 @@ describe('DifferenceDetectionService', () => {
         expect(socketSpy['send']).toHaveBeenCalled();
     });
 
-    it('should verify if game in multiplayer is finished',
-        () => {
-            const multiplayer = true;
-            const gameVerifiedSpy = spyOn(service, 'verifyGameFinished').and.callThrough();
-            service.verifyGameFinished(true, multiplayer, false);
-            expect(gameVerifiedSpy).toHaveBeenCalled();
-        });
+    it('should verify if game in multiplayer is finished', () => {
+        const multiplayer = true;
+        const gameVerifiedSpy = spyOn(service, 'verifyGameFinished').and.callThrough();
+        service.verifyGameFinished(true, multiplayer, false);
+        expect(gameVerifiedSpy).toHaveBeenCalled();
+    });
 
-    it('should verify if game in solo is finished',
-        () => {
-            const multiplayer = false;
-            const gameVerifiedSpy = spyOn(service, 'verifyGameFinished').and.callThrough();
-            service.verifyGameFinished(false, multiplayer, true);
-            expect(gameVerifiedSpy).toHaveBeenCalled();
-        });
-
+    it('should verify if game in solo is finished', () => {
+        const multiplayer = false;
+        const gameVerifiedSpy = spyOn(service, 'verifyGameFinished').and.callThrough();
+        service.verifyGameFinished(false, multiplayer, true);
+        expect(gameVerifiedSpy).toHaveBeenCalled();
+    });
 });

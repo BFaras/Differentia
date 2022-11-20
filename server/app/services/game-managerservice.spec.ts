@@ -150,7 +150,7 @@ describe('GameManagerService tests', () => {
     });
 
     it('should call findSocketGameRoomName() on getSocketMouseHandlerService()', () => {
-        const spy = sinon.spy(gameManagerService, <any>'findSocketGameRoomName');
+        const spy = sinon.stub(gameManagerService, <any>'findSocketGameRoomName').callsFake(() => {});
         gameManagerService.getSocketMouseHandlerService(serverSocket);
         expect(spy.calledOnce);
     });
@@ -159,6 +159,14 @@ describe('GameManagerService tests', () => {
         const spy = sinon.spy(gameManagerService, <any>'endChrono');
         gameManagerService.endGame(serverSocket);
         expect(spy.calledOnce);
+    });
+
+    it('should send the different pixels not found', () => {
+        const stub = sinon.stub(mouseHandlerService, 'getDifferentPixelListNotFound').callsFake(() => {
+            return [];
+        });
+        gameManagerService.sendDifferentPixelsNotFound(serverSocket);
+        expect(stub.calledOnce);
     });
 
     it('should tell if the game in solo is done or not', () => {
