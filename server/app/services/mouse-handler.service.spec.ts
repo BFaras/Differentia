@@ -110,6 +110,14 @@ describe('MouseHandlerService', () => {
         expect(mouseService.getNumberOfDifferencesFoundByPlayer(testSocketID)).to.equal(testNumberDiffFound);
     });
 
+    it('should return an array of pixel positions with differences not found on getDifferentPixelListNotFound()', () => {
+        const differencesNotFound = [0, 9, 12, 15, 16, 17];
+        const bigDifferencesList = [[0], [9, 12], [15, 16, 17]];
+        mouseService['differencesList'] = bigDifferencesList;
+        mouseService['differencesNbFound'] = [];
+        expect(mouseService.getDifferentPixelListNotFound()).to.equal(differencesNotFound);
+    });
+
     it('should return a list of pixel positions with differences not found on getListOfDifferencesNotFound()', () => {
         const differencesNotFound = [[0], [12], [15, 16, 17]];
         const bigDifferencesList = [[0], [5], [7], [9], [12], [15, 16, 17]];
