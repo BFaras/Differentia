@@ -17,7 +17,7 @@
     <div class="button-group">
         <ng-container *ngIf="buttonPage == 'Admin'">
             <button mat-raised-button (click)="deleteGameForm(gameForm.gameName)">{{ adminGameFormsButton[0] }}</button>
-            <button mat-raised-button>{{ adminGameFormsButton[1] }}</button>
+            <button mat-raised-button (click)="openResetDialog()">{{ adminGameFormsButton[1] }}</button>
         </ng-container>
         <ng-container *ngIf="buttonPage == 'GameSelection'">
             <ng-container *ngIf="isPlayerWaiting; else noOneIsWaiting">

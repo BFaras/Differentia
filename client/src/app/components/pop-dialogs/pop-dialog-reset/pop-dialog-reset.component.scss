@@ -1,0 +1,42 @@
+.section {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+    font-size: medium;
+}
+
+button {
+    font-size: medium;
+}
+
+h1:first-of-type {
+    font-size: 28px;
+}
+
+#verificationMsg {
+    margin-top: 20px;
+    font-size: large;
+    text-align: center;
+}
+
+#validateChoice {
+    margin-top: 25px;
+}
+
+.mat-flat-button.mat-warn,
+.mat-raised-button.mat-warn,
+.mat-fab.mat-warn,
+.mat-mini-fab.mat-warn {
+    margin-left: 480px;
+}
+
+#lastChoiceButtons {
+    margin-top: 20px;
+    margin-left: 20%;
+}
+
+#data {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    text-align: center;
+}

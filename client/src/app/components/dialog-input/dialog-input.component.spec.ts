@@ -43,7 +43,7 @@ describe('DialogInputComponent', () => {
     it('should submit Times', () => {
         let initialTime = component.initialTimeInput.nativeElement.value;
         let penaltyTime = component.penaltyTimeInput.nativeElement.value;
-        let savedTime = component.savedtimeInput.nativeElement.value;
+        let savedTime = component.savedTimeInput.nativeElement.value;
         component.submitTimes();
         expect(component.timeConstants).toEqual({ initialTime, penaltyTime, savedTime });
         expect(dialogRef['close']).toHaveBeenCalled();
@@ -66,7 +66,7 @@ describe('DialogInputComponent', () => {
     it('should not validate the time ', () => {
         component.initialTimeInput.nativeElement.value = '';
         component.penaltyTimeInput.nativeElement.value = '';
-        component.savedtimeInput.nativeElement.value = '';
+        component.savedTimeInput.nativeElement.value = '';
 
         component.validateTimeType(component.initialTimeInput, 0);
         expect(component.onlyQuitButton).toBeTrue();
