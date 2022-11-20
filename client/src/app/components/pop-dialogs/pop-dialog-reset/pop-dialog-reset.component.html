@@ -11,6 +11,9 @@
         <section class="section">
             <mat-checkbox [(ngModel)]="resetRecordsTimeBoard" (ngModelChange)="getInfoToReset()">Table des meilleurs temps de jeu</mat-checkbox>
         </section>
+        <section class="section">
+            <mat-checkbox [(ngModel)]="resetGameFormList" (ngModelChange)="getInfoToReset()">Liste des jeux</mat-checkbox>
+        </section>
         <button id="validateChoice" color="accent" mat-raised-button (click)="validateChoice()">Valider</button>
     </ng-container>
 
@@ -20,5 +23,6 @@
         <h1 id="verificationMsg">Êtes-vous sûr de vouloir réinitialiser ces données?</h1>
         <div id="data">{{ gameConstants }}</div>
         <div id="data">{{ recordsTime }}</div>
+        <div id="data">{{ gameFormList }}</div>
     </ng-container>
 </div>

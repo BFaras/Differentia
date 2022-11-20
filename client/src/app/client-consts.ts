@@ -39,3 +39,8 @@ export const EMPTY_MESSAGE = '';
 export const SNACKBAR_DURATION = 4000;
 export const SNACKBAR_HORIZONTAL_POSITION = 'center';
 export const SNACKBAR_VERTICAL_POSITION = 'top';
+
+// Constantes pour réinitialisation des données
+export const RESET_MSG_CONSTANTS = 'Constantes de temps de jeu';
+export const RESET_MSG_RECORDS_TIME = 'Table des meilleurs temps de jeu';
+export const RESET_MSG_GAME_LIST = 'Liste des jeux';

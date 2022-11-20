@@ -1,6 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { DEFAULT_INITIAL_TIME, DEFAULT_PENALTY_TIME, DEFAULT_SAVED_TIME } from '@app/client-consts';
+import {
+    DEFAULT_INITIAL_TIME,
+    DEFAULT_PENALTY_TIME,
+    DEFAULT_SAVED_TIME,
+    EMPTY_MESSAGE,
+    RESET_MSG_CONSTANTS,
+    RESET_MSG_GAME_LIST,
+    RESET_MSG_RECORDS_TIME,
+} from '@app/client-consts';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeConstants } from '@common/time-constants';
 
@@ -10,10 +18,12 @@ import { TimeConstants } from '@common/time-constants';
     styleUrls: ['./pop-dialog-reset.component.scss'],
 })
 export class PopDialogResetComponent implements OnInit {
-    recordsTime = '';
-    gameConstants = '';
+    recordsTime = EMPTY_MESSAGE;
+    gameConstants = EMPTY_MESSAGE;
+    gameFormList = EMPTY_MESSAGE;
     resetTimeConstants = false;
     resetRecordsTimeBoard = false;
+    resetGameFormList = false;
     isLastChance = false;
     isValidChoice = false;
     timeConstants: TimeConstants = {
@@ -29,12 +39,13 @@ export class PopDialogResetComponent implements OnInit {
     }
 
     getInfoToReset() {
-        this.recordsTime = this.resetRecordsTimeBoard ? 'Table des meilleurs temps de jeu' : '';
-        this.gameConstants = this.resetTimeConstants ? 'Constantes de jeu' : '';
+        this.recordsTime = this.resetRecordsTimeBoard ? RESET_MSG_RECORDS_TIME : EMPTY_MESSAGE;
+        this.gameConstants = this.resetTimeConstants ? RESET_MSG_CONSTANTS : EMPTY_MESSAGE;
+        this.gameFormList = this.resetGameFormList ? RESET_MSG_GAME_LIST : EMPTY_MESSAGE;
     }
 
     validateChoice() {
-        if (this.resetTimeConstants || this.resetRecordsTimeBoard) {
+        if (this.resetTimeConstants || this.resetRecordsTimeBoard || this.resetGameFormList) {
             this.isLastChance = true;
             this.isValidChoice = true;
         }
@@ -43,6 +54,7 @@ export class PopDialogResetComponent implements OnInit {
     resetData() {
         if (this.recordsTime) console.log('RESET');
         if (this.gameConstants) this.socketService.send('Set time constants', this.timeConstants);
+        if (this.resetGameFormList) console.log('RESET');
         this.dialogRef.close();
     }
 
