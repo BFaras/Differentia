@@ -147,7 +147,6 @@ export class SocketManager {
                 this.gameManagerService.clickResponse(socket, position);
             });
 
-            // To test Charles
             socket.on('Cheat key pressed', () => {
                 this.gameManagerService.sendDifferentPixelsNotFound(socket);
             });
