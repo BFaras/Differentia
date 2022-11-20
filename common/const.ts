@@ -49,6 +49,10 @@ export const MESSAGE_NOMBRE_DIFFERENCE_ERREUR = "Attention!! le nombre de differ
 export const ORIGINAL_IMAGE_POSITION = 0;
 export const MODIFIED_IMAGE_POSITION = 1;
 
+//nom image
+export const ORIGINAL_IMAGE_NAME:string = "Image Original"
+export const MODIFIED_IMAGE_NAME:string = "Image Modifié "
+
 //Arrays constants
 export const EMPTY_ARRAY_LENGTH = 0;
 export const FIRST_ARRAY_POSITION = 0;

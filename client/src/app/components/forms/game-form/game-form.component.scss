@@ -1,5 +1,5 @@
 body {
-    background-color: #687e91;
+    background-color: transparent;
     border-radius: 15px;
     color: #ebcdb9;
     font-weight: 55;
@@ -7,7 +7,7 @@ body {
 }
 h1 {
     align-items: center;
-    background-color: #687e91;
+    background-color: transparent;
     border-radius: 15px;
     display: flex;
     font-family: The Father;
@@ -56,9 +56,11 @@ li {
 }
 
 button {
-    color: rgb(240, 244, 248, 0.993);
-    background-color: rgb(46, 125, 129);
+    color: black;
+    background-color: rgb(214, 169, 143);
+    border:black solid 2px;
     width: 15%;
     margin-bottom: 15px;
     justify-content: center;
 }
+
