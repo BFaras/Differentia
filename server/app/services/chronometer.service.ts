@@ -14,7 +14,7 @@ export class ChronometerService {
         minutes: 0,
         seconds: 0,
     };
-    private mode: string;
+    mode: string;
     
     constructor() {}
 

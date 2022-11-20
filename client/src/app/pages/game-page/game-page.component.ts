@@ -83,9 +83,6 @@ export class GamePageComponent {
     }
 
     private configureGamePageSocketFeatures() {
-        // this.socketService.on('time hit zero', () => {
-        // });
-
         this.socketService.on(CLASSIC_MODE, () => {
             this.gameMode = CLASSIC_MODE;
         });
@@ -117,13 +114,17 @@ export class GamePageComponent {
             }
         });
 
-        this.socketService.on('game images', (imagesData: string[]) => {
+        this.socketService.on('game images', async (imagesData: string[]) => {
             this.images[ORIGINAL_IMAGE_POSITION].src = imagesData[ORIGINAL_IMAGE_POSITION];
             this.images[MODIFIED_IMAGE_POSITION].src = imagesData[MODIFIED_IMAGE_POSITION];
         });
 
         this.socketService.on('time hit zero', () => {
             this.openDialog(TIMER_HIT_ZERO_MESSAGE, false);
+        });
+
+        this.socketService.on('no more games available', () => {
+            this.openDialog('Vous avez fini tous les jeux disponibles! Vous avez gagné!', true); // Remplacer par des constantes
         });
     }
 }

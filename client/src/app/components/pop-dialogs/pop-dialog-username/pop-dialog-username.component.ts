@@ -33,7 +33,10 @@ export class PopDialogUsernameComponent implements OnInit {
     }
 
     ngOnDestroy(): void {
-        this.socketService.off('username valid');
+        // this.socketService.off('username valid');
+        // this.socketService.sendBuffer = [];
+        // this.socketService.off('username valid');
+        this.socketService.reset();
     }
 
     inputChanged(): void {
@@ -74,8 +77,8 @@ export class PopDialogUsernameComponent implements OnInit {
     private configureUsernamePopUpSocketFeatures(): void {
         this.socketService.on('username valid', () => {
             this.startWaitingLine();
-            this.closeDialog();
             this.socketService.send('gameMode is', this.gameInfo.classicFlag);
+            this.closeDialog();
         });
 
         this.socketService.on('username not valid', () => {

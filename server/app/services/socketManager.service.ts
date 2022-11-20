@@ -52,7 +52,7 @@ export class SocketManager {
             socket.on('solo limited time mode', async () => {
                 this.sio.to(socket.id).emit(LIMITED_TIME_MODE);
                 const username = this.waitingLineHandlerService.getUsernamePlayer(socket.id, this.sio);
-                const gameName = (await this.gamesService.generateRandomGame()).name;
+                const gameName = (await this.gamesService.generateRandomGame([])).name; // METTRE LE EMPTY ARRAY COMME ÉTANT ZERO_GAMES_PLAYED CONSTANTE
                 this.gameManagerService.initializeSocketGameHistoryLimitedTimeMode(socket);
                 this.gameManagerService.addGameToHistoryLimitedTimeMode(socket, gameName);
                 this.sio.to(socket.id).emit('The game is', gameName);
@@ -181,17 +181,23 @@ export class SocketManager {
                 this.gameManagerService.endGame(socket);
             });
 
-            socket.on('Check if game is finished', (isMultiplayer: boolean) => {
+            socket.on('Check if game is finished', async (isMultiplayer: boolean) => {
                 const mouseHandler: MouseHandlerService = this.gameManagerService.getSocketMouseHandlerService(socket);
-                let isGameFinished = this.gameManagerService.isGameFinishedSolo(socket);
+                const mode = this.gameManagerService.getSocketChronometerService(socket).mode;
+                const isGameFinished = await this.gameManagerService.isGameFinished(socket, isMultiplayer, mode);
 
-                if (isMultiplayer) {
-                    isGameFinished = this.gameManagerService.isGameFinishedMulti(socket);
-                }
+                // let isGameFinished = this.gameManagerService.isGameFinishedSolo(socket);
+
+                // if (isMultiplayer) {
+                //     isGameFinished = this.gameManagerService.isGameFinishedMulti(socket);
+                // }
                 if (isGameFinished) {
                     mouseHandler.resetDifferencesData();
                     this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
-                    this.gameManagerService.endGame(socket);
+                    if(mode === CLASSIC_MODE) this.gameManagerService.endGame(socket);
+                    else this.gameManagerService.endGame(socket, false, true); // À CHANGER LE FALSE POUR !TIMER_HIT_ZERO ET LE TRUE PAR NO_MORE_GAMES_AVAILABLE
+                } else {
+                    if (mode === LIMITED_TIME_MODE) await this.gameManagerService.switchGame(socket, this.sio);
                 }
             });
 

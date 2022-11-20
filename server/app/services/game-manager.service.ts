@@ -1,4 +1,4 @@
-import { DEFAULT_GAME_ROOM_NAME, GAME_ROOM_GENERAL_ID, MODIFIED_IMAGE_POSITION, NO_OTHER_PLAYER_ROOM, ORIGINAL_IMAGE_POSITION } from '@common/const';
+import { CLASSIC_MODE, DEFAULT_GAME_ROOM_NAME, GAME_ROOM_GENERAL_ID, MODIFIED_IMAGE_POSITION, NO_OTHER_PLAYER_ROOM, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
@@ -55,7 +55,7 @@ export class GameManagerService {
         this.chronometerServices.delete(gameRoomName);
         this.mouseHandlerServices.delete(gameRoomName);
         this.timeIntervals.delete(gameRoomName);
-        if (hasTheTimerHitZero) this.sio.to(gameRoomName).emit('time hit zero'); // À GÉRER DU CÔTÉ CLIENT
+        if (hasTheTimerHitZero) this.sio.to(gameRoomName).emit('time hit zero');
         if (noMoreGames) this.sio.to(gameRoomName).emit('no more games available'); // À GÉRER DU CÔTÉ CLIENT
         this.sio.in(gameRoomName).socketsLeave(gameRoomName);
     }
@@ -67,19 +67,9 @@ export class GameManagerService {
         this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
     }
 
-    isGameFinishedSolo(socket: io.Socket) {
-        const mouseHandler = this.getSocketMouseHandlerService(socket);
-        return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === mouseHandler.nbDifferencesTotal;
-    }
-
-    isGameFinishedMulti(socket: io.Socket) {
-        const mouseHandler = this.getSocketMouseHandlerService(socket);
-
-        if (mouseHandler.nbDifferencesTotal % 2 !== 0) {
-            return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === Math.floor(mouseHandler.nbDifferencesTotal / 2) + 1;
-        } else {
-            return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === mouseHandler.nbDifferencesTotal / 2 - 1;
-        }
+    async isGameFinished(socket: io.Socket, isItMultiplayer: boolean, mode: string): Promise<boolean> {
+        if (mode === CLASSIC_MODE) return this.classicIsGameFinished(socket, isItMultiplayer);
+        else return await this.limitedTimeIsGameFinished(socket, isItMultiplayer);
     }
 
     handleEndGameEmits(socket: io.Socket, isItMultiplayer: boolean) {
@@ -133,9 +123,62 @@ export class GameManagerService {
         socket.data.gamesPlayed.push(gameName);
     }
 
+    getSocketChronometerService(socket: io.Socket): ChronometerService {
+        const gameRoomName = this.findSocketGameRoomName(socket);
+        return this.chronometerServices.get(gameRoomName) as ChronometerService;
+    }
+
+    async switchGame(socket: io.Socket, server: io.Server): Promise<void> {
+        const gameToBePlayed = await this.gamesService.generateRandomGame(socket.data.gamesPlayed);
+        this.addGameToHistoryLimitedTimeMode(socket, gameToBePlayed.name);
+        const mouseHandlerService = this.getSocketMouseHandlerService(socket);
+        mouseHandlerService.resetDifferencesData();
+        await mouseHandlerService.generateDifferencesInformations(gameToBePlayed.name);
+        await this.sendImagesToClient(gameToBePlayed.name, socket);
+        server.to(socket.id).emit('The game is', gameToBePlayed.name);
+    }
+
+    private classicIsGameFinished(socket: io.Socket, isItMultiplayer: boolean): boolean {
+        let isGameFinished;
+        if (isItMultiplayer) isGameFinished = this.classicIsGameFinishedMultiplayer(socket);
+        else isGameFinished = this.classicIsGameFinishedSolo(socket);
+        return isGameFinished;
+    }
+
+    private async limitedTimeIsGameFinished(socket: io.Socket, isItMultiplayer: boolean): Promise<boolean> {
+        let isGameFinished;
+        if (isItMultiplayer) isGameFinished = await this.limitedTimeIsGameFinishedMultiplayer(socket);
+        else isGameFinished = await this.limitedTimeIsGameFinishedSolo(socket);
+        return isGameFinished;
+    }
+
+    private async limitedTimeIsGameFinishedSolo(socket: io.Socket): Promise<boolean> {
+        return socket.data.gamesPlayed === (await this.gamesService.getAllGames()).length;
+    }
+
+    private async limitedTimeIsGameFinishedMultiplayer(socket: io.Socket): Promise<boolean> {
+        return socket.data.gamesPlayed === (await this.gamesService.getAllGames()).length;
+    }
+
+    private classicIsGameFinishedSolo(socket: io.Socket) {
+        const mouseHandler = this.getSocketMouseHandlerService(socket);
+        return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === mouseHandler.nbDifferencesTotal;
+    }
+
+    private classicIsGameFinishedMultiplayer(socket: io.Socket) {
+        const mouseHandler = this.getSocketMouseHandlerService(socket);
+
+        if (mouseHandler.nbDifferencesTotal % 2 !== 0) {
+            return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === Math.floor(mouseHandler.nbDifferencesTotal / 2) + 1;
+        } else {
+            return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === mouseHandler.nbDifferencesTotal / 2 - 1;
+        }
+    }
+
     private eraseGamesFromHistoryLimitedTimeMode(socket: io.Socket): void {
         socket.data.gamesPlayed = [];
     }
+
 
     private setupNecessaryGameServices(socket: io.Socket, gameMode: string) {
         const mouseHandler: MouseHandlerService = new MouseHandlerService();
@@ -216,15 +259,9 @@ export class GameManagerService {
 
     private async sendImagesToClient(gameName: string, socket: io.Socket) {
         const gameImagesData: string[] = await this.gamesService.getGameImagesData(gameName);
-
         this.sio
             .to(this.findSocketGameRoomName(socket))
             .emit('game images', [gameImagesData[ORIGINAL_IMAGE_POSITION], gameImagesData[MODIFIED_IMAGE_POSITION]]);
-    }
-
-    private getSocketChronometerService(socket: io.Socket): ChronometerService {
-        const gameRoomName = this.findSocketGameRoomName(socket);
-        return this.chronometerServices.get(gameRoomName) as ChronometerService;
     }
 
     private getSocketTimeInterval(socket: io.Socket): NodeJS.Timer {

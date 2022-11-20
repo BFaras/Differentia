@@ -37,4 +37,8 @@ export class SocketClientService {
     off(event: string) {
         this.socket.off(event);
     }
+
+    reset(): void {
+        this.socket.sendBuffer = [];
+    }
 }

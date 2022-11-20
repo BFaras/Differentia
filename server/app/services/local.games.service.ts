@@ -25,9 +25,13 @@ export class GamesService {
         return this.games;
     }
 
-    async generateRandomGame(): Promise<Game> {
-        const max = (await this.getAllGames()).length - 1;
-        return this.games[Math.floor(Math.random() * (max + 1))];
+    async generateRandomGame(gamesAlreadyPlayed: string[]): Promise<Game> {
+        await this.getAllGames();
+        const gamesToPlay = this.games.filter((game) => {
+            return !gamesAlreadyPlayed.find((gameAlreadyPlayed) => gameAlreadyPlayed === game.name);
+        });
+        const max = gamesToPlay.length;
+        return gamesToPlay[Math.floor(Math.random() * (max + 1))];
     }
 
     async getAllGamesWithImagesData() {
