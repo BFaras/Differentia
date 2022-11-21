@@ -22,6 +22,7 @@ export const BLUE_POS = 2;
 export const ALPHA_POS = 3;
 export const BLACK_RGB = 0;
 export const ALPHA_OPAQUE = 255;
+export const MAX_RGB_VALUE = 255;
 export const DEFAULT_DIFFERENCE_POSITION = -1;
 export const RADIUS_AROUND_PIXEL = 1;
 export const UP = -1;
@@ -50,8 +51,8 @@ export const ORIGINAL_IMAGE_POSITION = 0;
 export const MODIFIED_IMAGE_POSITION = 1;
 
 //nom image
-export const ORIGINAL_IMAGE_NAME:string = "Image Original"
-export const MODIFIED_IMAGE_NAME:string = "Image Modifié "
+export const ORIGINAL_IMAGE_NAME: string = 'Image Original';
+export const MODIFIED_IMAGE_NAME: string = 'Image Modifié ';
 
 //Arrays constants
 export const EMPTY_ARRAY_LENGTH = 0;

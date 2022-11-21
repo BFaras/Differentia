@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ALPHA_OPAQUE, ALPHA_POS, BLACK_RGB, NB_BIT_PER_PIXEL } from '@common/const';
+import { ALPHA_OPAQUE, ALPHA_POS, BLACK_RGB, MAX_RGB_VALUE, NB_BIT_PER_PIXEL } from '@common/const';
 
 @Injectable({
     providedIn: 'root',
@@ -65,7 +65,7 @@ export class ImageGeneratorService {
             if (!invertColors || currentRGBIndex == ALPHA_POS) {
                 imageDataToDrawOn.data[positionInDataArray] = imageDataToCopy.data[positionInDataArray];
             } else {
-                imageDataToDrawOn.data[positionInDataArray] = 255 - imageDataToCopy.data[positionInDataArray];
+                imageDataToDrawOn.data[positionInDataArray] = MAX_RGB_VALUE - imageDataToCopy.data[positionInDataArray];
             }
         }
     }
