@@ -1,3 +1,5 @@
+import { Position } from './position';
+
 // ChronometerService constants
 export const ONE_SECOND = 1000;
 export const HALF_A_SECOND = 500;
@@ -101,6 +103,11 @@ export const FIRST_CLUE_NB = CLUE_AMOUNT_DEFAULT;
 export const SECOND_CLUE_NB = FIRST_CLUE_NB - 1;
 export const FIRST_CLUE_QUANDRANT_NB = 4;
 export const SECOND_CLUE_QUANDRANT_NB = 16;
+export const CARDINAL_DIRECTION_RAD_ANGLE = Math.PI / 4;
+export const MIDDLE_OF_IMAGE_POSITION: Position = {
+    x: IMAGE_WIDTH / 2,
+    y: IMAGE_HEIGHT / 2,
+};
 
 // Constantes de touches
 export const CHEAT_KEY: string = 'document:keyup.t';
