@@ -9,6 +9,7 @@ import * as io from 'socket.io';
 import Container from 'typedi';
 import { RecordTimesService } from './database.games.service';
 import { DatabaseService } from './database.service';
+import { ClueManagerService } from './clue-manager.service';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
 import { MouseHandlerService } from './mouse-handler.service';
@@ -68,16 +69,16 @@ export class SocketManager {
                 this.sio.emit(`${gameName} let me tell you if someone is waiting`, true);
             });
 
-            socket.on('Reload game selection page', (msg: string) => {
-                let roomToKeep: string[] = [];
-                for (const rooms of this.gameManagerService.getGameRooms().entries()) {
-                    if (roomToKeep.length === 0)
-                        rooms[1].forEach((room) => {
-                            roomToKeep.push(room);
-                        });
-                    else roomToKeep = roomToKeep.concat(rooms[1]);
+            socket.on('Reload game selection page', (gameName: string) => {
+                if (gameName) {
+                    this.sio.emit('close popDialogUsername', gameName);
+                    this.sio.except(this.gameManagerService.collectAllSocketsRooms()).emit('Page reloaded', gameName);
+                    this.gameManagerService.allSocketsRooms = [];
                 }
-                this.sio.except(roomToKeep).emit('Page reloaded', msg);
+            });
+
+            socket.on('refresh games after closing popDialog', (value) => {
+                this.sio.to(value).emit('game list updated', value);
             });
 
             socket.on('I left', (gameName: string) => {
@@ -150,6 +151,10 @@ export class SocketManager {
                 this.gameManagerService.clickResponse(socket, position);
             });
 
+            socket.on('Cheat key pressed', () => {
+                this.gameManagerService.sendDifferentPixelsNotFound(socket);
+            });
+
             socket.on('kill the game', () => {
                 this.gameManagerService.handleAbandonEmit(socket);
                 this.gameManagerService.endGame(socket);
@@ -163,7 +168,7 @@ export class SocketManager {
                     isGameFinished = this.gameManagerService.isGameFinishedMulti(socket);
                 }
                 if (isGameFinished) {
-                    mouseHandler.resetData();
+                    mouseHandler.resetDifferencesData();
                     this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
 
                     this.gameManagerService.endGame(socket);
@@ -177,6 +182,13 @@ export class SocketManager {
             socket.on('Need recordTimes', async (gameName: string) => {
                 const gameTimes = await this.recordTimesService.getGameTimes(gameName);
                 socket.emit('Send Record Times', gameTimes);
+            });
+            socket.on('get clue for player', () => {
+                const clueManagerService = Container.get(ClueManagerService);
+                const playerMouseHandlerService = this.gameManagerService.getSocketMouseHandlerService(socket);
+                const playerChronometerService = this.gameManagerService.getSocketChronometerService(socket);
+                clueManagerService.sendClueToPlayer(socket, playerMouseHandlerService, playerChronometerService);
+                this.sio.to(this.gameManagerService.findSocketGameRoomName(socket)).emit('time', playerChronometerService.time);
             });
         });
     }

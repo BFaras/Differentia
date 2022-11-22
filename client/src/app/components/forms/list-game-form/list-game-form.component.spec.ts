@@ -1,12 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { RecordTimesBoard } from '@app/classes/record-times-board';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
+import { CommunicationService } from '@app/services/communication.service';
 import { FormService } from '@app/services/form.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { Constants } from '@common/config';
+import { Game } from '@common/game';
+import { of } from 'rxjs/internal/observable/of';
+
 import { Socket } from 'socket.io-client';
 import { ListGameFormComponent } from './list-game-form.component';
 export class SocketClientServiceMock extends SocketClientService {
@@ -27,11 +32,22 @@ describe('ListGameFormComponent', () => {
         new GameFormDescription('Dog game', 'image', new RecordTimesBoard([], [])),
     ];
     const gameFormListWithOnlyOneGame = [new GameFormDescription('Car game', 'image', new RecordTimesBoard([], []))];
-
+    const games: Game[] = [
+        {
+            name: 'Car game',
+            numberOfDifferences: 7,
+            times: [],
+            images: ['Car.bmp', 'Cardiff.bmp'],
+            differencesList: [[]],
+        },
+    ];
     let listGameFormComp: ListGameFormComponent;
     let fixture: ComponentFixture<ListGameFormComponent>;
     let formServiceSpy: jasmine.SpyObj<FormService>;
     let snackBarSpy: jasmine.SpyObj<MatSnackBar>;
+    let communicationSpy: jasmine.SpyObj<CommunicationService>;
+    let router: jasmine.SpyObj<Router>;
+
     let socketClientServiceMock: SocketClientServiceMock;
     let socketTestHelper: SocketTestHelper;
 
@@ -40,6 +56,8 @@ describe('ListGameFormComponent', () => {
     beforeAll(async () => {
         formServiceSpy = jasmine.createSpyObj('FormService', ['receiveGameInformations', 'deleteGameForm']);
         snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
+        communicationSpy = jasmine.createSpyObj('CommunicationService', ['deleteGame']);
+        router = jasmine.createSpyObj('Router', ['navigate', 'parseUrl']);
 
         socketTestHelper = new SocketTestHelper();
         socketClientServiceMock = new SocketClientServiceMock();
@@ -53,6 +71,8 @@ describe('ListGameFormComponent', () => {
                 { provide: FormService, useValue: formServiceSpy },
                 { provide: SocketClientService, useValue: socketClientServiceMock },
                 { provide: MatSnackBar, useValue: snackBarSpy },
+                { provide: Router, useValue: router },
+                { provide: CommunicationService, useValue: communicationSpy },
             ],
         }).compileComponents();
 
@@ -62,6 +82,8 @@ describe('ListGameFormComponent', () => {
         jasmine.clock().install();
 
         formService = listGameFormComp.formService;
+        communicationSpy['deleteGame'].and.returnValue(of(games));
+
         formService.gameForms = gameFormsInTestFormService;
         listGameFormComp.ngOnInit();
         fixture.detectChanges();
@@ -109,35 +131,81 @@ describe('ListGameFormComponent', () => {
         expect(listGameFormComp.lastElementIndex).toEqual(Constants.MAX_NB_OF_FORMS_PER_PAGE - 1);
     });
 
-    it('should be able to delete a gameForm', () => {
+    it('should be able to delete a gameForm', async () => {
         formService.gameForms = gameFormsInTestFormService;
         const gameName = 'Dog game';
-        listGameFormComp.deleteGameForm(gameName);
-        expect(formService.gameToDelete).toEqual(gameName);
-    });
-
-    it('should call config when deleting a gameForm', () => {
-        const gameName = 'Dog game';
-        const configSpy = spyOn(listGameFormComp, <any>'config').and.callThrough();
-        listGameFormComp.deleteGameForm(gameName);
-        expect(configSpy).toHaveBeenCalled();
+        await listGameFormComp.deleteAndRefreshGames(gameName);
+        expect(communicationSpy['deleteGame']).toHaveBeenCalled();
     });
 
     it('should not call socket in config', () => {
         let gameName = '';
+        const routerMock = TestBed.inject(Router);
+        // @ts-ignore: force this private property value for testing.
+        routerMock.url = '/fakeLocation';
+        const spy = spyOn(listGameFormComp, <any>'refreshGames');
         socketTestHelper.peerSideEmit('Page reloaded', gameName);
         listGameFormComp['config'](gameName);
-
-        expect(listGameFormComp['messageForUpdate']).toEqual('');
+        expect(spy).not.toHaveBeenCalled();
     });
 
-    it('should call socket in config', () => {
+    it('should call config when deleting a gameForm', async () => {
+        const gameName = 'Dog game';
+        const configSpy = spyOn(listGameFormComp, <any>'config').and.callThrough();
+        await listGameFormComp.deleteAndRefreshGames(gameName);
+        jasmine.clock().tick(100);
+        expect(configSpy).toHaveBeenCalled();
+    });
+
+    it('should call socket <Page reloaded> in config', () => {
         let gameName = 'Lucky';
+        const routerMock = TestBed.inject(Router);
+        // @ts-ignore: force this private property value for testing.
+        routerMock.url = '/admin';
+
+        const spy = spyOn(listGameFormComp, <any>'refreshGames');
         socketTestHelper.peerSideEmit('Page reloaded', gameName);
         listGameFormComp['config'](gameName);
-
-        expect(listGameFormComp['messageForUpdate']).toEqual('Reload');
         expect(snackBarSpy['open']).toHaveBeenCalled();
+        expect(listGameFormComp['gameListToRefresh']).toBeTrue();
+        expect(spy).toHaveBeenCalled();
+        expect(listGameFormComp['messageForUpdate']).toEqual('');
+        expect(router['url']).toEqual('/admin');
+    });
+
+    it('should execute instructions in socket <game list updated>', () => {
+        let gameName = 'Lucky';
+        socketClientServiceMock.socket.id = 'Lucky';
+        const spy = spyOn(listGameFormComp, <any>'refreshGames');
+        socketTestHelper.peerSideEmit('game list updated', gameName);
+        listGameFormComp['config'](gameName);
+        expect(listGameFormComp['gameListToRefresh']).toBeTrue();
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('should not execute instructions in socket <game list updated>', () => {
+        let gameName = 'Lucky';
+        socketClientServiceMock.socket.id = 'Bruh';
+        const spy = spyOn(listGameFormComp, <any>'refreshGames');
+        socketTestHelper.peerSideEmit('game list updated', gameName);
+        listGameFormComp['config'](gameName);
+        expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('should call refreshGames and ngOnInit', () => {
+        const spy = spyOn(listGameFormComp, <any>'ngOnInit');
+        listGameFormComp['refreshGames'](true);
+        expect(listGameFormComp['gameListToRefresh']).toBeFalse();
+        expect(listGameFormComp['messageForUpdate']).toEqual('');
+        expect(listGameFormComp['firstElementIndex']).toEqual(0);
+        expect(listGameFormComp['lastElementIndex']).toEqual(3);
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('should call refreshGames but not ngOnInit', () => {
+        const spy = spyOn(listGameFormComp, <any>'ngOnInit');
+        listGameFormComp['refreshGames'](false);
+        expect(spy).not.toHaveBeenCalled();
     });
 
     afterEach(() => {

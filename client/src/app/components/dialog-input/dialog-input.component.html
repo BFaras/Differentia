@@ -1,10 +1,29 @@
+<button mat-mini-fab color="warn" aria-label="close dialog" (click)="this.dialogRef.close()">
+    <mat-icon>close</mat-icon>
+</button>
 <h1 mat-dialog-title>Constantes de jeu</h1>
+
 <div mat-dialog-content class="inputs">
-    <ng-container *ngFor="let data of datas">
-        <mat-form-field hintLabel="{{ data.valueUnit }}" appearance="fill">
-            <mat-label>{{ data.inputName }}</mat-label>
-            <input matInput #input placeholder="{{ data.placeHolder }}" />
-            <mat-hint align="end">{{ input.value || data.defaultTime }}</mat-hint>
-        </mat-form-field>
-    </ng-container>
+    <mat-form-field hintLabel="{{ datas[0].valueUnit }}" appearance="fill">
+        <mat-label>{{ datas[0].inputName }}</mat-label>
+        <input matInput #timeInput1 placeholder="{{ datas[0].placeHolder }}" (change)="validateTimeType(this.initialTimeInput, 0)" />
+        <mat-hint align="end">{{ timeInput1.value || datas[0].defaultTime }}</mat-hint>
+    </mat-form-field>
+    <mat-form-field hintLabel="{{ datas[1].valueUnit }}" appearance="fill">
+        <mat-label>{{ datas[1].inputName }}</mat-label>
+        <input matInput #timeInput2 placeholder="{{ datas[1].placeHolder }}" (change)="validateTimeType(this.penaltyTimeInput, 1)" />
+        <mat-hint align="end">{{ timeInput2.value || datas[1].defaultTime }}</mat-hint>
+    </mat-form-field>
+    <mat-form-field hintLabel="{{ datas[2].valueUnit }}" appearance="fill">
+        <mat-label>{{ datas[2].inputName }}</mat-label>
+        <input matInput #timeInput3 placeholder="{{ datas[2].placeHolder }}" (change)="validateTimeType(this.savedtimeInput, 2)" />
+        <mat-hint align="end">{{ timeInput3.value || datas[2].defaultTime }}</mat-hint>
+    </mat-form-field>
 </div>
+
+<ng-container *ngIf="timeValid[0] && timeValid[1] && timeValid[2]">
+    <button id="submitButton" mat-raised-button *ngIf="!onlyQuitButton" (click)="submitTimes()">Valider</button>
+</ng-container>
+<ng-container *ngIf="!timeValid[0] || !timeValid[1] || !timeValid[2]">
+    <h2>Le temps doit être un nombre supérieur à 0</h2>
+</ng-container>
