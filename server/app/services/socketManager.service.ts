@@ -7,9 +7,9 @@ import { Position } from '@common/position';
 import * as http from 'http';
 import * as io from 'socket.io';
 import Container from 'typedi';
-import { RecordTimesService } from './database.games.service';
-import { DatabaseService } from './database.service';
 import { ClueManagerService } from './clue-manager.service';
+//import { RecordTimesService } from './database.games.service';
+//import { DatabaseService } from './database.service';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
 import { MouseHandlerService } from './mouse-handler.service';
@@ -18,8 +18,8 @@ import { WaitingLineHandlerService } from './waiting-line-handler.service';
 export class SocketManager {
     socket: io.Socket;
     private sio: io.Server;
-    private databaseService: DatabaseService = Container.get(DatabaseService);
-    private recordTimesService: RecordTimesService = new RecordTimesService(this.databaseService);
+   // private databaseService: DatabaseService = Container.get(DatabaseService);
+   // private recordTimesService: RecordTimesService = new RecordTimesService(this.databaseService);
     private waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
     private gameManagerService: GameManagerService;
 
@@ -179,10 +179,11 @@ export class SocketManager {
                 this.sio.to(this.gameManagerService.findSocketGameRoomName(socket)).emit('Send message to opponent', msg);
             });
 
-            socket.on('Need recordTimes', async (gameName: string) => {
+            /*socket.on('Need recordTimes', async (gameName: string) => {
                 const gameTimes = await this.recordTimesService.getGameTimes(gameName);
                 socket.emit('Send Record Times', gameTimes);
-            });
+            });*/
+
             socket.on('get clue for player', () => {
                 const clueManagerService = Container.get(ClueManagerService);
                 const playerMouseHandlerService = this.gameManagerService.getSocketMouseHandlerService(socket);

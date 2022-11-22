@@ -11,7 +11,7 @@ import { Service } from 'typedi';
 export class DatabaseService {
     private db: Db;
     private client: MongoClient;
-    private DEFAULT_RECORD_TIMES: GameModeTimes = {
+    defaultRecordTimes: GameModeTimes = {
         soloGameTimes: [new RecordTime('02:00', 'Mark'), new RecordTime('02:15', 'Jean'), new RecordTime('02:30', 'Paul')],
         multiplayerGameTimes: [new RecordTime('02:00', 'Brook'), new RecordTime('02:15', 'Leon'), new RecordTime('02:30', 'Mike')],
     };
@@ -39,36 +39,44 @@ export class DatabaseService {
     async populateDB(): Promise<void> {
         const gamesTimes: GameTimes[] = [
             {
-                name: 'Car Game',
-                recordTimes: this.DEFAULT_RECORD_TIMES,
+                name: 'Car game',
+                recordTimes: this.defaultRecordTimes,
             },
             {
-                name: 'Bike Game',
-                recordTimes: this.DEFAULT_RECORD_TIMES,
+                name: 'Bike game',
+                recordTimes: this.defaultRecordTimes,
             },
             {
-                name: 'House Game',
-                recordTimes: this.DEFAULT_RECORD_TIMES,
+                name: 'House game',
+                recordTimes: this.defaultRecordTimes,
             },
             {
-                name: 'TV Game',
-                recordTimes: this.DEFAULT_RECORD_TIMES,
+                name: 'Plane game',
+                recordTimes: this.defaultRecordTimes,
             },
             {
-                name: 'Table Game',
-                recordTimes: this.DEFAULT_RECORD_TIMES,
+                name: 'TV game',
+                recordTimes: this.defaultRecordTimes,
             },
             {
-                name: 'Clown Game',
-                recordTimes: this.DEFAULT_RECORD_TIMES,
+                name: 'Table game',
+                recordTimes: this.defaultRecordTimes,
             },
             {
-                name: 'Dog Game',
-                recordTimes: this.DEFAULT_RECORD_TIMES,
+                name: 'Chair game',
+                recordTimes: this.defaultRecordTimes,
+            },
+            {
+                name: 'Clown game',
+                recordTimes: this.defaultRecordTimes,
+            },
+            {
+                name: 'Dog game',
+                recordTimes: this.defaultRecordTimes,
             },
             {
                 name: 'new game',
-                recordTimes: this.DEFAULT_RECORD_TIMES,
+                recordTimes: this.defaultRecordTimes,
             },
         ];
 
