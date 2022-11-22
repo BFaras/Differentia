@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
     CARDINAL_DIRECTION_RAD_ANGLE,
+    CIRCLE_CIRCONFERENCE,
     FIRST_CLUE_NB,
     FIRST_CLUE_QUANDRANT_NB,
     IMAGE_HEIGHT,
@@ -92,12 +93,16 @@ export class ClueHandlerService {
     private findDifferenceCardinalDirection(differencePixels: number[]): CardinalDirection {
         const cardinalDirectionsLength = Object.keys(CardinalDirection).length;
         let differenceCardinalDirection: CardinalDirection = cardinalDirectionsLength - 1;
-        let pixelPosition: Position = this.convertPixelNbToPosition(differencePixels[Math.floor(differencePixels.length / 2)]);
-        let differenceAngleWithOrigin = Math.atan2(pixelPosition.x - MIDDLE_OF_IMAGE_POSITION.x, pixelPosition.y - MIDDLE_OF_IMAGE_POSITION.y);
+        const pixelPosition: Position = this.convertPixelNbToPosition(differencePixels[Math.floor(differencePixels.length / 2)]);
+        let differenceAngleWithOrigin = -Math.atan2(pixelPosition.y - MIDDLE_OF_IMAGE_POSITION.y, pixelPosition.x - MIDDLE_OF_IMAGE_POSITION.x);
+
+        if (differenceAngleWithOrigin < 0) {
+            differenceAngleWithOrigin = CIRCLE_CIRCONFERENCE + differenceAngleWithOrigin;
+        }
 
         for (let cardinalDirection: CardinalDirection = 0; cardinalDirection < cardinalDirectionsLength - 1; cardinalDirection++) {
             const currentCardinalAngle = cardinalDirection * CARDINAL_DIRECTION_RAD_ANGLE;
-            let nextCardinalAngle = (cardinalDirection + 1) * CARDINAL_DIRECTION_RAD_ANGLE;
+            const nextCardinalAngle = (cardinalDirection + 1) * CARDINAL_DIRECTION_RAD_ANGLE;
 
             if (differenceAngleWithOrigin >= currentCardinalAngle && differenceAngleWithOrigin < nextCardinalAngle) {
                 differenceCardinalDirection = cardinalDirection;

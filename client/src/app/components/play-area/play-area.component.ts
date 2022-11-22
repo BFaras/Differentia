@@ -173,8 +173,9 @@ export class PlayAreaComponent implements OnInit {
             this.makePixelsBlinkOnCanvas(quandrantPixelsNb, this.modifiedCanvas.nativeElement, true);
         });
 
-        this.socketService.on('Clue with difference pixels', (differenceNotFoundPixels: number[]) => {
-            this.makePixelsBlinkOnCanvas(differenceNotFoundPixels, this.originalCanvas.nativeElement);
+        this.socketService.on('Clue with difference pixels', (differenceCluePixels: number[]) => {
+            this.clueHandlerService.getCompassInformationsForClue(differenceCluePixels);
+            this.makePixelsBlinkOnCanvas(differenceCluePixels, this.originalCanvas.nativeElement);
         });
 
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {

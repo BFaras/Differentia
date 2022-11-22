@@ -104,6 +104,7 @@ export const SECOND_CLUE_NB = FIRST_CLUE_NB - 1;
 export const FIRST_CLUE_QUANDRANT_NB = 4;
 export const SECOND_CLUE_QUANDRANT_NB = 16;
 export const CARDINAL_DIRECTION_RAD_ANGLE = Math.PI / 4;
+export const CIRCLE_CIRCONFERENCE = Math.PI * 2;
 export const MIDDLE_OF_IMAGE_POSITION: Position = {
     x: IMAGE_WIDTH / 2,
     y: IMAGE_HEIGHT / 2,
