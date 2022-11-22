@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { RecordTimesBoard } from '@app/classes/record-times-board';
 import { Game } from '@common/game';
+import { GameModeTimes } from '@common/games-record-times';
 import { firstValueFrom } from 'rxjs';
 import { CommunicationService } from './communication.service';
-//import { SocketClientService } from './socket-client.service';
+import { SocketClientService } from './socket-client.service';
 
 @Injectable({
     providedIn: 'root',
@@ -16,7 +17,7 @@ export class FormService {
     gameForms: GameFormDescription[] = [];
     gameToDelete: string = '';
 
-    constructor(private communicationService: CommunicationService) {}
+    constructor(private communicationService: CommunicationService, private socketService: SocketClientService) {}
 
     async receiveGameInformations() {
         this.resetGameForms();
@@ -45,11 +46,17 @@ export class FormService {
     }
 
     private initializeGameForm(index: number) {
-        // this.socketService.send('Need recordTimes', this.listName[index]);
-        // this.socketService.on('Send Record times', (gameRecordTimes: GameModeTimes) => {
-        //     this.gameForms.push(new GameFormDescription(this.listName[index], this.listImage[index], new RecordTimesBoard(gameRecordTimes.soloGameTimes, gameRecordTimes.multiplayerGameTimes)));
-        // });
-        this.gameForms.push(new GameFormDescription(this.listName[index], this.listImage[index], new RecordTimesBoard([], [])));
+        this.socketService.send('Need recordTimes', this.listName[index]);
+        this.socketService.on('Send Record times', (gameRecordTimes: GameModeTimes) => {
+            this.gameForms.push(
+                new GameFormDescription(
+                    this.listName[index],
+                    this.listImage[index],
+                    new RecordTimesBoard(gameRecordTimes.soloGameTimes, gameRecordTimes.multiplayerGameTimes),
+                ),
+            );
+        });
+        //this.gameForms.push(new GameFormDescription(this.listName[index], this.listImage[index], new RecordTimesBoard([], [])));
     }
 
     private resetGameForms() {

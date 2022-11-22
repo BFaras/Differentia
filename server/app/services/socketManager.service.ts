@@ -6,19 +6,19 @@ import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
 import * as http from 'http';
 import * as io from 'socket.io';
+import Container from 'typedi';
+import { RecordTimesService } from './database.games.service';
+import { DatabaseService } from './database.service';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
 import { MouseHandlerService } from './mouse-handler.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
-import {RecordTimesService} from './database.games.service';
-import { DatabaseService } from './database.service';
-
 
 export class SocketManager {
     socket: io.Socket;
     private sio: io.Server;
-    private databaseService: DatabaseService = new DatabaseService();
-    private recordTimesService : RecordTimesService = new RecordTimesService(this.databaseService);
+    private databaseService: DatabaseService = Container.get(DatabaseService);
+    private recordTimesService: RecordTimesService = new RecordTimesService(this.databaseService);
     private waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
     private gameManagerService: GameManagerService;
 
@@ -165,7 +165,7 @@ export class SocketManager {
                 if (isGameFinished) {
                     mouseHandler.resetData();
                     this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
-                    
+
                     this.gameManagerService.endGame(socket);
                 }
             });
@@ -173,8 +173,8 @@ export class SocketManager {
             socket.on('playerMessage', (msg: ChatMessage) => {
                 this.sio.to(this.gameManagerService.findSocketGameRoomName(socket)).emit('Send message to opponent', msg);
             });
-           
-            socket.on('Need recordTimes', async (gameName: string) => { 
+
+            socket.on('Need recordTimes', async (gameName: string) => {
                 const gameTimes = await this.recordTimesService.getGameTimes(gameName);
                 socket.emit('Send Record Times', gameTimes);
             });

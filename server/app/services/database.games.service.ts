@@ -1,8 +1,8 @@
 import { Collection, Filter, FindOptions, WithId } from 'mongodb';
 //import { Time } from '../../../common/time';
-//import { HttpException } from '@app/classes/http.exception';
+import { HttpException } from '@app/classes/http.exception';
 import { DatabaseService } from './database.service';
-//import { StatusCodes } from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 import { GameTimes } from '@common/game-times';
 import { GameModeTimes } from '@common/games-record-times';
 import 'dotenv/config';
@@ -10,11 +10,9 @@ import { Service } from 'typedi';
 
 @Service()
 export class RecordTimesService {
-    constructor(private databaseService: DatabaseService) {
-    }
+    constructor(private databaseService: DatabaseService) {}
 
     get collection(): Collection<GameTimes> {
-        console.log(this.databaseService.database.collection(process.env.DATABASE_COLLECTION!));
         return this.databaseService.database.collection(process.env.DATABASE_COLLECTION!);
     }
 
@@ -27,16 +25,16 @@ export class RecordTimesService {
     //     });
     // }
 
-    // async getGame(nameOfWantedGame: string): Promise<Game> {
-    //   return this.collection
-    //     .findOne({ name: nameOfWantedGame })
-    //     .then((game: WithId<Game>) => {
-    //       if(game) {
-    //           return game;
-    //       }
-    //       throw new HttpException('Game not found', StatusCodes.NOT_FOUND);
-    //     });
-    // }
+    async getGame(nameOfWantedGame: string): Promise<GameTimes> {
+      return this.collection
+        .findOne({ name: nameOfWantedGame })
+        .then((game: WithId<GameTimes>) => {
+          if(game) {
+              return game;
+          }
+          throw new HttpException('Game not found', StatusCodes.NOT_FOUND);
+        });
+    }
 
     // async addGame(game: Game): Promise<void> {
     //   if (await this.validateGame(game)) {
@@ -90,8 +88,8 @@ export class RecordTimesService {
         let projection: FindOptions = { projection: { recordTimes: 1, _id: 0 } };
         return this.collection
             .findOne(filterQuery, projection)
-            .then((game: WithId<GameTimes>) => {
-                return game.recordTimes;
+            .then((gameTimes: WithId<GameTimes>) => {
+                return gameTimes.recordTimes;
             })
             .catch(() => {
                 throw new Error('Failed to get the game times');
