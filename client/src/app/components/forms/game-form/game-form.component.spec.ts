@@ -61,9 +61,15 @@ describe('GameFormComponent', () => {
         expect(emitSpy).toHaveBeenCalled();
     });
 
-    it('should open dialog', () => {
+    it('should open dialog to get the players username ', () => {
         const dialogSpy = spyOn(gameFormComp['dialog'], 'open');
         gameFormComp.openDialog(true);
+        expect(dialogSpy).toHaveBeenCalled();
+    });
+
+    it('should open dialog to reset data', () => {
+        const dialogSpy = spyOn(gameFormComp['dialog'], 'open');
+        gameFormComp.openResetDialog();
         expect(dialogSpy).toHaveBeenCalled();
     });
 

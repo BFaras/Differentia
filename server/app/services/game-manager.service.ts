@@ -50,6 +50,10 @@ export class GameManagerService {
         await this.sendImagesToClient(gameName, socket);
     }
 
+    async resetGameList() {
+        this.sio.emit('Ready to reset game list', await this.gamesService.resetGameList());
+    }
+
     async startMultiplayerMatch(socket: io.Socket, adversarySocket: io.Socket, gameName: string) {
         adversarySocket.emit(`${gameName} you have been accepted`);
         await this.beginGame(socket, gameName, adversarySocket);

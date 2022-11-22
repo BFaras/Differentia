@@ -11,8 +11,19 @@ export const INITIAL_TIME_INDEX = 0;
 export const PENALTY_TIME_INDEX = 1;
 export const SAVED_TIME_INDEX = 2;
 
-export const MINIMUM_TIME_VALUE = 0;
+export const MINIMUM_INITIAL_TIME = 15;
+export const MINIMUM_PENALTY_TIME = 2;
+export const MINIMUM_SAVED_TIME = 2;
+
+export const MAXIMUM_INITIAL_TIME = 160;
+export const MAXIMUM_PENALTY_TIME = 40;
+export const MAXIMUM_SAVED_TIME = 40;
+export const TIME_RATIO = 4;
+
 export const EMPTY_TIME = '';
+export const MSG_PENALTY_TIME_RATIO = 'Le temps de pénalité ne doit pas dépasser le quart du temps initial';
+export const MSG_SAVED_TIME_RATIO = 'Le temps gagné ne doit pas  dépasser le quart du temps initial';
+export const MSG_ALL_TIME_RATIO = 'Le temps de pénalité et le temps gagné ne doivent pas dépasser le quart du temps initial';
 
 //Constantes vérification jeu avant upload
 export const MINIMUM_NB_DIFFERENCES = 3;
@@ -28,3 +39,9 @@ export const EMPTY_MESSAGE = '';
 export const SNACKBAR_DURATION = 4000;
 export const SNACKBAR_HORIZONTAL_POSITION = 'center';
 export const SNACKBAR_VERTICAL_POSITION = 'top';
+export const RESET_MSG_GAME_LIST = 'La liste des jeux a été réinitialisé :(';
+
+// Constantes pour réinitialisation des données
+export const RESET_INFO_CONSTANTS = 'Constantes de temps de jeu';
+export const RESET_INFO_RECORDS_TIME = 'Table des meilleurs temps de jeu';
+export const RESET_INFO_GAME_LIST = 'Liste des jeux';

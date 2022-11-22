@@ -31,6 +31,7 @@ import { TopbarComponent } from './components/topbar/topbar.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
 import { GameSelectionComponent } from './pages/game-selection/game-selection.component';
+import { PopDialogResetComponent } from './components/pop-dialogs/pop-dialog-reset/pop-dialog-reset.component';
 
 /**
  * Main module that is used in main.ts.
@@ -66,6 +67,7 @@ import { GameSelectionComponent } from './pages/game-selection/game-selection.co
         PopDialogHostRefusedComponent,
         ToolSettingComponent,
         CanvasDrawingComponent,
+        PopDialogResetComponent,
     ],
     imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
     providers: [],
