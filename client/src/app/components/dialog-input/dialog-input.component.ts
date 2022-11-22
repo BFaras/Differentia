@@ -58,9 +58,9 @@ export class DialogInputComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        if (this.initialTimeInput.nativeElement.value !== undefined) this.validateTimeType(this.initialTimeInput, INITIAL_TIME_INDEX);
-        if (this.penaltyTimeInput.nativeElement.value !== undefined) this.validateTimeType(this.penaltyTimeInput, PENALTY_TIME_INDEX);
-        if (this.savedTimeInput.nativeElement.value !== undefined) this.validateTimeType(this.savedTimeInput, SAVED_TIME_INDEX);
+        this.validateTimeType(this.initialTimeInput, INITIAL_TIME_INDEX);
+        this.validateTimeType(this.penaltyTimeInput, PENALTY_TIME_INDEX);
+        this.validateTimeType(this.savedTimeInput, SAVED_TIME_INDEX);
     }
 
     async submitTimes() {
@@ -82,39 +82,39 @@ export class DialogInputComponent implements OnInit {
             this.savedTimeInput.nativeElement.value <= this.initialTimeInput.nativeElement.value / TIME_RATIO
         ) {
             this.timeRatioValid = true;
-        }
+        } else {
+            this.timeRatioValid = false;
+            if (this.penaltyTimeInput.nativeElement.value > timeRatio) {
+                this.msgTimeRatio = MSG_PENALTY_TIME_RATIO;
+            }
+            if (this.savedTimeInput.nativeElement.value > timeRatio) {
+                this.msgTimeRatio = MSG_SAVED_TIME_RATIO;
+            }
 
-        if (this.penaltyTimeInput.nativeElement.value > timeRatio) {
-            this.msgTimeRatio = MSG_PENALTY_TIME_RATIO;
-            this.timeRatioValid = false;
-        }
-        if (this.savedTimeInput.nativeElement.value > timeRatio) {
-            this.msgTimeRatio = MSG_SAVED_TIME_RATIO;
-            this.timeRatioValid = false;
-        }
-
-        if (this.penaltyTimeInput.nativeElement.value > timeRatio && this.savedTimeInput.nativeElement.value > timeRatio) {
-            this.msgTimeRatio = MSG_ALL_TIME_RATIO;
-            this.timeRatioValid = false;
+            if (this.penaltyTimeInput.nativeElement.value > timeRatio && this.savedTimeInput.nativeElement.value > timeRatio) {
+                this.msgTimeRatio = MSG_ALL_TIME_RATIO;
+            }
         }
     }
 
     validateTimeType(time: ElementRef, index: number) {
-        if (time.nativeElement.value.type === Number || this.verifyTimeRange(time) || time.nativeElement.value === EMPTY_TIME) {
-            this.timeValid[index] = true;
-            this.onlyQuitButton = false;
-            if (
-                this.initialTimeInput.nativeElement.value === EMPTY_TIME &&
-                this.penaltyTimeInput.nativeElement.value === EMPTY_TIME &&
-                this.savedTimeInput.nativeElement.value === EMPTY_TIME
-            ) {
+        if (time.nativeElement.value !== undefined) {
+            if (time.nativeElement.value.type === Number || this.verifyTimeRange(time) || time.nativeElement.value === EMPTY_TIME) {
+                this.timeValid[index] = true;
+                this.onlyQuitButton = false;
+                if (
+                    this.initialTimeInput.nativeElement.value === EMPTY_TIME &&
+                    this.penaltyTimeInput.nativeElement.value === EMPTY_TIME &&
+                    this.savedTimeInput.nativeElement.value === EMPTY_TIME
+                ) {
+                    this.onlyQuitButton = true;
+                }
+            } else {
+                this.timeValid[index] = false;
                 this.onlyQuitButton = true;
             }
-        } else {
-            this.timeValid[index] = false;
-            this.onlyQuitButton = true;
+            this.validateTimesRatio();
         }
-        this.validateTimesRatio();
     }
 
     private setDefaultValue() {
