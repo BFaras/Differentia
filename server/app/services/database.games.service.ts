@@ -1,4 +1,4 @@
-import { Collection, Filter, FindOptions, WithId } from 'mongodb';
+import { Collection, Filter, FindOptions, WithId, ModifyResult} from 'mongodb';
 //import { Time } from '../../../common/time';
 import { HttpException } from '@app/classes/http.exception';
 import { GameTimes } from '@common/game-times';
@@ -48,18 +48,18 @@ export class RecordTimesService {
         }
     }
 
-    // async deleteGame(nameOfWantedGame: string): Promise<void> {
-    //   return this.collection
-    //     .findOneAndDelete({ name: nameOfWantedGame })
-    //     .then((res: ModifyResult<Game>) => {
-    //       if (!res.value) {
-    //         throw new HttpException('Could not find game', StatusCodes.NOT_FOUND);
-    //       }
-    //     })
-    //     .catch(() => {
-    //       throw new HttpException('Failed to delete game', StatusCodes.INTERNAL_SERVER_ERROR);
-    //     });
-    // }
+    async deleteGameRecordTimes(nameOfWantedGame: string): Promise<void> {
+      return this.collection
+        .findOneAndDelete({ name: nameOfWantedGame })
+        .then((res: ModifyResult<GameTimes>) => {
+          if (!res.value) {
+            throw new HttpException('Could not find game', StatusCodes.NOT_FOUND);
+          }
+        })
+        .catch(() => {
+          throw new HttpException('Failed to delete game record times', StatusCodes.INTERNAL_SERVER_ERROR);
+        });
+    }
 
     // async modifyGame(game: Game): Promise<void> {
     //   let filterQuery: Filter<Game> = { name: game.name };

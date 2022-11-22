@@ -34,6 +34,7 @@ export class GamesController {
 
         this.router.delete(`/:gameName`, async (req: Request, res: Response) => {
             res.json(await this.gamesService.deleteGame(req.params.gameName));
+            await this.recordTimesService.deleteGameRecordTimes(req.params.gameName);
         });
     }
 }
