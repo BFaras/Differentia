@@ -1,4 +1,4 @@
-import { Collection, Filter, FindOptions, WithId, ModifyResult} from 'mongodb';
+import { Collection, Filter, FindOptions, WithId, ModifyResult, UpdateFilter} from 'mongodb';
 //import { Time } from '../../../common/time';
 import { HttpException } from '@app/classes/http.exception';
 import { GameTimes } from '@common/game-times';
@@ -60,6 +60,31 @@ export class RecordTimesService {
           throw new HttpException('Failed to delete game record times', StatusCodes.INTERNAL_SERVER_ERROR);
         });
     }
+
+    async resetGameRecordTimes(gameName: string): Promise<void> {
+      let filterQuery: Filter<GameTimes> = { name: gameName };
+      let updateQuery: UpdateFilter<GameTimes> = {
+        $set: {recordTimes: this.databaseService.defaultRecordTimes,}
+      };
+      return this.collection
+      .updateOne(filterQuery, updateQuery)
+      .then(() => { })
+      .catch(() => {
+        throw new Error('Failed to reset the game record times');
+      });
+    }
+
+    async resetAllGamesRecordTimes(): Promise<void> {
+        let updateQuery: UpdateFilter<GameTimes> = {
+          $set: {recordTimes: this.databaseService.defaultRecordTimes,}
+        };
+        return this.collection
+        .updateMany({}, updateQuery)
+        .then(() => { })
+        .catch(() => {
+          throw new Error('Failed to reset all games record times');
+        });
+      }
 
     // async modifyGame(game: Game): Promise<void> {
     //   let filterQuery: Filter<Game> = { name: game.name };
