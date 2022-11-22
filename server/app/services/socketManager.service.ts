@@ -67,7 +67,11 @@ export class SocketManager {
                 this.sio.emit(`${gameName} let me tell you if someone is waiting`, true);
             });
 
-            socket.on('Reload game selection page', (gameName: string) => {
+            socket.on('Reset game list', () => {
+                this.gameManagerService.resetGameList();
+            });
+
+            socket.on('Reload game selection page', (gameName: string | string[]) => {
                 if (gameName) {
                     this.sio.emit('close popDialogUsername', gameName);
                     this.sio.except(this.gameManagerService.collectAllSocketsRooms()).emit('Page reloaded', gameName);

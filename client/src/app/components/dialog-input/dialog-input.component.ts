@@ -74,38 +74,6 @@ export class DialogInputComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    private setDefaultValue() {
-        if (this.initialTimeInput.nativeElement.value === EMPTY_TIME) {
-            this.initialTimeInput.nativeElement.value = DEFAULT_INITIAL_TIME;
-        }
-        if (this.penaltyTimeInput.nativeElement.value === EMPTY_TIME) {
-            this.penaltyTimeInput.nativeElement.value = DEFAULT_PENALTY_TIME;
-        }
-        if (this.savedTimeInput.nativeElement.value === EMPTY_TIME) {
-            this.savedTimeInput.nativeElement.value = DEFAULT_SAVED_TIME;
-        }
-    }
-
-    private verifyTimeRange(time: ElementRef) {
-        let minimumTime = 0;
-        let maximumTime = 0;
-
-        if (time === this.initialTimeInput) {
-            minimumTime = this.minTimeConstants.initialTime;
-            maximumTime = this.maxTimeConstants.initialTime;
-        }
-        if (time === this.penaltyTimeInput) {
-            minimumTime = this.minTimeConstants.penaltyTime;
-            maximumTime = this.maxTimeConstants.penaltyTime;
-        }
-        if (time === this.savedTimeInput) {
-            minimumTime = this.minTimeConstants.savedTime;
-            maximumTime = this.maxTimeConstants.savedTime;
-        }
-
-        return time.nativeElement.value >= minimumTime && time.nativeElement.value <= maximumTime;
-    }
-
     validateTimesRatio() {
         let timeRatio = (this.initialTimeInput.nativeElement.value | this.timeConstants.initialTime) / TIME_RATIO;
 
@@ -147,5 +115,37 @@ export class DialogInputComponent implements OnInit {
             this.onlyQuitButton = true;
         }
         this.validateTimesRatio();
+    }
+
+    private setDefaultValue() {
+        if (this.initialTimeInput.nativeElement.value === EMPTY_TIME) {
+            this.initialTimeInput.nativeElement.value = DEFAULT_INITIAL_TIME;
+        }
+        if (this.penaltyTimeInput.nativeElement.value === EMPTY_TIME) {
+            this.penaltyTimeInput.nativeElement.value = DEFAULT_PENALTY_TIME;
+        }
+        if (this.savedTimeInput.nativeElement.value === EMPTY_TIME) {
+            this.savedTimeInput.nativeElement.value = DEFAULT_SAVED_TIME;
+        }
+    }
+
+    private verifyTimeRange(time: ElementRef) {
+        let minimumTime = 0;
+        let maximumTime = 0;
+
+        if (time === this.initialTimeInput) {
+            minimumTime = this.minTimeConstants.initialTime;
+            maximumTime = this.maxTimeConstants.initialTime;
+        }
+        if (time === this.penaltyTimeInput) {
+            minimumTime = this.minTimeConstants.penaltyTime;
+            maximumTime = this.maxTimeConstants.penaltyTime;
+        }
+        if (time === this.savedTimeInput) {
+            minimumTime = this.minTimeConstants.savedTime;
+            maximumTime = this.maxTimeConstants.savedTime;
+        }
+
+        return time.nativeElement.value >= minimumTime && time.nativeElement.value <= maximumTime;
     }
 }

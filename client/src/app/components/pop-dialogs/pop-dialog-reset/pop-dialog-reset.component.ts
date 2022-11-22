@@ -5,9 +5,9 @@ import {
     DEFAULT_PENALTY_TIME,
     DEFAULT_SAVED_TIME,
     EMPTY_MESSAGE,
-    RESET_MSG_CONSTANTS,
-    RESET_MSG_GAME_LIST,
-    RESET_MSG_RECORDS_TIME,
+    RESET_INFO_CONSTANTS,
+    RESET_INFO_GAME_LIST,
+    RESET_INFO_RECORDS_TIME,
 } from '@app/client-consts';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeConstants } from '@common/time-constants';
@@ -39,9 +39,9 @@ export class PopDialogResetComponent implements OnInit {
     }
 
     getInfoToReset() {
-        this.recordsTime = this.resetRecordsTimeBoard ? RESET_MSG_RECORDS_TIME : EMPTY_MESSAGE;
-        this.gameConstants = this.resetTimeConstants ? RESET_MSG_CONSTANTS : EMPTY_MESSAGE;
-        this.gameFormList = this.resetGameFormList ? RESET_MSG_GAME_LIST : EMPTY_MESSAGE;
+        this.recordsTime = this.resetRecordsTimeBoard ? RESET_INFO_RECORDS_TIME : EMPTY_MESSAGE;
+        this.gameConstants = this.resetTimeConstants ? RESET_INFO_CONSTANTS : EMPTY_MESSAGE;
+        this.gameFormList = this.resetGameFormList ? RESET_INFO_GAME_LIST : EMPTY_MESSAGE;
     }
 
     validateChoice() {
@@ -52,9 +52,14 @@ export class PopDialogResetComponent implements OnInit {
     }
 
     resetData() {
-        if (this.recordsTime) console.log('RESET');
-        if (this.gameConstants) this.socketService.send('Set time constants', this.timeConstants);
-        if (this.resetGameFormList) console.log('RESET');
+        if (this.resetRecordsTimeBoard) console.log('RESET');
+        if (this.resetTimeConstants) this.socketService.send('Set time constants', this.timeConstants);
+        if (this.resetGameFormList) {
+            this.socketService.send('Reset game list');
+            this.socketService.on('Ready to reset game list', (value) => {
+                this.socketService.send('Reload game selection page', value);
+            });
+        }
         this.dialogRef.close();
     }
 
