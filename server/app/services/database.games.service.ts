@@ -125,27 +125,6 @@ export class RecordTimesService {
             });
     }
 
-    // async getGameNumberOfDifferences(nameOfWantedGame: string): Promise<number> {
-    //   let filterQuery: Filter<Game> = { name: nameOfWantedGame };
-    //   return this.collection
-    //     .findOne(filterQuery)
-    //     .then((game: WithId<Game>) => {
-    //       return game.numberOfDifferences;
-    //     });
-    // }
-
-    // private async validateGame(game: Game): Promise<boolean> {
-    //   return (
-    //     this.validateNumberOfDifferences(game.numberOfDifferences) &&
-    //     this.validateTimes(game.times) &&
-    //     await this.validateName(game.name)
-    //   );
-    // }
-
-    // private validateNumberOfDifferences(numberOfDifferences: number): boolean {
-    //     return numberOfDifferences >= 3 && numberOfDifferences <= 9;
-    // }
-
     // private validateTimes(times: Time[]): boolean {
     //     return times.length === 0;
     // }
