@@ -56,14 +56,7 @@ export class MouseHandlerService {
     async generateDifferencesInformations(gameName: string) {
         const gamesService: GamesService = Container.get(GamesService);
         const hashmapConverter: HashmapConverterService = Container.get(HashmapConverterService);
-        // let game: Game;
-        // if (gameName === 'limited time') {
-        //     game = await gamesService.generateRandomGame();
-        // } else {
-        //     game = await gamesService.getGame(gameName);
-        // }
         const game: Game = await gamesService.getGame(gameName);
-
         this.nbDifferencesTotal = game.numberOfDifferences;
         this.differencesList = this.copy2DNumberArray(game.differencesList);
         this.differencesHashmap = hashmapConverter.convertNumber2DArrayToNumberMap(this.differencesList);

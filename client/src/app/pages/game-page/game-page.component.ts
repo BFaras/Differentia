@@ -49,7 +49,7 @@ export class GamePageComponent {
     }
 
     ngOnDestroy() {
-        this.socketService.send('kill the game');
+        this.socketService.send('kill the game', this.gameMode);
         this.socketService.disconnect();
     }
 
@@ -88,6 +88,7 @@ export class GamePageComponent {
         });
 
         this.socketService.on(LIMITED_TIME_MODE, () => {
+            console.log('recu le LIMITED TIME MODE EVETN');
             this.gameMode = LIMITED_TIME_MODE;
         });
 
@@ -114,7 +115,7 @@ export class GamePageComponent {
             }
         });
 
-        this.socketService.on('game images', async (imagesData: string[]) => {
+        this.socketService.on('game images', (imagesData: string[]) => {
             this.images[ORIGINAL_IMAGE_POSITION].src = imagesData[ORIGINAL_IMAGE_POSITION];
             this.images[MODIFIED_IMAGE_POSITION].src = imagesData[MODIFIED_IMAGE_POSITION];
         });

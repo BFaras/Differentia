@@ -14,11 +14,11 @@ import { DifferencesInformations } from '@common/differences-informations';
 })
 export class ImageDifferenceComponent implements OnInit, OnDestroy {
     @Input() offset: number;
-    private numberOfDifferences: number;
-    private differencesList: number[][];
     readonly originalImage: HTMLImageElement = new Image();
     readonly modifiedImage: HTMLImageElement = new Image();
     readonly finalDifferencesImage: HTMLImageElement = new Image();
+    private numberOfDifferences: number;
+    private differencesList: number[][];
 
     constructor(
         private renderer: Renderer2,
@@ -54,6 +54,12 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
         }
     }
 
+    mergeImageCanvas(urlImage: string, index: number): string {
+        this.mergeImageCanvasService.initializeImage(urlImage, index);
+        this.mergeImageCanvasService.drawImageOnCanvas(index);
+        return this.mergeImageCanvasService.obtainUrlForMerged(index);
+    }
+
     private async loadImages() {
         const unwrappedOriginalModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getOriginalImageUploaded().image as SafeValue);
         const unwrappedModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getModifiedImageUploaded().image as SafeValue);
@@ -65,12 +71,6 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
         this.modifiedImage.src = this.mergeImageCanvas(unwrappedModifiedSafeUrl, this.gameToServerService.getModifiedImageUploaded().index!);
         await this.imageToImageDifferenceService.waitForImageToLoad(this.modifiedImage);
         this.uploadFileService.setModifiedMergedCanvasImage(this.modifiedImage);
-    }
-
-    mergeImageCanvas(urlImage: string, index: number): string {
-        this.mergeImageCanvasService.initializeImage(urlImage, index);
-        this.mergeImageCanvasService.drawImageOnCanvas(index);
-        return this.mergeImageCanvasService.obtainUrlForMerged(index);
     }
 
     private configureGameCreationPageSocketFeatures() {

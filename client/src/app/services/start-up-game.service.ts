@@ -27,19 +27,19 @@ export class StartUpGameService {
         this.socketService.send('launch classic mode multiplayer match', gameName);
         this.router.navigate(['/game']);
     }
-    
+
     declineAdversary(gameName: string) {
         this.socketService.send('I refuse this adversary', gameName);
     }
-    
+
     sendUsername(username: string): void {
         this.socketService.send('my username is', username);
     }
-    
+
     soloLimitedTimeGame(): void {
         this.socketService.send('solo limited time mode'); // À gérer dans socket Manager
     }
-    
+
     private startUpLimitedTimeWaitingLine(): void {
         this.createGameService.createLimitedTimeGame();
     }
@@ -51,19 +51,17 @@ export class StartUpGameService {
             this.soloClassicGame(gameInfo.nameGame);
         }
     }
-    
+
     // private multiplayerLimitedTimeGame(): void {
     //     this.createGameService.createLimitedTimeGame();
     // }
-    
 
     private multiplayerClassicGame(gameInfo: any): void {
         if (gameInfo.isPlayerWaiting) this.joinGameService.joinGame(gameInfo.nameGame);
         else this.createGameService.createGame(gameInfo.nameGame);
     }
-    
+
     private soloClassicGame(gameName: string): void {
         this.socketService.send('solo classic mode', gameName);
-        console.log('jai send solo classic mode' + gameName);
     }
 }

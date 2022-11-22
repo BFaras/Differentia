@@ -32,13 +32,6 @@ export class PopDialogUsernameComponent implements OnInit {
         this.configureUsernamePopUpSocketFeatures();
     }
 
-    ngOnDestroy(): void {
-        // this.socketService.off('username valid');
-        // this.socketService.sendBuffer = [];
-        // this.socketService.off('username valid');
-        this.socketService.reset();
-    }
-
     inputChanged(): void {
         if (this.username.nativeElement.value) this.disabledButton = false;
         else this.disabledButton = true;
@@ -58,6 +51,7 @@ export class PopDialogUsernameComponent implements OnInit {
                 joinFlag: this.gameInfo.joinFlag,
                 createFlag: this.gameInfo.createFlag,
                 username: this.username.nativeElement.value,
+                classicFlag: true, // CHANGER POUR UNE CONSTANTE
             },
         });
     }
@@ -67,6 +61,10 @@ export class PopDialogUsernameComponent implements OnInit {
             height: '400px',
             width: '600px',
             disableClose: true,
+            data: {
+                classicFlag: false,
+                username: this.username.nativeElement.value,
+            },
         });
     }
 
@@ -76,16 +74,19 @@ export class PopDialogUsernameComponent implements OnInit {
 
     private configureUsernamePopUpSocketFeatures(): void {
         this.socketService.on('username valid', () => {
-            this.startWaitingLine();
+            this.socketService.off('username valid');
             this.socketService.send('gameMode is', this.gameInfo.classicFlag);
             this.closeDialog();
         });
 
         this.socketService.on('username not valid', () => {
+            this.socketService.off('username not valid');
             this.usernameNotValid = true;
         });
 
         this.socketService.on(`${CLASSIC_MODE}`, () => {
+            this.startWaitingLine();
+            this.socketService.off(`${CLASSIC_MODE}`);
             if (this.gameInfo.multiFlag) {
                 this.openClassicDialog();
             } else {
@@ -94,6 +95,7 @@ export class PopDialogUsernameComponent implements OnInit {
         });
 
         this.socketService.on(`open the ${LIMITED_TIME_MODE} pop-dialog`, () => {
+            this.socketService.off(`open the ${LIMITED_TIME_MODE} pop-dialog`);
             this.openLimitedTimeDialog();
         });
     }

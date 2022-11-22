@@ -30,8 +30,8 @@ export class GamesService {
         const gamesToPlay = this.games.filter((game) => {
             return !gamesAlreadyPlayed.find((gameAlreadyPlayed) => gameAlreadyPlayed === game.name);
         });
-        const max = gamesToPlay.length;
-        return gamesToPlay[Math.floor(Math.random() * (max + 1))];
+        const max = gamesToPlay.length - 1;
+        return gamesToPlay[Math.floor(Math.random() * max)] as Game;
     }
 
     async getAllGamesWithImagesData() {

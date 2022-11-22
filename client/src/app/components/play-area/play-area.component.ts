@@ -7,19 +7,21 @@ import { ImageGeneratorService } from '@app/services/image-generator.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import {
+    CLASSIC_MODE,
     CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE,
     CLASSIC_MULTIPLAYER_LOST_MESSAGE,
     CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE,
     CLASSIC_SOLO_END_GAME_MESSAGE,
     DEFAULT_HEIGHT_CANVAS,
     DEFAULT_WIDTH_CANVAs,
+    // LIMITED_TIME_MODE,
     MODIFIED_IMAGE_POSITION,
     ORIGINAL_IMAGE_POSITION,
 } from '@common/const';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
-import { PopDialogEndgameComponent } from '../pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
+import { PopDialogEndgameComponent } from '@app/components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
 
 @Component({
     selector: 'app-play-area',
@@ -35,6 +37,7 @@ export class PlayAreaComponent implements OnInit {
     @Input() differentImages: HTMLImageElement[];
     @Input() localPlayerUsername: string;
     @Input() isMultiplayer: boolean;
+    @Input() mode: string;
     mousePosition: Position = { x: 0, y: 0 };
     private pixelList: number[] = [];
     private blinkCanvasOrginial: ImageData;
@@ -59,19 +62,24 @@ export class PlayAreaComponent implements OnInit {
     async ngOnInit(): Promise<void> {
         this.socketService.connect();
         this.configurePlayAreaSocket();
+        await this.loadImages();
+    }
 
+    async loadImages(): Promise<void> {
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[ORIGINAL_IMAGE_POSITION]);
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[MODIFIED_IMAGE_POSITION]);
-
         this.displayImages();
-
-        this.blinkCanvasOrginial = this.blinkCanvas.nativeElement
-        .getContext('2d')!
-        .getImageData(0, 0, this.blinkCanvas.nativeElement.width, this.blinkCanvas.nativeElement.height);
+        this.getImageData();
     }
 
     detectDifference(event: MouseEvent) {
         this.mouseDetection.mouseHitDetect(event);
+    }
+
+    getImageData(): void {
+        this.blinkCanvasOrginial = this.blinkCanvas.nativeElement
+            .getContext('2d')!
+            .getImageData(0, 0, this.blinkCanvas.nativeElement.width, this.blinkCanvas.nativeElement.height);
     }
 
     private displayImages() {
@@ -92,20 +100,20 @@ export class PlayAreaComponent implements OnInit {
         this.modifiedCanvas.nativeElement.focus();
     }
 
-    private openEndGameDialog(messageToDisplay: string) {
+    private openEndGameDialog(messageToDisplay: string, winFlag: boolean) {
         this.dialog.open(PopDialogEndgameComponent, {
             height: '400px',
             width: '600px',
             data: {
                 message: messageToDisplay,
-                winFlag: true,
+                winFlag,
             },
             disableClose: true,
         });
     }
 
     private configurePlayAreaSocket(): void {
-        this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {
+        this.socketService.on('Valid click', async (differencesInfo: GameplayDifferenceInformations) => {
             const isLocalPlayer = differencesInfo.socketId === this.socketService.socket.id;
             this.pixelList = differencesInfo.differencePixelsNumbers;
 
@@ -114,7 +122,7 @@ export class PlayAreaComponent implements OnInit {
             this.mouseDetection.clickMessage(isDifference, isLocalPlayer);
             this.mouseDetection.verifyGameFinished(isDifference, this.isMultiplayer, isLocalPlayer);
 
-            if (isDifference) {
+            if (isDifference && this.mode === CLASSIC_MODE) {
                 this.blinkCanvas.nativeElement.getContext('2d')?.putImageData(this.blinkCanvasOrginial, 0, 0);
                 this.drawService.context5 = this.blinkCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
                 this.drawService.context5.canvas.id = 'blink';
@@ -137,15 +145,23 @@ export class PlayAreaComponent implements OnInit {
         });
 
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
+            // CHANGER LES TRUES ET FALSES PAR DES CONSTANTES
+            console.log('jai recu le end game');
             let endGameMessage = CLASSIC_SOLO_END_GAME_MESSAGE;
+            let winFlag = true;
             if (endGameInfos.isMultiplayer && endGameInfos.isGameWon && !endGameInfos.isAbandon) {
                 endGameMessage = CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE;
             } else if (endGameInfos.isMultiplayer && endGameInfos.isAbandon) {
                 endGameMessage = CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE;
             } else if (!endGameInfos.isGameWon) {
                 endGameMessage = CLASSIC_MULTIPLAYER_LOST_MESSAGE;
+                winFlag = false;
             }
-            this.openEndGameDialog(endGameMessage);
+            this.openEndGameDialog(endGameMessage, winFlag);
+        });
+
+        this.socketService.on('game images', async () => {
+            await this.loadImages();
         });
     }
 }
