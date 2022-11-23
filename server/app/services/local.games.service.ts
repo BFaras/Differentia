@@ -1,9 +1,11 @@
 import { MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { Game } from '@common/game';
-import { Time } from '@common/time';
+//import { Time } from '@common/time';
 import * as fs from 'fs';
 import { join } from 'path';
-import { Service } from 'typedi';
+import Container, { Service } from 'typedi';
+import { RecordTimesService } from './database.games.service';
+import { DatabaseService } from './database.service';
 
 const IMAGES_PATH = 'assets/images/';
 
@@ -11,8 +13,13 @@ const IMAGES_PATH = 'assets/images/';
 export class GamesService {
     private gamesFilePath: string = 'games.json';
     private games: Game[];
+    private databaseService: DatabaseService
+    private recordTimesService: RecordTimesService;
 
-    constructor() {}
+    constructor() {
+        this.databaseService = Container.get(DatabaseService);
+        this.recordTimesService = new RecordTimesService(this.databaseService);
+    }
 
     async getGame(gameName: string): Promise<Game> {
         await this.asyncReadGamesFile();
@@ -32,7 +39,7 @@ export class GamesService {
             const gameImagesData: string[] = await this.getGameImagesData(games[i].name);
             games[i].images[ORIGINAL_IMAGE_POSITION] = gameImagesData[ORIGINAL_IMAGE_POSITION];
             games[i].images[MODIFIED_IMAGE_POSITION] = gameImagesData[MODIFIED_IMAGE_POSITION];
-            // Ici await database games[i].times = ce que je recois de la databse
+            games[i].times = await this.recordTimesService.getGameTimes(games[i].name);
         }
 
         return games;
@@ -65,13 +72,13 @@ export class GamesService {
         return this.games.find((x) => x.name === name) ? false : true;
     }
 
-    async addTimeToGame(newTime: Time, nameOfGame: string): Promise<void> {
-        await this.asyncReadGamesFile();
-        this.games.find((game: Game) => {
-            if (game.name === nameOfGame) game.times.push(newTime);
-        });
-        this.asyncWriteInGamesFile();
-    }
+    // async addTimeToGame(newTime: Time, nameOfGame: string): Promise<void> {
+    //     await this.asyncReadGamesFile();
+    //     this.games.find((game: Game) => {
+    //         if (game.name === nameOfGame) game.times.push(newTime);
+    //     });
+    //     this.asyncWriteInGamesFile();
+    // }
 
     async deleteGame(nameOfGameToDelete: string) {
         await this.asyncReadGamesFile();

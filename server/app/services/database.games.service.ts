@@ -1,4 +1,4 @@
-import { Collection, Filter, FindOptions, WithId, ModifyResult, UpdateFilter} from 'mongodb';
+import { Collection, Filter, WithId, ModifyResult, UpdateFilter} from 'mongodb';
 //import { Time } from '../../../common/time';
 import { HttpException } from '@app/classes/http.exception';
 import { GameTimes } from '@common/game-times';
@@ -7,7 +7,6 @@ import 'dotenv/config';
 import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
 import { DatabaseService } from './database.service';
-import { Time } from '@common/time';
 
 @Service()
 export class RecordTimesService {
@@ -112,18 +111,18 @@ export class RecordTimesService {
     // }
 
     async getGameTimes(nameOfWantedGame: string): Promise<GameModeTimes> {
-        let filterQuery: Filter<GameTimes> = { name: nameOfWantedGame };
-        let projection: FindOptions = { projection: { recordTimes: 1, _id: 0 } };
-        // const times = await this.collection.findOne({ name: nameOfWantedGame });
-        // return times!.recordTimes;
-        return this.collection
-            .findOne(filterQuery, projection)
-            .then((gameTimes: WithId<GameTimes>) => {
-                return gameTimes.recordTimes;
-            })
-            .catch(() => {
-                throw new Error('Failed to get the game times');
-            });
+        //let filterQuery: Filter<GameTimes> = { name: nameOfWantedGame };
+        //let projection: FindOptions = { projection: { recordTimes: 1, _id: 0 } };
+         const times = await this.collection.findOne({ name: 'Car game' });
+         return times!.recordTimes;
+        // return this.collection
+        //     .findOne(filterQuery, projection)
+        //     .then((gameTimes: WithId<GameTimes>) => {
+        //         return gameTimes.recordTimes;
+        //     })
+        //     .catch(() => {
+        //         throw new Error('Failed to get the game times');
+        //     });
     }
     // async updateRecordTimes(gameName: string, isItMultiplayer: boolean, times: Time): Promise<void> {
     //   let filterQuery: Filter<GameTimes> = { name: gameName };

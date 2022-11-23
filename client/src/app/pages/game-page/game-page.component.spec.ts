@@ -12,6 +12,7 @@ import { GameplayDifferenceInformations } from '@common/gameplay-difference-info
 import { of } from 'rxjs';
 import { Socket } from 'socket.io-client';
 import { GamePageComponent } from './game-page.component';
+import { RecordTime } from '@app/classes/record-time';
 import SpyObj = jasmine.SpyObj;
 
 class SocketClientServiceMock extends SocketClientService {
@@ -34,7 +35,7 @@ describe('GamePageComponent', () => {
         testGame = {
             name: 'test game',
             numberOfDifferences: 7,
-            times: [],
+            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
             images: [],
             differencesList: [],
         };

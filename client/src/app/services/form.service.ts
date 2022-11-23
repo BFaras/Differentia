@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { RecordTimesBoard } from '@app/classes/record-times-board';
 import { Game } from '@common/game';
+import { GameModeTimes } from '@common/games-record-times';
 import { firstValueFrom } from 'rxjs';
 import { CommunicationService } from './communication.service';
 
@@ -11,6 +12,7 @@ import { CommunicationService } from './communication.service';
 export class FormService {
     private listName: string[] = [];
     private listImage: string[] = [];
+    private listTimes: GameModeTimes[] = [];
     gamelist: Game[] = [];
     gameForms: GameFormDescription[] = [];
 
@@ -30,6 +32,7 @@ export class FormService {
         for (let index = 0; index < this.gamelist?.length; index++) {
             this.fillListGameName(this.gamelist[index].name, this.listName);
             this.fillListGameImage(this.gamelist[index].images[0], this.listImage);
+            this.fillListGameTimes(this.gamelist[index].times, this.listTimes);
             this.initializeGameForm(index);
         }
     }
@@ -40,6 +43,10 @@ export class FormService {
 
     private fillListGameImage(gameImage: string, listImage: string[]) {
         listImage.push(gameImage);
+    }
+
+    private fillListGameTimes(gameTimes:GameModeTimes, listTimes: GameModeTimes[]) {
+        listTimes.push(gameTimes);
     }
 
     private initializeGameForm(index: number) {
@@ -53,7 +60,7 @@ export class FormService {
         //         ),
         //     );
         // });
-         this.gameForms.push(new GameFormDescription(this.listName[index], this.listImage[index], new RecordTimesBoard([], [])));
+         this.gameForms.push(new GameFormDescription(this.listName[index], this.listImage[index], new RecordTimesBoard(this.listTimes[index].soloGameTimes,this.listTimes[index].multiplayerGameTimes)));
     }
 
     private resetGameForms() {

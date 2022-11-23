@@ -6,19 +6,20 @@ import { StatusCodes } from 'http-status-codes';
 import { createStubInstance, SinonStubbedInstance } from 'sinon';
 import * as supertest from 'supertest';
 import { Container } from 'typedi';
+import {RecordTime} from '@app/classes/record-times';
 
 describe('GamesController', () => {
     const baseGame = {
         name: 'Car game',
         numberOfDifferences: 8,
-        times: [],
+        times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
         images: ['image 1', 'image 2'],
         differencesList: [],
     } as Game;
     const newValidGame = {
         name: 'Valid game',
         numberOfDifferences: 5,
-        times: [],
+        times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
         images: ['image 3', 'image 4'],
         differencesList: [],
     } as Game;

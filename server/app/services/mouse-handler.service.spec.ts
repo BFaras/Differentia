@@ -8,6 +8,7 @@ import Container from 'typedi';
 import { HashmapConverterService } from './hashmap-converter.service';
 import { GamesService } from './local.games.service';
 import { MouseHandlerService } from './mouse-handler.service';
+import {RecordTime} from '@app/classes/record-times'
 
 describe('MouseHandlerService', () => {
     const testGameName = 'name';
@@ -15,7 +16,7 @@ describe('MouseHandlerService', () => {
     const testGame: Game = {
         name: testGameName,
         numberOfDifferences: 2,
-        times: [],
+        times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
         images: ['image1', 'image2'],
         differencesList: [
             [599, 666],

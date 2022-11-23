@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { CommunicationService } from '@app/services/communication.service';
 import { Game } from '@common/game';
 import { StatusCodes } from 'http-status-codes';
+import {RecordTime} from '@app/classes/record-time'
 
 
 describe('CommunicationService', () => {
@@ -13,63 +14,63 @@ describe('CommunicationService', () => {
         {
             name: 'Car game',
             numberOfDifferences: 4,
-            times: [],
+            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
             images: [],
             differencesList: [],
         },
         {
             name: 'Bike game',
             numberOfDifferences: 5,
-            times: [],
+            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
             images: [],
             differencesList: [],
         },
         {
             name: 'House game',
             numberOfDifferences: 6,
-            times: [],
+            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
             images: [],
             differencesList: [],
         },
         {
             name: 'Plane game',
             numberOfDifferences: 7,
-            times: [],
+            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
             images: [],
             differencesList: [],
         },
         {
             name: 'TV game',
             numberOfDifferences: 8,
-            times: [],
+            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
             images: [],
             differencesList: [],
         },
         {
             name: 'Table game',
             numberOfDifferences: 9,
-            times: [],
+            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
             images: [],
             differencesList: [],
         },
         {
             name: 'Chair game',
             numberOfDifferences: 9,
-            times: [],
+            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
             images: [],
             differencesList: [],
         },
         {
             name: 'Clown game',
             numberOfDifferences: 9,
-            times: [],
+            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
             images: [],
             differencesList: [],
         },
         {
             name: 'Dog game',
             numberOfDifferences: 9,
-            times: [],
+            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
             images: [],
             differencesList: [],
         },
@@ -77,14 +78,14 @@ describe('CommunicationService', () => {
     let validGameToAdd: Game = {
         name: 'New Game',
         numberOfDifferences: 5,
-        times: [],
+        times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
         images: ['image1', 'image2'],
         differencesList: [],
     };
     let unvalidGameToAdd: Game = {
         name: 'Car game',
         numberOfDifferences: 5,
-        times: [],
+        times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
         images: ['image3', 'image4'],
         differencesList: [],
     };

@@ -4,13 +4,15 @@ import { RecordTimesBoard } from '@app/classes/record-times-board';
 import { Game } from '@common/game';
 import { CommunicationService } from './communication.service';
 import { FormService } from './form.service';
+import {RecordTime} from '@app/classes/record-time'
 
 describe('FormService', () => {
     let service: FormService;
     let communicationSpy: jasmine.SpyObj<CommunicationService>;
     let listName: string[] = [];
     let listImage: string[] = [];
-    let gameList: Game[] = [{ name: 'bike', numberOfDifferences: 2, times: [], images: ['img1'], differencesList: [][0] }];
+    let gameList: Game[] = [{ name: 'bike', numberOfDifferences: 2, times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+                                images: ['img1'], differencesList: [][0] }];
 
     beforeEach(() => {
         communicationSpy = jasmine.createSpyObj('CommunicationService', ['getGames']);

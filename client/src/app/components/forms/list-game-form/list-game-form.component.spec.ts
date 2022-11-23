@@ -12,6 +12,7 @@ import { SocketClientService } from '@app/services/socket-client.service';
 import { Constants } from '@common/config';
 import { Game } from '@common/game';
 import { of } from 'rxjs/internal/observable/of';
+import { RecordTime } from '@app/classes/record-time';
 
 import { Socket } from 'socket.io-client';
 import { ListGameFormComponent } from './list-game-form.component';
@@ -37,7 +38,7 @@ describe('ListGameFormComponent', () => {
         {
             name: 'Car game',
             numberOfDifferences: 7,
-            times: [],
+            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
             images: ['Car.bmp', 'Cardiff.bmp'],
             differencesList: [[]],
         },
