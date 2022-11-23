@@ -3,7 +3,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-restricted-imports */
 import { Injectable } from '@angular/core';
-import { BASE_ONE } from '@common/const';
+import { BASE_ONE, EMPTY_SHOWABLE_TIME } from '@app/client-consts';
 import { Time } from '@common/time';
 
 @Injectable({
@@ -11,19 +11,10 @@ import { Time } from '@common/time';
 })
 export class TimeService {
     time: Time;
-    showableMinutes: string = '';
-    showableSeconds: string = '';
+    showableMinutes: string = EMPTY_SHOWABLE_TIME;
+    showableSeconds: string = EMPTY_SHOWABLE_TIME;
 
     constructor() {}
-
-    classicMode() {
-        this.time = {
-            minutes: 0,
-            seconds: 0,
-        };
-        this.showableMinutes = '00';
-        this.showableSeconds = '00';
-    }
 
     changeTime(newTime: Time) {
         this.time = newTime;

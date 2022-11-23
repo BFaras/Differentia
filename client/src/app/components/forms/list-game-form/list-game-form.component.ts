@@ -6,6 +6,7 @@ import {
     EMPTY_MESSAGE,
     FIRST_GAMEFORMS_INDEX,
     LAST_GAMEFORMS_INDEX,
+    RESET_MSG_GAME_LIST,
     SNACKBAR_DURATION,
     SNACKBAR_HORIZONTAL_POSITION,
     SNACKBAR_VERTICAL_POSITION,
@@ -77,17 +78,23 @@ export class ListGameFormComponent implements OnInit {
             this.currentPageGameFormList[index] = this.formService.gameForms[index + this.firstElementIndex];
         }
     }
+
+    private openSnackBar(gameName: string | string[]) {
+        let msg = Array.isArray(gameName) ? RESET_MSG_GAME_LIST : `Le jeu ${gameName} a été supprimé :(`;
+        this.snackBar.open(msg, 'OK', {
+            horizontalPosition: this.horizontalPosition,
+            verticalPosition: this.verticalPosition,
+            duration: SNACKBAR_DURATION,
+        });
+    }
+
     private config(gameName: string) {
         this.socketService.connect();
         this.socketService.send('Reload game selection page', gameName);
 
-        this.socketService.on('Page reloaded', async (message) => {
+        this.socketService.on('Page reloaded', async (message: string | string[]) => {
             if (this.router.url === '/admin' || this.router.url === '/gameSelection') {
-                this.snackBar.open('Le jeu ' + message + ' a été supprimé :(', 'OK', {
-                    horizontalPosition: this.horizontalPosition,
-                    verticalPosition: this.verticalPosition,
-                    duration: SNACKBAR_DURATION,
-                });
+                this.openSnackBar(message);
                 await this.refreshGames(this.gameListToRefresh);
                 this.gameListToRefresh = true;
             }

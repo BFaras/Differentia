@@ -1,5 +1,19 @@
 import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import {
+    BLINK_ID,
+    CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE,
+    CLASSIC_MULTIPLAYER_LOST_MESSAGE,
+    CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE,
+    CLASSIC_SOLO_END_GAME_MESSAGE,
+    DISABLE_CLOSE,
+    LOSING_FLAG,
+    PAUSED_ID,
+    STANDARD_POP_UP_HEIGHT,
+    STANDARD_POP_UP_WIDTH,
+    WIN_FLAG,
+} from '@app/client-consts';
+import { PopDialogEndgameComponent } from '@app/components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
 import { Coordinate } from '@app/interfaces/coordinate';
 import { ClueHandlerService } from '@app/services/clue-handler.service';
 import { DifferenceDetectionService } from '@app/services/difference-detection.service';
@@ -10,10 +24,7 @@ import { SocketClientService } from '@app/services/socket-client.service';
 import { ClueInformations } from '@common/clue-informations';
 import {
     CHEAT_KEY,
-    CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE,
-    CLASSIC_MULTIPLAYER_LOST_MESSAGE,
-    CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE,
-    CLASSIC_SOLO_END_GAME_MESSAGE,
+    CLASSIC_MODE,
     CLUE_KEY,
     DEFAULT_HEIGHT_CANVAS,
     DEFAULT_WIDTH_CANVAs,
@@ -23,7 +34,6 @@ import {
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
-import { PopDialogEndgameComponent } from '../pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
 
 @Component({
     selector: 'app-play-area',
@@ -40,6 +50,7 @@ export class PlayAreaComponent implements OnInit {
     @Input() differentImages: HTMLImageElement[];
     @Input() localPlayerUsername: string;
     @Input() isMultiplayer: boolean;
+    @Input() mode: string;
     mousePosition: Position = { x: 0, y: 0 };
     private isCheatActivated = false;
     private blinkCanvasOrginial: ImageData;
@@ -55,15 +66,39 @@ export class PlayAreaComponent implements OnInit {
         private readonly clueHandlerService: ClueHandlerService,
     ) {}
 
+    get width(): number {
+        return this.canvasSize.x;
+    }
+
+    get height(): number {
+        return this.canvasSize.y;
+    }
+
     async ngOnInit(): Promise<void> {
         this.socketService.connect();
         this.configurePlayAreaSocket();
+        await this.loadImages();
+    }
 
+    async loadImages(): Promise<void> {
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[ORIGINAL_IMAGE_POSITION]);
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[MODIFIED_IMAGE_POSITION]);
-
         this.displayImages();
+        this.getImageData();
+    }
 
+    detectDifference(event: MouseEvent) {
+        this.mouseDetection.mouseHitDetect(event);
+    }
+
+    getImageData(): void {
+        const context = this.blinkOriginalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.blinkCanvasOrginial = context.getImageData(
+            0,
+            0,
+            this.blinkOriginalCanvas.nativeElement.width,
+            this.blinkOriginalCanvas.nativeElement.height,
+        );
         this.blinkCanvasOrginial = this.blinkModifiedCanvas.nativeElement
             .getContext('2d')!
             .getImageData(0, 0, this.blinkModifiedCanvas.nativeElement.width, this.blinkModifiedCanvas.nativeElement.height);
@@ -94,24 +129,15 @@ export class PlayAreaComponent implements OnInit {
         this.modifiedCanvas.nativeElement.focus();
     }
 
-    get width(): number {
-        return this.canvasSize.x;
-    }
-
-    get height(): number {
-        return this.canvasSize.y;
-    }
-
-    detectDifference(event: MouseEvent) {
-        this.mouseDetection.mouseHitDetect(event);
-    }
-
-    private openEndGameDialog(messageToDisplay: string) {
+    private openEndGameDialog(messageToDisplay: string, winFlag: boolean) {
         this.dialog.open(PopDialogEndgameComponent, {
-            height: '400px',
-            width: '600px',
-            data: messageToDisplay,
-            disableClose: true,
+            height: STANDARD_POP_UP_HEIGHT,
+            width: STANDARD_POP_UP_WIDTH,
+            data: {
+                message: messageToDisplay,
+                winFlag,
+            },
+            disableClose: DISABLE_CLOSE,
         });
     }
 
@@ -138,12 +164,12 @@ export class PlayAreaComponent implements OnInit {
         this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {
             const isLocalPlayer = differencesInfo.socketId == this.socketService.socket.id;
 
-            let isDifference: boolean = differencesInfo.isValidDifference;
+            const isDifference: boolean = differencesInfo.isValidDifference;
             this.mouseDetection.playSound(isDifference, isLocalPlayer);
             this.mouseDetection.clickMessage(isDifference, isLocalPlayer);
             this.mouseDetection.verifyGameFinished(isDifference, this.isMultiplayer, isLocalPlayer);
 
-            if (isDifference) {
+            if (isDifference && this.mode == CLASSIC_MODE) {
                 if (!this.isCheatActivated) this.makePixelsBlinkOnCanvas(differencesInfo.differencePixelsNumbers, this.modifiedCanvas.nativeElement);
 
                 this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
@@ -180,21 +206,27 @@ export class PlayAreaComponent implements OnInit {
 
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
             let endGameMessage = CLASSIC_SOLO_END_GAME_MESSAGE;
+            let winFlag = WIN_FLAG;
             if (endGameInfos.isMultiplayer && endGameInfos.isGameWon && !endGameInfos.isAbandon) {
                 endGameMessage = CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE;
             } else if (endGameInfos.isMultiplayer && endGameInfos.isAbandon) {
                 endGameMessage = CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE;
             } else if (!endGameInfos.isGameWon) {
                 endGameMessage = CLASSIC_MULTIPLAYER_LOST_MESSAGE;
+                winFlag = LOSING_FLAG;
             }
-            this.openEndGameDialog(endGameMessage);
+            this.openEndGameDialog(endGameMessage, winFlag);
+        });
+
+        this.socketService.on('game images', async () => {
+            await this.loadImages();
         });
     }
 
     private makePixelsBlinkOnCanvas(pixelsToBlink: number[], canvasToCopyFrom: HTMLCanvasElement, invertColors?: boolean) {
         this.blinkModifiedCanvas.nativeElement.getContext('2d')?.putImageData(this.blinkCanvasOrginial, 0, 0);
         const context = this.blinkModifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        context.canvas.id = 'blink';
+        context.canvas.id = BLINK_ID;
         this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
             pixelsToBlink,
             canvasToCopyFrom,
@@ -206,7 +238,7 @@ export class PlayAreaComponent implements OnInit {
         setTimeout(() => {
             this.numberOfBlinkCalls--;
             if (this.numberOfBlinkCalls <= 0) {
-                context.canvas.id = 'paused';
+                context.canvas.id = PAUSED_ID;
             }
         }, 3000);
     }

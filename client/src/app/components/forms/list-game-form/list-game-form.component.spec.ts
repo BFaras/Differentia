@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { RecordTimesBoard } from '@app/classes/record-times-board';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
+import { RESET_MSG_GAME_LIST, SNACKBAR_DURATION } from '@app/client-consts';
 import { CommunicationService } from '@app/services/communication.service';
 import { FormService } from '@app/services/form.service';
 import { SocketClientService } from '@app/services/socket-client.service';
@@ -162,11 +163,11 @@ describe('ListGameFormComponent', () => {
         const routerMock = TestBed.inject(Router);
         // @ts-ignore: force this private property value for testing.
         routerMock.url = '/admin';
-
+        const snackBar = spyOn(listGameFormComp, <any>'openSnackBar');
         const spy = spyOn(listGameFormComp, <any>'refreshGames');
         socketTestHelper.peerSideEmit('Page reloaded', gameName);
         listGameFormComp['config'](gameName);
-        expect(snackBarSpy['open']).toHaveBeenCalled();
+        expect(snackBar).toHaveBeenCalled();
         expect(listGameFormComp['gameListToRefresh']).toBeTrue();
         expect(spy).toHaveBeenCalled();
         expect(listGameFormComp['messageForUpdate']).toEqual('');
@@ -206,6 +207,26 @@ describe('ListGameFormComponent', () => {
         const spy = spyOn(listGameFormComp, <any>'ngOnInit');
         listGameFormComp['refreshGames'](false);
         expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('should open snackbar for all the games', () => {
+        let gameName = 'hi';
+        listGameFormComp['openSnackBar'](gameName);
+        expect(snackBarSpy['open']).toHaveBeenCalledWith(`Le jeu ${gameName} a été supprimé :(`, 'OK', {
+            horizontalPosition: listGameFormComp['horizontalPosition'],
+            verticalPosition: listGameFormComp['verticalPosition'],
+            duration: SNACKBAR_DURATION,
+        });
+    });
+
+    it('should open snackbar for one game', () => {
+        let gameName = ['hi', 'AUGH'];
+        listGameFormComp['openSnackBar'](gameName);
+        expect(snackBarSpy['open']).toHaveBeenCalledWith(RESET_MSG_GAME_LIST, 'OK', {
+            horizontalPosition: listGameFormComp['horizontalPosition'],
+            verticalPosition: listGameFormComp['verticalPosition'],
+            duration: SNACKBAR_DURATION,
+        });
     });
 
     afterEach(() => {

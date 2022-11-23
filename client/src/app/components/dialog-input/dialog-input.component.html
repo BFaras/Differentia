@@ -16,14 +16,29 @@
     </mat-form-field>
     <mat-form-field hintLabel="{{ datas[2].valueUnit }}" appearance="fill">
         <mat-label>{{ datas[2].inputName }}</mat-label>
-        <input matInput #timeInput3 placeholder="{{ datas[2].placeHolder }}" (change)="validateTimeType(this.savedtimeInput, 2)" />
+        <input matInput #timeInput3 placeholder="{{ datas[2].placeHolder }}" (change)="validateTimeType(this.savedTimeInput, 2)" />
         <mat-hint align="end">{{ timeInput3.value || datas[2].defaultTime }}</mat-hint>
     </mat-form-field>
 </div>
 
-<ng-container *ngIf="timeValid[0] && timeValid[1] && timeValid[2]">
-    <button id="submitButton" mat-raised-button *ngIf="!onlyQuitButton" (click)="submitTimes()">Valider</button>
+<ng-container *ngIf="timeValid[0] && timeValid[1] && timeValid[2] && timeRatioValid">
+    <button id="submitButton" mat-raised-button color="accent" *ngIf="!onlyQuitButton" (click)="submitTimes()">Valider</button>
 </ng-container>
-<ng-container *ngIf="!timeValid[0] || !timeValid[1] || !timeValid[2]">
-    <h2>Le temps doit être un nombre supérieur à 0</h2>
+<ng-container *ngIf="!timeValid[0]">
+    <h2>
+        Le temps initial doit être un nombre supérieur à {{ this.minTimeConstants.initialTime }} et inférieur à
+        {{ this.maxTimeConstants.initialTime }}
+    </h2>
+</ng-container>
+<ng-container *ngIf="!timeValid[1]">
+    <h2>
+        Le temps de pénalité doit être un nombre supérieur à {{ this.minTimeConstants.penaltyTime }} et inférieur à
+        {{ this.maxTimeConstants.penaltyTime }}
+    </h2>
+</ng-container>
+<ng-container *ngIf="!timeValid[2]">
+    <h2>Le temps gagné doit être un nombre supérieur à {{ this.minTimeConstants.savedTime }} et inférieur à {{ this.maxTimeConstants.savedTime }}</h2>
+</ng-container>
+<ng-container *ngIf="!timeRatioValid">
+    <h2>{{ msgTimeRatio }}</h2>
 </ng-container>

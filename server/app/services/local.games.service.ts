@@ -16,7 +16,7 @@ export class GamesService {
 
     async getGame(gameName: string): Promise<Game> {
         await this.asyncReadGamesFile();
-        const game: Game = (await this.getAllGames()).find((game) => game.name === gameName) as Game;
+        const game: Game = (await this.getAllGames()).find((gameNeeded) => gameNeeded.name === gameName) as Game;
         return game;
     }
 
@@ -25,15 +25,22 @@ export class GamesService {
         return this.games;
     }
 
+    async generateRandomGame(gamesAlreadyPlayed: string[]): Promise<Game> {
+        await this.getAllGames();
+        const gamesToPlay = this.games.filter((game) => {
+            return !gamesAlreadyPlayed.find((gameAlreadyPlayed) => gameAlreadyPlayed === game.name);
+        });
+        const max = gamesToPlay.length - 1;
+        return gamesToPlay[Math.floor(Math.random() * max)] as Game;
+    }
+
     async getAllGamesWithImagesData() {
         const games: Game[] = await this.getAllGames();
-
-        for (let i = 0; i < games.length; i++) {
-            const gameImagesData: string[] = await this.getGameImagesData(games[i].name);
-            games[i].images[ORIGINAL_IMAGE_POSITION] = gameImagesData[ORIGINAL_IMAGE_POSITION];
-            games[i].images[MODIFIED_IMAGE_POSITION] = gameImagesData[MODIFIED_IMAGE_POSITION];
+        for (const game of games) {
+            const gameImagesData: string[] = await this.getGameImagesData(game.name);
+            game.images[ORIGINAL_IMAGE_POSITION] = gameImagesData[ORIGINAL_IMAGE_POSITION];
+            game.images[MODIFIED_IMAGE_POSITION] = gameImagesData[MODIFIED_IMAGE_POSITION];
         }
-
         return games;
     }
 
@@ -49,7 +56,7 @@ export class GamesService {
         return gameImagesData;
     }
 
-    async addGame(gameToAdd: Game): Promise<Boolean> {
+    async addGame(gameToAdd: Game): Promise<boolean> {
         let gameAdded = false;
         await this.asyncReadGamesFile();
         if (this.validateName(gameToAdd.name)) {
@@ -76,18 +83,24 @@ export class GamesService {
         await this.asyncReadGamesFile();
         const newGames = this.games.filter((game: Game) => {
             if (game.name === nameOfGameToDelete) {
-                fs.rm(IMAGES_PATH + game.images[0], (err) => {
-                    if (err) throw err;
-                });
-                fs.rm(IMAGES_PATH + game.images[1], (err) => {
-                    if (err) throw err;
-                });
+                this.deleteImages(game.images[0], game.images[1]);
             }
             return game.name !== nameOfGameToDelete;
         });
         this.games = newGames;
         await this.asyncWriteInGamesFile();
         return this.games;
+    }
+
+    async resetGameList() {
+        let nameList: string[] = [];
+        this.games.filter((game: Game) => {
+            this.deleteImages(game.images[0], game.images[1]);
+            nameList.push(game.name);
+        });
+        this.games = [];
+        await this.asyncWriteInGamesFile();
+        return nameList;
     }
 
     async asyncWriteInGamesFile() {
@@ -111,10 +124,19 @@ export class GamesService {
         }
     }
 
+    private deleteImages(image1: string, image2: string) {
+        fs.rm(IMAGES_PATH + image1, (err) => {
+            if (err) throw err;
+        });
+        fs.rm(IMAGES_PATH + image2, (err) => {
+            if (err) throw err;
+        });
+    }
+
     private async getGameImagesNames(gameName: string): Promise<string[]> {
         return (await this.getGame(gameName)).images;
     }
-    
+
     private async getGameImageData(imageName: string): Promise<Buffer> {
         try {
             const imageData: Buffer = await fs.promises.readFile(IMAGES_PATH + imageName);
