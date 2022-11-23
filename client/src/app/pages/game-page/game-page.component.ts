@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {
     ALL_GAMES_FINISHED,
     DISABLE_CLOSE,
+    EMPTY_PLAYER_NAME,
     LOSING_FLAG,
     STANDARD_POP_UP_HEIGHT,
     STANDARD_POP_UP_WIDTH,
@@ -135,6 +136,12 @@ export class GamePageComponent {
 
         this.socketService.on('no more games available', () => {
             this.openDialog(ALL_GAMES_FINISHED, WIN_FLAG);
+        });
+
+        //To test Seb
+        this.socketService.on('Other player abandonned LM', (username: string) => {
+            this.usernames[ADVERSARY_PLR_USERNAME_POS] = EMPTY_PLAYER_NAME;
+            this.isMultiplayerGame = false;
         });
     }
 }

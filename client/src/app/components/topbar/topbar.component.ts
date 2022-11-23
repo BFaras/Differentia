@@ -1,9 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { EMPTY_PLAYER_NAME } from '@app/client-consts';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
 import { ClueInformations } from '@common/clue-informations';
-import { CLUE_AMOUNT_DEFAULT } from '@common/const';
+import { CLUE_AMOUNT_DEFAULT, LOCAL_PLR_USERNAME_POS } from '@common/const';
 
 @Component({
     selector: 'app-topbar',
@@ -11,6 +10,7 @@ import { CLUE_AMOUNT_DEFAULT } from '@common/const';
     styleUrls: ['./topbar.component.scss'],
 })
 export class TopbarComponent implements OnInit {
+    readonly localPlayerUsernamePos = LOCAL_PLR_USERNAME_POS;
     @Input() nbrDifferencesFound: number[];
     @Input() playerNames: string[];
     @Input() gameMode: string;
@@ -37,16 +37,6 @@ export class TopbarComponent implements OnInit {
         });
         this.socketService.on('Clue with difference pixels', () => {
             this.clueAmountLeft = 0;
-        });
-
-        //To test Seb
-        this.socketService.on('Other player abandonned LM', (username: string) => {
-            if (this.playerNames[0] === username) {
-                this.playerNames[0] = EMPTY_PLAYER_NAME;
-                this.indexPlayerLeft = 1;
-            } else {
-                this.playerNames[1] = EMPTY_PLAYER_NAME;
-            }
         });
     }
 }
