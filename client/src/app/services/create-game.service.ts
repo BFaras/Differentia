@@ -8,8 +8,11 @@ export class CreateGameService {
     constructor(private socketService: SocketClientService) {}
 
     createLimitedTimeGame(): void {
-        console.log('jte send le trying to play LM');
         this.socketService.send('I am trying to play a limited time game');
+    }
+
+    leaveLimitedTimeGame(): void {
+        this.socketService.send('I left from LM');
     }
 
     createGame(gameName: string): void {

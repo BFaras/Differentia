@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { CLASSIC_MODE } from '@common/const';
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 
@@ -37,14 +36,5 @@ export class SocketClientService {
 
     off(event: string) {
         this.socket.off(event);
-    }
-
-    reset(): void {
-        this.socket.removeAllListeners('username valid');
-        this.socket.removeAllListeners(`${CLASSIC_MODE}`);
-    }
-
-    print(): void {
-        console.log(this.socket.sendBuffer);
     }
 }

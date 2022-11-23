@@ -33,6 +33,10 @@ export class PopDialogWaitingForPlayerComponent implements OnInit {
         if (this.gameInfo.classicFlag) this.socketService.send('Is the host still there', this.gameInfo.nameGame);
     }
 
+    close(): void {
+        this.dialogRef.close();
+    }
+
     private openRefusedDialog(didHostChoseAnother: boolean): void {
         this.dialog.open(PopDialogHostRefusedComponent, {
             height: '400px',
@@ -43,6 +47,7 @@ export class PopDialogWaitingForPlayerComponent implements OnInit {
             },
         });
     }
+
     private configureWaitingPopUpSocketFeatures(): void {
         this.socketService.on(`${this.gameInfo.nameGame} someone is trying to join`, (username: string) => {
             this.isSomeoneJoining = true;
@@ -57,18 +62,21 @@ export class PopDialogWaitingForPlayerComponent implements OnInit {
         });
         this.socketService.on(`${this.gameInfo.nameGame} you have been declined`, (didHostChoseAnother: boolean) => {
             this.socketService.off(`${this.gameInfo.nameGame} you have been declined`);
-            this.dialogRef.close();
+            this.close();
             this.openRefusedDialog(didHostChoseAnother);
         });
         this.socketService.on(`${this.gameInfo.nameGame} you have been accepted`, () => {
             this.socketService.off(`${this.gameInfo.nameGame} you have been accepted`);
-            this.dialogRef.close();
+            this.close();
             this.router.navigate(['/game']);
         });
 
-        this.socketService.on('response on limited time waiting line', () => {
-            this.dialogRef.close();
-            this.router.navigate(['/game']);
+        this.socketService.on('response on limited time waiting line', (res: boolean) => {
+            if (res) {
+                this.socketService.off('response on limited time waiting line');
+                this.close();
+                this.router.navigate(['/game']);
+            }
         });
     }
 }

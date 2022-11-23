@@ -115,6 +115,10 @@ export class SocketManager {
                 this.sio.emit(`${gameName} nobody is waiting no more`);
             });
 
+            socket.on('I left from LM', () => {
+                this.waitingLineHandlerService.resetLimitedTimeWaitingLine();
+            });
+
             socket.on('need reconnection', () => {
                 this.sio.to(socket.id).emit('reconnect');
             });
