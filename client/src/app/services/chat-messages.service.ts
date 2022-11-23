@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ChatMessage } from '@common/chat-message';
 import {
     ABANDON_MESSAGE,
     GAME_MESSAGE_SENDER_NAME,
@@ -10,6 +9,7 @@ import {
     MESSAGE_INDICE,
     TWO_DIGIT_TIME_VALUE,
 } from '@app/client-consts';
+import { ChatMessage } from '@common/chat-message';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Observable, Subscriber } from 'rxjs';
@@ -73,8 +73,12 @@ export class ChatMessagesService {
 
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
             if (endGameInfos.isMultiplayer && endGameInfos.isAbandon) {
-                observer.next(this.generateChatMessageFromGame(this.adversaryUsername + ABANDON_MESSAGE));
+                this.sendAbandonMessage(observer);
             }
+        });
+
+        this.socketService.on('Other player abandonned LM', () => {
+            this.sendAbandonMessage(observer);
         });
 
         //To test Raph
@@ -98,5 +102,9 @@ export class ChatMessagesService {
             senderName,
             message,
         };
+    }
+
+    private sendAbandonMessage(observer: Subscriber<ChatMessage>) {
+        observer.next(this.generateChatMessageFromGame(this.adversaryUsername + ABANDON_MESSAGE));
     }
 }
