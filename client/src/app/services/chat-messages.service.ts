@@ -8,7 +8,7 @@ import {
     MESSAGE_ERROR_DIFFERENCE_MULTI,
     MESSAGE_ERROR_DIFFERENCE_SOLO,
     TWO_DIGIT_TIME_VALUE,
-} from '@common/const';
+} from '@app/client-consts';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Observable, Subscriber } from 'rxjs';
@@ -18,7 +18,7 @@ import { SocketClientService } from './socket-client.service';
     providedIn: 'root',
 })
 export class ChatMessagesService {
-    public messagesObservable: Observable<ChatMessage>;
+    messagesObservable: Observable<ChatMessage>;
     private adversaryUsername: string;
     private isMultiplayerGame: boolean;
     private date: Date;
@@ -84,8 +84,8 @@ export class ChatMessagesService {
     private generateChatMessage(senderName: string, message: string): ChatMessage {
         return {
             timeMessageSent: this.getTimeInCorrectFormat(),
-            senderName: senderName,
-            message: message,
+            senderName,
+            message,
         };
     }
 }

@@ -1,4 +1,4 @@
-import { HOST_PRESENT } from '@app/server-consts';
+import { HOST_PRESENT } from '@common/const';
 import * as io from 'socket.io';
 import { Service } from 'typedi';
 

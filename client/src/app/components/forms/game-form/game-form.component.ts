@@ -1,7 +1,18 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GameFormDescription } from '@app/classes/game-form-description';
-import { ADMIN_GAME_FORMS_BUTTON, MULTIPLAYER_MODE, SELECTION_GAME_FORMS_BUTTON } from '@app/client-consts';
+import {
+    ADMIN_GAME_FORMS_BUTTON,
+    MULTIPLAYER_MODE,
+    SELECTION_GAME_FORMS_BUTTON,
+    STANDARD_POP_UP_HEIGHT,
+    STANDARD_POP_UP_WIDTH,
+    SOMEBODY_IS_WAITING,
+    CREATE_FLAG,
+    JOIN_FLAG,
+    CLASSIC_FLAG,
+    DISABLE_CLOSE,
+} from '@app/client-consts';
 import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
 import { SocketClientService } from '@app/services/socket-client.service';
 
@@ -17,9 +28,9 @@ export class GameFormComponent {
     adminGameFormsButton = ADMIN_GAME_FORMS_BUTTON;
     selectionGameFormsButton = SELECTION_GAME_FORMS_BUTTON;
     multiplayerFlag = MULTIPLAYER_MODE;
-    isPlayerWaiting: boolean = false;
-    joinFlag: boolean = false;
-    createFlag: boolean = false;
+    isPlayerWaiting: boolean = !SOMEBODY_IS_WAITING;
+    joinFlag: boolean = !JOIN_FLAG;
+    createFlag: boolean = !CREATE_FLAG;
     constructor(private dialog: MatDialog, private socketService: SocketClientService) {}
 
     ngOnInit(): void {
@@ -29,12 +40,12 @@ export class GameFormComponent {
 
     openDialog(multiplayerFlag: boolean): void {
         this.dialog.open(PopDialogUsernameComponent, {
-            height: '400px',
-            width: '600px',
-            disableClose: true,
+            height: STANDARD_POP_UP_HEIGHT,
+            width: STANDARD_POP_UP_WIDTH,
+            disableClose: DISABLE_CLOSE,
             data: {
                 nameGame: this.gameForm.gameName,
-                classicFlag: true,
+                classicFlag: CLASSIC_FLAG,
                 multiFlag: multiplayerFlag,
                 joinFlag: this.joinFlag,
                 createFlag: this.createFlag,
@@ -48,18 +59,18 @@ export class GameFormComponent {
     }
 
     setJoinFlag(): void {
-        this.joinFlag = true;
-        this.createFlag = false;
+        this.joinFlag = JOIN_FLAG;
+        this.createFlag = !CREATE_FLAG;
     }
 
     setCreateFlag(): void {
-        this.createFlag = true;
-        this.joinFlag = false;
+        this.createFlag = CREATE_FLAG;
+        this.joinFlag = !JOIN_FLAG;
     }
 
     resetFlags(): void {
-        this.createFlag = false;
-        this.joinFlag = false;
+        this.createFlag = !JOIN_FLAG;
+        this.joinFlag = !CREATE_FLAG;
     }
 
     private configureGameFormSocketFeatures(): void {
@@ -70,7 +81,7 @@ export class GameFormComponent {
             });
 
             this.socketService.on(`${this.gameForm.gameName} nobody is waiting no more`, () => {
-                this.isPlayerWaiting = false;
+                this.isPlayerWaiting = !SOMEBODY_IS_WAITING;
             });
 
             this.socketService.on('reconnect', () => {

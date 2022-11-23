@@ -6,6 +6,9 @@ import { CreateGameService } from '@app/services/create-game.service';
 import { JoinGameService } from '@app/services/join-game.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
+import { STANDARD_POP_UP_HEIGHT, STANDARD_POP_UP_WIDTH, SOMEONE_IS_JOINING, DISABLE_CLOSE, EMPTY_PLAYER_NAME } from '@app/client-consts';
+import { HOST_PRESENT } from '@common/const';
+import { PopUpData } from '@app/interfaces/pop-up-data';
 
 @Component({
     selector: 'app-pop-dialog-waiting-for-player',
@@ -13,9 +16,9 @@ import { StartUpGameService } from '@app/services/start-up-game.service';
     styleUrls: ['./pop-dialog-waiting-for-player.component.scss'],
 })
 export class PopDialogWaitingForPlayerComponent implements OnInit {
-    isSomeoneJoining: boolean = false;
-    playerTryingToJoin: string = '';
-    isHostPresent: boolean = true;
+    isSomeoneJoining: boolean = !SOMEONE_IS_JOINING;
+    playerTryingToJoin: string = EMPTY_PLAYER_NAME;
+    isHostPresent: boolean = HOST_PRESENT;
     constructor(
         private socketService: SocketClientService,
         public createGameService: CreateGameService,
@@ -23,7 +26,7 @@ export class PopDialogWaitingForPlayerComponent implements OnInit {
         public startUpGameService: StartUpGameService,
         private dialogRef: MatDialogRef<PopDialogWaitingForPlayerComponent>,
         private dialog: MatDialog,
-        @Inject(MAT_DIALOG_DATA) public gameInfo: any,
+        @Inject(MAT_DIALOG_DATA) public gameInfo: PopUpData,
         public router: Router,
     ) {}
 
@@ -39,9 +42,9 @@ export class PopDialogWaitingForPlayerComponent implements OnInit {
 
     private openRefusedDialog(didHostChoseAnother: boolean): void {
         this.dialog.open(PopDialogHostRefusedComponent, {
-            height: '400px',
-            width: '600px',
-            disableClose: true,
+            height: STANDARD_POP_UP_HEIGHT,
+            width: STANDARD_POP_UP_WIDTH,
+            disableClose: DISABLE_CLOSE,
             data: {
                 didHostChoseAnotherFlag: didHostChoseAnother,
             },
@@ -50,11 +53,11 @@ export class PopDialogWaitingForPlayerComponent implements OnInit {
 
     private configureWaitingPopUpSocketFeatures(): void {
         this.socketService.on(`${this.gameInfo.nameGame} someone is trying to join`, (username: string) => {
-            this.isSomeoneJoining = true;
+            this.isSomeoneJoining = SOMEONE_IS_JOINING;
             this.playerTryingToJoin = username;
         });
         this.socketService.on(`${this.gameInfo.nameGame} the player trying to join left`, () => {
-            this.isSomeoneJoining = false;
+            this.isSomeoneJoining = !SOMEONE_IS_JOINING;
             this.playerTryingToJoin = '';
         });
         this.socketService.on(`${this.gameInfo.nameGame} response on host presence`, (response: boolean) => {

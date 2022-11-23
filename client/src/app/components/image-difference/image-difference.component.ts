@@ -64,11 +64,14 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
         const unwrappedOriginalModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getOriginalImageUploaded().image as SafeValue);
         const unwrappedModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getModifiedImageUploaded().image as SafeValue);
 
-        this.originalImage.src = this.mergeImageCanvas(unwrappedOriginalModifiedSafeUrl, this.gameToServerService.getOriginalImageUploaded().index!);
+        this.originalImage.src = this.mergeImageCanvas(
+            unwrappedOriginalModifiedSafeUrl,
+            this.gameToServerService.getOriginalImageUploaded().index as number,
+        );
         await this.imageToImageDifferenceService.waitForImageToLoad(this.originalImage);
         this.uploadFileService.setOriginalMergedCanvasImage(this.originalImage);
 
-        this.modifiedImage.src = this.mergeImageCanvas(unwrappedModifiedSafeUrl, this.gameToServerService.getModifiedImageUploaded().index!);
+        this.modifiedImage.src = this.mergeImageCanvas(unwrappedModifiedSafeUrl, this.gameToServerService.getModifiedImageUploaded().index as number);
         await this.imageToImageDifferenceService.waitForImageToLoad(this.modifiedImage);
         this.uploadFileService.setModifiedMergedCanvasImage(this.modifiedImage);
     }
@@ -84,13 +87,19 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
 
     private linearizeDoubleArray(doubleArray: number[][]): number[] {
         const linearizedArray: number[] = [];
-
         for (let i = 0; i < doubleArray.length; i++) {
             for (let j = 0; j < doubleArray[i].length; j++) {
                 linearizedArray.push(doubleArray[i][j]);
             }
         }
 
+        /*
+        for (const num of doubleArray) {
+            for (const number of doubleArray[]) {
+                linearizedArray.push(number);
+            }
+        }
+        */
         return linearizedArray;
     }
 

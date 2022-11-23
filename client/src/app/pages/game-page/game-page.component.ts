@@ -4,7 +4,7 @@ import { PopDialogEndgameComponent } from '@app/components/pop-dialogs/pop-dialo
 import { CommunicationService } from '@app/services/communication.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
-import { TIMER_HIT_ZERO_MESSAGE } from '@app/client-consts';
+import { ALL_GAMES_FINISHED, DISABLE_CLOSE, LOSING_FLAG, STANDARD_POP_UP_HEIGHT, STANDARD_POP_UP_WIDTH, TIMER_HIT_ZERO_MESSAGE, WIN_FLAG } from '@app/client-consts';
 import {
     ADVERSARY_PLR_USERNAME_POS,
     CLASSIC_MODE,
@@ -26,7 +26,7 @@ import { firstValueFrom } from 'rxjs';
     styleUrls: ['./game-page.component.scss'],
 })
 export class GamePageComponent {
-    readonly localPlrUseranmePos = LOCAL_PLR_USERNAME_POS;
+    readonly localPlrUsernamePos = LOCAL_PLR_USERNAME_POS;
     nbDifferences: number;
     gameName: string;
     gameMode: string;
@@ -50,14 +50,13 @@ export class GamePageComponent {
 
     ngOnDestroy() {
         this.socketService.send('kill the game', this.gameMode);
-        // this.socketService.disconnect();
     }
 
     private openDialog(messageToDisplay: string, winF: boolean): void {
         this.dialog.open(PopDialogEndgameComponent, {
-            height: '400px',
-            width: '600px',
-            disableClose: true,
+            height: STANDARD_POP_UP_HEIGHT,
+            width: STANDARD_POP_UP_WIDTH,
+            disableClose: DISABLE_CLOSE,
             data: {
                 message: messageToDisplay,
                 winFlag: winF,
@@ -88,7 +87,6 @@ export class GamePageComponent {
         });
 
         this.socketService.on(LIMITED_TIME_MODE, () => {
-            console.log('recu le LIMITED TIME MODE EVETN');
             this.gameMode = LIMITED_TIME_MODE;
         });
 
@@ -96,17 +94,17 @@ export class GamePageComponent {
             this.timeService.changeTime(time);
         });
 
-        this.socketService.on('The game is', (message: string) => {
-            this.receiveNumberOfDifferences(message);
-            this.gameName = message;
+        this.socketService.on('The game is', (gameName: string) => {
+            this.receiveNumberOfDifferences(gameName);
+            this.gameName = gameName;
         });
 
         this.socketService.on('show the username', (username: string) => {
             this.usernames[LOCAL_PLR_USERNAME_POS] = username;
         });
 
-        this.socketService.on('The adversary username is', (advesaryUsername: string) => {
-            this.usernames[ADVERSARY_PLR_USERNAME_POS] = advesaryUsername;
+        this.socketService.on('The adversary username is', (adversaryUsername: string) => {
+            this.usernames[ADVERSARY_PLR_USERNAME_POS] = adversaryUsername;
         });
 
         this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {
@@ -121,11 +119,11 @@ export class GamePageComponent {
         });
 
         this.socketService.on('time hit zero', () => {
-            this.openDialog(TIMER_HIT_ZERO_MESSAGE, false);
+            this.openDialog(TIMER_HIT_ZERO_MESSAGE, LOSING_FLAG);
         });
 
         this.socketService.on('no more games available', () => {
-            this.openDialog('Vous avez fini tous les jeux disponibles! Vous avez gagné!', true); // Remplacer par des constantes
+            this.openDialog(ALL_GAMES_FINISHED, WIN_FLAG);
         });
     }
 }

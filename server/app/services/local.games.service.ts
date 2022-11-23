@@ -41,13 +41,6 @@ export class GamesService {
             game.images[ORIGINAL_IMAGE_POSITION] = gameImagesData[ORIGINAL_IMAGE_POSITION];
             game.images[MODIFIED_IMAGE_POSITION] = gameImagesData[MODIFIED_IMAGE_POSITION];
         }
-
-        // for (let i = 0; i < games.length; i++) {
-        //     const gameImagesData: string[] = await this.getGameImagesData(games[i].name);
-        //     games[i].images[ORIGINAL_IMAGE_POSITION] = gameImagesData[ORIGINAL_IMAGE_POSITION];
-        //     games[i].images[MODIFIED_IMAGE_POSITION] = gameImagesData[MODIFIED_IMAGE_POSITION];
-        // }
-
         return games;
     }
 

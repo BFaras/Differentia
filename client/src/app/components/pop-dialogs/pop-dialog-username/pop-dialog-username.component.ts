@@ -7,6 +7,8 @@ import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
 import { PopDialogLimitedTimeModeComponent } from '@app/components/pop-dialogs/pop-dialog-limited-time-mode/pop-dialog-limited-time-mode.component';
 import { CLASSIC_MODE, LIMITED_TIME_MODE } from '@common/const';
+import { STANDARD_POP_UP_HEIGHT, STANDARD_POP_UP_WIDTH, DISABLE_BUTTON, CLASSIC_FLAG, DISABLE_CLOSE, USERNAME_VALID } from '@app/client-consts';
+import { PopUpData } from '@app/interfaces/pop-up-data';
 
 @Component({
     selector: 'app-pop-dialog-username',
@@ -15,12 +17,12 @@ import { CLASSIC_MODE, LIMITED_TIME_MODE } from '@common/const';
 })
 export class PopDialogUsernameComponent implements OnInit {
     @ViewChild('userName') username: ElementRef;
-    disabledButton: boolean = true;
-    usernameNotValid: boolean = false;
+    disabledButton: boolean = DISABLE_BUTTON;
+    usernameNotValid: boolean = USERNAME_VALID;
 
     constructor(
         private socketService: SocketClientService,
-        @Inject(MAT_DIALOG_DATA) public gameInfo: any,
+        @Inject(MAT_DIALOG_DATA) public gameInfo: PopUpData,
         public startUpGameService: StartUpGameService,
         private dialog: MatDialog,
         public dialogRef: MatDialogRef<PopDialogUsernameComponent>,
@@ -33,8 +35,8 @@ export class PopDialogUsernameComponent implements OnInit {
     }
 
     inputChanged(): void {
-        if (this.username.nativeElement.value) this.disabledButton = false;
-        else this.disabledButton = true;
+        if (this.username.nativeElement.value) this.disabledButton = !DISABLE_BUTTON;
+        else this.disabledButton = DISABLE_BUTTON;
     }
 
     private startWaitingLine(): void {
@@ -43,26 +45,26 @@ export class PopDialogUsernameComponent implements OnInit {
 
     private openClassicDialog(): void {
         this.dialog.open(PopDialogWaitingForPlayerComponent, {
-            height: '400px',
-            width: '600px',
-            disableClose: true,
+            height: STANDARD_POP_UP_HEIGHT,
+            width: STANDARD_POP_UP_WIDTH,
+            disableClose: DISABLE_CLOSE,
             data: {
                 nameGame: this.gameInfo.nameGame,
                 joinFlag: this.gameInfo.joinFlag,
                 createFlag: this.gameInfo.createFlag,
                 username: this.username.nativeElement.value,
-                classicFlag: true, // CHANGER POUR UNE CONSTANTE
+                classicFlag: CLASSIC_FLAG,
             },
         });
     }
 
     private openLimitedTimeDialog(): void {
         this.dialog.open(PopDialogLimitedTimeModeComponent, {
-            height: '400px',
-            width: '600px',
-            disableClose: true,
+            height: STANDARD_POP_UP_HEIGHT,
+            width: STANDARD_POP_UP_WIDTH,
+            disableClose: DISABLE_CLOSE,
             data: {
-                classicFlag: false,
+                classicFlag: !CLASSIC_FLAG,
                 username: this.username.nativeElement.value,
             },
         });
@@ -81,7 +83,7 @@ export class PopDialogUsernameComponent implements OnInit {
 
         this.socketService.on('username not valid', () => {
             this.socketService.off('username not valid');
-            this.usernameNotValid = true;
+            this.usernameNotValid = !USERNAME_VALID;
         });
 
         this.socketService.on(`${CLASSIC_MODE}`, () => {

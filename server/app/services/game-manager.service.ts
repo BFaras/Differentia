@@ -7,6 +7,7 @@ import {
     NO_OTHER_PLAYER_ROOM,
     ORIGINAL_IMAGE_POSITION,
 } from '@common/const';
+import { IT_IS_MULTIPLAYER, GAME_WON, NOBODY_ABANDONNED, NO_MORE_GAMES_AVAILABLE, ONE_SECOND_DELAY, TIMER_HIT_ZERO } from '@app/server-consts';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
@@ -15,7 +16,6 @@ import Container, { Service } from 'typedi';
 import { ChronometerService } from './chronometer.service';
 import { GamesService } from './local.games.service';
 import { MouseHandlerService } from './mouse-handler.service';
-import { NO_MORE_GAMES_AVAILABLE, ONE_SECOND_DELAY, TIMER_HIT_ZERO } from '@app/server-consts';
 
 @Service()
 export class GameManagerService {
@@ -76,12 +76,12 @@ export class GameManagerService {
     handleEndGameEmits(socket: io.Socket, isItMultiplayer: boolean) {
         const endGameInfos: EndGameInformations = {
             isMultiplayer: isItMultiplayer,
-            isAbandon: false,
-            isGameWon: true,
+            isAbandon: NOBODY_ABANDONNED,
+            isGameWon: GAME_WON,
         };
         socket.emit('End game', endGameInfos);
 
-        endGameInfos.isGameWon = false;
+        endGameInfos.isGameWon = !GAME_WON;
         this.deleteRoom(socket);
         socket.broadcast.to(this.findSocketGameRoomName(socket)).emit('End game', endGameInfos);
     }
@@ -91,9 +91,9 @@ export class GameManagerService {
         let endGameInfos: EndGameInformations;
         if (gameMode === CLASSIC_MODE) {
             endGameInfos = {
-                isMultiplayer: true,
-                isAbandon: true,
-                isGameWon: true,
+                isMultiplayer: IT_IS_MULTIPLAYER,
+                isAbandon: !NOBODY_ABANDONNED,
+                isGameWon: GAME_WON,
             };
             this.sio.to(gameRoomName).emit('End game', endGameInfos);
             this.endGame(socket, gameMode);

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import { HOST_CHOSE_ANOTHER, HOST_PRESENT, ZERO_GAMES_PLAYED } from '@app/server-consts';
-import { CLASSIC_MODE, LIMITED_TIME_MODE } from '@common/const';
+import { HOST_CHOSE_ANOTHER, SOMEBODY_IS_WAITING, ZERO_GAMES_PLAYED } from '@app/server-consts';
+import { CLASSIC_MODE, LIMITED_TIME_MODE, HOST_PRESENT } from '@common/const';
 import { ChatMessage } from '@common/chat-message';
 import { DifferencesInformations } from '@common/differences-informations';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
@@ -82,18 +82,18 @@ export class SocketManager {
 
             socket.on('I am waiting', (gameName: string) => {
                 this.waitingLineHandlerService.addCreatingPlayer(gameName, socket.id);
-                this.sio.emit(`${gameName} let me tell you if someone is waiting`, true); // SOMEONE_IS_WAITING
+                this.sio.emit(`${gameName} let me tell you if someone is waiting`, SOMEBODY_IS_WAITING);
             });
 
             socket.on('I am trying to play a limited time game', () => {
                 if (this.waitingLineHandlerService.isSomebodyWaitingForALimitedTimeGame()) {
                     const adversarySocketId = this.waitingLineHandlerService.getLimitedTimeWaitingPlayerId();
-                    this.sio.to(adversarySocketId).emit('response on limited time waiting line', true); // METTRE LES TRUE/FLSE DANS DS CSTES
-                    this.sio.to(socket.id).emit('response on limited time waiting line', true);
+                    this.sio.to(adversarySocketId).emit('response on limited time waiting line', SOMEBODY_IS_WAITING);
+                    this.sio.to(socket.id).emit('response on limited time waiting line', SOMEBODY_IS_WAITING);
                 } else {
                     console.log('attend bitch');
                     this.waitingLineHandlerService.addLimitedTimeWaitingPlayer(socket.id);
-                    this.sio.to(socket.id).emit('response on limited time waiting line', false);
+                    this.sio.to(socket.id).emit('response on limited time waiting line', !SOMEBODY_IS_WAITING);
                 }
             });
 

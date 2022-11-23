@@ -6,18 +6,21 @@ import { DrawService } from '@app/services/draw.service';
 import { ImageGeneratorService } from '@app/services/image-generator.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { SocketClientService } from '@app/services/socket-client.service';
+import { CLASSIC_MODE, DEFAULT_HEIGHT_CANVAS, DEFAULT_WIDTH_CANVAs, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import {
-    CLASSIC_MODE,
+    BLINK_ID,
     CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE,
     CLASSIC_MULTIPLAYER_LOST_MESSAGE,
     CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE,
     CLASSIC_SOLO_END_GAME_MESSAGE,
-    DEFAULT_HEIGHT_CANVAS,
-    DEFAULT_WIDTH_CANVAs,
-    // LIMITED_TIME_MODE,
-    MODIFIED_IMAGE_POSITION,
-    ORIGINAL_IMAGE_POSITION,
-} from '@common/const';
+    DISABLE_CLOSE,
+    LOSING_FLAG,
+    PAUSED_ID,
+    STANDARD_POP_UP_HEIGHT,
+    STANDARD_POP_UP_WIDTH,
+    THREE_SECONDS,
+    WIN_FLAG,
+} from '@app/client-consts';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
@@ -40,7 +43,7 @@ export class PlayAreaComponent implements OnInit {
     @Input() mode: string;
     mousePosition: Position = { x: 0, y: 0 };
     private pixelList: number[] = [];
-    private blinkCanvasOrginial: ImageData;
+    private blinkCanvasOriginal: ImageData;
     private canvasSize: Coordinate = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
     constructor(
         private socketService: SocketClientService,
@@ -77,9 +80,8 @@ export class PlayAreaComponent implements OnInit {
     }
 
     getImageData(): void {
-        this.blinkCanvasOrginial = this.blinkCanvas.nativeElement
-            .getContext('2d')!
-            .getImageData(0, 0, this.blinkCanvas.nativeElement.width, this.blinkCanvas.nativeElement.height);
+        const context = this.blinkCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.blinkCanvasOriginal = context.getImageData(0, 0, this.blinkCanvas.nativeElement.width, this.blinkCanvas.nativeElement.height);
     }
 
     private displayImages() {
@@ -102,13 +104,13 @@ export class PlayAreaComponent implements OnInit {
 
     private openEndGameDialog(messageToDisplay: string, winFlag: boolean) {
         this.dialog.open(PopDialogEndgameComponent, {
-            height: '400px',
-            width: '600px',
+            height: STANDARD_POP_UP_HEIGHT,
+            width: STANDARD_POP_UP_WIDTH,
             data: {
                 message: messageToDisplay,
                 winFlag,
             },
-            disableClose: true,
+            disableClose: DISABLE_CLOSE,
         });
     }
 
@@ -123,9 +125,9 @@ export class PlayAreaComponent implements OnInit {
             this.mouseDetection.verifyGameFinished(isDifference, this.isMultiplayer, isLocalPlayer);
 
             if (isDifference && this.mode === CLASSIC_MODE) {
-                this.blinkCanvas.nativeElement.getContext('2d')?.putImageData(this.blinkCanvasOrginial, 0, 0);
+                this.blinkCanvas.nativeElement.getContext('2d')?.putImageData(this.blinkCanvasOriginal, 0, 0);
                 this.drawService.context5 = this.blinkCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-                this.drawService.context5.canvas.id = 'blink';
+                this.drawService.context5.canvas.id = BLINK_ID;
                 this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
                     this.pixelList,
                     this.modifiedCanvas.nativeElement,
@@ -139,22 +141,21 @@ export class PlayAreaComponent implements OnInit {
                 );
 
                 setTimeout(() => {
-                    this.drawService.context5.canvas.id = 'paused';
-                }, 3000); // CRÉER UNE CONSTANTE DANS LE FICHIER CONSANTES DANS LE COTE CLIENT
+                    this.drawService.context5.canvas.id = PAUSED_ID;
+                }, THREE_SECONDS);
             }
         });
 
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
-            // CHANGER LES TRUES ET FALSES PAR DES CONSTANTES
             let endGameMessage = CLASSIC_SOLO_END_GAME_MESSAGE;
-            let winFlag = true;
+            let winFlag = WIN_FLAG;
             if (endGameInfos.isMultiplayer && endGameInfos.isGameWon && !endGameInfos.isAbandon) {
                 endGameMessage = CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE;
             } else if (endGameInfos.isMultiplayer && endGameInfos.isAbandon) {
                 endGameMessage = CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE;
             } else if (!endGameInfos.isGameWon) {
                 endGameMessage = CLASSIC_MULTIPLAYER_LOST_MESSAGE;
-                winFlag = false;
+                winFlag = LOSING_FLAG;
             }
             this.openEndGameDialog(endGameMessage, winFlag);
         });

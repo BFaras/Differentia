@@ -1,6 +1,5 @@
-/* eslint-disable prettier/prettier */
-
 import { Component, Input, OnInit } from '@angular/core';
+import { EMPTY_PLAYER_NAME } from '@app/client-consts';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
 
@@ -23,13 +22,12 @@ export class TopbarComponent implements OnInit {
 
     configureTopBarSocketFeatures(): void {
         this.socketService.on('Other player abandonned LM', (username: string) => {
-           console.log('salut papa');
             if (this.playerNames[0] === username) {
-            this.playerNames[0] = '';
-            this.indexPlayerLeft = 1;
-           } else {
-            this.playerNames[1] = '';     
-           }
+                this.playerNames[0] = EMPTY_PLAYER_NAME;
+                this.indexPlayerLeft = 1;
+            } else {
+                this.playerNames[1] = EMPTY_PLAYER_NAME;
+            }
         });
     }
 }

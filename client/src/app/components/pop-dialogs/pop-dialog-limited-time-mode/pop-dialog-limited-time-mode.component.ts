@@ -3,7 +3,9 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { Router } from '@angular/router';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
-import { PopDialogWaitingForPlayerComponent } from '../pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
+// eslint-disable-next-line max-len
+import { PopDialogWaitingForPlayerComponent } from '@app/components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
+import { STANDARD_POP_UP_HEIGHT, STANDARD_POP_UP_WIDTH, CREATE_FLAG, JOIN_FLAG, DISABLE_CLOSE, EMPTY_GAME_NAME, CLASSIC_FLAG } from '@app/client-consts';
 
 @Component({
     selector: 'app-pop-dialog-limited-time-mode',
@@ -27,14 +29,15 @@ export class PopDialogLimitedTimeModeComponent implements OnInit {
 
     openWaitingDialog(): void {
         this.dialog.open(PopDialogWaitingForPlayerComponent, {
-            height: '400px',
-            width: '600px',
-            disableClose: true,
+            height: STANDARD_POP_UP_HEIGHT,
+            width: STANDARD_POP_UP_WIDTH,
+            disableClose: DISABLE_CLOSE,
             data: {
-                nameGame: '',
-                joinFlag: false,
-                createFlag: false,
+                nameGame: EMPTY_GAME_NAME,
+                joinFlag: !JOIN_FLAG,
+                createFlag: !CREATE_FLAG,
                 username: this.gameInfo.username,
+                classicFlag: !CLASSIC_FLAG,
             },
         });
     }
@@ -47,7 +50,6 @@ export class PopDialogLimitedTimeModeComponent implements OnInit {
         this.socketService.on('response on limited time waiting line', (res: boolean) => {
             this.socketService.off('response on limited time waiting line');
             if (res) {
-                console.log('jvais send le lunahc limite timed multi');
                 this.socketService.send('launch limited time mode multiplayer match');
                 this.close();
                 this.router.navigate(['/game']);

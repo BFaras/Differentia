@@ -37,7 +37,7 @@ export class StartUpGameService {
     }
 
     soloLimitedTimeGame(): void {
-        this.socketService.send('solo limited time mode'); // À gérer dans socket Manager
+        this.socketService.send('solo limited time mode');
     }
 
     private startUpLimitedTimeWaitingLine(): void {
@@ -51,10 +51,6 @@ export class StartUpGameService {
             this.soloClassicGame(gameInfo.nameGame);
         }
     }
-
-    // private multiplayerLimitedTimeGame(): void {
-    //     this.createGameService.createLimitedTimeGame();
-    // }
 
     private multiplayerClassicGame(gameInfo: any): void {
         if (gameInfo.isPlayerWaiting) this.joinGameService.joinGame(gameInfo.nameGame);
