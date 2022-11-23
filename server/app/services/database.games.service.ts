@@ -7,6 +7,7 @@ import 'dotenv/config';
 import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
 import { DatabaseService } from './database.service';
+import { Time } from '@common/time';
 
 @Service()
 export class RecordTimesService {
@@ -124,6 +125,23 @@ export class RecordTimesService {
                 throw new Error('Failed to get the game times');
             });
     }
+    // async updateRecordTimes(gameName: string, isItMultiplayer: boolean, times: Time): Promise<void> {
+    //   let filterQuery: Filter<GameTimes> = { name: gameName };
+    //   let updateQuery: UpdateFilter<GameTimes> = {
+    //     $set: {
+    //       name: game.name,
+    //       numberOfDifferences: game.numberOfDifferences,
+    //       times: game.times,
+    //       images: game.images,
+    //     },
+    //   };
+    //   return this.collection
+    //   .updateOne(filterQuery, updateQuery)
+    //   .then(() => { })
+    //   .catch(() => {
+    //     throw new Error('Failed to update game');
+    //   });
+    // }
 
     // private validateTimes(times: Time[]): boolean {
     //     return times.length === 0;

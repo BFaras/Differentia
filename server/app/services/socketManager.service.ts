@@ -170,7 +170,7 @@ export class SocketManager {
                 if (isGameFinished) {
                     mouseHandler.resetDifferencesData();
                     this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
-
+                    //= this.gamemanaservice.getSOcketChronometerService.time
                     this.gameManagerService.endGame(socket);
                 }
             });

@@ -32,6 +32,7 @@ export class GamesService {
             const gameImagesData: string[] = await this.getGameImagesData(games[i].name);
             games[i].images[ORIGINAL_IMAGE_POSITION] = gameImagesData[ORIGINAL_IMAGE_POSITION];
             games[i].images[MODIFIED_IMAGE_POSITION] = gameImagesData[MODIFIED_IMAGE_POSITION];
+            // Ici await database games[i].times = ce que je recois de la databse
         }
 
         return games;
