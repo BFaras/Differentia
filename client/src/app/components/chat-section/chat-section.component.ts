@@ -2,7 +2,8 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { ChatMessagesService } from '@app/services/chat-messages.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { ChatMessage } from '@common/chat-message';
-import { DEFAULT_USERNAME, GAME_MESSAGE_SENDER_NAME } from '@common/const';
+import { DEFAULT_USERNAME } from '@common/const';
+import { GAME_MESSAGE_SENDER_NAME } from '@app/client-consts';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -15,11 +16,11 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
     @ViewChild('playerMsg') playerMsg: ElementRef;
 
     message: string;
-    public messagesSent: ChatMessage[];
-    public localPlayerUsername: string = DEFAULT_USERNAME;
-    public readonly gameMessageSenderName = GAME_MESSAGE_SENDER_NAME;
+    messagesSent: ChatMessage[];
+    localPlayerUsername: string = DEFAULT_USERNAME;
+    readonly gameMessageSenderName = GAME_MESSAGE_SENDER_NAME;
+    isMultiplayerGame: boolean;
     private chatMessagesSubscription: Subscription;
-    public isMultiplayerGame: boolean;
 
     constructor(private chatMessagesService: ChatMessagesService, private socketService: SocketClientService) {
         this.messagesSent = [];
@@ -61,7 +62,7 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
         this.socketService.on('show the username', (username: string) => {
             this.localPlayerUsername = username;
         });
-        this.socketService.on('The adversary username is', (adversaryName: string) => {
+        this.socketService.on('The adversary username is', () => {
             this.isMultiplayerGame = true;
         });
     }
