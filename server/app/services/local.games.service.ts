@@ -83,18 +83,24 @@ export class GamesService {
         await this.asyncReadGamesFile();
         const newGames = this.games.filter((game: Game) => {
             if (game.name === nameOfGameToDelete) {
-                fs.rm(IMAGES_PATH + game.images[0], (err: Error) => {
-                    if (err) throw err;
-                });
-                fs.rm(IMAGES_PATH + game.images[1], (err: Error) => {
-                    if (err) throw err;
-                });
+                this.deleteImages(game.images[0], game.images[1]);
             }
             return game.name !== nameOfGameToDelete;
         });
         this.games = newGames;
         await this.asyncWriteInGamesFile();
         return this.games;
+    }
+
+    async resetGameList() {
+        let nameList: string[] = [];
+        this.games.filter((game: Game) => {
+            this.deleteImages(game.images[0], game.images[1]);
+            nameList.push(game.name);
+        });
+        this.games = [];
+        await this.asyncWriteInGamesFile();
+        return nameList;
     }
 
     async asyncWriteInGamesFile() {
@@ -116,6 +122,15 @@ export class GamesService {
             console.log('Something went wrong trying to read the json file:' + err);
             throw new Error(err);
         }
+    }
+
+    private deleteImages(image1: string, image2: string) {
+        fs.rm(IMAGES_PATH + image1, (err) => {
+            if (err) throw err;
+        });
+        fs.rm(IMAGES_PATH + image2, (err) => {
+            if (err) throw err;
+        });
     }
 
     private async getGameImagesNames(gameName: string): Promise<string[]> {

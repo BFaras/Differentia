@@ -1,16 +1,19 @@
 /* eslint-disable no-console */
 import { HOST_CHOSE_ANOTHER, SOMEBODY_IS_WAITING, ZERO_GAMES_PLAYED } from '@app/server-consts';
-import { CLASSIC_MODE, LIMITED_TIME_MODE, HOST_PRESENT } from '@common/const';
 import { ChatMessage } from '@common/chat-message';
+import { CLASSIC_MODE, HOST_PRESENT, LIMITED_TIME_MODE } from '@common/const';
 import { DifferencesInformations } from '@common/differences-informations';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
 import * as http from 'http';
 import * as io from 'socket.io';
+import Container from 'typedi';
+import { ClueManagerService } from './clue-manager.service';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
 import { GamesService } from './local.games.service';
 import { MouseHandlerService } from './mouse-handler.service';
+import { TimeConstantsService } from './time-constants.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
 
 export class SocketManager {
@@ -19,7 +22,7 @@ export class SocketManager {
     private waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
     private gameManagerService: GameManagerService;
     private gamesService: GamesService = new GamesService();
-    // private gamesService: GamesService;
+    private timeConstantsService: TimeConstantsService = new TimeConstantsService();
 
     constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] }, maxHttpBufferSize: 1e7 });
@@ -46,7 +49,6 @@ export class SocketManager {
                 const username = this.waitingLineHandlerService.getUsernamePlayer(socket.id, this.sio);
                 this.sio.to(socket.id).emit('show the username', username);
                 await this.gameManagerService.beginGame(socket, [gameName, CLASSIC_MODE]);
-
             });
 
             socket.on('solo limited time mode', async () => {
@@ -97,16 +99,26 @@ export class SocketManager {
                 }
             });
 
-            socket.on('Reload game selection page', (msg: string) => {
-                let roomToKeep: string[] = [];
-                for (const rooms of this.gameManagerService.getGameRooms().entries()) {
-                    if (roomToKeep.length === 0)
-                        rooms[1].forEach((room) => {
-                            roomToKeep.push(room);
-                        });
-                    else roomToKeep = roomToKeep.concat(rooms[1]);
+            socket.on('Reset game list', () => {
+                this.gameManagerService.resetGameList();
+            });
+
+            socket.on('Reload game selection page', (gameName: string | string[]) => {
+                if (gameName) {
+                    this.sio.emit('close popDialogUsername', gameName);
+                    this.sio.except(this.gameManagerService.collectAllSocketsRooms()).emit('Page reloaded', gameName);
+                    this.gameManagerService.allSocketsRooms = [];
                 }
-                this.sio.except(roomToKeep).emit('Page reloaded', msg);
+            });
+
+            socket.on('refresh games after closing popDialog', (value) => {
+                this.sio.to(value).emit('game list updated', value);
+            });
+
+            socket.on('Set time constants', (timeConstants) => {
+                this.timeConstantsService.setTimes(timeConstants).then((value) => {
+                    console.log(value);
+                });
             });
 
             socket.on('I left', (gameName: string) => {
@@ -200,6 +212,10 @@ export class SocketManager {
                 this.gameManagerService.clickResponse(socket, position);
             });
 
+            socket.on('Cheat key pressed', () => {
+                this.gameManagerService.sendDifferentPixelsNotFound(socket);
+            });
+
             socket.on('kill the game', (gameMode: string) => {
                 this.gameManagerService.handleAbandonEmit(socket, gameMode);
             });
@@ -219,6 +235,14 @@ export class SocketManager {
 
             socket.on('playerMessage', (msg: ChatMessage) => {
                 this.sio.to(this.gameManagerService.findSocketGameRoomName(socket)).emit('Send message to opponent', msg);
+            });
+
+            socket.on('get clue for player', () => {
+                const clueManagerService = Container.get(ClueManagerService);
+                const playerMouseHandlerService = this.gameManagerService.getSocketMouseHandlerService(socket);
+                const playerChronometerService = this.gameManagerService.getSocketChronometerService(socket);
+                clueManagerService.sendClueToPlayer(socket, playerMouseHandlerService, playerChronometerService);
+                this.sio.to(this.gameManagerService.findSocketGameRoomName(socket)).emit('time', playerChronometerService.time);
             });
         });
     }

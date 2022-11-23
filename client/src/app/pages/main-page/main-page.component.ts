@@ -1,8 +1,19 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import {
+    CLASSIC_FLAG,
+    CREATE_FLAG,
+    DISABLE_CLOSE,
+    EMPTY_GAME_NAME,
+    JOIN_FLAG,
+    MAIN_PAGE_BUTTONS,
+    MULTI_FLAG,
+    SOMEBODY_IS_WAITING,
+    STANDARD_POP_UP_HEIGHT,
+    STANDARD_POP_UP_WIDTH,
+} from '@app/client-consts';
 import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
 import { SocketClientService } from '@app/services/socket-client.service';
-import { STANDARD_POP_UP_HEIGHT, STANDARD_POP_UP_WIDTH, MAIN_PAGE_BUTTONS, CLASSIC_FLAG, DISABLE_CLOSE, EMPTY_GAME_NAME, MULTI_FLAG, JOIN_FLAG, CREATE_FLAG, SOMEBODY_IS_WAITING } from '@app/client-consts';
 
 @Component({
     selector: 'app-main-page',
@@ -10,7 +21,7 @@ import { STANDARD_POP_UP_HEIGHT, STANDARD_POP_UP_WIDTH, MAIN_PAGE_BUTTONS, CLASS
     styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent {
-    readonly title: string = 'Jeu de Difference';
+    readonly title: string = 'Jeu des Différences';
     readonly buttonName: string[] = MAIN_PAGE_BUTTONS;
 
     constructor(private socketService: SocketClientService, private dialog: MatDialog) {}

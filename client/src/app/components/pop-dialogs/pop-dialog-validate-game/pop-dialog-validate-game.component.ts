@@ -26,13 +26,14 @@ export class PopDialogValidateGameComponent implements OnDestroy {
         });
     }
 
-    startsGeneratingImageDifferenceAndNumberDifference(){
+    startsGeneratingImageDifferenceAndNumberDifference() {
         if (this.valueChosen) {
             this.areImageDifferenceAndNumberDifferenceReady = true;
+            this.isChecked = false;
         }
     }
 
-    onRadiusChanged(value: number){
+    onRadiusChanged(value: number) {
         this.valueChosen = value;
     }
 }

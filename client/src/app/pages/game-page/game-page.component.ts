@@ -1,10 +1,18 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import {
+    ALL_GAMES_FINISHED,
+    DISABLE_CLOSE,
+    LOSING_FLAG,
+    STANDARD_POP_UP_HEIGHT,
+    STANDARD_POP_UP_WIDTH,
+    TIMER_HIT_ZERO_MESSAGE,
+    WIN_FLAG,
+} from '@app/client-consts';
 import { PopDialogEndgameComponent } from '@app/components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
 import { CommunicationService } from '@app/services/communication.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
-import { ALL_GAMES_FINISHED, DISABLE_CLOSE, LOSING_FLAG, STANDARD_POP_UP_HEIGHT, STANDARD_POP_UP_WIDTH, TIMER_HIT_ZERO_MESSAGE, WIN_FLAG } from '@app/client-consts';
 import {
     ADVERSARY_PLR_USERNAME_POS,
     CLASSIC_MODE,
@@ -31,6 +39,7 @@ export class GamePageComponent {
     gameName: string;
     gameMode: string;
     usernames: string[] = [];
+    isMultiplayerGame: boolean;
     images: HTMLImageElement[];
     nbDifferencesFound: number[] = [0, 0];
 
@@ -41,6 +50,7 @@ export class GamePageComponent {
         private dialog: MatDialog,
     ) {
         this.images = [new Image(IMAGE_WIDTH, IMAGE_HEIGHT), new Image(IMAGE_WIDTH, IMAGE_HEIGHT)];
+        this.isMultiplayerGame = false;
     }
 
     ngOnInit() {
@@ -103,8 +113,9 @@ export class GamePageComponent {
             this.usernames[LOCAL_PLR_USERNAME_POS] = username;
         });
 
-        this.socketService.on('The adversary username is', (adversaryUsername: string) => {
-            this.usernames[ADVERSARY_PLR_USERNAME_POS] = adversaryUsername;
+        this.socketService.on('The adversary username is', (advesaryUsername: string) => {
+            this.usernames[ADVERSARY_PLR_USERNAME_POS] = advesaryUsername;
+            this.isMultiplayerGame = true;
         });
 
         this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {

@@ -28,13 +28,13 @@ export class DifferenceDetectionService {
     clickMessage(differenceIsValid: boolean, isLocalPlayer: boolean) {
         if (differenceIsValid) {
             this.message = 'BON TRAVAIL';
-            this.drawService.context1.fillStyle = 'green';
-            this.drawService.context2.fillStyle = 'green';
+            this.drawService.contextClickOriginalCanvas.fillStyle = 'green';
+            this.drawService.contextClickModifiedCanvas.fillStyle = 'green';
             this.drawMessage(this.message);
         } else if (isLocalPlayer) {
             this.message = 'ERREUR';
-            this.drawService.context1.fillStyle = 'red';
-            this.drawService.context2.fillStyle = 'red';
+            this.drawService.contextClickOriginalCanvas.fillStyle = 'red';
+            this.drawService.contextClickModifiedCanvas.fillStyle = 'red';
             this.drawMessage(this.message);
         }
     }
@@ -46,8 +46,8 @@ export class DifferenceDetectionService {
     }
 
     private drawMessage(message: string) {
-        this.drawService.drawWord(message, this.mousePosition, this.drawService.context1);
-        this.drawService.drawWord(message, this.mousePosition, this.drawService.context2);
+        this.drawService.drawWord(message, this.mousePosition, this.drawService.contextClickOriginalCanvas);
+        this.drawService.drawWord(message, this.mousePosition, this.drawService.contextClickModifiedCanvas);
     }
 
     private playAudio(audioSource: string) {

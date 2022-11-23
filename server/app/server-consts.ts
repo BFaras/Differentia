@@ -11,3 +11,7 @@ export const SOMEBODY_IS_WAITING = true;
 export const NOBODY_ABANDONNED = false;
 export const GAME_WON = true;
 export const IT_IS_MULTIPLAYER = true;
+
+//Constantes des indices
+export const INCORRECT_CLUE_NB_ERROR = -1;
+export const NO_MORE_CLUES_AMOUNT = 0;

@@ -10,6 +10,7 @@ import * as sinon from 'sinon';
 import * as io from 'socket.io';
 import { io as ioClient, Socket } from 'socket.io-client';
 import { Container } from 'typedi';
+import { ClueManagerService } from './clue-manager.service';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
 import { MouseHandlerService } from './mouse-handler.service';
@@ -155,11 +156,22 @@ describe('SocketManager service tests', () => {
         });
     });
 
+    it("should handle 'refresh games after closing popDialog' event", (done) => {
+        const value = 'Blue';
+        clientSocket.emit('refresh games after closing popDialog', value);
+        clientSocket.once('game list updated', (message: string) => {
+            expect(message).to.equal(value);
+            done();
+        });
+    });
+
     it("should handle 'Reload game selection page' event", (done) => {
         const testMsg = 'Hello';
+        const gameManagerServiceSPy = sinon.spy(GameManagerService.prototype, <any>'collectAllSocketsRooms');
         clientSocket.emit('Reload game selection page', testMsg);
         clientSocket.once('Page reloaded', (message: string) => {
             expect(message).to.equal(testMsg);
+            expect(gameManagerServiceSPy.calledOnce);
             done();
         });
     });
@@ -352,6 +364,15 @@ describe('SocketManager service tests', () => {
         }, RESPONSE_DELAY * 5);
     });
 
+    it("should handle 'Cheat key pressed' and call sendDifferentPixelsNotFound", (done) => {
+        const stubDifference = sinon.stub(GameManagerService.prototype, <any>'sendDifferentPixelsNotFound').callsFake(() => {});
+        clientSocket.emit('Cheat key pressed');
+        setTimeout(() => {
+            expect(stubDifference.calledOnce);
+            done();
+        }, RESPONSE_DELAY * 5);
+    });
+
     it("should handle 'Check if game is finished' and end the game", () => {
         const stub = sinon.stub(GameManagerService.prototype, <any>'isGameFinishedMulti').callsFake(() => {
             return true;
@@ -375,5 +396,11 @@ describe('SocketManager service tests', () => {
         const position: Position = { x: 0, y: 0 };
         clientSocket.emit('Verify position', position);
         expect(clickResponseStub.calledOnce);
+    });
+
+    it("should handle 'get clue for player' and call sendClueToPlayerSocket() from ClueManagerService", () => {
+        const stub = sinon.stub(ClueManagerService.prototype, 'sendClueToPlayer').callsFake(() => {});
+        clientSocket.emit('get clue for player');
+        expect(stub.calledOnce);
     });
 });

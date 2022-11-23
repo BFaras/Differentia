@@ -13,7 +13,6 @@ export class MouseHandlerService {
     private differencesList: number[][];
     private differenceAmountFoundByPlayer: Map<string, number>;
     private differencesNbFound: number[];
-    // private localGamesService: GamesService = new GamesService();
 
     constructor() {
         this.differencesHashmap = new Map<number, number>();
@@ -35,6 +34,22 @@ export class MouseHandlerService {
 
     getNumberOfDifferencesFoundByPlayer(plrSocketId: string): number {
         return this.differenceAmountFoundByPlayer.get(plrSocketId) as number;
+    }
+
+    getDifferentPixelListNotFound(): number[] {
+        return this.doubleArrayToArray(this.getListOfDifferencesNotFound());
+    }
+
+    doubleArrayToArray(doubleArray: number[][]): number[] {
+        const linearizedArray: number[] = [];
+
+        for (let i = 0; i < doubleArray.length; i++) {
+            for (let j = 0; j < doubleArray[i].length; j++) {
+                linearizedArray.push(doubleArray[i][j]);
+            }
+        }
+
+        return linearizedArray;
     }
 
     isValidClick(mousePosition: Position, plrSocketID: string): GameplayDifferenceInformations {
@@ -86,6 +101,7 @@ export class MouseHandlerService {
         this.differenceAmountFoundByPlayer.set(plrSocketID, this.getNumberOfDifferencesFoundByPlayer(plrSocketID) + 1);
     }
 
+    // Ligne 119 pas couverte?
     private validateDifferencesOnClick(mousePosition: Position, plrSocketID: string): GameplayDifferenceInformations {
         const pixelNumber = this.convertMousePositionToPixelNumber(mousePosition);
         const differenceInformation: GameplayDifferenceInformations = {

@@ -1,16 +1,18 @@
 <div class="container">
     <app-sidebar [numberOfDifferences]="nbDifferences" [gameName]="gameName" [gameMode]="gameMode"></app-sidebar>
     <section class="play-area-container">
-        <app-topbar class="sidebar-container" 
+        <app-topbar
+            class="sidebar-container"
             [nbrDifferencesFound]="nbDifferencesFound"
             [playerNames]="usernames"
             [gameMode]="gameMode"
+            [isMultiplayer]="isMultiplayerGame"
         ></app-topbar>
         <app-play-area
             [differentImages]="images"
             [localPlayerUsername]="usernames[localPlrUsernamePos]"
-            [isMultiplayer]="usernames.length > 1"
-            [mode] = "gameMode"
+            [isMultiplayer]="isMultiplayerGame"
+            [mode]="gameMode"
         ></app-play-area>
     </section>
 </div>

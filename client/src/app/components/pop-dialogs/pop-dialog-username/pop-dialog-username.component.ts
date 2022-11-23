@@ -1,14 +1,13 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { PopDialogWaitingForPlayerComponent } from
-'@app/components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
+import { CLASSIC_FLAG, DISABLE_BUTTON, DISABLE_CLOSE, STANDARD_POP_UP_HEIGHT, STANDARD_POP_UP_WIDTH, USERNAME_VALID } from '@app/client-consts';
+import { PopDialogLimitedTimeModeComponent } from '@app/components/pop-dialogs/pop-dialog-limited-time-mode/pop-dialog-limited-time-mode.component';
+import { PopDialogWaitingForPlayerComponent } from '@app/components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
+import { PopUpData } from '@app/interfaces/pop-up-data';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
-import { PopDialogLimitedTimeModeComponent } from '@app/components/pop-dialogs/pop-dialog-limited-time-mode/pop-dialog-limited-time-mode.component';
 import { CLASSIC_MODE, LIMITED_TIME_MODE } from '@common/const';
-import { STANDARD_POP_UP_HEIGHT, STANDARD_POP_UP_WIDTH, DISABLE_BUTTON, CLASSIC_FLAG, DISABLE_CLOSE, USERNAME_VALID } from '@app/client-consts';
-import { PopUpData } from '@app/interfaces/pop-up-data';
 
 @Component({
     selector: 'app-pop-dialog-username',
@@ -74,6 +73,13 @@ export class PopDialogUsernameComponent implements OnInit {
         this.dialogRef.close();
     }
 
+    private closeGameDialog(value: string) {
+        if (this.gameInfo.nameGame === value) {
+            this.socketService.send('refresh games after closing popDialog', this.socketService.socket.id);
+            this.dialog.closeAll();
+        }
+    }
+
     private configureUsernamePopUpSocketFeatures(): void {
         this.socketService.on('username valid', () => {
             this.socketService.off('username valid');
@@ -99,6 +105,16 @@ export class PopDialogUsernameComponent implements OnInit {
         this.socketService.on(`open the ${LIMITED_TIME_MODE} pop-dialog`, () => {
             this.socketService.off(`open the ${LIMITED_TIME_MODE} pop-dialog`);
             this.openLimitedTimeDialog();
+        });
+
+        this.socketService.on('close popDialogUsername', (value: string | string[]) => {
+            if (Array.isArray(value)) {
+                for (let gameName of value) {
+                    this.closeGameDialog(gameName);
+                }
+            } else {
+                this.closeGameDialog(value);
+            }
         });
     }
 }

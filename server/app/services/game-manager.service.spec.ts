@@ -150,7 +150,7 @@ describe('GameManagerService tests', () => {
     });
 
     it('should call findSocketGameRoomName() on getSocketMouseHandlerService()', () => {
-        const spy = sinon.spy(gameManagerService, <any>'findSocketGameRoomName');
+        const spy = sinon.stub(gameManagerService, <any>'findSocketGameRoomName').callsFake(() => {});
         gameManagerService.getSocketMouseHandlerService(serverSocket);
         expect(spy.calledOnce);
     });
@@ -159,6 +159,14 @@ describe('GameManagerService tests', () => {
         const spy = sinon.spy(gameManagerService, <any>'endChrono');
         gameManagerService.endGame(serverSocket);
         expect(spy.calledOnce);
+    });
+
+    it('should send the different pixels not found', () => {
+        const stub = sinon.stub(mouseHandlerService, 'getDifferentPixelListNotFound').callsFake(() => {
+            return [];
+        });
+        gameManagerService.sendDifferentPixelsNotFound(serverSocket);
+        expect(stub.calledOnce);
     });
 
     it('should tell if the game in solo is done or not', () => {
@@ -186,5 +194,28 @@ describe('GameManagerService tests', () => {
         });
         expect(gameManagerService.isGameFinishedMulti(serverSocket)).to.be.true;
         expect(stub.calledOnce);
+    });
+
+    it('should logRoomsWithGames()', () => {
+        const gameName = 'car';
+        const roomName = 'room1';
+        gameManagerService['logRoomsWithGames'](gameName, roomName);
+        expect(gameManagerService.gamesRooms.has(gameName)).to.be.true;
+    });
+
+    it('should getGameRooms()', () => {
+        gameManagerService.getGameRooms();
+        expect(gameManagerService.gamesRooms.has(testGameName)).to.be.true;
+    });
+
+    it('should deleteRoom()', () => {
+        gameManagerService.gamesRooms.get(testGameName)?.pop();
+        gameManagerService.gamesRooms.get(testGameName)?.pop();
+
+        const spy = sinon.spy(gameManagerService.gamesRooms, 'delete');
+        const stub = sinon.stub(gameManagerService, 'findSocketGameRoomName');
+        gameManagerService['deleteRoom'](serverSocket);
+        expect(stub.calledOnce);
+        expect(spy.calledOnceWith(testGameName));
     });
 });

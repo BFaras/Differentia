@@ -3,10 +3,10 @@
 /* eslint-disable no-restricted-imports */
 /* eslint-disable prettier/prettier */
 
-import { MAX_TIME, RESET_VALUE, CLASSIC_MODE, LIMITED_TIME_MODE } from '@common/const';
+import { CLASSIC_MODE, LIMITED_TIME_MODE, MAX_TIME, RESET_VALUE } from '@common/const';
 import { Time } from '@common/time';
-import { Service } from 'typedi';
 import * as io from 'socket.io';
+import { Service } from 'typedi';
 
 @Service()
 export class ChronometerService {
@@ -15,7 +15,7 @@ export class ChronometerService {
         seconds: 0,
     };
     mode: string;
-    
+
     constructor() {}
 
     setChronometerMode(gameMode: string, socket: io.Socket): void {
@@ -25,11 +25,11 @@ export class ChronometerService {
             this.classicMode(socket);
         }
     }
-    
+
     hasTheChronoHitZero(): boolean {
         return this.time.minutes === RESET_VALUE && this.time.seconds === RESET_VALUE;
     }
-    
+
     resetChrono() {
         this.time.minutes = RESET_VALUE;
         this.time.seconds = RESET_VALUE;
@@ -58,7 +58,7 @@ export class ChronometerService {
             this.decreaseMinutes();
         }
     }
-    
+
     private classicMode(socket: io.Socket): void {
         this.resetChrono();
         this.mode = CLASSIC_MODE;
@@ -110,4 +110,9 @@ export class ChronometerService {
         }
     }
 
+    increaseTimeByXSeconds(amountToIncrease: number) {
+        for (let i = 0; i < amountToIncrease; i++) {
+            this.increaseTime();
+        }
+    }
 }
