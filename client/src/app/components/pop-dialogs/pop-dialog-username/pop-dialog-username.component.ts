@@ -54,6 +54,13 @@ export class PopDialogUsernameComponent implements OnInit {
         });
     }
 
+    private closeGameDialog(value: string) {
+        if (this.gameInfo.nameGame === value) {
+            this.socketService.send('refresh games after closing popDialog', this.socketService.socket.id);
+            this.dialog.closeAll();
+        }
+    }
+
     private configureUsernamePopUpSocketFeatures(): void {
         this.socketService.on('username valid', () => {
             this.startWaitingLine();
@@ -64,10 +71,13 @@ export class PopDialogUsernameComponent implements OnInit {
         this.socketService.on('username not valid', () => {
             this.usernameNotValid = true;
         });
-        this.socketService.on('close popDialogUsername', (value) => {
-            if (this.gameInfo.nameGame === value) {
-                this.socketService.send('refresh games after closing popDialog', this.socketService.socket.id);
-                this.dialog.closeAll();
+        this.socketService.on('close popDialogUsername', (value: string | string[]) => {
+            if (Array.isArray(value)) {
+                for (let gameName of value) {
+                    this.closeGameDialog(gameName);
+                }
+            } else {
+                this.closeGameDialog(value);
             }
         });
     }

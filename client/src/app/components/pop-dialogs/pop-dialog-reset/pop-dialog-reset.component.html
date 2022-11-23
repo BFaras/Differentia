@@ -1,0 +1,28 @@
+<button mat-mini-fab color="warn" aria-label="close dialog" (click)="this.dialogRef.close()">
+    <mat-icon>close</mat-icon>
+</button>
+<h1 mat-dialog-title>Réinitialisation</h1>
+
+<div>
+    <ng-container *ngIf="!isValidChoice">
+        <section class="section">
+            <mat-checkbox [(ngModel)]="resetTimeConstants" (ngModelChange)="getInfoToReset()">Constantes de jeu</mat-checkbox>
+        </section>
+        <section class="section">
+            <mat-checkbox [(ngModel)]="resetRecordsTimeBoard" (ngModelChange)="getInfoToReset()">Table des meilleurs temps de jeu</mat-checkbox>
+        </section>
+        <section class="section">
+            <mat-checkbox [(ngModel)]="resetGameFormList" (ngModelChange)="getInfoToReset()">Liste des jeux</mat-checkbox>
+        </section>
+        <button id="validateChoice" color="accent" mat-raised-button (click)="validateChoice()">Valider</button>
+    </ng-container>
+
+    <ng-container *ngIf="isLastChance">
+        <button mat-raised-button color="warn" (click)="resetData()" id="lastChoiceButtons">Réinitialiser</button>
+        <button mat-raised-button color="accent" (click)="modifyChoice()" id="lastChoiceButtons">Modifier</button>
+        <h1 id="verificationMsg">Êtes-vous sûr de vouloir réinitialiser ces données?</h1>
+        <div id="data">{{ gameConstants }}</div>
+        <div id="data">{{ recordsTime }}</div>
+        <div id="data">{{ gameFormList }}</div>
+    </ng-container>
+</div>

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GameFormDescription } from '@app/classes/game-form-description';
 import { ADMIN_GAME_FORMS_BUTTON, MULTIPLAYER_MODE, SELECTION_GAME_FORMS_BUTTON } from '@app/client-consts';
+import { PopDialogResetComponent } from '@app/components/pop-dialogs/pop-dialog-reset/pop-dialog-reset.component';
 import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
 import { SocketClientService } from '@app/services/socket-client.service';
 
@@ -39,6 +40,14 @@ export class GameFormComponent {
                 createFlag: this.createFlag,
                 isPlayerWaiting: this.isPlayerWaiting,
             },
+        });
+    }
+
+    openResetDialog() {
+        this.dialog.open(PopDialogResetComponent, {
+            height: '320px',
+            width: '580px',
+            disableClose: true,
         });
     }
 
