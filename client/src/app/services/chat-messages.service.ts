@@ -79,6 +79,7 @@ export class ChatMessagesService {
 
         this.socketService.on('Other player abandonned LM', () => {
             this.sendAbandonMessage(observer);
+            this.isMultiplayerGame = false;
         });
 
         //To test Raph
