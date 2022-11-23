@@ -23,7 +23,8 @@ export class TopbarComponent implements OnInit {
 
     configureTopBarSocketFeatures(): void {
         this.socketService.on('Other player abandonned LM', (username: string) => {
-           if (this.playerNames[0] === username) {
+           console.log('salut papa');
+            if (this.playerNames[0] === username) {
             this.playerNames[0] = '';
             this.indexPlayerLeft = 1;
            } else {

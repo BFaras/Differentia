@@ -20,7 +20,7 @@ export class SocketClientService {
     }
 
     disconnect() {
-        this.socket.disconnect();
+        if (this.isSocketAlive()) this.socket.disconnect();
     }
 
     on<T>(event: string, action: (data: T) => void): void {

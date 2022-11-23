@@ -19,6 +19,7 @@ export class MainPageComponent {
     }
 
     ngOnInit(): void {
+        this.socketService.disconnect();
         this.socketService.connect();
         this.configureBaseSocketFeatures();
     }

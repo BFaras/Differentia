@@ -87,20 +87,18 @@ export class GameManagerService {
     }
 
     handleAbandonEmit(socket: io.Socket, gameMode: string) {
-        console.log('gameroom is ' + this.findSocketGameRoomName(socket));
+        const gameRoomName = this.findSocketGameRoomName(socket);
         let endGameInfos: EndGameInformations;
         if (gameMode === CLASSIC_MODE) {
-            this.endGame(socket, gameMode);
             endGameInfos = {
                 isMultiplayer: true,
                 isAbandon: true,
                 isGameWon: true,
             };
-            console.log('salut');
-            socket.broadcast.to(this.findSocketGameRoomName(socket)).emit('End game', endGameInfos);
-            this.deleteRoom(socket);
+            this.sio.to(gameRoomName).emit('End game', endGameInfos);
+            this.endGame(socket, gameMode);
         } else {
-            socket.broadcast.to(this.findSocketGameRoomName(socket)).emit('Other player abandonned LM', socket.data.username);
+            this.sio.in(gameRoomName).emit('Other player abandonned LM', socket.data.username);
         }
     }
 
@@ -111,7 +109,6 @@ export class GameManagerService {
                 gameRoomName = roomName;
             }
         });
-
         return gameRoomName;
     }
 

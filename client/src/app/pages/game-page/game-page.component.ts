@@ -50,7 +50,7 @@ export class GamePageComponent {
 
     ngOnDestroy() {
         this.socketService.send('kill the game', this.gameMode);
-        this.socketService.disconnect();
+        // this.socketService.disconnect();
     }
 
     private openDialog(messageToDisplay: string, winF: boolean): void {

@@ -146,7 +146,6 @@ export class PlayAreaComponent implements OnInit {
 
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
             // CHANGER LES TRUES ET FALSES PAR DES CONSTANTES
-            console.log('jai recu le end game');
             let endGameMessage = CLASSIC_SOLO_END_GAME_MESSAGE;
             let winFlag = true;
             if (endGameInfos.isMultiplayer && endGameInfos.isGameWon && !endGameInfos.isAbandon) {
