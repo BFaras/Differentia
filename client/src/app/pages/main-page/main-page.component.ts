@@ -21,7 +21,7 @@ import { SocketClientService } from '@app/services/socket-client.service';
     styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent {
-    readonly title: string = 'Jeu des Différences';
+    readonly title: string = 'Jeu de Différence';
     readonly buttonName: string[] = MAIN_PAGE_BUTTONS;
 
     constructor(private socketService: SocketClientService, private dialog: MatDialog) {}

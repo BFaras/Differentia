@@ -6,7 +6,7 @@
         <button mat-raised-button (click)="sendClueEventToServer()">Indice</button>
         <p>{{ clueAmountLeft }}</p>
     </span>
-    <span *ngIf="isMultiplayer || clueAmountLeft == 0" class="menu-element">
+    <span *ngIf="isMultiplayer || clueAmountLeft <= 0" class="menu-element">
         <button mat-raised-button disabled>Indice</button>
         <p>0</p>
     </span>

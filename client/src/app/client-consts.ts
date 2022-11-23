@@ -66,6 +66,7 @@ export const MESSAGE_ERROR_DIFFERENCE_SOLO = 'Erreur, aucune nouvelle différenc
 export const MESSAGE_DIFFERENCE_FOUND_SOLO = 'Vous avez trouver une différence!';
 export const MESSAGE_DIFFERENCE_FOUND_MULTI = 'Différence trouvée par ';
 export const MESSAGE_ERROR_DIFFERENCE_MULTI = 'Erreur par ';
+export const MESSAGE_INDICE = 'Indice utilisé';
 export const TWO_DIGIT_TIME_VALUE = '2-digit';
 
 // End game messages
@@ -74,10 +75,12 @@ export const CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE = 'Vous avez gagnez contre vot
 export const CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE = 'Votre adversaire a abandonné, donc vous avez gagner!';
 export const CLASSIC_MULTIPLAYER_LOST_MESSAGE = 'Vous avez perdu contre votre adversaire :(';
 export const ABANDON_MESSAGE = ' a abandonné la partie';
-export const WIN_FLAG = true;
-export const LOSING_FLAG = false;
 export const TIMER_HIT_ZERO_MESSAGE = 'Le temps est arrivé à zéro, vous avez perdu...';
 export const ALL_GAMES_FINISHED = 'Vous avez fini tous les jeux disponibles! Vous avez gagné!';
+
+//End game flags
+export const WIN_FLAG = true;
+export const LOSING_FLAG = false;
 
 // Timeout constantes
 export const THREE_SECONDS = 3000;

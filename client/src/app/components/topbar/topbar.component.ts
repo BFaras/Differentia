@@ -21,20 +21,8 @@ export class TopbarComponent implements OnInit {
     constructor(public timeService: TimeService, private socketService: SocketClientService) {}
 
     ngOnInit(): void {
-        this.configureTopBarSocketFeatures();
-    }
-
-    configureTopBarSocketFeatures(): void {
-        this.socketService.on('Other player abandonned LM', (username: string) => {
-            if (this.playerNames[0] === username) {
-                this.playerNames[0] = EMPTY_PLAYER_NAME;
-                this.indexPlayerLeft = 1;
-            } else {
-                this.playerNames[1] = EMPTY_PLAYER_NAME;
-            }
-            this.clueAmountLeft = CLUE_AMOUNT_DEFAULT;
-            this.configureTopBarSocket();
-        });
+        this.clueAmountLeft = CLUE_AMOUNT_DEFAULT;
+        this.configureTopBarSocket();
     }
 
     //To test Raph
@@ -49,6 +37,16 @@ export class TopbarComponent implements OnInit {
         });
         this.socketService.on('Clue with difference pixels', () => {
             this.clueAmountLeft = 0;
+        });
+
+        //To test Seb
+        this.socketService.on('Other player abandonned LM', (username: string) => {
+            if (this.playerNames[0] === username) {
+                this.playerNames[0] = EMPTY_PLAYER_NAME;
+                this.indexPlayerLeft = 1;
+            } else {
+                this.playerNames[1] = EMPTY_PLAYER_NAME;
+            }
         });
     }
 }
