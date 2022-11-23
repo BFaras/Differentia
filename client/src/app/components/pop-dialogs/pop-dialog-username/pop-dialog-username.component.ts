@@ -18,7 +18,7 @@ import { PopUpData } from '@app/interfaces/pop-up-data';
 export class PopDialogUsernameComponent implements OnInit {
     @ViewChild('userName') username: ElementRef;
     disabledButton: boolean = DISABLE_BUTTON;
-    usernameNotValid: boolean = USERNAME_VALID;
+    usernameNotValid: boolean = !USERNAME_VALID;
 
     constructor(
         private socketService: SocketClientService,
