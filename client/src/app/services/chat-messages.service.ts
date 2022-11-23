@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ChatMessage } from '@common/chat-message';
 import {
     ABANDON_MESSAGE,
     GAME_MESSAGE_SENDER_NAME,
@@ -7,8 +6,10 @@ import {
     MESSAGE_DIFFERENCE_FOUND_SOLO,
     MESSAGE_ERROR_DIFFERENCE_MULTI,
     MESSAGE_ERROR_DIFFERENCE_SOLO,
+    MESSAGE_INDICE,
     TWO_DIGIT_TIME_VALUE,
-} from '@common/const';
+} from '@app/client-consts';
+import { ChatMessage } from '@common/chat-message';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Observable, Subscriber } from 'rxjs';
@@ -18,7 +19,7 @@ import { SocketClientService } from './socket-client.service';
     providedIn: 'root',
 })
 export class ChatMessagesService {
-    public messagesObservable: Observable<ChatMessage>;
+    messagesObservable: Observable<ChatMessage>;
     private adversaryUsername: string;
     private isMultiplayerGame: boolean;
     private date: Date;
@@ -72,8 +73,23 @@ export class ChatMessagesService {
 
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
             if (endGameInfos.isMultiplayer && endGameInfos.isAbandon) {
-                observer.next(this.generateChatMessageFromGame(this.adversaryUsername + ABANDON_MESSAGE));
+                this.sendAbandonMessage(observer);
             }
+        });
+
+        this.socketService.on('Other player abandonned LM', () => {
+            this.sendAbandonMessage(observer);
+            this.isMultiplayerGame = false;
+        });
+
+        //To test Raph
+        this.socketService.on('Clue with quadrant of difference', (endGameInfos: EndGameInformations) => {
+            observer.next(this.generateChatMessageFromGame(MESSAGE_INDICE));
+        });
+
+        //To test Raph
+        this.socketService.on('Clue with difference pixels', (endGameInfos: EndGameInformations) => {
+            observer.next(this.generateChatMessageFromGame(MESSAGE_INDICE));
         });
     }
 
@@ -84,8 +100,12 @@ export class ChatMessagesService {
     private generateChatMessage(senderName: string, message: string): ChatMessage {
         return {
             timeMessageSent: this.getTimeInCorrectFormat(),
-            senderName: senderName,
-            message: message,
+            senderName,
+            message,
         };
+    }
+
+    private sendAbandonMessage(observer: Subscriber<ChatMessage>) {
+        observer.next(this.generateChatMessageFromGame(this.adversaryUsername + ABANDON_MESSAGE));
     }
 }

@@ -1,9 +1,13 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { CLASSIC_FLAG, DISABLE_BUTTON, DISABLE_CLOSE, STANDARD_POP_UP_HEIGHT, STANDARD_POP_UP_WIDTH, USERNAME_VALID } from '@app/client-consts';
+import { PopDialogLimitedTimeModeComponent } from '@app/components/pop-dialogs/pop-dialog-limited-time-mode/pop-dialog-limited-time-mode.component';
 import { PopDialogWaitingForPlayerComponent } from '@app/components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
+import { PopUpData } from '@app/interfaces/pop-up-data';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
+import { CLASSIC_MODE, LIMITED_TIME_MODE } from '@common/const';
 
 @Component({
     selector: 'app-pop-dialog-username',
@@ -12,12 +16,12 @@ import { StartUpGameService } from '@app/services/start-up-game.service';
 })
 export class PopDialogUsernameComponent implements OnInit {
     @ViewChild('userName') username: ElementRef;
-    disabledButton: boolean = true;
-    usernameNotValid: boolean = false;
+    disabledButton: boolean = DISABLE_BUTTON;
+    usernameNotValid: boolean = !USERNAME_VALID;
 
     constructor(
         private socketService: SocketClientService,
-        @Inject(MAT_DIALOG_DATA) public gameInfo: any,
+        @Inject(MAT_DIALOG_DATA) public gameInfo: PopUpData,
         public startUpGameService: StartUpGameService,
         private dialog: MatDialog,
         public dialogRef: MatDialogRef<PopDialogUsernameComponent>,
@@ -29,52 +33,87 @@ export class PopDialogUsernameComponent implements OnInit {
         this.configureUsernamePopUpSocketFeatures();
     }
 
-    ngOnDestroy(): void {
-        this.socketService.off('username valid');
-    }
-
     inputChanged(): void {
-        if (this.username.nativeElement.value) this.disabledButton = false;
-        else this.disabledButton = true;
+        if (this.username.nativeElement.value) this.disabledButton = !DISABLE_BUTTON;
+        else this.disabledButton = DISABLE_BUTTON;
     }
 
     private startWaitingLine(): void {
         this.startUpGameService.startUpWaitingLine(this.gameInfo);
     }
 
-    private openDialog(): void {
+    private openClassicDialog(): void {
         this.dialog.open(PopDialogWaitingForPlayerComponent, {
-            height: '400px',
-            width: '600px',
-            disableClose: true,
+            height: STANDARD_POP_UP_HEIGHT,
+            width: STANDARD_POP_UP_WIDTH,
+            disableClose: DISABLE_CLOSE,
             data: {
                 nameGame: this.gameInfo.nameGame,
                 joinFlag: this.gameInfo.joinFlag,
                 createFlag: this.gameInfo.createFlag,
                 username: this.username.nativeElement.value,
+                classicFlag: CLASSIC_FLAG,
             },
         });
     }
 
+    private openLimitedTimeDialog(): void {
+        this.dialog.open(PopDialogLimitedTimeModeComponent, {
+            height: STANDARD_POP_UP_HEIGHT,
+            width: STANDARD_POP_UP_WIDTH,
+            disableClose: DISABLE_CLOSE,
+            data: {
+                classicFlag: !CLASSIC_FLAG,
+                username: this.username.nativeElement.value,
+            },
+        });
+    }
+
+    private closeDialog(): void {
+        this.dialogRef.close();
+    }
+
+    private closeGameDialog(value: string) {
+        if (this.gameInfo.nameGame === value) {
+            this.socketService.send('refresh games after closing popDialog', this.socketService.socket.id);
+            this.dialog.closeAll();
+        }
+    }
+
     private configureUsernamePopUpSocketFeatures(): void {
         this.socketService.on('username valid', () => {
+            this.socketService.off('username valid');
+            this.socketService.send('gameMode is', this.gameInfo.classicFlag);
+            this.closeDialog();
+        });
+
+        this.socketService.on('username not valid', () => {
+            this.socketService.off('username not valid');
+            this.usernameNotValid = !USERNAME_VALID;
+        });
+
+        this.socketService.on(`${CLASSIC_MODE}`, () => {
             this.startWaitingLine();
-            this.dialogRef.close();
+            this.socketService.off(`${CLASSIC_MODE}`);
             if (this.gameInfo.multiFlag) {
-                this.openDialog();
-            }
-            else {
+                this.openClassicDialog();
+            } else {
                 this.router.navigate(['/game']);
             }
         });
 
-        this.socketService.on('username not valid', () => {
-            this.usernameNotValid = true;
+        this.socketService.on(`open the ${LIMITED_TIME_MODE} pop-dialog`, () => {
+            this.socketService.off(`open the ${LIMITED_TIME_MODE} pop-dialog`);
+            this.openLimitedTimeDialog();
         });
-        this.socketService.on('close popDialogUsername', (value) => {
-            if (this.gameInfo.nameGame === value) {
-                this.socketService.send('refresh games after closing popDialog', this.socketService.socket.id);
-                this.dialog.closeAll();
+
+        this.socketService.on('close popDialogUsername', (value: string | string[]) => {
+            if (Array.isArray(value)) {
+                for (let gameName of value) {
+                    this.closeGameDialog(gameName);
+                }
+            } else {
+                this.closeGameDialog(value);
             }
         });
     }

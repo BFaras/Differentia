@@ -2,12 +2,27 @@
     <span class="menu-element">
         <p>{{ timeService.showableMinutes }}:{{ timeService.showableSeconds }}</p>
     </span>
-    <span class="menu-element">
+    <span *ngIf="!isMultiplayer && clueAmountLeft > 0" class="menu-element">
+        <button mat-raised-button (click)="sendClueEventToServer()">Indice</button>
+        <p>{{ clueAmountLeft }}</p>
+    </span>
+    <span *ngIf="isMultiplayer || clueAmountLeft <= 0" class="menu-element">
         <button mat-raised-button disabled>Indice</button>
+        <p>0</p>
     </span>
     <span class="username-element">
-        <div *ngFor="let username of playerNames; index as i">
-            <div>{{ nbrDifferencesFound[i] }} différences trouvées par {{ username }}</div>
-        </div>
+        <ng-container *ngIf="gameMode === 'Classic mode'; else limitedTime">
+            <div *ngFor="let username of playerNames; index as i">
+                <div>{{ nbrDifferencesFound[i] }} différences trouvées par {{ username }}</div>
+            </div>
+        </ng-container>
+        <ng-template #limitedTime>
+            <ng-container *ngIf="isMultiplayer; else solo">
+                <div>{{ nbrDifferencesFound[0] + nbrDifferencesFound[1] }} différences trouvées par {{ playerNames[0] }} et {{ playerNames[1] }}</div>
+            </ng-container>
+            <ng-template #solo>
+                <div>{{ nbrDifferencesFound[0] + nbrDifferencesFound[1] }} différences trouvées par {{ playerNames[localPlayerUsernamePos] }}</div>
+            </ng-template>
+        </ng-template>
     </span>
 </div>

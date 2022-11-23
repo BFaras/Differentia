@@ -19,7 +19,7 @@ export class StartUpGameService {
         if (gameInfo.classicFlag) {
             this.startUpClassicWaitingLine(gameInfo);
         } else {
-            this.startUpLimitedTimeWaitingLine(gameInfo);
+            this.startUpLimitedTimeWaitingLine();
         }
     }
 
@@ -27,22 +27,21 @@ export class StartUpGameService {
         this.socketService.send('launch classic mode multiplayer match', gameName);
         this.router.navigate(['/game']);
     }
-    
+
     declineAdversary(gameName: string) {
         this.socketService.send('I refuse this adversary', gameName);
     }
-    
+
     sendUsername(username: string): void {
         this.socketService.send('my username is', username);
     }
 
-    // pt les 2 ifs dans les 2 prochaines fonctions peuvent etre mises dans une autre fonction?? esq c de la duplication de code????
-    private startUpLimitedTimeWaitingLine(gameInfo: any): void {
-        if (gameInfo.multiFlag) {
-            this.multiplayerLimitedTimeGame();
-        } else {
-            this.soloLimitedTimeGame();
-        }
+    soloLimitedTimeGame(): void {
+        this.socketService.send('solo limited time mode');
+    }
+
+    private startUpLimitedTimeWaitingLine(): void {
+        this.createGameService.createLimitedTimeGame();
     }
 
     private startUpClassicWaitingLine(gameInfo: any): void {
@@ -52,20 +51,12 @@ export class StartUpGameService {
             this.soloClassicGame(gameInfo.nameGame);
         }
     }
-    
-    private multiplayerLimitedTimeGame(): void {
-        this.createGameService.createLimitedTimeGame();
-    }
-    
-    private soloLimitedTimeGame(): void {
-        this.socketService.send('solo limited time mode'); // À gérer dans socket Manager
-    }
 
     private multiplayerClassicGame(gameInfo: any): void {
         if (gameInfo.isPlayerWaiting) this.joinGameService.joinGame(gameInfo.nameGame);
         else this.createGameService.createGame(gameInfo.nameGame);
     }
-    
+
     private soloClassicGame(gameName: string): void {
         this.socketService.send('solo classic mode', gameName);
     }

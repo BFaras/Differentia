@@ -20,7 +20,7 @@
             <button mat-raised-button matTooltip="Supprimer le jeu" (click)="deleteGameForm(gameForm.gameName)">{{ adminGameFormsButton[0] }}</button>
             <button mat-raised-button matTooltip="Réinitialiser le classement" >{{ adminGameFormsButton[1] }}</button>
         </ng-container>
-        <ng-container *ngIf="buttonPage == 'GameSelection'">
+        <ng-container *ngIf="buttonPage === 'GameSelection'">
             <ng-container *ngIf="isPlayerWaiting; else noOneIsWaiting">
                 <button matTooltip="Rejoindre une partie multijoueur" mat-stroked-button (click)="setJoinFlag()" (click)="openDialog(multiplayerFlag)">{{ selectionGameFormsButton[2] }}</button>
             </ng-container>

@@ -1,13 +1,13 @@
-import { HOST_PRESENT } from '@app/server-consts';
+import { HOST_PRESENT } from '@common/const';
 import * as io from 'socket.io';
 import { Service } from 'typedi';
 
 @Service()
 export class WaitingLineHandlerService {
+    playerWaitingForALimitedTimeGameId: string = '';
     private playersCreatingAGame: Map<string, string> = new Map<string, string>();
     private playersJoiningAGame: Map<string, string[]> = new Map<string, string[]>();
     constructor() {}
-
 
     addCreatingPlayer(gameName: string, socketId: string): void {
         this.playersCreatingAGame.set(gameName, socketId);
@@ -26,6 +26,22 @@ export class WaitingLineHandlerService {
         server.to(waitingSocketId).emit(`${gameName} ${event}`, this.getUsernameFirstPlayerWaiting(gameName, server));
     }
 
+    addLimitedTimeWaitingPlayer(socketId: string) {
+        this.playerWaitingForALimitedTimeGameId = socketId;
+    }
+
+    isSomebodyWaitingForALimitedTimeGame(): boolean {
+        return this.playerWaitingForALimitedTimeGameId !== '';
+    }
+
+    getLimitedTimeWaitingPlayerId(): string {
+        return this.playerWaitingForALimitedTimeGameId;
+    }
+
+    resetLimitedTimeWaitingLine(): void {
+        this.playerWaitingForALimitedTimeGameId = '';
+    }
+
     getPresenceOfJoiningPlayers(gameName: string): number {
         return this.playersJoiningAGame.get(gameName)?.length as number;
     }
@@ -42,14 +58,14 @@ export class WaitingLineHandlerService {
             }
         }
     }
-    
+
     getIDFirstPlayerWaiting(gameName: string): string {
-        let playersWaiting = this.playersJoiningAGame.get(gameName) as string[];
+        const playersWaiting = this.playersJoiningAGame.get(gameName) as string[];
         const idWanted = playersWaiting.shift() as string;
         playersWaiting.unshift(idWanted);
         return idWanted;
     }
-    
+
     getUsernameFirstPlayerWaiting(gameName: string, server: io.Server): string {
         return this.getUsernamePlayer(this.getIDFirstPlayerWaiting(gameName), server);
     }
@@ -67,7 +83,7 @@ export class WaitingLineHandlerService {
     }
 
     getSocketByID(socketID: string, server: io.Server): io.Socket {
-        return server.sockets.sockets.get(socketID)!;
+        return server.sockets.sockets.get(socketID) as io.Socket;
     }
 
     private addJoiningPlayerId(socketId: string, gameName: string): void {
