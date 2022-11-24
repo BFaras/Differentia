@@ -1,5 +1,7 @@
 body {
-    background: url(../../../assets/bob.jpg)
+    background: url(../../../assets/bob.jpg);
+    min-width: 1920px;
+    min-height: 1080px;
 }
 app-list-game-form {
     align-items: center;

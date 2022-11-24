@@ -1,24 +1,31 @@
+
 <div> Canvas  {{indexTool}}</div>
 
 <div class = "mouse-mode-container">
-  <button mat-mini-fab id = "{{indexTool}}" value= "write"(click)="setPencilMode($event)">W</button>
+  <button mat-mini-fab id = "{{indexTool}}" value= "write"(click)="setPencilMode($event)">
+    <mat-icon>create</mat-icon>
+  </button>
   <button mat-mini-fab id = "{{indexTool}}" value= "erase"(click)="setPencilMode($event)">E</button>
 </div>
 <div >
     <label>Couleur : </label>
     <input (change) = "onChangeColor()" [(ngModel)]="color" type="color" />
   </div>
-<mat-form-field appearance="fill">
+<mat-form-field >
     <mat-label>Width</mat-label>
-    <mat-select [(value)] ="widths[0]" >
+    <mat-select [value] ="widths[0]" >
       <mat-option *ngFor="let width of widths"  (click) ="onChangeWidth(width)" [value]="width" #chosenWidth>
         {{width}}
       </mat-option>
     </mat-select>
 </mat-form-field>
 <div class ="group-buttons">
-  <button mat-mini-fab [disabled]="checkIfThereAreSavedDrawnLines()" (click) = "cancelActionDrawnLine()"><--</button>
-  <button mat-mini-fab [disabled]="checkIfThereAreSavedDeletedDrawnLines()" (click) = "cancelActionDeletedDrawnLine()" >--></button>
+  <button mat-mini-fab [disabled]="checkIfThereAreSavedDrawnLines()" (click) = "cancelActionDrawnLine()">
+    <mat-icon>undo</mat-icon>
+  </button>
+  <button mat-mini-fab [disabled]="checkIfThereAreSavedDeletedDrawnLines()" (click) = "cancelActionDeletedDrawnLine()" >
+    <mat-icon>redo</mat-icon>
+  </button>
 </div>
 <button  mat-raised-button (click) = "clearCanvas()"> 
   <i class="material-icons">delete</i>

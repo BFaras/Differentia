@@ -10,13 +10,13 @@ import { CLUE_AMOUNT_DEFAULT, LOCAL_PLR_USERNAME_POS } from '@common/const';
     styleUrls: ['./topbar.component.scss'],
 })
 export class TopbarComponent implements OnInit {
-    readonly localPlayerUsernamePos = LOCAL_PLR_USERNAME_POS;
     @Input() nbrDifferencesFound: number[];
     @Input() playerNames: string[];
     @Input() gameMode: string;
     @Input() isMultiplayer: boolean;
     indexPlayerLeft: number = 0;
     clueAmountLeft: number;
+    readonly localPlayerUsernamePos = LOCAL_PLR_USERNAME_POS;
 
     constructor(public timeService: TimeService, private socketService: SocketClientService) {}
 
@@ -25,12 +25,17 @@ export class TopbarComponent implements OnInit {
         this.configureTopBarSocket();
     }
 
-    //To test Raph
+    ngOnDestroy(): void {
+        this.timeService.resetTime();
+        this.socketService.disconnect();
+    }
+
+    // To test Raph
     sendClueEventToServer() {
         this.socketService.send('get clue for player');
     }
 
-    //To test Raph
+    // To test Raph
     private configureTopBarSocket() {
         this.socketService.on('Clue with quadrant of difference', (clueInformations: ClueInformations) => {
             this.clueAmountLeft = clueInformations.clueAmountLeft - 1;

@@ -34,6 +34,7 @@ import {
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
+import { PopDialogAbandonVerificationComponent } from '../pop-dialogs/pop-dialog-abandon-verification/pop-dialog-abandon-verification.component';
 
 @Component({
     selector: 'app-play-area',
@@ -56,6 +57,7 @@ export class PlayAreaComponent implements OnInit {
     private isWriting = false;
     private canvasSize: Coordinate = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
     private numberOfBlinkCalls = 0;
+    reloadState: boolean = true;
     constructor(
         private socketService: SocketClientService,
         private readonly drawService: DrawService,
@@ -83,12 +85,23 @@ export class PlayAreaComponent implements OnInit {
     async loadImages(): Promise<void> {
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[ORIGINAL_IMAGE_POSITION]);
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[MODIFIED_IMAGE_POSITION]);
+        this.reloadState = false;
         this.displayImages();
         this.setClickCanvasesTransparent();
     }
 
     detectDifference(event: MouseEvent) {
         this.mouseDetection.mouseHitDetect(event);
+    }
+
+    onCreateVerifyAbandonGamePopDialog() {
+        this.dialog.open(PopDialogAbandonVerificationComponent, {
+            height: STANDARD_POP_UP_HEIGHT,
+            width: STANDARD_POP_UP_WIDTH,
+            data: {
+                gameMode: this.mode,
+            },
+        });
     }
 
     private setClickCanvasesTransparent() {

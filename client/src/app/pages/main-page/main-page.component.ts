@@ -5,12 +5,10 @@ import {
     CREATE_FLAG,
     DISABLE_CLOSE,
     EMPTY_GAME_NAME,
-    JOIN_FLAG,
-    MAIN_PAGE_BUTTONS,
-    MULTI_FLAG,
+    JOIN_FLAG, MULTI_FLAG,
     SOMEBODY_IS_WAITING,
     STANDARD_POP_UP_HEIGHT,
-    STANDARD_POP_UP_WIDTH,
+    STANDARD_POP_UP_WIDTH
 } from '@app/client-consts';
 import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
 import { SocketClientService } from '@app/services/socket-client.service';
@@ -21,8 +19,8 @@ import { SocketClientService } from '@app/services/socket-client.service';
     styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent {
-    readonly title: string = 'Jeu de Différence';
-    readonly buttonName: string[] = MAIN_PAGE_BUTTONS;
+    readonly title: string = 'Peux-tu trouver les différences ?';
+    readonly buttonName: String[] = ['Mode classique', 'Temps limité', 'Administration'];
 
     constructor(private socketService: SocketClientService, private dialog: MatDialog) {}
 
