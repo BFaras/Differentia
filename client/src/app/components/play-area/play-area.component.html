@@ -1,4 +1,5 @@
 <div class="play-area">
+    <h1 class = "title">Trouvez les différences !</h1>
     <span class="image-container">
         <span class="image">
             <!--Image de gauche-->
@@ -32,6 +33,6 @@
 </div>
 <div>
     <span class="button-container">
-        <button matTooltip="Abandonner la partie en cours " mat-raised-button routerLink="/home">Abandon</button>
+        <button matTooltip="Abandonner la partie en cours " mat-raised-button (click) = "onCreateVerifyAbandonGamePopDialog()">Abandon</button>
     </span>
 </div>

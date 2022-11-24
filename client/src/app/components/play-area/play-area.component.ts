@@ -34,6 +34,7 @@ import {
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
+import { PopDialogAbandonVerificationComponent } from '../pop-dialogs/pop-dialog-abandon-verification/pop-dialog-abandon-verification.component';
 
 @Component({
     selector: 'app-play-area',
@@ -91,6 +92,16 @@ export class PlayAreaComponent implements OnInit {
 
     detectDifference(event: MouseEvent) {
         this.mouseDetection.mouseHitDetect(event);
+    }
+
+    onCreateVerifyAbandonGamePopDialog() {
+        this.dialog.open(PopDialogAbandonVerificationComponent, {
+            height: STANDARD_POP_UP_HEIGHT,
+            width: STANDARD_POP_UP_WIDTH,
+            data: {
+                gameMode: this.mode,
+            },
+        });
     }
 
     getImageData(): void {

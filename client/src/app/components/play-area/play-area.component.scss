@@ -19,6 +19,14 @@
 button{
     background-color: rgb(214, 169, 143);
 }
+
+.title{
+    color: rgb(214, 169, 143);
+    font-size: 40px;
+    position: relative;
+    left: 470px;
+    top: 10px;
+}
 #noClick {
     pointer-events: none;
     transition-delay: 1s;
@@ -30,7 +38,8 @@ button{
 
 .button-container {
     padding: 0px 470px 0px 470px;
-    position:relative
+    position:relative;
+    left: 167px;
     
 }
 

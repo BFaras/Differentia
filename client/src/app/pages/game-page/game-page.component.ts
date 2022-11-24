@@ -8,7 +8,7 @@ import {
     STANDARD_POP_UP_HEIGHT,
     STANDARD_POP_UP_WIDTH,
     TIMER_HIT_ZERO_MESSAGE,
-    WIN_FLAG,
+    WIN_FLAG
 } from '@app/client-consts';
 import { PopDialogEndgameComponent } from '@app/components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
 import { CommunicationService } from '@app/services/communication.service';
@@ -22,7 +22,7 @@ import {
     LIMITED_TIME_MODE,
     LOCAL_PLR_USERNAME_POS,
     MODIFIED_IMAGE_POSITION,
-    ORIGINAL_IMAGE_POSITION,
+    ORIGINAL_IMAGE_POSITION
 } from '@common/const';
 import { Game } from '@common/game';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
@@ -88,7 +88,7 @@ export class GamePageComponent {
             const gameWanted = array.find((x) => x.name === nameGame);
             // gameWanted ne sera jamais undefined car le nom utilisé dans le .find est d'un jeu qui
             // existe forcément (il est dans la page de sélection )
-            this.nbDifferences = gameWanted ? gameWanted.numberOfDifferences : -1; // METTRE LE -1 DANS UNE CONSTANTE
+            this.nbDifferences = gameWanted ? gameWanted.numberOfDifferences : -1; 
         });
     }
 

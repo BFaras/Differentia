@@ -226,7 +226,7 @@ export class SocketManager {
                 const isGameFinished = await this.gameManagerService.isGameFinished(socket, isMultiplayer, mode);
                 if (isGameFinished) {
                     mouseHandler.resetDifferencesData();
-                    this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
+                    if (mode === CLASSIC_MODE) this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
                     this.gameManagerService.endGame(socket, mode);
                 } else {
                     this.gameManagerService.doWeHaveToSwitchGame(socket, mode);

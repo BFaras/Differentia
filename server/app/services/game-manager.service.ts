@@ -7,7 +7,7 @@ import {
     LIMITED_TIME_MODE,
     MODIFIED_IMAGE_POSITION,
     NO_OTHER_PLAYER_ROOM,
-    ORIGINAL_IMAGE_POSITION,
+    ORIGINAL_IMAGE_POSITION
 } from '@common/const';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
@@ -178,7 +178,7 @@ export class GameManagerService {
         this.mouseHandlerServices.delete(gameRoomName);
         this.timeIntervals.delete(gameRoomName);
         if (hasTheTimerHitZero) this.sio.to(gameRoomName).emit('time hit zero');
-        if (noMoreGames) this.sio.to(gameRoomName).emit('no more games available'); // À GÉRER DU CÔTÉ CLIENT
+        if (noMoreGames) this.sio.to(gameRoomName).emit('no more games available');
         this.sio.in(gameRoomName).socketsLeave(gameRoomName);
     }
 
@@ -218,7 +218,7 @@ export class GameManagerService {
     }
 
     private async limitedTimeIsGameFinished(socket: io.Socket): Promise<boolean> {
-        return socket.data.gamesPlayed === (await this.gamesService.getAllGames()).length;
+        return socket.data.gamesPlayed.length === (await this.gamesService.getAllGames()).length;
     }
 
     private classicIsGameFinishedSolo(socket: io.Socket) {

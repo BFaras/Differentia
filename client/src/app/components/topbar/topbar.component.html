@@ -1,18 +1,21 @@
 <div class="topbar">
     <span class="menu-element">
-        <p>{{ timeService.showableMinutes }}:{{ timeService.showableSeconds }}</p>
+        <p id = "timer">{{ timeService.showableMinutes }}:{{ timeService.showableSeconds }}</p>
     </span>
     <span class = "hint-button"*ngIf="!isMultiplayer && clueAmountLeft > 0" class="menu-element">
         <button mat-raised-button  matTooltip="Obtenir un indice" (click)="sendClueEventToServer()">
             <mat-icon>search</mat-icon>
         </button>
-        <p>{{ clueAmountLeft }}</p>
+        <div class = "container-hints">
+            <div *ngFor="let item of [].constructor(clueAmountLeft); let i = index">
+                <mat-icon class = "bulb-hint">wb_incandescent</mat-icon>
+            </div>
+         </div>
     </span>
     <span class = "hint-button" *ngIf="isMultiplayer || clueAmountLeft <= 0" class="menu-element">
         <button matTooltip="Obtenir un indice" mat-raised-button disabled>
             <mat-icon>search</mat-icon>
         </button>
-        <p>0</p>
     </span>
     <span class="username-element">
         <ng-container *ngIf="gameMode === 'Classic mode'; else limitedTime">

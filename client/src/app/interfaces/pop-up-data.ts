@@ -9,4 +9,5 @@ export interface PopUpData {
     didHostChoseAnotherFlag: boolean;
     message: string;
     winFlag: boolean;
+    gameMode: string;
 }
