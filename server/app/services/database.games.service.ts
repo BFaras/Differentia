@@ -1,4 +1,4 @@
-import { Collection, Filter, WithId, ModifyResult, UpdateFilter} from 'mongodb';
+import { Collection, Filter, FindOptions, ModifyResult, UpdateFilter, WithId } from 'mongodb';
 //import { Time } from '../../../common/time';
 import { HttpException } from '@app/classes/http.exception';
 import { GameTimes } from '@common/game-times';
@@ -49,42 +49,42 @@ export class RecordTimesService {
     }
 
     async deleteGameRecordTimes(nameOfWantedGame: string): Promise<void> {
-      return this.collection
-        .findOneAndDelete({ name: nameOfWantedGame })
-        .then((res: ModifyResult<GameTimes>) => {
-          if (!res.value) {
-            throw new HttpException('Could not find game', StatusCodes.NOT_FOUND);
-          }
-        })
-        .catch(() => {
-          throw new HttpException('Failed to delete game record times', StatusCodes.INTERNAL_SERVER_ERROR);
-        });
+        return this.collection
+            .findOneAndDelete({ name: nameOfWantedGame })
+            .then((res: ModifyResult<GameTimes>) => {
+                if (!res.value) {
+                    throw new HttpException('Could not find game', StatusCodes.NOT_FOUND);
+                }
+            })
+            .catch(() => {
+                throw new HttpException('Failed to delete game record times', StatusCodes.INTERNAL_SERVER_ERROR);
+            });
     }
 
     async resetGameRecordTimes(gameName: string): Promise<void> {
-      let filterQuery: Filter<GameTimes> = { name: gameName };
-      let updateQuery: UpdateFilter<GameTimes> = {
-        $set: {recordTimes: this.databaseService.defaultRecordTimes,}
-      };
-      return this.collection
-      .updateOne(filterQuery, updateQuery)
-      .then(() => { })
-      .catch(() => {
-        throw new Error('Failed to reset the game record times');
-      });
+        let filterQuery: Filter<GameTimes> = { name: gameName };
+        let updateQuery: UpdateFilter<GameTimes> = {
+            $set: { recordTimes: this.databaseService.defaultRecordTimes },
+        };
+        return this.collection
+            .updateOne(filterQuery, updateQuery)
+            .then(() => {})
+            .catch(() => {
+                throw new Error('Failed to reset the game record times');
+            });
     }
 
     async resetAllGamesRecordTimes(): Promise<void> {
         let updateQuery: UpdateFilter<GameTimes> = {
-          $set: {recordTimes: this.databaseService.defaultRecordTimes,}
+            $set: { recordTimes: this.databaseService.defaultRecordTimes },
         };
         return this.collection
-        .updateMany({}, updateQuery)
-        .then(() => { })
-        .catch(() => {
-          throw new Error('Failed to reset all games record times');
-        });
-      }
+            .updateMany({}, updateQuery)
+            .then(() => {})
+            .catch(() => {
+                throw new Error('Failed to reset all games record times');
+            });
+    }
 
     // async modifyGame(game: Game): Promise<void> {
     //   let filterQuery: Filter<Game> = { name: game.name };
@@ -111,18 +111,18 @@ export class RecordTimesService {
     // }
 
     async getGameTimes(nameOfWantedGame: string): Promise<GameModeTimes> {
-        //let filterQuery: Filter<GameTimes> = { name: nameOfWantedGame };
-        //let projection: FindOptions = { projection: { recordTimes: 1, _id: 0 } };
-         const times = await this.collection.findOne({ name: 'Car game' });
-         return times!.recordTimes;
-        // return this.collection
-        //     .findOne(filterQuery, projection)
-        //     .then((gameTimes: WithId<GameTimes>) => {
-        //         return gameTimes.recordTimes;
-        //     })
-        //     .catch(() => {
-        //         throw new Error('Failed to get the game times');
-        //     });
+        let filterQuery: Filter<GameTimes> = { name: nameOfWantedGame };
+        let projection: FindOptions = { projection: { recordTimes: 1, _id: 0 } };
+        //  const times = await this.collection.findOne({ name: nameOfWantedGame });
+        //  return times!.recordTimes;
+        return this.collection
+            .findOne(filterQuery, projection)
+            .then((gameTimes: WithId<GameTimes>) => {
+                return gameTimes.recordTimes;
+            })
+            .catch(() => {
+                throw new Error('Failed to get the game times');
+            });
     }
     // async updateRecordTimes(gameName: string, isItMultiplayer: boolean, times: Time): Promise<void> {
     //   let filterQuery: Filter<GameTimes> = { name: gameName };
