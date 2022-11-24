@@ -3,7 +3,8 @@
 .nyc_output/
 node_modules/
 false/
-
+assets/
+games.json
 # Exclusion des fichiers Javascripts
 out/
 
