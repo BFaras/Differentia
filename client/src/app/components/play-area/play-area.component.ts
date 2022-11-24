@@ -207,6 +207,10 @@ export class PlayAreaComponent implements OnInit {
             await this.loadImages();
             this.drawService.setCanvasTransparent(this.blinkModifiedCanvas.nativeElement);
             this.drawService.setCanvasTransparent(this.blinkOriginalCanvas.nativeElement);
+            if (this.isCheatActivated) {
+                this.isCheatActivated = false;
+                this.handleKeyboardCheat();
+            }
         });
     }
 
