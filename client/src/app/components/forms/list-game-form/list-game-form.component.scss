@@ -6,7 +6,20 @@
     width: 100%;
 }
 
-// percentage marche pas , meme si parent a une height!!!
+.mat-progress-spinner{
+    position:relative;
+    left:95%;
+    top:95%;
+    height: 300px;
+
+    
+}
+
+:host ::ng-deep .mat-progress-spinner circle, .mat-spinner circle{
+    stroke: rgb(214, 169, 143);
+    
+}
+
 .gameFormsContainer {
     display: grid;
     grid-gap: 20px;
@@ -18,8 +31,8 @@
 }
 
 .arrow {
-    border: solid black;
-    border-width: 0 2px 2px 0;
+    border: solid rgb(214, 169, 143);
+    border-width: 0 3px 3px 0;
     display: inline-block;
     height: 50px;
     padding: 3px;
@@ -43,8 +56,17 @@
 
 .arrow:hover {
     border-width: 0 6px 6px 0;
+    transition: 0.2s;
     cursor: pointer;
     transition: 0, 5s all ease-out;
+}
+
+.message-no-game{
+    position:relative;
+    left:65%;
+    top:95%;
+    font-size: 40px;
+    width:600px;
 }
 
 .mat-mini-fab{

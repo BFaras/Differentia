@@ -8,4 +8,5 @@ import { Component, Input } from '@angular/core';
 export class SidebarComponent {
     @Input() numberOfDifferences: number;
     @Input() gameName: string;
+    @Input() gameMode: string;
 }

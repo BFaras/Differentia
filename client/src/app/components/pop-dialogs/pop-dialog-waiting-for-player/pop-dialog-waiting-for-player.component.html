@@ -7,11 +7,16 @@
             <ng-template #hostPresent>
                 <h2>Vous êtes maintenant en attente d'un autre joueur</h2>
             </ng-template>
-            <ng-container *ngIf="gameInfo.createFlag; else joinFlag">
-                <button mat-raised-button mat-dialog-close (click)="createGameService.leaveWaitingList(gameInfo.nameGame)">Annuler</button>
+            <ng-container *ngIf="gameInfo.classicFlag; else limitedTime">
+                <ng-container *ngIf="gameInfo.createFlag; else joinFlag">
+                    <button mat-raised-button mat-dialog-close (click)="createGameService.leaveWaitingList(gameInfo.nameGame)">Annuler</button>
+                </ng-container>
+                <ng-template #joinFlag>
+                    <button mat-raised-button mat-dialog-close (click)="joinGameService.leaveJoiningProcess(gameInfo.nameGame)">Annuler</button>
+                </ng-template>
             </ng-container>
-            <ng-template #joinFlag>
-                <button mat-raised-button mat-dialog-close (click)="joinGameService.leaveJoiningProcess(gameInfo.nameGame)">Annuler</button>
+            <ng-template #limitedTime>
+                <button mat-raised-button mat-dialog-close (click)="createGameService.leaveLimitedTimeGame()" (click)="close()">Annuler</button>
             </ng-template>
             <ng-container *ngIf="isSomeoneJoining">
                 <h3>{{ playerTryingToJoin }} is trying to join</h3>

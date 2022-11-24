@@ -1,5 +1,11 @@
 <mat-grid-list class="container" cols="3" rowHeight="fit">
-    <mat-grid-tile><button mat-raised-button (click)="onCreateDownloadPopDialog()">+</button></mat-grid-tile>
+    <mat-grid-tile><button 
+        matTooltip="Téléverser l'image"
+        mat-raised-button (click)="onCreateDownloadPopDialog()">
+        <i class="material-icons">upload_file</i>
+    </button></mat-grid-tile>
     <mat-grid-tile>{{nameImage}}</mat-grid-tile>
-    <mat-grid-tile><button mat-raised-button (click)="onDeleteImage()">-</button></mat-grid-tile>
+    <mat-grid-tile><button
+        matTooltip="Supprimer l'image "
+        mat-raised-button (click)="onDeleteImage()"><mat-icon>delete_outline</mat-icon></button></mat-grid-tile>
 </mat-grid-list>

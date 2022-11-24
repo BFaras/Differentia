@@ -23,7 +23,7 @@ export class GamesService {
 
     async getGame(gameName: string): Promise<Game> {
         await this.asyncReadGamesFile();
-        const game: Game = (await this.getAllGames()).find((game) => game.name === gameName) as Game;
+        const game: Game = (await this.getAllGames()).find((gameNeeded) => gameNeeded.name === gameName) as Game;
         return game;
     }
 
@@ -32,16 +32,24 @@ export class GamesService {
         return this.games;
     }
 
+    async generateRandomGame(gamesAlreadyPlayed: string[]): Promise<Game> {
+        await this.getAllGames();
+        const gamesToPlay = this.games.filter((game) => {
+            return !gamesAlreadyPlayed.find((gameAlreadyPlayed) => gameAlreadyPlayed === game.name);
+        });
+        const max = gamesToPlay.length - 1;
+        return gamesToPlay[Math.floor(Math.random() * max)] as Game;
+    }
+
     async getAllGamesWithImagesData() {
         const games: Game[] = await this.getAllGames();
 
-        for (let i = 0; i < games.length; i++) {
-            const gameImagesData: string[] = await this.getGameImagesData(games[i].name);
-            games[i].images[ORIGINAL_IMAGE_POSITION] = gameImagesData[ORIGINAL_IMAGE_POSITION];
-            games[i].images[MODIFIED_IMAGE_POSITION] = gameImagesData[MODIFIED_IMAGE_POSITION];
-            games[i].times = await this.recordTimesService.getGameTimes(games[i].name);
+        for (const game of games) {
+            const gameImagesData: string[] = await this.getGameImagesData(game.name);
+            game.images[ORIGINAL_IMAGE_POSITION] = gameImagesData[ORIGINAL_IMAGE_POSITION];
+            game.images[MODIFIED_IMAGE_POSITION] = gameImagesData[MODIFIED_IMAGE_POSITION];
+            game.times = await this.recordTimesService.getGameTimes(game.name);
         }
-
         return games;
     }
 
@@ -57,7 +65,7 @@ export class GamesService {
         return gameImagesData;
     }
 
-    async addGame(gameToAdd: Game): Promise<Boolean> {
+    async addGame(gameToAdd: Game): Promise<boolean> {
         let gameAdded = false;
         await this.asyncReadGamesFile();
         if (this.validateName(gameToAdd.name)) {

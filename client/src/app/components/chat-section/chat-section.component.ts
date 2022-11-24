@@ -1,8 +1,9 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { GAME_MESSAGE_SENDER_NAME } from '@app/client-consts';
 import { ChatMessagesService } from '@app/services/chat-messages.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { ChatMessage } from '@common/chat-message';
-import { DEFAULT_USERNAME, GAME_MESSAGE_SENDER_NAME } from '@common/const';
+import { DEFAULT_USERNAME } from '@common/const';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -14,12 +15,12 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
     @ViewChild('scrollMe') private myScrollContainer: ElementRef;
     @ViewChild('playerMsg') playerMsg: ElementRef;
 
+    isMultiplayerGame: boolean;
     message: string;
-    public messagesSent: ChatMessage[];
-    public localPlayerUsername: string = DEFAULT_USERNAME;
-    public readonly gameMessageSenderName = GAME_MESSAGE_SENDER_NAME;
+    messagesSent: ChatMessage[];
+    localPlayerUsername: string = DEFAULT_USERNAME;
+    readonly gameMessageSenderName = GAME_MESSAGE_SENDER_NAME;
     private chatMessagesSubscription: Subscription;
-    public isMultiplayerGame: boolean;
 
     constructor(private chatMessagesService: ChatMessagesService, private socketService: SocketClientService) {
         this.messagesSent = [];
@@ -63,6 +64,10 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
         });
         this.socketService.on('The adversary username is', (adversaryName: string) => {
             this.isMultiplayerGame = true;
+        });
+
+        this.socketService.on('Other player abandonned LM', () => {
+            this.isMultiplayerGame = false;
         });
     }
 }

@@ -29,7 +29,8 @@ export class ClueFinderService {
 
     private findClueQuadrant(numberOfQuadrants: number, differencesList: number[][]): number {
         const clueDifferenceNb: number = randomInt(FIRST_ARRAY_POSITION, differencesList.length);
-        const clueDifferencePixelNb: number = differencesList[clueDifferenceNb][FIRST_ARRAY_POSITION];
+        const clueDifferencePixels = differencesList[clueDifferenceNb];
+        const clueDifferencePixelNb: number = clueDifferencePixels[Math.floor(clueDifferencePixels.length / 2)];
         const clueDifferencePostion: Position = {
             x: this.findXPositionFromPixelNumber(clueDifferencePixelNb),
             y: this.findYPositionFromPixelNumber(clueDifferencePixelNb),

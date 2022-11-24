@@ -1,3 +1,4 @@
+
 <ng-container *ngIf="page == 'Admin'">
     <button id="adminButton" mat-mini-fab aria-label routerLink="/home">
         <mat-icon>home</mat-icon>
@@ -9,7 +10,13 @@
     </button>
 </ng-container>
 <div *ngIf="firstElementIndex != 0" class="arrow left" (click)="previousPageGameForms()"></div>
+
 <div class="gameFormsContainer">
+    <mat-progress-spinner *ngIf="reloadState" mode="indeterminate">
+    </mat-progress-spinner>
+    <div class = "message-no-game"*ngIf = "numberOfGames == 0"> Il n'y a pas de jeu disponible
+    </div>
+
     <ng-container *ngFor="let form of currentPageGameFormList">
         <app-game-form
             class="gameForm"

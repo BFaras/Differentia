@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
-import { DEFAULT_USERNAME } from '@common/const';
 import { Socket } from 'socket.io-client';
 import { CreateGameService } from './create-game.service';
 import { JoinGameService } from './join-game.service';
@@ -44,31 +43,31 @@ describe('StartUpGameService', () => {
 
     it('should multiplayerGame() call joinGame() of JoinGameService if a player is waiting ', () => {
         const spy = spyOn(joinGameService, 'joinGame').and.callThrough();
-        startUpGameService['multiplayerGame'](multiPlayerGameInfo, DEFAULT_USERNAME);
+        startUpGameService['multiplayerClassicGame'](multiPlayerGameInfo);
         expect(spy).toHaveBeenCalled();
     });
 
     it('should multiplayerGame() call createGame() of CreateGameService if no player is waiting ', () => {
         const spy = spyOn(createGameService, 'createGame').and.callThrough();
-        startUpGameService['multiplayerGame'](createGameInfo, DEFAULT_USERNAME);
+        startUpGameService['multiplayerClassicGame'](createGameInfo);
         expect(spy).toHaveBeenCalled();
     });
 
     it('should startUpWaitingLine() call multiplayerGame() of StartUpGameService if there is the multiplayer flag', () => {
         const spy = spyOn(startUpGameService, <any>'multiplayerGame').and.callThrough();
-        startUpGameService.startUpWaitingLine(multiPlayerGameInfo, DEFAULT_USERNAME);
+        startUpGameService.startUpWaitingLine(multiPlayerGameInfo);
         expect(spy).toHaveBeenCalled();
     });
 
     it('should startUpWaitingLine() call soloGame() of StartUpGameService if there is not the multiplayer flag', () => {
         const spy = spyOn(startUpGameService, <any>'soloGame').and.callThrough();
-        startUpGameService.startUpWaitingLine(createGameInfo, DEFAULT_USERNAME);
+        startUpGameService.startUpWaitingLine(createGameInfo);
         expect(spy).toHaveBeenCalled();
     });
 
     it('should soloGame call send()', () => {
         const spy = spyOn(socketService, 'send').and.callThrough();
-        startUpGameService['soloGame'](testGameName);
+        startUpGameService['soloClassicGame'](testGameName);
         expect(spy).toHaveBeenCalled();
     });
 

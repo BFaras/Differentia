@@ -15,33 +15,49 @@ export class StartUpGameService {
         private router: Router,
     ) {}
 
-    private multiplayerGame(gameInfo: any, username: string): void {
-        if (gameInfo.isPlayerWaiting) this.joinGameService.joinGame(gameInfo, username);
-        else this.createGameService.createGame(gameInfo.nameGame);
-    }
-
-    private soloGame(gameName: string): void {
-        this.socketService.send('solo classic mode', gameName);
-    }
-
-    public startUpWaitingLine(gameInfo: any, username: string): void {
-        if (gameInfo.multiFlag) {
-            this.multiplayerGame(gameInfo, username);
+    startUpWaitingLine(gameInfo: any): void {
+        if (gameInfo.classicFlag) {
+            this.startUpClassicWaitingLine(gameInfo);
         } else {
-            this.soloGame(gameInfo.nameGame);
+            this.startUpLimitedTimeWaitingLine();
         }
     }
 
-    public startMatch(gameName: string) {
+    startMatch(gameName: string) {
         this.socketService.send('launch classic mode multiplayer match', gameName);
         this.router.navigate(['/game']);
     }
 
-    public declineAdversary(gameName: string) {
+    declineAdversary(gameName: string) {
         this.socketService.send('I refuse this adversary', gameName);
     }
 
-    public sendUsername(username: string): void {
+    sendUsername(username: string): void {
         this.socketService.send('my username is', username);
+    }
+
+    soloLimitedTimeGame(): void {
+        this.socketService.send('solo limited time mode');
+    }
+
+    private startUpLimitedTimeWaitingLine(): void {
+        this.createGameService.createLimitedTimeGame();
+    }
+
+    private startUpClassicWaitingLine(gameInfo: any): void {
+        if (gameInfo.multiFlag) {
+            this.multiplayerClassicGame(gameInfo);
+        } else {
+            this.soloClassicGame(gameInfo.nameGame);
+        }
+    }
+
+    private multiplayerClassicGame(gameInfo: any): void {
+        if (gameInfo.isPlayerWaiting) this.joinGameService.joinGame(gameInfo.nameGame);
+        else this.createGameService.createGame(gameInfo.nameGame);
+    }
+
+    private soloClassicGame(gameName: string): void {
+        this.socketService.send('solo classic mode', gameName);
     }
 }
