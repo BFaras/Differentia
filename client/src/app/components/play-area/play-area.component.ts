@@ -53,7 +53,6 @@ export class PlayAreaComponent implements OnInit {
     @Input() mode: string;
     mousePosition: Position = { x: 0, y: 0 };
     private isCheatActivated = false;
-    private blinkCanvasOrginial: ImageData;
     private canvasSize: Coordinate = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
     private numberOfBlinkCalls = 0;
     constructor(
@@ -84,26 +83,11 @@ export class PlayAreaComponent implements OnInit {
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[ORIGINAL_IMAGE_POSITION]);
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[MODIFIED_IMAGE_POSITION]);
         this.displayImages();
-        this.getImageData();
+        this.setClickCanvasesTransparent();
     }
 
     detectDifference(event: MouseEvent) {
         this.mouseDetection.mouseHitDetect(event);
-    }
-
-    getImageData(): void {
-        const context = this.blinkOriginalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.blinkCanvasOrginial = context.getImageData(
-            0,
-            0,
-            this.blinkOriginalCanvas.nativeElement.width,
-            this.blinkOriginalCanvas.nativeElement.height,
-        );
-        this.blinkCanvasOrginial = this.blinkModifiedCanvas.nativeElement
-            .getContext('2d')!
-            .getImageData(0, 0, this.blinkModifiedCanvas.nativeElement.width, this.blinkModifiedCanvas.nativeElement.height);
-
-        this.setClickCanvasesTransparent();
     }
 
     private setClickCanvasesTransparent() {
@@ -220,11 +204,13 @@ export class PlayAreaComponent implements OnInit {
 
         this.socketService.on('game images', async () => {
             await this.loadImages();
+            this.drawService.setCanvasTransparent(this.blinkModifiedCanvas.nativeElement);
+            this.drawService.setCanvasTransparent(this.blinkOriginalCanvas.nativeElement);
         });
     }
 
     private makePixelsBlinkOnCanvas(pixelsToBlink: number[], canvasToCopyFrom: HTMLCanvasElement, invertColors?: boolean) {
-        this.blinkModifiedCanvas.nativeElement.getContext('2d')?.putImageData(this.blinkCanvasOrginial, 0, 0);
+        this.drawService.setCanvasTransparent(this.blinkModifiedCanvas.nativeElement);
         const context = this.blinkModifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         context.canvas.id = BLINK_ID;
         this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
@@ -244,7 +230,7 @@ export class PlayAreaComponent implements OnInit {
     }
 
     private makePixelsBlinkOnCanvasCheat(pixelsToBlink: number[], canvasToCopyFrom: HTMLCanvasElement, canvasToCopyOn: HTMLCanvasElement) {
-        canvasToCopyOn.getContext('2d')?.putImageData(this.blinkCanvasOrginial, 0, 0);
+        this.drawService.setCanvasTransparent(this.blinkOriginalCanvas.nativeElement);
         const context = canvasToCopyOn.getContext('2d') as CanvasRenderingContext2D;
         context.canvas.id = 'blinkCheat';
         this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(pixelsToBlink, canvasToCopyFrom, canvasToCopyOn);
