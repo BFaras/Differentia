@@ -15,6 +15,7 @@ import { GameManagerService } from './game-manager.service';
 import { MouseHandlerService } from './mouse-handler.service';
 import { TimeConstantsService } from './time-constants.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
+import { BestTimesService } from './best-times.service';
 
 export class SocketManager {
     socket: io.Socket;
@@ -24,6 +25,7 @@ export class SocketManager {
     private waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
     private gameManagerService: GameManagerService;
     private timeConstantsService: TimeConstantsService = new TimeConstantsService();
+    private bestTimesService: BestTimesService = new BestTimesService();
 
     constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] }, maxHttpBufferSize: 1e7 });
@@ -172,29 +174,27 @@ export class SocketManager {
                 this.gameManagerService.endGame(socket);
             });
 
-            socket.on('Check if game is finished', (isMultiplayer: boolean) => {
+            socket.on('Check if game is finished', async (isMultiplayer: boolean) => {
                 const mouseHandler: MouseHandlerService = this.gameManagerService.getSocketMouseHandlerService(socket);
                 let isGameFinished = this.gameManagerService.isGameFinishedSolo(socket);
-
+                const playerUsername = this.gameManagerService.getSocketUsername(socket);
                 if (isMultiplayer) {
                     isGameFinished = this.gameManagerService.isGameFinishedMulti(socket);
                 }
                 if (isGameFinished) {
                     mouseHandler.resetDifferencesData();
                     this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
+                    const playerGameTime = this.gameManagerService.getSocketChronometerService(socket).time;
+                    const gameName = this.gameManagerService.getSocketGameName(socket);
                     //= this.gamemanaservice.getSOcketChronometerService.time
                     this.gameManagerService.endGame(socket);
+                    await this.bestTimesService.compareGameTimeWithDbTimes(playerGameTime,isMultiplayer,gameName,playerUsername)
                 }
             });
 
             socket.on('playerMessage', (msg: ChatMessage) => {
                 this.sio.to(this.gameManagerService.findSocketGameRoomName(socket)).emit('Send message to opponent', msg);
             });
-
-            /*socket.on('Need recordTimes', async (gameName: string) => {
-                const gameTimes = await this.recordTimesService.getGameTimes(gameName);
-                socket.emit('Send Record Times', gameTimes);
-            });*/
 
             socket.on('get clue for player', () => {
                 const clueManagerService = Container.get(ClueManagerService);

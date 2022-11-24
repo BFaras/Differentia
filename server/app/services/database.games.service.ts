@@ -1,4 +1,4 @@
-import { Collection, Filter, FindOptions, ModifyResult, UpdateFilter, WithId } from 'mongodb';
+import { Collection, Filter, ModifyResult, UpdateFilter, WithId } from 'mongodb';
 //import { Time } from '../../../common/time';
 import { HttpException } from '@app/classes/http.exception';
 import { GameTimes } from '@common/game-times';
@@ -111,19 +111,33 @@ export class RecordTimesService {
     // }
 
     async getGameTimes(nameOfWantedGame: string): Promise<GameModeTimes> {
-        let filterQuery: Filter<GameTimes> = { name: nameOfWantedGame };
-        let projection: FindOptions = { projection: { recordTimes: 1, _id: 0 } };
-        //  const times = await this.collection.findOne({ name: nameOfWantedGame });
-        //  return times!.recordTimes;
-        return this.collection
-            .findOne(filterQuery, projection)
-            .then((gameTimes: WithId<GameTimes>) => {
-                return gameTimes.recordTimes;
-            })
-            .catch(() => {
-                throw new Error('Failed to get the game times');
-            });
+        // let filterQuery: Filter<GameTimes> = { name: nameOfWantedGame };
+        // let projection: FindOptions = { projection: { recordTimes: 1, _id: 0 } };
+         const times = await this.collection.findOne({ name: 'Car game' });
+         return times!.recordTimes;
+        // return this.collection
+        //     .findOne(filterQuery, projection)
+        //     .then((gameTimes: WithId<GameTimes>) => {
+        //         return gameTimes.recordTimes;
+        //     })
+        //     .catch(() => {
+        //         throw new Error('Failed to get the game times');
+        //     });
     }
+
+    // async sortGameTimes(gameName: string, isMultiplayer: boolean): Promise<void> {
+    //     if (isMultiplayer) {
+    //         return this.collection
+    //             .updateOne({name: gameName},
+    //                 {$push: {recordTimes: { $each: [], $sort: 1}}})
+    //             .then(() => {})
+    //             .catch(() => {
+    //                 throw new Error('Failed to reset the game record times');
+    //             });
+    //     } else {
+    //     }
+    // }
+
     // async updateRecordTimes(gameName: string, isItMultiplayer: boolean, times: Time): Promise<void> {
     //   let filterQuery: Filter<GameTimes> = { name: gameName };
     //   let updateQuery: UpdateFilter<GameTimes> = {
