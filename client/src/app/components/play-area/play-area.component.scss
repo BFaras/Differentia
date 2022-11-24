@@ -16,7 +16,9 @@
     width: 640px;
     height: 480px;
 }
-
+button{
+    background-color: rgb(214, 169, 143);
+}
 #noClick {
     pointer-events: none;
     transition-delay: 1s;
@@ -28,6 +30,8 @@
 
 .button-container {
     padding: 0px 470px 0px 470px;
+    position:relative
+    
 }
 
 #mouse-position-display {
@@ -70,4 +74,17 @@ canvas {
     100% {
         opacity: 1;
     }
+}
+
+.mat-progress-spinner{
+    position:relative;
+    left:42%;
+    top:42%;
+
+    
+}
+
+:host ::ng-deep .mat-progress-spinner circle, .mat-spinner circle{
+    stroke: rgb(214, 169, 143);
+    
 }

@@ -2,34 +2,36 @@
     <span class="image-container">
         <span class="image">
             <!--Image de gauche-->
+            <mat-progress-spinner  [diameter]="70" *ngIf="reloadState" mode="indeterminate">
+            </mat-progress-spinner>
             <canvas id="canvas" #originalCanvas [attr.width]="width" [attr.height]="height"></canvas>
             <canvas #blinkCanvas1 [attr.width]="width" [attr.height]="height"></canvas>
             <canvas id="click" #clickCanvas1 (click)="detectDifference($event)" [attr.width]="width" [attr.height]="height"></canvas>
             <div id="mouse-position-display">
-                <p>Cliquez sur l'image pour détecter les différences</p>
                 <p *ngIf="mousePosition.x !== 0">X : {{ mousePosition.x }}</p>
                 <p *ngIf="mousePosition.y !== 0">Y : {{ mousePosition.y }}</p>
-                <hr />
+
             </div>
         </span>
     </span>
     <span class="image-container">
         <span class="image">
             <!--Image de droite-->
+            <mat-progress-spinner [diameter]="70" *ngIf="reloadState" mode="indeterminate">
+            </mat-progress-spinner>
             <canvas id="canvas" #modifiedCanvas [attr.width]="width" [attr.height]="height"></canvas>
             <canvas #blinkCanvas2 [attr.width]="width" [attr.height]="height"></canvas>
             <canvas id="click" #clickCanvas2 (click)="detectDifference($event)" [attr.width]="width" [attr.height]="height"></canvas>
             <div id="mouse-position-display">
-                <p>Cliquez sur l'image pour détecter les différences</p>
+
                 <p *ngIf="mousePosition.x !== 0">X : {{ mousePosition.x }}</p>
                 <p *ngIf="mousePosition.y !== 0">Y : {{ mousePosition.y }}</p>
-                <hr />
             </div>
         </span>
     </span>
 </div>
 <div>
     <span class="button-container">
-        <button mat-raised-button routerLink="/home">Abandon</button>
+        <button matTooltip="Abandonner la partie en cours " mat-raised-button routerLink="/home">Abandon</button>
     </span>
 </div>

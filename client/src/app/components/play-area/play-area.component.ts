@@ -11,7 +11,7 @@ import {
     PAUSED_ID,
     STANDARD_POP_UP_HEIGHT,
     STANDARD_POP_UP_WIDTH,
-    WIN_FLAG,
+    WIN_FLAG
 } from '@app/client-consts';
 import { PopDialogEndgameComponent } from '@app/components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
 import { Coordinate } from '@app/interfaces/coordinate';
@@ -29,7 +29,7 @@ import {
     DEFAULT_HEIGHT_CANVAS,
     DEFAULT_WIDTH_CANVAs,
     MODIFIED_IMAGE_POSITION,
-    ORIGINAL_IMAGE_POSITION,
+    ORIGINAL_IMAGE_POSITION
 } from '@common/const';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
@@ -56,6 +56,7 @@ export class PlayAreaComponent implements OnInit {
     private blinkCanvasOrginial: ImageData;
     private canvasSize: Coordinate = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
     private numberOfBlinkCalls = 0;
+    reloadState:boolean = true
     constructor(
         private socketService: SocketClientService,
         private readonly drawService: DrawService,
@@ -83,6 +84,7 @@ export class PlayAreaComponent implements OnInit {
     async loadImages(): Promise<void> {
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[ORIGINAL_IMAGE_POSITION]);
         await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[MODIFIED_IMAGE_POSITION]);
+        this.reloadState = false
         this.displayImages();
         this.getImageData();
     }

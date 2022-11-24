@@ -45,7 +45,7 @@ const modules = [
     MatToolbarModule,
     MatTooltipModule,
     MatSnackBarModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
     MatCheckboxModule
 ];
 

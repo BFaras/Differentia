@@ -2,12 +2,16 @@
     <span class="menu-element">
         <p>{{ timeService.showableMinutes }}:{{ timeService.showableSeconds }}</p>
     </span>
-    <span *ngIf="!isMultiplayer && clueAmountLeft > 0" class="menu-element">
-        <button mat-raised-button (click)="sendClueEventToServer()">Indice</button>
+    <span class = "hint-button"*ngIf="!isMultiplayer && clueAmountLeft > 0" class="menu-element">
+        <button mat-raised-button  matTooltip="Obtenir un indice" (click)="sendClueEventToServer()">
+            <mat-icon>search</mat-icon>
+        </button>
         <p>{{ clueAmountLeft }}</p>
     </span>
-    <span *ngIf="isMultiplayer || clueAmountLeft <= 0" class="menu-element">
-        <button mat-raised-button disabled>Indice</button>
+    <span class = "hint-button" *ngIf="isMultiplayer || clueAmountLeft <= 0" class="menu-element">
+        <button matTooltip="Obtenir un indice" mat-raised-button disabled>
+            <mat-icon>search</mat-icon>
+        </button>
         <p>0</p>
     </span>
     <span class="username-element">
