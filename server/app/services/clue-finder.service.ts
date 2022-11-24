@@ -18,6 +18,7 @@ export class ClueFinderService {
     constructor() {}
 
     findClueQuandrantFromClueNumber(clueNumber: number, differencesList: number[][]): number {
+        //Bonjour
         if (clueNumber == FIRST_CLUE_NB) {
             return this.findClueQuadrant(FIRST_CLUE_QUANDRANT_NB, differencesList);
         } else if (clueNumber == SECOND_CLUE_NB) {
