@@ -248,7 +248,7 @@ export class PlayAreaComponent implements OnInit {
     }
 
     private makePixelsBlinkOnCanvasCheat(pixelsToBlink: number[], canvasToCopyFrom: HTMLCanvasElement, canvasToCopyOn: HTMLCanvasElement) {
-        this.drawService.setCanvasTransparent(this.blinkOriginalCanvas.nativeElement);
+        this.drawService.setCanvasTransparent(canvasToCopyOn);
         const context = canvasToCopyOn.getContext('2d') as CanvasRenderingContext2D;
         context.canvas.id = 'blinkCheat';
         this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(pixelsToBlink, canvasToCopyFrom, canvasToCopyOn);
