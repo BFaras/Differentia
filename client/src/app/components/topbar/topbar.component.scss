@@ -4,7 +4,7 @@
     border-bottom: 1px solid black;
     height: 90px;
     justify-content: space-around;
-    grid-template-columns: 10% 25% 25%;
+    grid-template-columns: 13% 22% 25%;
     background-color: rgba(0, 0, 0, 0.2);
 }
 
@@ -34,7 +34,9 @@ button{
 }
 
 .bulb-hint{
-    color:rgb(216, 204, 41)
+    color:rgb(216, 204, 41);
+    position:relative;
+    left:13px;
     
 }
 .container-hints{

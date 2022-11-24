@@ -1,12 +1,15 @@
 .chatContainer {
-    height: 250px;
+    height: 450px;
     width: 250px;
     border-radius: 6px;
-    background-color: rgb(234, 223, 223);
+    background-color: rgba(0, 0, 0, 0.2);
     font: 1.3rem Inconsolata, monospace;
     text-shadow: 0 0 5px #c8c8c8;
 }
 
+.sendMessage{
+    background-color: rgba(0, 0, 0, 0.2);
+}
 .chatMessages {
     border-radius: 20px;
     flex-direction: column;
@@ -14,8 +17,14 @@
     justify-content: space-around;
 }
 
+button{
+    position: relative;
+    top: 25px;
+    background-color: rgb(214, 169, 143);
+}
+
 .chatBox {
-    border: 2px solid black;
+    border: 2px solid rgb(255, 255, 255);
     border-radius: 5px;
     height: 20%;
 }
@@ -39,7 +48,7 @@
 }
 
 .localUserMessage {
-    color: rgb(7, 68, 199);
+    color: rgb(7, 207, 17);
 }
 
 .otherUserMessage {
@@ -47,11 +56,11 @@
 }
 
 .gameMessage {
-    color: rgb(13, 119, 133);
+    color: rgb(255, 255, 255);
 }
 
 .timeInMessage {
-    color: rgb(3, 3, 3);
+    color: rgb(255, 255, 255);
     font-size: xx-small;
     margin-right: 0.05cm;
 }
@@ -69,6 +78,6 @@
     font-size: 16px;
     word-break: break-word;
     overflow-y: auto;
-    display:flex;
     flex-direction: column-reverse;
+    text-align: start;
 }
