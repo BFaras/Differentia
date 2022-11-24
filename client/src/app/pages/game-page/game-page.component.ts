@@ -59,10 +59,6 @@ export class GamePageComponent {
         this.configureGamePageSocketFeatures();
     }
 
-    ngOnDestroy() {
-        this.socketService.send('kill the game', this.gameMode);
-    }
-
     private openDialog(messageToDisplay: string, winF: boolean): void {
         this.dialog.open(PopDialogEndgameComponent, {
             height: STANDARD_POP_UP_HEIGHT,

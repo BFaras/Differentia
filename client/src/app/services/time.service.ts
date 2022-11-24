@@ -33,4 +33,9 @@ export class TimeService {
     showSeconds() {
         this.showableSeconds = this.time.seconds < BASE_ONE ? `0${this.time.seconds}` : this.time.seconds.toString();
     }
+
+    resetTime() {
+        this.showableMinutes = EMPTY_SHOWABLE_TIME;
+        this.showableSeconds = EMPTY_SHOWABLE_TIME;
+    }
 }
