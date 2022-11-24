@@ -186,9 +186,9 @@ export class SocketManager {
                     this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
                     const playerGameTime = this.gameManagerService.getSocketChronometerService(socket).time;
                     const gameName = this.gameManagerService.getSocketGameName(socket);
-                    //= this.gamemanaservice.getSOcketChronometerService.time
+                    await this.bestTimesService.compareGameTimeWithDbTimes(playerGameTime,isMultiplayer,gameName,playerUsername);
                     this.gameManagerService.endGame(socket);
-                    await this.bestTimesService.compareGameTimeWithDbTimes(playerGameTime,isMultiplayer,gameName,playerUsername)
+                    
                 }
             });
 
