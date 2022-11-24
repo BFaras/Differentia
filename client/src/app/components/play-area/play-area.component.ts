@@ -53,6 +53,7 @@ export class PlayAreaComponent implements OnInit {
     @Input() mode: string;
     mousePosition: Position = { x: 0, y: 0 };
     private isCheatActivated = false;
+    private isWriting = false;
     private blinkCanvasOrginial: ImageData;
     private canvasSize: Coordinate = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
     private numberOfBlinkCalls = 0;
@@ -143,13 +144,13 @@ export class PlayAreaComponent implements OnInit {
 
     @HostListener(CHEAT_KEY, ['$event'])
     handleKeyboardCheat() {
-        if (this.isCheatActivated) {
+        if (this.isCheatActivated && !this.isWriting) {
             const originalContext = this.blinkOriginalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             originalContext.canvas.id = 'paused';
             const modifiedContext = this.blinkModifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
             modifiedContext.canvas.id = 'paused';
             this.isCheatActivated = !this.isCheatActivated;
-        } else {
+        } else if (!this.isWriting) {
             this.socketService.send('Cheat key pressed');
             this.isCheatActivated = !this.isCheatActivated;
         }
