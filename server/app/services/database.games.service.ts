@@ -113,7 +113,7 @@ export class RecordTimesService {
     async getGameTimes(nameOfWantedGame: string): Promise<GameModeTimes> {
         // let filterQuery: Filter<GameTimes> = { name: nameOfWantedGame };
         // let projection: FindOptions = { projection: { recordTimes: 1, _id: 0 } };
-         const times = await this.collection.findOne({ name: 'Car game' });
+         const times = await this.collection.findOne({ name: nameOfWantedGame });
          return times!.recordTimes;
         // return this.collection
         //     .findOne(filterQuery, projection)

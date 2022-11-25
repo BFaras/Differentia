@@ -12,8 +12,8 @@ export class DatabaseService {
     private db: Db;
     private client: MongoClient;
     defaultRecordTimes: GameModeTimes = {
-        soloGameTimes: [new RecordTime('02:00', 'Mark'), new RecordTime('02:15', 'Jean'), new RecordTime('02:30', 'Paul')],
-        multiplayerGameTimes: [new RecordTime('02:00', 'Brook'), new RecordTime('02:15', 'Leon'), new RecordTime('02:30', 'Mike')],
+        soloGameTimes: [new RecordTime('02:00', 'David'), new RecordTime('02:15', 'Jean'), new RecordTime('02:30', 'Paul')],
+        multiplayerGameTimes: [new RecordTime('02:00', 'Brook'), new RecordTime('02:15', 'Leon'), new RecordTime('02:30', 'Tom')],
     };
 
     // La ligne 13 de ce fichier n'est pas couverte dans les tests car le process.env
@@ -39,27 +39,7 @@ export class DatabaseService {
     async populateDB(): Promise<void> {
         const gamesTimes: GameTimes[] = [
             {
-                name: 'Car game',
-                recordTimes: this.defaultRecordTimes,
-            },
-            {
-                name: 'Bike game',
-                recordTimes: this.defaultRecordTimes,
-            },
-            {
-                name: 'House game',
-                recordTimes: this.defaultRecordTimes,
-            },
-            {
                 name: 'Plane game',
-                recordTimes: this.defaultRecordTimes,
-            },
-            {
-                name: 'TV game',
-                recordTimes: this.defaultRecordTimes,
-            },
-            {
-                name: 'Table game',
                 recordTimes: this.defaultRecordTimes,
             },
             {
@@ -67,15 +47,15 @@ export class DatabaseService {
                 recordTimes: this.defaultRecordTimes,
             },
             {
-                name: 'Clown game',
+                name: 'Le Tunnel',
                 recordTimes: this.defaultRecordTimes,
             },
             {
-                name: 'Dog game',
+                name: 'Les Ballons',
                 recordTimes: this.defaultRecordTimes,
             },
             {
-                name: 'new game',
+                name: 'Le Meilleur Chien',
                 recordTimes: this.defaultRecordTimes,
             },
         ];
