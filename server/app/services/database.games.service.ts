@@ -113,8 +113,8 @@ export class RecordTimesService {
     async getGameTimes(nameOfWantedGame: string): Promise<GameModeTimes> {
         // let filterQuery: Filter<GameTimes> = { name: nameOfWantedGame };
         // let projection: FindOptions = { projection: { recordTimes: 1, _id: 0 } };
-         const times = await this.collection.findOne({ name: 'Car game' });
-         return times!.recordTimes;
+        const times = await this.collection.findOne({ name: 'Car game' });
+        return times!.recordTimes;
         // return this.collection
         //     .findOne(filterQuery, projection)
         //     .then((gameTimes: WithId<GameTimes>) => {
@@ -138,22 +138,28 @@ export class RecordTimesService {
     //     }
     // }
 
-    // async updateRecordTimes(gameName: string, isItMultiplayer: boolean, times: Time): Promise<void> {
-    //   let filterQuery: Filter<GameTimes> = { name: gameName };
-    //   let updateQuery: UpdateFilter<GameTimes> = {
-    //     $set: {
-    //       name: game.name,
-    //       numberOfDifferences: game.numberOfDifferences,
-    //       times: game.times,
-    //       images: game.images,
-    //     },
-    //   };
-    //   return this.collection
-    //   .updateOne(filterQuery, updateQuery)
-    //   .then(() => { })
-    //   .catch(() => {
-    //     throw new Error('Failed to update game');
-    //   });
+    // async updateRecordTimes(gameName: string, isMultiplayer: boolean, newTime: string, newUsername: string): Promise<void> {
+    //     //   let filterQuery: Filter<GameTimes> = { name: gameName };
+
+    //     //   let updateQuery: UpdateFilter<GameTimes>
+    //     //   if (isItMultiplayer) {
+    //     //     updateQuery = {
+    //     //     $set: {
+    //     //       recordTimes:
+    //     //     },
+    //     //   }};
+    //     if (isMultiplayer) {
+    //         return this.collection.findOneAndUpdate(
+    //             { name: gameName },
+    //             {
+    //                 $set: {
+    //                     ""
+    //                     // [`recordTimes.multiplayerGameTimes.${2}.time`]: newTime,
+    //                     // [`recordTimes.multiplayerGameTimes.${2}.playerName`]: newUsername,
+    //                 },
+    //             },
+    //         );
+    //     }
     // }
 
     // private validateTimes(times: Time[]): boolean {
