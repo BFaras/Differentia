@@ -93,7 +93,6 @@ describe('PlayAreaComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
         component.differentImages = differenceImage;
-        TestBed.inject(SocketClientService);
 
         spyOn(CanvasRenderingContext2D.prototype, 'putImageData').and.callFake(() => {});
         component['blinkModifiedCanvas'] = new HTMLElementRefCanvasMock() as ElementRef<HTMLCanvasElement>;
