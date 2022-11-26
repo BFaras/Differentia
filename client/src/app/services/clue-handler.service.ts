@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { COMPASS_HEIGHT, COMPASS_IMAGES_BASIC_PATH, COMPASS_WIDTH } from '@app/client-consts';
+import { COMPASS_HEIGHT, COMPASS_IMAGES_BASIC_PATH, COMPASS_WIDTH, PNG_FILE_TYPE_SRC } from '@app/client-consts';
 import { CompassInformations } from '@app/interfaces/compass-informations';
 import {
     CARDINAL_DIRECTION_RAD_ANGLE,
     CIRCLE_CIRCONFERENCE,
+    FIRST_ARRAY_POSITION,
     FIRST_CLUE_NB,
     FIRST_CLUE_QUANDRANT_NB,
     IMAGE_HEIGHT,
@@ -13,6 +14,7 @@ import {
 } from '@common/const';
 import { Position } from '@common/position';
 import { Positions } from '@common/positions';
+import { ImageToImageDifferenceService } from './image-to-image-difference.service';
 
 enum CardinalDirection {
     East,
@@ -29,7 +31,7 @@ enum CardinalDirection {
     providedIn: 'root',
 })
 export class ClueHandlerService {
-    constructor() {}
+    constructor(private imageToImageDiffService: ImageToImageDifferenceService) {}
 
     //To test Raph
     findClueQuadrantPixels(clueNb: number, quadrantNb: number): number[] {
@@ -45,15 +47,19 @@ export class ClueHandlerService {
         return quadrantPixelsNb;
     }
 
-    getCompassInformationsForClue(differencePixels: number[]): CompassInformations {
+    async getCompassInformationsForClue(differencePixels: number[]): Promise<CompassInformations> {
         const compassCardinalDirection = this.findDifferenceCardinalDirection(differencePixels);
-        const compassImage: HTMLImageElement = new Image(COMPASS_WIDTH, COMPASS_HEIGHT);
-        compassImage.src = COMPASS_IMAGES_BASIC_PATH + compassCardinalDirection;
+        const compassImage: HTMLImageElement = new Image();
+        compassImage.src = COMPASS_IMAGES_BASIC_PATH + compassCardinalDirection + PNG_FILE_TYPE_SRC;
+        await this.imageToImageDiffService.waitForImageToLoad(compassImage);
+        compassImage.width = COMPASS_WIDTH;
+        compassImage.height = COMPASS_HEIGHT;
+
         const compassInfo: CompassInformations = {
             compassClueImage: compassImage,
             isDifferenceClueMiddle: false,
         };
-        return compassInfo;
+        return Promise.resolve(compassInfo);
     }
 
     private findQuadrantLimitsFromClueNb(clueNb: number, quadrantNb: number): Positions {
@@ -101,7 +107,7 @@ export class ClueHandlerService {
     private findDifferenceCardinalDirection(differencePixels: number[]): CardinalDirection {
         const cardinalDirectionsLength = Object.keys(CardinalDirection).length;
         let differenceCardinalDirection: CardinalDirection = cardinalDirectionsLength - 1;
-        const pixelPosition: Position = this.convertPixelNbToPosition(differencePixels[Math.floor(differencePixels.length / 2)]);
+        const pixelPosition: Position = this.convertPixelNbToPosition(differencePixels[FIRST_ARRAY_POSITION]);
         let differenceAngleWithOrigin = -Math.atan2(pixelPosition.y - MIDDLE_OF_IMAGE_POSITION.y, pixelPosition.x - MIDDLE_OF_IMAGE_POSITION.x);
 
         if (differenceAngleWithOrigin < 0) {

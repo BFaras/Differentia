@@ -26,10 +26,24 @@ export class DrawService {
         contextToDrawOn: CanvasRenderingContext2D,
         xPositionOffset: number,
         yPositionOffset: number,
-    ) {}
+    ) {
+        const xMiddlePosition: number = this.calculateLeftTopCornerMiddlePosition(contextToDrawOn.canvas.width, imageToDraw.width);
+        const yMiddlePosition: number = this.calculateLeftTopCornerMiddlePosition(contextToDrawOn.canvas.height, imageToDraw.height);
+        contextToDrawOn.drawImage(
+            imageToDraw,
+            xMiddlePosition + xPositionOffset,
+            yMiddlePosition + yPositionOffset,
+            imageToDraw.width,
+            imageToDraw.height,
+        );
+    }
 
     setCanvasTransparent(canvas: HTMLCanvasElement) {
         const canvasContext = canvas.getContext('2d')!;
         canvasContext.clearRect(0, 0, canvasContext.canvas.width, canvasContext.canvas.height);
+    }
+
+    private calculateLeftTopCornerMiddlePosition(canvasSize: number, imageSize: number): number {
+        return Math.floor(canvasSize / 2) - Math.floor(imageSize / 2);
     }
 }

@@ -145,9 +145,9 @@ export class PlayAreaComponent implements OnInit {
     handleKeyboardCheat() {
         if (this.isCheatActivated && !this.isWriting) {
             const originalContext = this.blinkOriginalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            originalContext.canvas.id = 'paused';
+            originalContext.canvas.id = PAUSED_ID;
             const modifiedContext = this.blinkModifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            modifiedContext.canvas.id = 'paused';
+            modifiedContext.canvas.id = PAUSED_ID;
             this.isCheatActivated = !this.isCheatActivated;
         } else if (!this.isWriting) {
             this.socketService.send('Cheat key pressed');
@@ -199,12 +199,13 @@ export class PlayAreaComponent implements OnInit {
             this.makePixelsBlinkOnCanvas(quandrantPixelsNb, this.modifiedCanvas.nativeElement, true);
         });
 
-        this.socketService.on('Clue with difference pixels', (differenceCluePixels: number[]) => {
-            const compassInfos: CompassInformations = this.clueHandlerService.getCompassInformationsForClue(differenceCluePixels);
+        this.socketService.on('Clue with difference pixels', async (differenceCluePixels: number[]) => {
+            const compassInfos: CompassInformations = await this.clueHandlerService.getCompassInformationsForClue(differenceCluePixels);
             const blinkModifiedCanvas: HTMLCanvasElement = this.blinkModifiedCanvas.nativeElement;
             const blinkModifiedCanvasContext: CanvasRenderingContext2D = blinkModifiedCanvas.getContext('2d') as CanvasRenderingContext2D;
 
             this.drawService.setCanvasTransparent(blinkModifiedCanvas);
+            blinkModifiedCanvas.id = 'compassClue';
 
             if (compassInfos.isDifferenceClueMiddle) {
             } else {
