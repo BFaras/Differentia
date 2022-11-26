@@ -226,6 +226,7 @@ export class PlayAreaComponent implements OnInit {
             this.openEndGameDialog(endGameMessage, winFlag);
         });
 
+        //To test Raph
         this.socketService.on('game images', async () => {
             await this.loadImages();
             this.drawService.setCanvasTransparent(this.blinkModifiedCanvas.nativeElement);

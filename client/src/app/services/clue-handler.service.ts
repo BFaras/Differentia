@@ -23,7 +23,7 @@ import { Position } from '@common/position';
 import { Positions } from '@common/positions';
 import { ImageToImageDifferenceService } from './image-to-image-difference.service';
 
-enum CardinalDirection {
+export enum CardinalDirection {
     East,
     NorthEast,
     North,
@@ -54,7 +54,7 @@ export class ClueHandlerService {
         return quadrantPixelsNb;
     }
 
-    //To test Raph
+    //To test Raph (À voir si les tests fonctionnent)
     async getCompassInformationsForClue(differencePixels: number[]): Promise<CompassInformations> {
         const compassCardinalDirection = this.findDifferenceCardinalDirection(differencePixels);
 
