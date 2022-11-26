@@ -144,9 +144,15 @@ export class RecordTimesService {
                 .updateOne({ name: 'Plane game' }, { $push: { 'recordTimes.soloGameTimes': { $each: [], $sort: { time: 1 } } } })
                 .then(() => {})
                 .catch(() => {
-                    throw new Error('Failed to reset the game record times');
+                    throw new Error('Failed to sort the solo game record times');
                 });
         } else {
+            return this.collection
+            .updateOne({ name: 'Plane game' }, { $push: { 'recordTimes.multiplayerGameTimes': { $each: [], $sort: { time: 1 } } } })
+            .then(() => {})
+            .catch(() => {
+                throw new Error('Failed to sort the multiplayer game record times');
+            });
         }
     }
 

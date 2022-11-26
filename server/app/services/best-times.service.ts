@@ -14,7 +14,7 @@ export class BestTimesService {
     }
 
     private timeFormatToString(gameTime: Time): string {
-        return gameTime.minutes + ':' + gameTime.seconds;
+        return (gameTime.minutes < 10 ? '0' : '') + gameTime.minutes + ':' + ((gameTime.seconds < 10 ? '0' : '') + gameTime.seconds);
     }
 
     private convertTimeForComparison(time: string): number {
@@ -25,10 +25,13 @@ export class BestTimesService {
         const databaseGameTimes = await this.recordTimesService.getGameTimes(gameName);
         if (isMultiplayer) {
             const gameTimeInString = this.timeFormatToString(gameTime);
+            console.log(gameTimeInString);
             const dbGameTimes = this.convertTimeForComparison(databaseGameTimes.multiplayerGameTimes[2].time);
             if (this.convertTimeForComparison(gameTimeInString) < dbGameTimes) {
                 databaseGameTimes.multiplayerGameTimes[2].time = gameTimeInString;
                 databaseGameTimes.multiplayerGameTimes[2].playerName = playerUsername;
+                await this.recordTimesService.updateGameRecordTimes(gameName, databaseGameTimes);
+                await this.recordTimesService.sortGameTimes(gameName, isMultiplayer);
             }
         } else {
             const gameTimeInString = this.timeFormatToString(gameTime);
