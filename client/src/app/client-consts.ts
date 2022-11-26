@@ -66,7 +66,7 @@ export const MESSAGE_ERROR_DIFFERENCE_SOLO = 'Erreur, aucune nouvelle différenc
 export const MESSAGE_DIFFERENCE_FOUND_SOLO = 'Vous avez trouver une différence!';
 export const MESSAGE_DIFFERENCE_FOUND_MULTI = 'Différence trouvée par ';
 export const MESSAGE_ERROR_DIFFERENCE_MULTI = 'Erreur par ';
-export const MESSAGE_INDICE = 'Indice utilisé';
+export const MESSAGE_CLUE = 'Indice utilisé';
 export const TWO_DIGIT_TIME_VALUE = '2-digit';
 
 // End game messages

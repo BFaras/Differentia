@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import {
     ABANDON_MESSAGE,
     GAME_MESSAGE_SENDER_NAME,
+    MESSAGE_CLUE,
     MESSAGE_DIFFERENCE_FOUND_MULTI,
     MESSAGE_DIFFERENCE_FOUND_SOLO,
     MESSAGE_ERROR_DIFFERENCE_MULTI,
     MESSAGE_ERROR_DIFFERENCE_SOLO,
-    MESSAGE_INDICE,
     TWO_DIGIT_TIME_VALUE,
 } from '@app/client-consts';
 import { ChatMessage } from '@common/chat-message';
@@ -82,14 +82,14 @@ export class ChatMessagesService {
             this.isMultiplayerGame = false;
         });
 
-        //To test Raph
-        this.socketService.on('Clue with quadrant of difference', (endGameInfos: EndGameInformations) => {
-            observer.next(this.generateChatMessageFromGame(MESSAGE_INDICE));
+        //To test Raph (À voir si les tests fonctionnent)
+        this.socketService.on('Clue with quadrant of difference', () => {
+            observer.next(this.generateChatMessageFromGame(MESSAGE_CLUE));
         });
 
-        //To test Raph
-        this.socketService.on('Clue with difference pixels', (endGameInfos: EndGameInformations) => {
-            observer.next(this.generateChatMessageFromGame(MESSAGE_INDICE));
+        //To test Raph (À voir si les tests fonctionnent)
+        this.socketService.on('Clue with difference pixels', () => {
+            observer.next(this.generateChatMessageFromGame(MESSAGE_CLUE));
         });
     }
 

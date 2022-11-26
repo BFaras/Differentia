@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
+import { MESSAGE_CLUE } from '@app/client-consts';
 import { ChatMessage } from '@common/chat-message';
 import {
     ABANDON_MESSAGE,
@@ -160,5 +161,23 @@ describe('ChatMessagesService', () => {
     it('should reset isMultiplayerGame to false on resetIsMultiplayer()', () => {
         chatMessagesService.resetIsMultiplayer();
         expect(chatMessagesService['isMultiplayerGame']).toBeFalsy();
+    });
+
+    it('should send the clue message on a Clue with quadrant of difference event', (done) => {
+        observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
+        socketTestHelper.peerSideEmit('Clue with quadrant of difference', messageFromPlayer);
+        setTimeout(() => {
+            expect(messageReceivedFromObservable.message.includes(MESSAGE_CLUE)).toBeTruthy();
+            done();
+        }, littleTimeout);
+    });
+
+    it('should send the clue message on a Clue with difference pixels event', (done) => {
+        observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
+        socketTestHelper.peerSideEmit('Clue with difference pixels', messageFromPlayer);
+        setTimeout(() => {
+            expect(messageReceivedFromObservable.message.includes(MESSAGE_CLUE)).toBeTruthy();
+            done();
+        }, littleTimeout);
     });
 });
