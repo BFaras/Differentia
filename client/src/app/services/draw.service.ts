@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
+import { COMPASS_CLUE_ID, DIFFERENCE_NOT_MIDDLE_OFFSET } from '@app/client-consts';
+import { CompassInformations } from '@app/interfaces/compass-informations';
 import { Position } from '@common/position';
+import { ClueHandlerService } from './clue-handler.service';
 
 @Injectable({
     providedIn: 'root',
@@ -7,6 +10,8 @@ import { Position } from '@common/position';
 export class DrawService {
     contextClickOriginalCanvas: CanvasRenderingContext2D;
     contextClickModifiedCanvas: CanvasRenderingContext2D;
+
+    constructor(private readonly clueHandlerService: ClueHandlerService) {}
 
     drawWord(word: string, mousePosition: Position, context: CanvasRenderingContext2D) {
         const startPosition: Position = { x: mousePosition.x, y: mousePosition.y };
@@ -21,7 +26,30 @@ export class DrawService {
         }, 1000);
     }
 
-    drawImageOnMiddleOfCanvas(
+    async showCompassClue(differenceCluePixels: number[], canvasToShowOn: HTMLCanvasElement) {
+        const compassInfos: CompassInformations = await this.clueHandlerService.getCompassInformationsForClue(differenceCluePixels);
+        const canvasToShowOnContext: CanvasRenderingContext2D = canvasToShowOn.getContext('2d') as CanvasRenderingContext2D;
+
+        this.setCanvasTransparent(canvasToShowOn);
+        canvasToShowOn.id = COMPASS_CLUE_ID;
+
+        if (compassInfos.isDifferenceClueMiddle) {
+        } else {
+            this.drawImageOnMiddleOfCanvas(
+                compassInfos.compassClueImage,
+                canvasToShowOnContext,
+                DIFFERENCE_NOT_MIDDLE_OFFSET,
+                DIFFERENCE_NOT_MIDDLE_OFFSET,
+            );
+        }
+    }
+
+    setCanvasTransparent(canvas: HTMLCanvasElement) {
+        const canvasContext = canvas.getContext('2d')!;
+        canvasContext.clearRect(0, 0, canvasContext.canvas.width, canvasContext.canvas.height);
+    }
+
+    private drawImageOnMiddleOfCanvas(
         imageToDraw: HTMLImageElement,
         contextToDrawOn: CanvasRenderingContext2D,
         xPositionOffset: number,
@@ -36,11 +64,6 @@ export class DrawService {
             imageToDraw.width,
             imageToDraw.height,
         );
-    }
-
-    setCanvasTransparent(canvas: HTMLCanvasElement) {
-        const canvasContext = canvas.getContext('2d')!;
-        canvasContext.clearRect(0, 0, canvasContext.canvas.width, canvasContext.canvas.height);
     }
 
     private calculateLeftTopCornerMiddlePosition(canvasSize: number, imageSize: number): number {

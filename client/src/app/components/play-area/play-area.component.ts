@@ -6,7 +6,6 @@ import {
     CLASSIC_MULTIPLAYER_LOST_MESSAGE,
     CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE,
     CLASSIC_SOLO_END_GAME_MESSAGE,
-    DIFFERENCE_NOT_MIDDLE_OFFSET,
     DISABLE_CLOSE,
     LOSING_FLAG,
     PAUSED_ID,
@@ -15,7 +14,6 @@ import {
     WIN_FLAG,
 } from '@app/client-consts';
 import { PopDialogEndgameComponent } from '@app/components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
-import { CompassInformations } from '@app/interfaces/compass-informations';
 import { Coordinate } from '@app/interfaces/coordinate';
 import { ClueHandlerService } from '@app/services/clue-handler.service';
 import { DifferenceDetectionService } from '@app/services/difference-detection.service';
@@ -200,22 +198,7 @@ export class PlayAreaComponent implements OnInit {
         });
 
         this.socketService.on('Clue with difference pixels', async (differenceCluePixels: number[]) => {
-            const compassInfos: CompassInformations = await this.clueHandlerService.getCompassInformationsForClue(differenceCluePixels);
-            const blinkModifiedCanvas: HTMLCanvasElement = this.blinkModifiedCanvas.nativeElement;
-            const blinkModifiedCanvasContext: CanvasRenderingContext2D = blinkModifiedCanvas.getContext('2d') as CanvasRenderingContext2D;
-
-            this.drawService.setCanvasTransparent(blinkModifiedCanvas);
-            blinkModifiedCanvas.id = 'compassClue';
-
-            if (compassInfos.isDifferenceClueMiddle) {
-            } else {
-                this.drawService.drawImageOnMiddleOfCanvas(
-                    compassInfos.compassClueImage,
-                    blinkModifiedCanvasContext,
-                    DIFFERENCE_NOT_MIDDLE_OFFSET,
-                    DIFFERENCE_NOT_MIDDLE_OFFSET,
-                );
-            }
+            await this.drawService.showCompassClue(differenceCluePixels, this.blinkModifiedCanvas.nativeElement);
         });
 
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
@@ -244,20 +227,16 @@ export class PlayAreaComponent implements OnInit {
     }
 
     private makePixelsBlinkOnCanvas(pixelsToBlink: number[], canvasToCopyFrom: HTMLCanvasElement, invertColors?: boolean) {
-        this.drawService.setCanvasTransparent(this.blinkModifiedCanvas.nativeElement);
+        const blinkModifiedCanvas: HTMLCanvasElement = this.blinkModifiedCanvas.nativeElement;
         const context = this.blinkModifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.drawService.setCanvasTransparent(blinkModifiedCanvas);
         context.canvas.id = BLINK_ID;
-        this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
-            pixelsToBlink,
-            canvasToCopyFrom,
-            this.blinkModifiedCanvas.nativeElement,
-            invertColors,
-        );
+        this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(pixelsToBlink, canvasToCopyFrom, blinkModifiedCanvas, invertColors);
 
         this.numberOfBlinkCalls++;
         setTimeout(() => {
             this.numberOfBlinkCalls--;
-            if (this.numberOfBlinkCalls <= 0) {
+            if (this.numberOfBlinkCalls <= 0 && blinkModifiedCanvas.id === BLINK_ID) {
                 context.canvas.id = PAUSED_ID;
             }
         }, 3000);

@@ -112,3 +112,4 @@ export const COMPASS_WIDTH = 130;
 export const COMPASS_HEIGHT = 120;
 export const DIFFERENCE_NOT_MIDDLE_OFFSET = 0;
 export const PNG_FILE_TYPE_SRC = '.png';
+export const COMPASS_CLUE_ID = 'compassClue';
