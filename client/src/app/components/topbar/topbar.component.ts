@@ -30,12 +30,12 @@ export class TopbarComponent implements OnInit {
         this.socketService.disconnect();
     }
 
-    // To test Raph
+    // To test Raph (À voir si les tests fonctionnent)
     sendClueEventToServer() {
         this.socketService.send('get clue for player');
     }
 
-    // To test Raph
+    // To test Raph (À voir si les tests fonctionnent)
     private configureTopBarSocket() {
         this.socketService.on('Clue with quadrant of difference', (clueInformations: ClueInformations) => {
             this.clueAmountLeft = clueInformations.clueAmountLeft - 1;
