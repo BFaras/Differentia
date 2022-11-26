@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { COMPASS_IMAGES_BASIC_PATH } from '@app/client-consts';
+import { CompassInformations } from '@app/interfaces/compass-informations';
 import {
     CARDINAL_DIRECTION_RAD_ANGLE,
     CIRCLE_CIRCONFERENCE,
@@ -43,9 +45,13 @@ export class ClueHandlerService {
         return quadrantPixelsNb;
     }
 
-    getCompassInformationsForClue(differencePixels: number[]) {
-        let compassCardinalDirection = this.findDifferenceCardinalDirection(differencePixels);
-        console.log(compassCardinalDirection);
+    getCompassInformationsForClue(differencePixels: number[]): CompassInformations {
+        const compassCardinalDirection = this.findDifferenceCardinalDirection(differencePixels);
+        const compassInfo: CompassInformations = {
+            compassImageSrc: COMPASS_IMAGES_BASIC_PATH + compassCardinalDirection,
+            isDifferenceClueMiddle: false,
+        };
+        return compassInfo;
     }
 
     private findQuadrantLimitsFromClueNb(clueNb: number, quadrantNb: number): Positions {
@@ -101,8 +107,8 @@ export class ClueHandlerService {
         }
 
         for (let cardinalDirection: CardinalDirection = 0; cardinalDirection < cardinalDirectionsLength - 1; cardinalDirection++) {
-            const currentCardinalAngle = cardinalDirection * CARDINAL_DIRECTION_RAD_ANGLE;
-            const nextCardinalAngle = (cardinalDirection + 1) * CARDINAL_DIRECTION_RAD_ANGLE;
+            const currentCardinalAngle = this.calculateCardinalDirectionAngle(cardinalDirection);
+            const nextCardinalAngle = this.calculateCardinalDirectionAngle(cardinalDirection + 1);
 
             if (differenceAngleWithOrigin >= currentCardinalAngle && differenceAngleWithOrigin < nextCardinalAngle) {
                 differenceCardinalDirection = cardinalDirection;
@@ -110,5 +116,9 @@ export class ClueHandlerService {
         }
 
         return differenceCardinalDirection;
+    }
+
+    private calculateCardinalDirectionAngle(cardinalDirection: CardinalDirection): number {
+        return cardinalDirection * CARDINAL_DIRECTION_RAD_ANGLE;
     }
 }

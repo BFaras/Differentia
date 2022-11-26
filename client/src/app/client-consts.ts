@@ -105,3 +105,6 @@ export const RESET_MSG_GAME_LIST = 'La liste des jeux a été réinitialisé :('
 export const RESET_INFO_CONSTANTS = 'Constantes de temps de jeu';
 export const RESET_INFO_RECORDS_TIME = 'Table des meilleurs temps de jeu';
 export const RESET_INFO_GAME_LIST = 'Liste des jeux';
+
+//Constantes pour les indices
+export const COMPASS_IMAGES_BASIC_PATH = 'assets/compass-images/compass';
