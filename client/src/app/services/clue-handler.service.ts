@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { COMPASS_IMAGES_BASIC_PATH } from '@app/client-consts';
+import { COMPASS_HEIGHT, COMPASS_IMAGES_BASIC_PATH, COMPASS_WIDTH } from '@app/client-consts';
 import { CompassInformations } from '@app/interfaces/compass-informations';
 import {
     CARDINAL_DIRECTION_RAD_ANGLE,
@@ -47,8 +47,10 @@ export class ClueHandlerService {
 
     getCompassInformationsForClue(differencePixels: number[]): CompassInformations {
         const compassCardinalDirection = this.findDifferenceCardinalDirection(differencePixels);
+        const compassImage: HTMLImageElement = new Image(COMPASS_WIDTH, COMPASS_HEIGHT);
+        compassImage.src = COMPASS_IMAGES_BASIC_PATH + compassCardinalDirection;
         const compassInfo: CompassInformations = {
-            compassImageSrc: COMPASS_IMAGES_BASIC_PATH + compassCardinalDirection,
+            compassClueImage: compassImage,
             isDifferenceClueMiddle: false,
         };
         return compassInfo;

@@ -6,6 +6,7 @@ import {
     CLASSIC_MULTIPLAYER_LOST_MESSAGE,
     CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE,
     CLASSIC_SOLO_END_GAME_MESSAGE,
+    DIFFERENCE_NOT_MIDDLE_OFFSET,
     DISABLE_CLOSE,
     LOSING_FLAG,
     PAUSED_ID,
@@ -14,6 +15,7 @@ import {
     WIN_FLAG,
 } from '@app/client-consts';
 import { PopDialogEndgameComponent } from '@app/components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
+import { CompassInformations } from '@app/interfaces/compass-informations';
 import { Coordinate } from '@app/interfaces/coordinate';
 import { ClueHandlerService } from '@app/services/clue-handler.service';
 import { DifferenceDetectionService } from '@app/services/difference-detection.service';
@@ -198,8 +200,21 @@ export class PlayAreaComponent implements OnInit {
         });
 
         this.socketService.on('Clue with difference pixels', (differenceCluePixels: number[]) => {
-            this.clueHandlerService.getCompassInformationsForClue(differenceCluePixels);
-            this.makePixelsBlinkOnCanvas(differenceCluePixels, this.originalCanvas.nativeElement);
+            const compassInfos: CompassInformations = this.clueHandlerService.getCompassInformationsForClue(differenceCluePixels);
+            const blinkModifiedCanvas: HTMLCanvasElement = this.blinkModifiedCanvas.nativeElement;
+            const blinkModifiedCanvasContext: CanvasRenderingContext2D = blinkModifiedCanvas.getContext('2d') as CanvasRenderingContext2D;
+
+            this.drawService.setCanvasTransparent(blinkModifiedCanvas);
+
+            if (compassInfos.isDifferenceClueMiddle) {
+            } else {
+                this.drawService.drawImageOnMiddleOfCanvas(
+                    compassInfos.compassClueImage,
+                    blinkModifiedCanvasContext,
+                    DIFFERENCE_NOT_MIDDLE_OFFSET,
+                    DIFFERENCE_NOT_MIDDLE_OFFSET,
+                );
+            }
         });
 
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {

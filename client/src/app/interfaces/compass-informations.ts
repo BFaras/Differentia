@@ -1,4 +1,4 @@
 export interface CompassInformations {
-    compassImageSrc: string;
+    compassClueImage: HTMLImageElement;
     isDifferenceClueMiddle: boolean;
 }

@@ -108,3 +108,6 @@ export const RESET_INFO_GAME_LIST = 'Liste des jeux';
 
 //Constantes pour les indices
 export const COMPASS_IMAGES_BASIC_PATH = 'assets/compass-images/compass';
+export const COMPASS_WIDTH = 108;
+export const COMPASS_HEIGHT = 100;
+export const DIFFERENCE_NOT_MIDDLE_OFFSET = 0;

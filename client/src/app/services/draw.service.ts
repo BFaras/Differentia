@@ -21,6 +21,13 @@ export class DrawService {
         }, 1000);
     }
 
+    drawImageOnMiddleOfCanvas(
+        imageToDraw: HTMLImageElement,
+        contextToDrawOn: CanvasRenderingContext2D,
+        xPositionOffset: number,
+        yPositionOffset: number,
+    ) {}
+
     setCanvasTransparent(canvas: HTMLCanvasElement) {
         const canvasContext = canvas.getContext('2d')!;
         canvasContext.clearRect(0, 0, canvasContext.canvas.width, canvasContext.canvas.height);
