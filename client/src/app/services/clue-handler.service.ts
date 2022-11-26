@@ -40,7 +40,7 @@ enum CardinalDirection {
 export class ClueHandlerService {
     constructor(private imageToImageDiffService: ImageToImageDifferenceService) {}
 
-    //To test Raph
+    //To test Raph (À voir si les tests fonctionnent)
     findClueQuadrantPixels(clueNb: number, quadrantNb: number): number[] {
         const quadrantPixelsNb: number[] = [];
         const quadrantLimits = this.findQuadrantLimitsFromClueNb(clueNb, quadrantNb);

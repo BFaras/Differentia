@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { FIRST_CLUE_NB } from '@common/const';
+import { FIRST_CLUE_NB, SECOND_CLUE_NB } from '@common/const';
 import { Position } from '@common/position';
 import { Positions } from '@common/positions';
 
@@ -65,5 +65,21 @@ describe('ClueHandlerService', () => {
             endingPosition: testEndingPos,
         };
         expect(service['findQuadrantLimitsFromClueNb'](testClueNb, testQuadrantNb)).toEqual(testPositionsExpected);
+    });
+
+    it('should have (0,0) in pixel positions when the clue is the quadrant 0 on clue first ', () => {
+        const pixelPositionExepected: Position = { x: 0, y: 0 };
+        const testQuadrant = 0;
+        const testClueNb = FIRST_CLUE_NB;
+        const pixelNbExepected = service['convertPositionToPixelNb'](pixelPositionExepected.x, pixelPositionExepected.y);
+        expect(service.findClueQuadrantPixels(testClueNb, testQuadrant)).toContain(pixelNbExepected);
+    });
+
+    it('should have (635,478) in pixel positions when the clue is the quadrant 15 on clue second ', () => {
+        const pixelPositionExepected: Position = { x: 635, y: 478 };
+        const testQuadrant = 15;
+        const testClueNb = SECOND_CLUE_NB;
+        const pixelNbExepected = service['convertPositionToPixelNb'](pixelPositionExepected.x, pixelPositionExepected.y);
+        expect(service.findClueQuadrantPixels(testClueNb, testQuadrant)).toContain(pixelNbExepected);
     });
 });
