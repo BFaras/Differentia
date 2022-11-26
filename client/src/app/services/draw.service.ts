@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { COMPASS_CLUE_ID, DIFFERENCE_NOT_MIDDLE_OFFSET } from '@app/client-consts';
+import { CLUE_MIDDLE_COMPASS_OFFSET_X, COMPASS_CLUE_ID, NO_OFFSET } from '@app/client-consts';
 import { CompassInformations } from '@app/interfaces/compass-informations';
 import { Position } from '@common/position';
 import { ClueHandlerService } from './clue-handler.service';
@@ -26,6 +26,7 @@ export class DrawService {
         }, 1000);
     }
 
+    //To test Raph
     async showCompassClue(differenceCluePixels: number[], canvasToShowOn: HTMLCanvasElement) {
         const compassInfos: CompassInformations = await this.clueHandlerService.getCompassInformationsForClue(differenceCluePixels);
         const canvasToShowOnContext: CanvasRenderingContext2D = canvasToShowOn.getContext('2d') as CanvasRenderingContext2D;
@@ -34,13 +35,9 @@ export class DrawService {
         canvasToShowOn.id = COMPASS_CLUE_ID;
 
         if (compassInfos.isDifferenceClueMiddle) {
+            this.drawImageOnMiddleOfCanvas(compassInfos.compassClueImage, canvasToShowOnContext, CLUE_MIDDLE_COMPASS_OFFSET_X, NO_OFFSET);
         } else {
-            this.drawImageOnMiddleOfCanvas(
-                compassInfos.compassClueImage,
-                canvasToShowOnContext,
-                DIFFERENCE_NOT_MIDDLE_OFFSET,
-                DIFFERENCE_NOT_MIDDLE_OFFSET,
-            );
+            this.drawImageOnMiddleOfCanvas(compassInfos.compassClueImage, canvasToShowOnContext, NO_OFFSET, NO_OFFSET);
         }
     }
 

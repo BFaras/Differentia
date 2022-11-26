@@ -6,11 +6,14 @@ import {
     CLASSIC_MULTIPLAYER_LOST_MESSAGE,
     CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE,
     CLASSIC_SOLO_END_GAME_MESSAGE,
+    COMPASS_BLINK_MILISECONDS,
+    COMPASS_CLUE_ID,
     DISABLE_CLOSE,
     LOSING_FLAG,
     PAUSED_ID,
     STANDARD_POP_UP_HEIGHT,
     STANDARD_POP_UP_WIDTH,
+    THREE_SECONDS,
     WIN_FLAG,
 } from '@app/client-consts';
 import { PopDialogEndgameComponent } from '@app/components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
@@ -197,8 +200,16 @@ export class PlayAreaComponent implements OnInit {
             this.makePixelsBlinkOnCanvas(quandrantPixelsNb, this.modifiedCanvas.nativeElement, true);
         });
 
+        //To test Raph
         this.socketService.on('Clue with difference pixels', async (differenceCluePixels: number[]) => {
             await this.drawService.showCompassClue(differenceCluePixels, this.blinkModifiedCanvas.nativeElement);
+
+            this.blinkModifiedCanvas.nativeElement.id = BLINK_ID;
+            this.numberOfBlinkCalls++;
+            setTimeout(() => {
+                this.numberOfBlinkCalls--;
+                this.blinkModifiedCanvas.nativeElement.id = COMPASS_CLUE_ID;
+            }, COMPASS_BLINK_MILISECONDS);
         });
 
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
@@ -239,7 +250,7 @@ export class PlayAreaComponent implements OnInit {
             if (this.numberOfBlinkCalls <= 0 && blinkModifiedCanvas.id === BLINK_ID) {
                 context.canvas.id = PAUSED_ID;
             }
-        }, 3000);
+        }, THREE_SECONDS);
     }
 
     private makePixelsBlinkOnCanvasCheat(pixelsToBlink: number[], canvasToCopyFrom: HTMLCanvasElement, canvasToCopyOn: HTMLCanvasElement) {
