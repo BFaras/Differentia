@@ -86,6 +86,19 @@ export class RecordTimesService {
             });
     }
 
+    async updateGameRecordTimes(gameName: string, newRecordTimes: GameModeTimes): Promise<void> {
+        let filterQuery: Filter<GameTimes> = { name: 'Plane game' };
+        let updateQuery: UpdateFilter<GameTimes> = {
+            $set: { recordTimes: newRecordTimes },
+        };
+        return this.collection
+            .updateOne(filterQuery, updateQuery)
+            .then(() => {})
+            .catch(() => {
+                throw new Error('Failed to reset this game record times');
+            });
+    }
+
     // async modifyGame(game: Game): Promise<void> {
     //   let filterQuery: Filter<Game> = { name: game.name };
     //   let updateQuery: UpdateFilter<Game> = {
@@ -113,8 +126,8 @@ export class RecordTimesService {
     async getGameTimes(nameOfWantedGame: string): Promise<GameModeTimes> {
         // let filterQuery: Filter<GameTimes> = { name: nameOfWantedGame };
         // let projection: FindOptions = { projection: { recordTimes: 1, _id: 0 } };
-         const times = await this.collection.findOne({ name: nameOfWantedGame });
-         return times!.recordTimes;
+        const times = await this.collection.findOne({ name: 'Plane game' });
+        return times!.recordTimes;
         // return this.collection
         //     .findOne(filterQuery, projection)
         //     .then((gameTimes: WithId<GameTimes>) => {
@@ -125,18 +138,17 @@ export class RecordTimesService {
         //     });
     }
 
-    // async sortGameTimes(gameName: string, isMultiplayer: boolean): Promise<void> {
-    //     if (isMultiplayer) {
-    //         return this.collection
-    //             .updateOne({name: gameName},
-    //                 {$push: {recordTimes: { $each: [], $sort: 1}}})
-    //             .then(() => {})
-    //             .catch(() => {
-    //                 throw new Error('Failed to reset the game record times');
-    //             });
-    //     } else {
-    //     }
-    // }
+    async sortGameTimes(gameName: string, isMultiplayer: boolean): Promise<void> {
+        if (!isMultiplayer) {
+            return this.collection
+                .updateOne({ name: 'Plane game' }, { $push: { 'recordTimes.soloGameTimes': { $each: [], $sort: { time: 1 } } } })
+                .then(() => {})
+                .catch(() => {
+                    throw new Error('Failed to reset the game record times');
+                });
+        } else {
+        }
+    }
 
     // async updateRecordTimes(gameName: string, isMultiplayer: boolean, newTime: string, newUsername: string): Promise<void> {
     //     //   let filterQuery: Filter<GameTimes> = { name: gameName };
