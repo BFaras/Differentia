@@ -5,7 +5,7 @@ import { DrawService } from '@app/services/draw.service';
 import { DEFAULT_HEIGHT_CANVAS, DEFAULT_WIDTH_CANVAs } from '@common/const';
 import { ClueHandlerService } from './clue-handler.service';
 
-fdescribe('DrawService', () => {
+describe('DrawService', () => {
     const diffCluePixelsTest = [5];
     let service: DrawService;
     let clueHandlerService: ClueHandlerService;

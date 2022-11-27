@@ -91,7 +91,7 @@ describe('ClueHandlerService', () => {
     });
 
     it('should return that the difference is in the middle if the differencePosition is at (320, 240)', async () => {
-        const pixelPositionExepected: Position = { x: MIDDLE_OF_IMAGE_POSITION.x, y: MIDDLE_OF_IMAGE_POSITION.x };
+        const pixelPositionExepected: Position = { x: MIDDLE_OF_IMAGE_POSITION.x, y: MIDDLE_OF_IMAGE_POSITION.y };
         const pixelArrayTest = [service['convertPositionToPixelNb'](pixelPositionExepected.x, pixelPositionExepected.y)];
         expect((await service.getCompassInformationsForClue(pixelArrayTest)).isDifferenceClueMiddle).toBeTruthy();
     });
