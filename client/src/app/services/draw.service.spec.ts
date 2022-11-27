@@ -5,7 +5,7 @@ import { DrawService } from '@app/services/draw.service';
 import { DEFAULT_HEIGHT_CANVAS, DEFAULT_WIDTH_CANVAs } from '@common/const';
 import { ClueHandlerService } from './clue-handler.service';
 
-describe('DrawService', () => {
+fdescribe('DrawService', () => {
     const diffCluePixelsTest = [5];
     let service: DrawService;
     let clueHandlerService: ClueHandlerService;
@@ -29,7 +29,7 @@ describe('DrawService', () => {
     });
 
     it(' height should return the height of the grid canvas', () => {
-        expect(service.contextClickOriginalCanvas.canvas.height).toEqual(DEFAULT_WIDTH_CANVAs);
+        expect(service.contextClickOriginalCanvas.canvas.height).toEqual(DEFAULT_HEIGHT_CANVAS);
         expect(service.contextClickModifiedCanvas.canvas.height).toEqual(DEFAULT_HEIGHT_CANVAS);
     });
 
