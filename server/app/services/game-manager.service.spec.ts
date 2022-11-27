@@ -1,3 +1,4 @@
+import { RecordTime } from '@app/classes/record-times';
 import { ServerIOTestHelper } from '@app/classes/server-io-test-helper';
 import { ServerSocketTestHelper } from '@app/classes/server-socket-test-helper';
 import { GAME_ROOM_GENERAL_ID, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
@@ -12,7 +13,6 @@ import { ChronometerService } from './chronometer.service';
 import { GameManagerService } from './game-manager.service';
 import { GamesService } from './local.games.service';
 import { MouseHandlerService } from './mouse-handler.service';
-import {RecordTime} from '@app/classes/record-times'
 
 describe('GameManagerService tests', () => {
     const testGameName = 'test12345';
@@ -22,7 +22,7 @@ describe('GameManagerService tests', () => {
     const testGame: Game = {
         name: testGameName,
         numberOfDifferences: 2,
-        times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+        times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
         images: ['image1', 'image2'],
         differencesList: [
             [599, 666],
@@ -138,13 +138,13 @@ describe('GameManagerService tests', () => {
     });
 
     it('should call deleteRoom() on handleEndGameEmit()', () => {
-        const stub = sinon.stub(gameManagerService, <any>'deleteRoom').callsFake(() => {});
+        const stub = sinon.stub(gameManagerService, 'deleteRoom').callsFake(() => {});
         gameManagerService.handleEndGameEmits(serverSocket, true);
         expect(stub.calledOnce);
     });
 
     it('should call deleteRoom() on handleAbandonEmit()', () => {
-        const spy = sinon.spy(gameManagerService, <any>'deleteRoom');
+        const spy = sinon.spy(gameManagerService, 'deleteRoom');
         serverSocket.join(testSocketId1 + GAME_ROOM_GENERAL_ID);
         gameManagerService.handleAbandonEmit(serverSocket);
         expect(spy);
@@ -215,7 +215,7 @@ describe('GameManagerService tests', () => {
 
         const spy = sinon.spy(gameManagerService.gamesRooms, 'delete');
         const stub = sinon.stub(gameManagerService, 'findSocketGameRoomName');
-        gameManagerService['deleteRoom'](serverSocket);
+        gameManagerService.deleteRoom(serverSocket);
         expect(stub.calledOnce);
         expect(spy.calledOnceWith(testGameName));
     });

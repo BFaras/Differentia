@@ -18,9 +18,9 @@ export const MINIMUM_INITIAL_TIME = 15;
 export const MINIMUM_PENALTY_TIME = 2;
 export const MINIMUM_SAVED_TIME = 2;
 
-export const MAXIMUM_INITIAL_TIME = 160;
-export const MAXIMUM_PENALTY_TIME = 40;
-export const MAXIMUM_SAVED_TIME = 40;
+export const MAXIMUM_INITIAL_TIME = 120;
+export const MAXIMUM_PENALTY_TIME = 30;
+export const MAXIMUM_SAVED_TIME = 30;
 export const TIME_RATIO = 4;
 
 export const EMPTY_TIME = '';

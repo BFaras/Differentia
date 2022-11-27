@@ -13,7 +13,6 @@ import {
     STANDARD_POP_UP_HEIGHT,
     STANDARD_POP_UP_WIDTH,
 } from '@app/client-consts';
-import { PopDialogResetComponent } from '@app/components/pop-dialogs/pop-dialog-reset/pop-dialog-reset.component';
 import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
 import { SocketClientService } from '@app/services/socket-client.service';
 
@@ -55,16 +54,12 @@ export class GameFormComponent {
         });
     }
 
-    openResetDialog() {
-        this.dialog.open(PopDialogResetComponent, {
-            height: '320px',
-            width: '580px',
-            disableClose: true,
-        });
-    }
-
     deleteGameForm(value: string) {
         this.newItemEvent.emit(value);
+    }
+
+    resetTimesBoard(value: string) {
+        this.socketService.send('Reset records time board', value);
     }
 
     setJoinFlag(): void {

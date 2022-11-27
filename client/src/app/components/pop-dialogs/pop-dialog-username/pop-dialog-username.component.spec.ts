@@ -99,7 +99,7 @@ describe('PopDialogUsernameComponent', () => {
     it('should not close dialog when calling closeGameDialog', () => {
         const gameName = 'car game';
         component.gameInfo.nameGame = 'red sky';
-        component['closeGameDialog'](gameName);
+        component['closeGameDialogAfterDelete'](gameName);
         expect(dialog['closeAll']).not.toHaveBeenCalled();
     });
 
@@ -107,7 +107,7 @@ describe('PopDialogUsernameComponent', () => {
         const gameName = 'car game';
         component.gameInfo.nameGame = gameName;
         const spy = spyOn(socketClientServiceMock, 'send');
-        component['closeGameDialog'](gameName);
+        component['closeGameDialogAfterDelete'](gameName);
         expect(dialog['closeAll']).toHaveBeenCalled();
         expect(spy).toHaveBeenCalled();
     });
@@ -122,8 +122,11 @@ describe('PopDialogUsernameComponent', () => {
     });
 
     it('should close many dialogs', () => {
+        let fixture1 = TestBed.createComponent(PopDialogUsernameComponent);
+        let component1 = fixture1.componentInstance;
         const gameName = ['car game', 'blue sky'];
-        component.gameInfo.nameGame = gameName;
+        component.gameInfo.nameGame = gameName[0];
+        component1.gameInfo.nameGame = gameName[1];
         const closeDialogSpy = spyOn(component, <any>'closeGameDialog');
         socketTestHelper.peerSideEmit('close popDialogUsername', gameName);
         component['configureUsernamePopUpSocketFeatures']();
@@ -134,12 +137,12 @@ describe('PopDialogUsernameComponent', () => {
         const gameName = 'car game';
         component.gameInfo.nameGame = 'blue game';
         socketTestHelper.peerSideEmit('close popDialogUsername', gameName);
-        component['closeGameDialog'](gameName);
+        component['closeGameDialogAfterDelete'](gameName);
         expect(dialog['closeAll']).not.toHaveBeenCalled();
     });
 
     it('should open the dialog when calling openDialog', () => {
-        component['openDialog']();
+        component['openClassicDialog']();
         expect(dialog['open']).toHaveBeenCalled();
     });
 

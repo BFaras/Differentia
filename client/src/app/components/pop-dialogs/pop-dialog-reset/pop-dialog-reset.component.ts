@@ -52,7 +52,9 @@ export class PopDialogResetComponent implements OnInit {
     }
 
     resetData() {
-        if (this.resetRecordsTimeBoard) console.log('RESET');
+        if (this.resetRecordsTimeBoard) {
+            this.socketService.send('Reset records time board');
+        }
         if (this.resetTimeConstants) this.socketService.send('Set time constants', this.timeConstants);
         if (this.resetGameFormList) {
             this.socketService.send('Reset game list');

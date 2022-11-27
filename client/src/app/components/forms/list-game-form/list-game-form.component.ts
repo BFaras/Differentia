@@ -9,12 +9,13 @@ import {
     RESET_MSG_GAME_LIST,
     SNACKBAR_DURATION,
     SNACKBAR_HORIZONTAL_POSITION,
-    SNACKBAR_VERTICAL_POSITION
+    SNACKBAR_VERTICAL_POSITION,
 } from '@app/client-consts';
 import { CommunicationService } from '@app/services/communication.service';
 import { FormService } from '@app/services/form.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { Constants } from '@common/config';
+import { MSG_RESET_ALL_TIME, MSG_RESET_TIME } from '@common/const';
 
 @Component({
     selector: 'app-list-game-form',
@@ -26,12 +27,11 @@ export class ListGameFormComponent implements OnInit {
     lastElementIndex: number = LAST_GAMEFORMS_INDEX;
     currentPageGameFormList: GameFormDescription[];
     gameListToRefresh: boolean = true;
-    numberOfGames:number;
-    reloadState: boolean = true
+    numberOfGames: number;
+    reloadState: boolean = true;
     private messageForUpdate: string = EMPTY_MESSAGE;
     private horizontalPosition: MatSnackBarHorizontalPosition = SNACKBAR_HORIZONTAL_POSITION;
     private verticalPosition: MatSnackBarVerticalPosition = SNACKBAR_VERTICAL_POSITION;
-
 
     @Input() page: string;
 
@@ -46,7 +46,7 @@ export class ListGameFormComponent implements OnInit {
     async ngOnInit() {
         this.config(this.messageForUpdate);
         await this.formService.receiveGameInformations();
-        this.reloadState = false
+        this.reloadState = false;
         if (this.formService.gameForms?.length < Constants.MAX_NB_OF_FORMS_PER_PAGE) {
             this.lastElementIndex = this.formService.gameForms?.length - 1;
         }
@@ -63,11 +63,8 @@ export class ListGameFormComponent implements OnInit {
                 this.lastElementIndex = this.formService.gameForms.length - 1;
             }
 
-           
-
             this.addCurrentPageGameForms();
         }
-
     }
 
     previousPageGameForms() {
@@ -81,15 +78,19 @@ export class ListGameFormComponent implements OnInit {
 
     private addCurrentPageGameForms() {
         this.currentPageGameFormList = new Array(this.lastElementIndex - this.firstElementIndex + 1);
-        console.log('fdsdf')
         for (let index: number = 0; index < this.currentPageGameFormList.length; index++) {
             this.currentPageGameFormList[index] = this.formService.gameForms[index + this.firstElementIndex];
         }
-        this.numberOfGames = this.currentPageGameFormList.length
+        this.numberOfGames = this.currentPageGameFormList.length;
     }
 
     private openSnackBar(gameName: string | string[]) {
-        let msg = Array.isArray(gameName) ? RESET_MSG_GAME_LIST : `Le jeu ${gameName} a été supprimé :(`;
+        let msg: string;
+        if (gameName === MSG_RESET_TIME || gameName === MSG_RESET_ALL_TIME) {
+            msg = gameName.toString();
+        } else {
+            msg = Array.isArray(gameName) ? RESET_MSG_GAME_LIST : `Le jeu ${gameName} a été supprimé :(`;
+        }
         this.snackBar.open(msg, 'OK', {
             horizontalPosition: this.horizontalPosition,
             verticalPosition: this.verticalPosition,
@@ -129,9 +130,9 @@ export class ListGameFormComponent implements OnInit {
 
     async deleteAndRefreshGames(gameName: string) {
         this.communicationService.deleteGame(gameName).subscribe((games) => {
-            this.messageForUpdate = gameName;
+            // this.messageForUpdate = gameName;
             this.formService.gamelist = games;
-            this.config(this.messageForUpdate);
+            this.config(gameName);
         });
     }
 }

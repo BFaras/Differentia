@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogInputComponent } from '@app/components/dialog-input/dialog-input.component';
+import { PopDialogResetComponent } from '@app/components/pop-dialogs/pop-dialog-reset/pop-dialog-reset.component';
 import { GameTimeSetting } from '@app/interfaces/game-time-setting';
 
 @Component({
@@ -23,6 +24,14 @@ export class AdminPageComponent {
             width: '580px',
             disableClose: true,
             data: this.gameTimeSettings,
+        });
+    }
+
+    openResetDialog() {
+        this.dialog.open(PopDialogResetComponent, {
+            height: '320px',
+            width: '580px',
+            disableClose: true,
         });
     }
 }

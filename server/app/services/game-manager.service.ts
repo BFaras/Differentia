@@ -7,7 +7,7 @@ import {
     LIMITED_TIME_MODE,
     MODIFIED_IMAGE_POSITION,
     NO_OTHER_PLAYER_ROOM,
-    ORIGINAL_IMAGE_POSITION
+    ORIGINAL_IMAGE_POSITION,
 } from '@common/const';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
@@ -282,7 +282,7 @@ export class GameManagerService {
         this.gamesRooms.set(gameName, rooms);
     }
 
-    private deleteRoom(socket: io.Socket): void {
+    deleteRoom(socket: io.Socket): void {
         const gameRoomName = this.findSocketGameRoomName(socket);
         let gameName = '';
         for (const rooms of this.gamesRooms.entries()) {
@@ -342,7 +342,7 @@ export class GameManagerService {
         return socket.data.username;
     }
 
-    getSocketGameName(socket:io.Socket): string {
+    getSocketGameName(socket: io.Socket): string {
         const gameRoomName = this.findSocketGameRoomName(socket);
         let gameName = '';
         for (const rooms of this.gamesRooms.entries()) {
