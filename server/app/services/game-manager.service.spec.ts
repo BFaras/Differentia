@@ -1,7 +1,7 @@
 import { RecordTime } from '@app/classes/record-times';
 import { ServerIOTestHelper } from '@app/classes/server-io-test-helper';
 import { ServerSocketTestHelper } from '@app/classes/server-socket-test-helper';
-import { GAME_ROOM_GENERAL_ID, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
+import { CLASSIC_MODE, GAME_ROOM_GENERAL_ID, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
 import { Game } from '@common/game';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
@@ -79,43 +79,43 @@ describe('GameManagerService tests', () => {
 
     it('should call setupSocketGameRoom() on beginGame()', async () => {
         const spy = sinon.spy(gameManagerService, <any>'setupSocketGameRoom');
-        await gameManagerService.beginGame(serverSocket, testGameName);
+        await gameManagerService.beginGame(serverSocket, [testGameName, CLASSIC_MODE]);
         expect(spy.calledOnce);
     });
 
     it('should call setupNecessaryGameServices() on begin game', async () => {
         const spy = sinon.spy(gameManagerService, <any>'setupNecessaryGameServices');
-        await gameManagerService.beginGame(serverSocket, testGameName);
+        await gameManagerService.beginGame(serverSocket, [testGameName, CLASSIC_MODE]);
         expect(spy.calledOnce);
     });
 
     it('should beginGame() should call generateDifferencesInformations() from MouseHandlerService on beginGame()', async () => {
         const spy = sinon.spy(mouseHandlerService, 'generateDifferencesInformations');
-        await gameManagerService.beginGame(serverSocket, testGameName);
+        await gameManagerService.beginGame(serverSocket, [testGameName, CLASSIC_MODE]);
         expect(spy.calledOnce);
     });
 
     it('should beginGame() should call addPlayerToGame() from MouseHandlerService on beginGame()', async () => {
         const spy = sinon.spy(mouseHandlerService, 'addPlayerToGame');
-        await gameManagerService.beginGame(serverSocket, testGameName);
+        await gameManagerService.beginGame(serverSocket, [testGameName, CLASSIC_MODE]);
         expect(spy.calledOnce);
     });
 
     it('should call sendImagesToClient() on beginGame()', async () => {
         const spy = sinon.spy(gameManagerService, <any>'sendImagesToClient');
-        await gameManagerService.beginGame(serverSocket, testGameName);
+        await gameManagerService.beginGame(serverSocket, [testGameName, CLASSIC_MODE]);
         expect(spy.calledOnce);
     });
 
     it('should call beginGame() on startMultiplayerMatch()', async () => {
         const spy = sinon.spy(gameManagerService, 'beginGame');
-        await gameManagerService.startMultiplayerMatch(serverSocket, serverSocket2, testGameName);
+        await gameManagerService.startMultiplayerMatch(serverSocket, serverSocket2, [testGameName, CLASSIC_MODE]);
         expect(spy.calledOnce);
     });
 
     it('should call findSocketGameRoomName() on startMultiplayerMatch()', async () => {
         const spy = sinon.spy(gameManagerService, <any>'findSocketGameRoomName');
-        await gameManagerService.startMultiplayerMatch(serverSocket, serverSocket2, testGameName);
+        await gameManagerService.startMultiplayerMatch(serverSocket, serverSocket2, [testGameName, CLASSIC_MODE]);
         expect(spy.calledOnce);
     });
 
@@ -146,7 +146,7 @@ describe('GameManagerService tests', () => {
     it('should call deleteRoom() on handleAbandonEmit()', () => {
         const spy = sinon.spy(gameManagerService, 'deleteRoom');
         serverSocket.join(testSocketId1 + GAME_ROOM_GENERAL_ID);
-        gameManagerService.handleAbandonEmit(serverSocket);
+        gameManagerService.handleAbandonEmit(serverSocket, CLASSIC_MODE);
         expect(spy);
     });
 
@@ -158,7 +158,7 @@ describe('GameManagerService tests', () => {
 
     it('should call endChrono() on endGame()', () => {
         const spy = sinon.spy(gameManagerService, <any>'endChrono');
-        gameManagerService.endGame(serverSocket);
+        gameManagerService.endGame(serverSocket, CLASSIC_MODE);
         expect(spy.calledOnce);
     });
 
