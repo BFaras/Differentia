@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
+import { CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE, CLASSIC_MULTIPLAYER_LOST_MESSAGE, CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE } from '@app/client-consts';
 import { ClueHandlerService } from '@app/services/clue-handler.service';
 import { DifferenceDetectionService } from '@app/services/difference-detection.service';
 import { DrawService } from '@app/services/draw.service';
@@ -10,14 +11,7 @@ import { ImageGeneratorService } from '@app/services/image-generator.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { ClueInformations } from '@common/clue-informations';
-import {
-    CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE,
-    CLASSIC_MULTIPLAYER_LOST_MESSAGE,
-    CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE,
-    DEFAULT_USERNAME,
-    IMAGE_HEIGHT,
-    IMAGE_WIDTH,
-} from '@common/const';
+import { DEFAULT_USERNAME, IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
@@ -124,7 +118,7 @@ describe('PlayAreaComponent', () => {
     });
 
     it('should open dialog', () => {
-        component['openEndGameDialog']('Hello');
+        component['openEndGameDialog']('Hello', false);
         expect(matDialogSpy).toBeTruthy();
     });
 

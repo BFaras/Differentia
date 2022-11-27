@@ -23,11 +23,10 @@ describe('JoinGameService', () => {
     });
 
     it('should joinGame() call send()', () => {
-      const potentialAdversaryName = 'testName1234';
-      const spy = spyOn(socketService, 'send').and.callThrough();
-      service.joinGame(testGameName, potentialAdversaryName);
-      expect(spy).toHaveBeenCalled();
-  });
+        const spy = spyOn(socketService, 'send').and.callThrough();
+        service.joinGame(testGameName);
+        expect(spy).toHaveBeenCalled();
+    });
 
     it('should leaveJoiningProcess() call send()', () => {
         const spy = spyOn(socketService, 'send').and.callThrough();
