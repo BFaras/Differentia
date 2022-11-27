@@ -26,7 +26,6 @@ export class DrawService {
         }, 1000);
     }
 
-    //To test Raph (À voir si les tests fonctionnent)
     async showCompassClue(differenceCluePixels: number[], canvasToShowOn: HTMLCanvasElement) {
         const compassInfos: CompassInformations = await this.clueHandlerService.getCompassInformationsForClue(differenceCluePixels);
         const canvasToShowOnContext: CanvasRenderingContext2D = canvasToShowOn.getContext('2d') as CanvasRenderingContext2D;

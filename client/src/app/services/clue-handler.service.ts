@@ -40,7 +40,6 @@ export enum CardinalDirection {
 export class ClueHandlerService {
     constructor(private imageToImageDiffService: ImageToImageDifferenceService) {}
 
-    //To test Raph (À voir si les tests fonctionnent)
     findClueQuadrantPixels(clueNb: number, quadrantNb: number): number[] {
         const quadrantPixelsNb: number[] = [];
         const quadrantLimits = this.findQuadrantLimitsFromClueNb(clueNb, quadrantNb);
@@ -54,7 +53,6 @@ export class ClueHandlerService {
         return quadrantPixelsNb;
     }
 
-    //To test Raph (À voir si les tests fonctionnent)
     async getCompassInformationsForClue(differencePixels: number[]): Promise<CompassInformations> {
         const compassCardinalDirection = this.findDifferenceCardinalDirection(differencePixels);
 
