@@ -36,7 +36,7 @@ describe('SocketManager service tests', () => {
     let clientSocket: Socket;
     const differenceDetectorService: DifferenceDetectorService = new DifferenceDetectorService(imagesData);
     const mouseHandlerService: MouseHandlerService = new MouseHandlerService();
-    let gameManagerServiceBeginGameStub: sinon.SinonStub<[socket: io.Socket, gameName: string, adversarySocket?: io.Socket], Promise<void>>;
+    let gameManagerServiceBeginGameStub: sinon.SinonStub<[socket: io.Socket, gameInfo: string[], adversarySocket?: io.Socket], Promise<void>>;
     const waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
 
     const urlString = 'http://localhost:3000';
@@ -205,7 +205,7 @@ describe('SocketManager service tests', () => {
         const getPresenceOfJoiningPlayersSpy = sinon.spy(service['waitingLineHandlerService'], 'getIDFirstPlayerWaiting');
         const updateJoiningPlayerSpy = sinon.spy(service['waitingLineHandlerService'], 'updateJoiningPlayer');
         service['waitingLineHandlerService'].addCreatingPlayer(testGameName, clientSocket.id);
-        service['waitingLineHandlerService'].addJoiningPlayer(clientSocket.id, [testGameName]);
+        service['waitingLineHandlerService'].addJoiningPlayer(clientSocket.id, testGameName);
         clientSocket.emit('I dont want to join anymore', testGameName);
         clientSocket.once(`${testGameName} someone is trying to join`, () => {
             expect(getPresenceOfJoiningPlayersSpy.calledOnce);
@@ -237,7 +237,7 @@ describe('SocketManager service tests', () => {
 
     it("should handle 'launch classic mode multiplayer match' event and tell the other joining players that the host started a match", (done) => {
         service['waitingLineHandlerService'].addCreatingPlayer(testGameName, clientSocket.id);
-        service['waitingLineHandlerService'].addJoiningPlayer(testGameName, [testGameName]);
+        service['waitingLineHandlerService'].addJoiningPlayer(testGameName, testGameName);
         sinon.stub(GameManagerService.prototype, <any>'startMultiplayerMatch').callsFake(() => {});
         sinon.stub(service['waitingLineHandlerService'], 'deleteJoiningPlayer').callsFake(() => {});
 
@@ -253,7 +253,7 @@ describe('SocketManager service tests', () => {
 
     it("should handle 'I refuse this adversary' event", () => {
         service['waitingLineHandlerService'].addCreatingPlayer(testGameName, clientSocket.id);
-        service['waitingLineHandlerService'].addJoiningPlayer(clientSocket.id, [testGameName]);
+        service['waitingLineHandlerService'].addJoiningPlayer(clientSocket.id, testGameName);
         const getIDSpy = sinon.spy(service['waitingLineHandlerService'], 'getIDFirstPlayerWaiting');
         const deleteJoiningPlayerSpy = sinon.spy(service['waitingLineHandlerService'], 'deleteJoiningPlayer');
         clientSocket.emit('I refuse this adversary', testGameName);
@@ -268,7 +268,7 @@ describe('SocketManager service tests', () => {
 
     it("should handle 'I refuse this adversary' event and tell the creator that no one else is waiting", () => {
         service['waitingLineHandlerService'].addCreatingPlayer(testGameName, clientSocket.id);
-        service['waitingLineHandlerService'].addJoiningPlayer(clientSocket.id, [testGameName]);
+        service['waitingLineHandlerService'].addJoiningPlayer(clientSocket.id, testGameName);
         const getIDSpy = sinon.spy(service['waitingLineHandlerService'], 'getIDFirstPlayerWaiting');
         const deleteJoiningPlayerSpy = sinon.spy(service['waitingLineHandlerService'], 'deleteJoiningPlayer');
         clientSocket.emit('I refuse this adversary', testGameName);

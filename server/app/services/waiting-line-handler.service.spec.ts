@@ -11,7 +11,6 @@ describe('WaitingLineHandlerService tests', () => {
     let socket: io.Socket;
     let event = 'event';
     let waitingLineHandlerService: WaitingLineHandlerService;
-    let gameInfo = ['info1', 'info2'];
     let addJoiningPlayerIdSpy: sinon.SinonSpy;
     let deleteJoiningPlayerIdSpy: sinon.SinonSpy;
     let playergetSpy: sinon.SinonSpy;
@@ -41,8 +40,8 @@ describe('WaitingLineHandlerService tests', () => {
         playerCreatorsetSpy = sinon.spy(waitingLineHandlerService['playersCreatingAGame'], 'set');
         playerCreatorgetSpy = sinon.spy(waitingLineHandlerService['playersCreatingAGame'], 'get');
 
-        addJoiningPlayerIdSpy = sinon.spy(waitingLineHandlerService, <any> 'addJoiningPlayerId');
-        deleteJoiningPlayerIdSpy = sinon.spy(waitingLineHandlerService, <any> 'deleteJoiningPlayerId');
+        addJoiningPlayerIdSpy = sinon.spy(waitingLineHandlerService, <any>'addJoiningPlayerId');
+        deleteJoiningPlayerIdSpy = sinon.spy(waitingLineHandlerService, <any>'deleteJoiningPlayerId');
 
         getIDFirstPlayerWaitingSpy = sinon.spy(waitingLineHandlerService, 'getIDFirstPlayerWaiting');
         getUsernamePlayerSpy = sinon.spy(waitingLineHandlerService, 'getUsernamePlayer');
@@ -66,7 +65,7 @@ describe('WaitingLineHandlerService tests', () => {
 
     it('should add joining PlayerId when addJoiningPlayer is called ', () => {
         waitingLineHandlerService['playersJoiningAGame'].set(testGameName, [testSocketId1]);
-        waitingLineHandlerService.addJoiningPlayer(testSocketId1, gameInfo);
+        waitingLineHandlerService.addJoiningPlayer(testSocketId1, testGameName);
         expect(addJoiningPlayerIdSpy.calledOnce);
     });
 
