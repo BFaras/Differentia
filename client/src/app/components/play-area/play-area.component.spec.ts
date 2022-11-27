@@ -3,7 +3,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
-import { CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE, CLASSIC_MULTIPLAYER_LOST_MESSAGE, CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE } from '@app/client-consts';
+import {
+    BLINK_ID,
+    CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE,
+    CLASSIC_MULTIPLAYER_LOST_MESSAGE,
+    CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE,
+    PAUSED_ID,
+    THREE_SECONDS,
+} from '@app/client-consts';
 import { ClueHandlerService } from '@app/services/clue-handler.service';
 import { DifferenceDetectionService } from '@app/services/difference-detection.service';
 import { DrawService } from '@app/services/draw.service';
@@ -11,7 +18,7 @@ import { ImageGeneratorService } from '@app/services/image-generator.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { ClueInformations } from '@common/clue-informations';
-import { DEFAULT_USERNAME, IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
+import { CLASSIC_MODE, DEFAULT_USERNAME, IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
@@ -156,12 +163,13 @@ describe('PlayAreaComponent', () => {
 
     it('should set the context 5 to blink then to paused', () => {
         differencesFoundInfo.isValidDifference = true;
-        differencesFoundInfo.differencePixelsNumbers = [];
-        socketTestHelper.peerSideEmit('Valid click', differencesFoundInfo);
+        differencesFoundInfo.differencePixelsNumbers = [5];
+        component.mode = CLASSIC_MODE;
         component['configurePlayAreaSocket']();
-        expect(component['blinkModifiedCanvas'].nativeElement.id).toEqual('blink');
-        jasmine.clock().tick(3000);
-        expect(component['blinkModifiedCanvas'].nativeElement.id).toEqual('paused');
+        socketTestHelper.peerSideEmit('Valid click', differencesFoundInfo);
+        expect(component['blinkModifiedCanvas'].nativeElement.id).toEqual(BLINK_ID);
+        jasmine.clock().tick(THREE_SECONDS);
+        expect(component['blinkModifiedCanvas'].nativeElement.id).toEqual(PAUSED_ID);
     });
 
     it('should call end game event when the user win', () => {
@@ -174,7 +182,7 @@ describe('PlayAreaComponent', () => {
         socketTestHelper.peerSideEmit('End game', endGameInfos);
         component['configurePlayAreaSocket']();
 
-        expect(spy).toHaveBeenCalledWith(CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE);
+        expect(spy).toHaveBeenCalledWith(CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE, true);
     });
 
     it('should call end game event when the user abandon', () => {
@@ -187,7 +195,7 @@ describe('PlayAreaComponent', () => {
         socketTestHelper.peerSideEmit('End game', endGameInfos);
         component['configurePlayAreaSocket']();
 
-        expect(spy).toHaveBeenCalledWith(CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE);
+        expect(spy).toHaveBeenCalledWith(CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE, true);
     });
 
     it('should call end game event when the user lose', () => {
@@ -200,7 +208,7 @@ describe('PlayAreaComponent', () => {
         component['configurePlayAreaSocket']();
         socketTestHelper.peerSideEmit('End game', endGameInfos);
 
-        expect(spy).toHaveBeenCalledWith(CLASSIC_MULTIPLAYER_LOST_MESSAGE);
+        expect(spy).toHaveBeenCalledWith(CLASSIC_MULTIPLAYER_LOST_MESSAGE, false);
     });
 
     it('should handle clue key pressed and send get clue for player', () => {
@@ -240,14 +248,6 @@ describe('PlayAreaComponent', () => {
         expect(spy).toHaveBeenCalled();
     });
 
-    it('should handle a Clue with difference pixels event and call makePixelsBlinkOnCanvas()', () => {
-        const cluePixels = [1, 2, 3];
-        const spy = spyOn(component, <any>'makePixelsBlinkOnCanvas').and.callFake(() => {});
-        component['configurePlayAreaSocket']();
-        socketTestHelper.peerSideEmit('Clue with difference pixels', cluePixels);
-        expect(spy).toHaveBeenCalled();
-    });
-
     it('should change the canvas id to paused even if makePixelsBlinkOnCanvas is called two times', () => {
         const pixelsToBlink = [1, 2, 3];
         component['makePixelsBlinkOnCanvas'](pixelsToBlink, component['blinkOriginalCanvas'].nativeElement);
@@ -259,25 +259,24 @@ describe('PlayAreaComponent', () => {
 
     it('should call setCanvasTransparent() from DrawService and not handleKeyboardCheat() on a game images event when cheat mode is off', () => {
         const spy = spyOn(component, 'handleKeyboardCheat').and.callFake(() => {});
-        expect(drawServiceSpy.setCanvasTransparent).toHaveBeenCalled();
         component['configurePlayAreaSocket']();
         component['isCheatActivated'] = false;
         socketTestHelper.peerSideEmit('game images');
+        expect(drawServiceSpy.setCanvasTransparent).toHaveBeenCalled();
         expect(spy).not.toHaveBeenCalled();
     });
 
-    it('should call setCanvasTransparent() from DrawService and handleKeyboardCheat() on a game images event when cheat mode is on', () => {
-        const spy = spyOn(component, 'handleKeyboardCheat').and.callFake(() => {});
-        expect(drawServiceSpy.setCanvasTransparent).toHaveBeenCalled();
+    it('should call setCanvasTransparent() from DrawService on a game images event when cheat mode is on', () => {
+        spyOn(component, <any>'loadImages').and.returnValue(Promise.resolve());
         component['configurePlayAreaSocket']();
         component['isCheatActivated'] = true;
         socketTestHelper.peerSideEmit('game images');
-        expect(spy).toHaveBeenCalled();
+        expect(drawServiceSpy.setCanvasTransparent).toHaveBeenCalled();
     });
 
     it('should call showCompassClue() from DrawService on a Clue with difference pixels event', () => {
         component['configurePlayAreaSocket']();
-        socketTestHelper.peerSideEmit('game images');
+        socketTestHelper.peerSideEmit('Clue with difference pixels');
         expect(drawServiceSpy.showCompassClue).toHaveBeenCalled();
     });
 

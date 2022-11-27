@@ -85,14 +85,6 @@ export class PlayAreaComponent implements OnInit {
         await this.loadImages();
     }
 
-    async loadImages(): Promise<void> {
-        await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[ORIGINAL_IMAGE_POSITION]);
-        await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[MODIFIED_IMAGE_POSITION]);
-        this.reloadState = false;
-        this.displayImages();
-        this.setClickCanvasesTransparent();
-    }
-
     detectDifference(event: MouseEvent) {
         this.mouseDetection.mouseHitDetect(event);
     }
@@ -105,6 +97,14 @@ export class PlayAreaComponent implements OnInit {
                 gameMode: this.mode,
             },
         });
+    }
+
+    private async loadImages(): Promise<void> {
+        await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[ORIGINAL_IMAGE_POSITION]);
+        await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[MODIFIED_IMAGE_POSITION]);
+        this.reloadState = false;
+        this.displayImages();
+        this.setClickCanvasesTransparent();
     }
 
     private setClickCanvasesTransparent() {
