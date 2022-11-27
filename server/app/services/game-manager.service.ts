@@ -35,7 +35,7 @@ export class GameManagerService {
 
     async beginGame(socket: io.Socket, gameInfo: string[], adversarySocket?: io.Socket) {
         this.setupSocketGameRoom(socket, NO_OTHER_PLAYER_ROOM);
-        this.setupNecessaryGameServices(socket, gameInfo[1]);
+        await this.setupNecessaryGameServices(socket, gameInfo[1]);
         await this.getSocketMouseHandlerService(socket).generateDifferencesInformations(gameInfo[0]);
         this.clueManagerService.resetSocketClueAmount(socket);
         this.getSocketMouseHandlerService(socket).addPlayerToGame(socket.id);
@@ -78,6 +78,11 @@ export class GameManagerService {
         const differencesInfo: GameplayDifferenceInformations = this.getSocketMouseHandlerService(socket).isValidClick(mousePosition, socket.id);
         differencesInfo.socketId = socket.id;
         differencesInfo.playerUsername = this.getSocketUsername(socket);
+        if (differencesInfo.isValidDifference && socket.data.gameMode === LIMITED_TIME_MODE) {
+            const gameRoomName = this.findSocketGameRoomName(socket);
+            const chronometerService = this.getRoomChronometerService(gameRoomName);
+            chronometerService.increaseTimeByBonusTime();
+        }
         this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
     }
 
@@ -167,11 +172,11 @@ export class GameManagerService {
         return this.chronometerServices.get(gameRoomName) as ChronometerService;
     }
 
-    async doWeHaveToSwitchGame(socket: io.Socket, mode: string, adversarySocket?: io.Socket) {
+    async doWeHaveToSwitchGame(socket: io.Socket, mode: string, adversarySocket?: io.Socket): Promise<void> {
         if (mode === LIMITED_TIME_MODE) await this.switchGame(socket, adversarySocket);
     }
 
-    endGameWithDependencies(socket: io.Socket, hasTheTimerHitZero?: boolean, noMoreGames?: boolean) {
+    endGameWithDependencies(socket: io.Socket, hasTheTimerHitZero?: boolean, noMoreGames?: boolean): void {
         const gameRoomName: string = this.findSocketGameRoomName(socket);
         this.endChrono(socket);
         this.chronometerServices.delete(gameRoomName);
@@ -182,7 +187,7 @@ export class GameManagerService {
         this.sio.in(gameRoomName).socketsLeave(gameRoomName);
     }
 
-    collectAllSocketsRooms() {
+    collectAllSocketsRooms(): string[] {
         for (const rooms of this.getGameRooms().entries()) {
             if (this.allSocketsRooms.length === 0)
                 rooms[1].forEach((room) => {
@@ -191,6 +196,23 @@ export class GameManagerService {
             else this.allSocketsRooms = this.allSocketsRooms.concat(rooms[1]);
         }
         return this.allSocketsRooms;
+    }
+
+    getSocketUsername(socket: io.Socket): string {
+        return socket.data.username;
+    }
+
+    getSocketGameName(socket: io.Socket): string {
+        const gameRoomName = this.findSocketGameRoomName(socket);
+        let gameName = '';
+        for (const rooms of this.gamesRooms.entries()) {
+            rooms[1].forEach((value) => {
+                if (value === gameRoomName) {
+                    gameName = rooms[0];
+                }
+            });
+        }
+        return gameName;
     }
 
     private async switchGame(socket: io.Socket, adversarySocket?: io.Socket): Promise<void> {
@@ -240,10 +262,10 @@ export class GameManagerService {
         socket.data.gamesPlayed = [];
     }
 
-    private setupNecessaryGameServices(socket: io.Socket, gameMode: string) {
+    private async setupNecessaryGameServices(socket: io.Socket, gameMode: string) {
         const mouseHandler: MouseHandlerService = new MouseHandlerService();
         const chronometerService: ChronometerService = new ChronometerService();
-        chronometerService.setChronometerMode(gameMode, socket);
+        await chronometerService.setChronometerMode(gameMode, socket);
         const gameRoomName = this.findSocketGameRoomName(socket);
         this.sendFirstTime(gameRoomName, chronometerService);
 
@@ -313,11 +335,12 @@ export class GameManagerService {
     }
 
     private emitTime(chronometerService: ChronometerService, gameRoomName: string, socket: io.Socket) {
-        chronometerService.changeTime();
-        this.sio.to(gameRoomName).emit('time', chronometerService.time);
         if (chronometerService.hasTheChronoHitZero()) {
             this.eraseGamesFromHistoryLimitedTimeMode(socket);
             this.endGameWithDependencies(socket, TIMER_HIT_ZERO);
+        } else {
+            chronometerService.changeTime();
+            this.sio.to(gameRoomName).emit('time', chronometerService.time);
         }
     }
 
@@ -336,22 +359,5 @@ export class GameManagerService {
     private endChrono(socket: io.Socket) {
         clearInterval(this.getSocketTimeInterval(socket));
         this.getSocketChronometerService(socket)?.resetChrono();
-    }
-
-    getSocketUsername(socket: io.Socket) {
-        return socket.data.username;
-    }
-
-    getSocketGameName(socket: io.Socket): string {
-        const gameRoomName = this.findSocketGameRoomName(socket);
-        let gameName = '';
-        for (const rooms of this.gamesRooms.entries()) {
-            rooms[1].forEach((value) => {
-                if (value === gameRoomName) {
-                    gameName = rooms[0];
-                }
-            });
-        }
-        return gameName;
     }
 }
