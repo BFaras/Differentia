@@ -68,6 +68,7 @@ describe('PlayAreaComponent', () => {
             'contextClickModifiedCanvas',
             'drawWord',
             'setCanvasTransparent',
+            'showCompassClue',
         ]);
         imageGeneratorSpy = jasmine.createSpyObj('ImageGeneratorService', ['copyCertainPixelsFromOneImageToACanvas']);
         imageDifferenceSpy = jasmine.createSpyObj('ImageToImageDifferenceService', ['waitForImageToLoad']);
@@ -260,6 +261,24 @@ describe('PlayAreaComponent', () => {
         component['makePixelsBlinkOnCanvas'](pixelsToBlink, component['blinkOriginalCanvas'].nativeElement);
         jasmine.clock().tick(3000);
         expect(component['blinkModifiedCanvas'].nativeElement.id).toEqual('paused');
+    });
+
+    it('should call setCanvasTransparent() from DrawService and not handleKeyboardCheat() on a game images event when cheat mode is off', () => {
+        const spy = spyOn(component, 'handleKeyboardCheat').and.callFake(() => {});
+        expect(drawServiceSpy.setCanvasTransparent).toHaveBeenCalled();
+        component['configurePlayAreaSocket']();
+        component['isCheatActivated'] = false;
+        socketTestHelper.peerSideEmit('game images');
+        expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('should call setCanvasTransparent() from DrawService and handleKeyboardCheat() on a game images event when cheat mode is on', () => {
+        const spy = spyOn(component, 'handleKeyboardCheat').and.callFake(() => {});
+        expect(drawServiceSpy.setCanvasTransparent).toHaveBeenCalled();
+        component['configurePlayAreaSocket']();
+        component['isCheatActivated'] = true;
+        socketTestHelper.peerSideEmit('game images');
+        expect(spy).not.toHaveBeenCalled();
     });
 
     afterEach(() => {
