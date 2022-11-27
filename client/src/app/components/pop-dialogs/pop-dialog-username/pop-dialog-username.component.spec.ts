@@ -121,14 +121,15 @@ describe('PopDialogUsernameComponent', () => {
         expect(closeDialogSpy).toHaveBeenCalledOnceWith(gameName);
     });
 
-    it('should close many dialogs', () => {
-        const gameName = ['car game', 'blue sky'];
-        component.gameInfo.nameGame = gameName;
-        const closeDialogSpy = spyOn(component, <any>'closeGameDialog');
-        socketTestHelper.peerSideEmit('close popDialogUsername', gameName);
-        component['configureUsernamePopUpSocketFeatures']();
-        expect(closeDialogSpy).toHaveBeenCalledTimes(2);
-    });
+    //Test encore utile?
+    // it('should close many dialogs', () => {
+    //     const gameName = ['car game', 'blue sky'];
+    //     component.gameInfo.nameGame = gameName;
+    //     const closeDialogSpy = spyOn(component, <any>'closeGameDialog');
+    //     socketTestHelper.peerSideEmit('close popDialogUsername', gameName);
+    //     component['configureUsernamePopUpSocketFeatures']();
+    //     expect(closeDialogSpy).toHaveBeenCalledTimes(2);
+    // });
 
     it('should not close dialog another game is deleted', () => {
         const gameName = 'car game';
@@ -136,11 +137,6 @@ describe('PopDialogUsernameComponent', () => {
         socketTestHelper.peerSideEmit('close popDialogUsername', gameName);
         component['closeGameDialog'](gameName);
         expect(dialog['closeAll']).not.toHaveBeenCalled();
-    });
-
-    it('should open the dialog when calling openDialog', () => {
-        component['openDialog']();
-        expect(dialog['open']).toHaveBeenCalled();
     });
 
     afterEach(() => {

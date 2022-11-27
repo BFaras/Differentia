@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { RecordTime } from '@app/classes/record-time';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { SidebarComponent } from '@app/components/sidebar/sidebar.component';
 import { TopbarComponent } from '@app/components/topbar/topbar.component';
 import { CommunicationService } from '@app/services/communication.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
-import { ADVERSARY_PLR_USERNAME_POS } from '@common/const';
+import { ADVERSARY_PLR_USERNAME_POS, CLASSIC_MODE } from '@common/const';
 import { Game } from '@common/game';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { of } from 'rxjs';
 import { Socket } from 'socket.io-client';
 import { GamePageComponent } from './game-page.component';
-import { RecordTime } from '@app/classes/record-time';
 import SpyObj = jasmine.SpyObj;
 
 class SocketClientServiceMock extends SocketClientService {
@@ -35,7 +35,7 @@ describe('GamePageComponent', () => {
         testGame = {
             name: 'test game',
             numberOfDifferences: 7,
-            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+            times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
             images: [],
             differencesList: [],
         };
@@ -67,8 +67,8 @@ describe('GamePageComponent', () => {
 
     describe('Receiving events', () => {
         it('should handle classic mode event and call the classicMode method of the time service', () => {
-            socketHelper.peerSideEmit('classic mode');
-            expect(component['timeService'].classicMode).toHaveBeenCalled();
+            socketHelper.peerSideEmit('Classic mode');
+            expect(component.gameMode).toEqual(CLASSIC_MODE);
         });
 
         it('should handle time event and call the changeTime method of the time service', () => {
@@ -131,14 +131,5 @@ describe('GamePageComponent', () => {
         const testUsername = 'userAdversary';
         socketHelper.peerSideEmit('The adversary username is', testUsername);
         expect(component.usernames[ADVERSARY_PLR_USERNAME_POS]).toEqual(testUsername);
-    });
-
-    describe('Emiting events', () => {
-        it('should send a kill the game event on destroy', () => {
-            const spy = spyOn(component['socketService'], 'send');
-            const eventName = 'kill the game';
-            component.ngOnDestroy();
-            expect(spy).toHaveBeenCalledWith(eventName);
-        });
     });
 });
