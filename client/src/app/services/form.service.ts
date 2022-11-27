@@ -68,5 +68,6 @@ export class FormService {
         this.gamelist = [];
         this.listImage = [];
         this.listName = [];
+        this.listTimes = [];
     }
 }
