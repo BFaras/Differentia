@@ -29,6 +29,7 @@ export class SocketManager {
     private gamesService: GamesService = new GamesService();
     private timeConstantsService: TimeConstantsService = new TimeConstantsService();
     private bestTimesService: BestTimesService = new BestTimesService();
+    private currentGameName: string;
 
     constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] }, maxHttpBufferSize: 1e7 });
@@ -52,6 +53,7 @@ export class SocketManager {
             socket.on('solo classic mode', async (gameName: string) => {
                 this.sio.to(socket.id).emit(CLASSIC_MODE);
                 this.sio.to(socket.id).emit('The game is', gameName);
+                this.currentGameName = gameName;
                 const username = this.waitingLineHandlerService.getUsernamePlayer(socket.id, this.sio);
                 this.sio.to(socket.id).emit('show the username', username);
                 await this.gameManagerService.beginGame(socket, [gameName, CLASSIC_MODE]);
@@ -235,8 +237,7 @@ export class SocketManager {
                     mouseHandler.resetDifferencesData();
                     if (mode === CLASSIC_MODE) this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
                     const playerGameTime = this.gameManagerService.getSocketChronometerService(socket).time;
-                    const gameName = this.gameManagerService.getSocketGameName(socket);
-                    await this.bestTimesService.compareGameTimeWithDbTimes(playerGameTime,isMultiplayer,gameName,playerUsername);
+                    await this.bestTimesService.compareGameTimeWithDbTimes(playerGameTime,isMultiplayer,this.currentGameName,playerUsername);
                     this.gameManagerService.endGame(socket, mode);
                 } else {
                     this.gameManagerService.doWeHaveToSwitchGame(socket, mode);

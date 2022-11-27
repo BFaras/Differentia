@@ -25,7 +25,6 @@ export class BestTimesService {
         const databaseGameTimes = await this.recordTimesService.getGameTimes(gameName);
         if (isMultiplayer) {
             const gameTimeInString = this.timeFormatToString(gameTime);
-            console.log(gameTimeInString);
             const dbGameTimes = this.convertTimeForComparison(databaseGameTimes.multiplayerGameTimes[2].time);
             if (this.convertTimeForComparison(gameTimeInString) < dbGameTimes) {
                 databaseGameTimes.multiplayerGameTimes[2].time = gameTimeInString;
