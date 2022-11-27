@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
 import { GameFormDescription } from '@app/classes/game-form-description';
+import { RecordTime } from '@app/classes/record-time';
 import { RecordTimesBoard } from '@app/classes/record-times-board';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { RESET_MSG_GAME_LIST, SNACKBAR_DURATION } from '@app/client-consts';
@@ -12,7 +13,6 @@ import { SocketClientService } from '@app/services/socket-client.service';
 import { Constants } from '@common/config';
 import { Game } from '@common/game';
 import { of } from 'rxjs/internal/observable/of';
-import { RecordTime } from '@app/classes/record-time';
 
 import { Socket } from 'socket.io-client';
 import { ListGameFormComponent } from './list-game-form.component';
@@ -38,7 +38,7 @@ describe('ListGameFormComponent', () => {
         {
             name: 'Car game',
             numberOfDifferences: 7,
-            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+            times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
             images: ['Car.bmp', 'Cardiff.bmp'],
             differencesList: [[]],
         },

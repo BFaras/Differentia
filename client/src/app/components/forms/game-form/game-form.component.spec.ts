@@ -67,12 +67,6 @@ describe('GameFormComponent', () => {
         expect(dialogSpy).toHaveBeenCalled();
     });
 
-    it('should open dialog to reset data', () => {
-        const dialogSpy = spyOn(gameFormComp['dialog'], 'open');
-        gameFormComp.openResetDialog();
-        expect(dialogSpy).toHaveBeenCalled();
-    });
-
     it('should set join flag', () => {
         gameFormComp.setJoinFlag();
         expect(gameFormComp['createFlag']).toEqual(false);

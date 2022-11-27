@@ -87,10 +87,8 @@ describe('PopDialogResetComponent', () => {
     it('should reset the records timeBoard and game constants', () => {
         component.resetRecordsTimeBoard = true;
         component.resetTimeConstants = true;
-        let consoleSpy = spyOn(console, 'log');
         let socketSpy = spyOn(socketClientServiceMock, 'send');
         component.resetData();
-        expect(consoleSpy).toHaveBeenCalled();
         expect(socketSpy).toHaveBeenCalled();
     });
 
