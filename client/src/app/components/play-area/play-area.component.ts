@@ -200,7 +200,7 @@ export class PlayAreaComponent implements OnInit {
             this.makePixelsBlinkOnCanvas(quandrantPixelsNb, this.modifiedCanvas.nativeElement, true);
         });
 
-        //To test Raph
+        //To test Raph (À voir si les tests fonctionnent)
         this.socketService.on('Clue with difference pixels', async (differenceCluePixels: number[]) => {
             await this.drawService.showCompassClue(differenceCluePixels, this.blinkModifiedCanvas.nativeElement);
 
@@ -226,7 +226,7 @@ export class PlayAreaComponent implements OnInit {
             this.openEndGameDialog(endGameMessage, winFlag);
         });
 
-        //To test Raph
+        //To test Raph (À voir si les tests fonctionnent)
         this.socketService.on('game images', async () => {
             await this.loadImages();
             this.drawService.setCanvasTransparent(this.blinkModifiedCanvas.nativeElement);

@@ -278,7 +278,13 @@ describe('PlayAreaComponent', () => {
         component['configurePlayAreaSocket']();
         component['isCheatActivated'] = true;
         socketTestHelper.peerSideEmit('game images');
-        expect(spy).not.toHaveBeenCalled();
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('should call showCompassClue() from DrawService on a Clue with difference pixels event', () => {
+        component['configurePlayAreaSocket']();
+        socketTestHelper.peerSideEmit('game images');
+        expect(drawServiceSpy.showCompassClue).toHaveBeenCalled();
     });
 
     afterEach(() => {
