@@ -57,7 +57,7 @@ describe('DrawService', () => {
         expect(spy).toHaveBeenCalled();
     }));
 
-    it('should call getCompassInformationsForClue() from ClueHandlerService on showCompassClue()', async (done) => {
+    it('should call getCompassInformationsForClue() from ClueHandlerService on showCompassClue()', async () => {
         const fakeCompassInfo: CompassInformations = {
             compassClueImage: new Image(),
             isDifferenceClueMiddle: false,
@@ -65,10 +65,9 @@ describe('DrawService', () => {
         const spy = spyOn(clueHandlerService, 'getCompassInformationsForClue').and.returnValue(Promise.resolve(fakeCompassInfo));
         await service.showCompassClue(diffCluePixelsTest, ctxStub.canvas);
         expect(spy).toHaveBeenCalled();
-        done();
     });
 
-    it('should call drawImageOnMiddleOfCanvas() from ClueHandlerService on showCompassClue() when clue difference is in the middle', async (done) => {
+    it('should call drawImageOnMiddleOfCanvas() from ClueHandlerService on showCompassClue() when clue difference is in the middle', async () => {
         const fakeCompassInfo: CompassInformations = {
             compassClueImage: new Image(),
             isDifferenceClueMiddle: true,
@@ -77,10 +76,9 @@ describe('DrawService', () => {
         spyOn(clueHandlerService, 'getCompassInformationsForClue').and.returnValue(Promise.resolve(fakeCompassInfo));
         await service.showCompassClue(diffCluePixelsTest, ctxStub.canvas);
         expect(spy).toHaveBeenCalled();
-        done();
     });
 
-    it('should call drawImageOnMiddleOfCanvas() from ClueHandlerService on showCompassClue() when clue difference is not in the middle', async (done) => {
+    it('should call drawImageOnMiddleOfCanvas() from ClueHandlerService on showCompassClue() when clue difference is not in the middle', async () => {
         const fakeCompassInfo: CompassInformations = {
             compassClueImage: new Image(),
             isDifferenceClueMiddle: false,
@@ -89,6 +87,5 @@ describe('DrawService', () => {
         spyOn(clueHandlerService, 'getCompassInformationsForClue').and.returnValue(Promise.resolve(fakeCompassInfo));
         await service.showCompassClue(diffCluePixelsTest, ctxStub.canvas);
         expect(spy).toHaveBeenCalled();
-        done();
     });
 });

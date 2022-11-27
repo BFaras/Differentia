@@ -83,18 +83,16 @@ describe('ClueHandlerService', () => {
         expect(service.findClueQuadrantPixels(testClueNb, testQuadrant)).toContain(pixelNbExepected);
     });
 
-    it('should return an image compass for the east direction in the difference is at (630, 240)', async (done) => {
+    it('should return an image compass for the east direction in the difference is at (630, 240)', async () => {
         const pixelPositionExepected: Position = { x: 630, y: MIDDLE_OF_IMAGE_POSITION.y };
         const testCardinalDirection: CardinalDirection = CardinalDirection.East;
         const pixelArrayTest = [service['convertPositionToPixelNb'](pixelPositionExepected.x, pixelPositionExepected.y)];
         expect((await service.getCompassInformationsForClue(pixelArrayTest)).compassClueImage.src).toContain(testCardinalDirection.toString());
-        done();
     });
 
-    it('should return that the difference is in the middle if the differencePosition is at (320, 240)', async (done) => {
+    it('should return that the difference is in the middle if the differencePosition is at (320, 240)', async () => {
         const pixelPositionExepected: Position = { x: MIDDLE_OF_IMAGE_POSITION.x, y: MIDDLE_OF_IMAGE_POSITION.x };
         const pixelArrayTest = [service['convertPositionToPixelNb'](pixelPositionExepected.x, pixelPositionExepected.y)];
         expect((await service.getCompassInformationsForClue(pixelArrayTest)).isDifferenceClueMiddle).toBeTruthy();
-        done();
     });
 });
