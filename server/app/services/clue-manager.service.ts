@@ -39,7 +39,7 @@ export class ClueManagerService {
                 }
             }
             this.decrementSocketClueAmount(socket);
-            gameChronometerService.decreaseTimeByPenaltyTime();
+            gameChronometerService.penaliseTime();
         }
     }
 
