@@ -142,6 +142,8 @@ export class PlayAreaComponent implements OnInit {
         });
     }
 
+    // Ajouter de la verification pour le chat
+    // Oublier la fonction que le prof a conseiller, onChange? onActive?
     @HostListener(CHEAT_KEY, ['$event'])
     handleKeyboardCheat() {
         if (this.isCheatActivated && !this.isWriting) {
