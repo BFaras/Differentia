@@ -7,7 +7,7 @@ import { MatDialogRef } from '@angular/material/dialog';
     styleUrls: ['./pop-dialog-warning.component.scss'],
 })
 export class PopDialogWarningComponent implements OnInit {
-    value: boolean;
+    private value: boolean;
     constructor(public dialogRef: MatDialogRef<PopDialogWarningComponent>) {}
 
     ngOnInit(): void {}
