@@ -14,6 +14,7 @@ import {
     STANDARD_POP_UP_WIDTH,
 } from '@app/client-consts';
 import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
+import { PopDialogWarningComponent } from '@app/components/pop-dialogs/pop-dialog-warning/pop-dialog-warning.component';
 import { SocketClientService } from '@app/services/socket-client.service';
 
 @Component({
@@ -54,12 +55,33 @@ export class GameFormComponent {
         });
     }
 
+    openWarningDialog() {
+        const popDialog = this.dialog.open(PopDialogWarningComponent, {
+            height: STANDARD_POP_UP_HEIGHT,
+            width: STANDARD_POP_UP_WIDTH,
+            disableClose: DISABLE_CLOSE,
+        });
+        return popDialog;
+    }
+
     deleteGameForm(value: string) {
-        this.newItemEvent.emit(value);
+        this.openWarningDialog()
+            .afterClosed()
+            .subscribe((result) => {
+                if (result.event == 'Oui' && result.data) {
+                    this.newItemEvent.emit(value);
+                }
+            });
     }
 
     resetTimesBoard(value: string) {
-        this.socketService.send('Reset records time board', value);
+        this.openWarningDialog()
+            .afterClosed()
+            .subscribe((result) => {
+                if (result.event == 'Oui' && result.data) {
+                    this.socketService.send('Reset records time board', value);
+                }
+            });
     }
 
     setJoinFlag(): void {

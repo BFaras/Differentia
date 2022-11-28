@@ -1,12 +1,3 @@
-h1 {
-    font-size: 28px;
-}
-.inputs {
-    font-size: large;
-    display: grid;
-    grid-row: auto;
-    gap: 20px;
-}
 .mat-flat-button.mat-warn,
 .mat-raised-button.mat-warn,
 .mat-fab.mat-warn,
@@ -14,12 +5,13 @@ h1 {
     margin-left: 480px;
 }
 
-#submitButton {
-    margin-top: 35px;
-    width: 90px;
-    margin-left: 221px;
-    height: 40px;
-    font-size: large;
+#lastChoiceButtons {
+    margin-top: 60px;
+    margin-left: 25%;
+}
+
+#titre {
+    margin-top: 50px;
 }
 
 .mat-flat-button.mat-accent,

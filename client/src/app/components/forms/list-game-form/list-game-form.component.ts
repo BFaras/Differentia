@@ -119,7 +119,6 @@ export class ListGameFormComponent implements OnInit {
     }
 
     private async refreshGames(reload?: boolean) {
-        this.messageForUpdate = EMPTY_MESSAGE;
         this.gameListToRefresh = false;
         this.firstElementIndex = FIRST_GAMEFORMS_INDEX;
         this.lastElementIndex = LAST_GAMEFORMS_INDEX;
@@ -130,7 +129,6 @@ export class ListGameFormComponent implements OnInit {
 
     async deleteAndRefreshGames(gameName: string) {
         this.communicationService.deleteGame(gameName).subscribe((games) => {
-            // this.messageForUpdate = gameName;
             this.formService.gamelist = games;
             this.config(gameName);
         });
