@@ -9,8 +9,6 @@ import * as http from 'http';
 import * as io from 'socket.io';
 import Container from 'typedi';
 import { ClueManagerService } from './clue-manager.service';
-//import { RecordTimesService } from './database.games.service';
-//import { DatabaseService } from './database.service';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
 import { GamesService } from './local.games.service';
@@ -22,8 +20,6 @@ import { BestTimesService } from './best-times.service';
 export class SocketManager {
     socket: io.Socket;
     private sio: io.Server;
-   // private databaseService: DatabaseService = Container.get(DatabaseService);
-   // private recordTimesService: RecordTimesService = new RecordTimesService(this.databaseService);
     private waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
     private gameManagerService: GameManagerService;
     private gamesService: GamesService = new GamesService();

@@ -1,6 +1,5 @@
 import { MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const';
 import { Game } from '@common/game';
-//import { Time } from '@common/time';
 import * as fs from 'fs';
 import { join } from 'path';
 import Container, { Service } from 'typedi';
@@ -79,14 +78,6 @@ export class GamesService {
     validateName(name: string): boolean {
         return this.games.find((x) => x.name === name) ? false : true;
     }
-
-    // async addTimeToGame(newTime: Time, nameOfGame: string): Promise<void> {
-    //     await this.asyncReadGamesFile();
-    //     this.games.find((game: Game) => {
-    //         if (game.name === nameOfGame) game.times.push(newTime);
-    //     });
-    //     this.asyncWriteInGamesFile();
-    // }
 
     async deleteGame(nameOfGameToDelete: string) {
         await this.asyncReadGamesFile();
