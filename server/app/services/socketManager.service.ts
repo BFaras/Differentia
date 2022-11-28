@@ -77,7 +77,6 @@ export class SocketManager {
 
             socket.on('my username is', (username: string) => {
                 if (username.charAt(0) !== ' ') {
-                    console.log('jtenvoie valid username' + username);
                     this.waitingLineHandlerService.setUsernamePlayer(socket.id, username, this.sio);
                     this.sio.to(socket.id).emit('username valid');
                 } else this.sio.to(socket.id).emit('username not valid');
@@ -99,7 +98,6 @@ export class SocketManager {
                     this.sio.to(adversarySocketId).emit('response on limited time waiting line', SOMEBODY_IS_WAITING);
                     this.sio.to(socket.id).emit('response on limited time waiting line', SOMEBODY_IS_WAITING);
                 } else {
-                    console.log('attend bitch');
                     this.waitingLineHandlerService.addLimitedTimeWaitingPlayer(socket.id);
                     this.sio.to(socket.id).emit('response on limited time waiting line', !SOMEBODY_IS_WAITING);
                 }
@@ -187,9 +185,7 @@ export class SocketManager {
                 const gameName = (await this.gamesService.generateRandomGame(ZERO_GAMES_PLAYED)).name;
                 // DUPLICATION DE CODE
                 this.gameManagerService.initializeSocketGameHistoryLimitedTimeMode(socket);
-                console.log('initaliser gamePlayed de socket');
                 this.gameManagerService.initializeSocketGameHistoryLimitedTimeMode(adversarySocket);
-                console.log('initaliser gamePlayed de adversary socket');
                 this.gameManagerService.addGameToHistoryLimitedTimeMode(socket, gameName);
                 this.gameManagerService.addGameToHistoryLimitedTimeMode(adversarySocket, gameName);
                 // SALUT
@@ -236,7 +232,7 @@ export class SocketManager {
                     if (mode === CLASSIC_MODE) this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
                     const playerGameTime = this.gameManagerService.getSocketChronometerService(socket).time;
                     const gameName = this.gameManagerService.getSocketGameName(socket);
-                    await this.bestTimesService.compareGameTimeWithDbTimes(playerGameTime,isMultiplayer,gameName,playerUsername);
+                    await this.bestTimesService.compareGameTimeWithDbTimes(playerGameTime, isMultiplayer, gameName, playerUsername);
                     this.gameManagerService.endGame(socket, mode);
                 } else {
                     this.gameManagerService.doWeHaveToSwitchGame(socket, mode);
