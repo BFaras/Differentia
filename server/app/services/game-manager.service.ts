@@ -335,7 +335,7 @@ export class GameManagerService {
     }
 
     private emitTime(chronometerService: ChronometerService, gameRoomName: string, socket: io.Socket) {
-        if (chronometerService.hasTheChronoHitZero()) {
+        if (chronometerService.mode === LIMITED_TIME_MODE && chronometerService.hasTheChronoHitZero()) {
             this.eraseGamesFromHistoryLimitedTimeMode(socket);
             this.endGameWithDependencies(socket, TIMER_HIT_ZERO);
         } else {
@@ -360,5 +360,4 @@ export class GameManagerService {
         clearInterval(this.getSocketTimeInterval(socket));
         this.getSocketChronometerService(socket)?.resetChrono();
     }
-
 }
