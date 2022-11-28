@@ -10,7 +10,7 @@ import {
     SNACKBAR_DURATION,
     SNACKBAR_HORIZONTAL_POSITION,
     SNACKBAR_VERTICAL_POSITION,
-} from '@app/client-consts';
+} from '@app/const/client-consts';
 import { CommunicationService } from '@app/services/communication.service';
 import { FormService } from '@app/services/form.service';
 import { SocketClientService } from '@app/services/socket-client.service';

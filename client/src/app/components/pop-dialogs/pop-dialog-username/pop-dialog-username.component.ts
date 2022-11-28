@@ -1,9 +1,9 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { CLASSIC_FLAG, DISABLE_BUTTON, DISABLE_CLOSE, STANDARD_POP_UP_HEIGHT, STANDARD_POP_UP_WIDTH, USERNAME_VALID } from '@app/client-consts';
 import { PopDialogLimitedTimeModeComponent } from '@app/components/pop-dialogs/pop-dialog-limited-time-mode/pop-dialog-limited-time-mode.component';
 import { PopDialogWaitingForPlayerComponent } from '@app/components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
+import { CLASSIC_FLAG, DISABLE_BUTTON, DISABLE_CLOSE, STANDARD_POP_UP_HEIGHT, STANDARD_POP_UP_WIDTH, USERNAME_VALID } from '@app/const/client-consts';
 import { PopUpData } from '@app/interfaces/pop-up-data';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';

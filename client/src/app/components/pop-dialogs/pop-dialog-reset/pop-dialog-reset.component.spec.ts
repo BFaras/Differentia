@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
-import { EMPTY_MESSAGE, RESET_INFO_CONSTANTS, RESET_INFO_GAME_LIST, RESET_INFO_RECORDS_TIME } from '@app/client-consts';
+import { EMPTY_MESSAGE, RESET_INFO_CONSTANTS, RESET_INFO_GAME_LIST, RESET_INFO_RECORDS_TIME } from '@app/const/client-consts';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { Socket } from 'socket.io-client';
 import { PopDialogResetComponent } from './pop-dialog-reset.component';

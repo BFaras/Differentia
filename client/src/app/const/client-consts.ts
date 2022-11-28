@@ -105,3 +105,13 @@ export const RESET_MSG_GAME_LIST = 'La liste des jeux a été réinitialisé :('
 export const RESET_INFO_CONSTANTS = 'Constantes de temps de jeu';
 export const RESET_INFO_RECORDS_TIME = 'Table des meilleurs temps de jeu';
 export const RESET_INFO_GAME_LIST = 'Liste des jeux';
+
+// Constantes popDialog de la page ADMIN
+export const HEIGHT_POP_ADMIN = '640px';
+export const TIME_SETTING_INPUT1 = 'Temps initial';
+export const TIME_SETTING_INPUT2 = 'Temps de pénalité';
+export const TIME_SETTING_INPUT3 = 'Temps gagné';
+export const TIME_PLACEHOLDER_INPUT1 = 'Temps par défaut: 30s';
+export const TIME_PLACEHOLDER_INPUT2 = 'Temps par défaut: 5s';
+export const TIME_PLACEHOLDER_INPUT3 = 'Temps par défaut: 5s';
+export const INPUT_TYPE = 'secondes';

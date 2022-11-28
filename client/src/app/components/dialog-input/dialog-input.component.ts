@@ -18,7 +18,7 @@ import {
     PENALTY_TIME_INDEX,
     SAVED_TIME_INDEX,
     TIME_RATIO,
-} from '@app/client-consts';
+} from '@app/const/client-consts';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeConstants } from '@common/time-constants';
 

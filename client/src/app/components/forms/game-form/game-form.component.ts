@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GameFormDescription } from '@app/classes/game-form-description';
+import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
+import { PopDialogWarningComponent } from '@app/components/pop-dialogs/pop-dialog-warning/pop-dialog-warning.component';
 import {
     ADMIN_GAME_FORMS_BUTTON,
     CLASSIC_FLAG,
@@ -12,9 +14,7 @@ import {
     SOMEBODY_IS_WAITING,
     STANDARD_POP_UP_HEIGHT,
     STANDARD_POP_UP_WIDTH,
-} from '@app/client-consts';
-import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
-import { PopDialogWarningComponent } from '@app/components/pop-dialogs/pop-dialog-warning/pop-dialog-warning.component';
+} from '@app/const/client-consts';
 import { SocketClientService } from '@app/services/socket-client.service';
 
 @Component({

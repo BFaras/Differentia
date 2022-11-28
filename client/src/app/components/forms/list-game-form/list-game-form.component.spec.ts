@@ -6,7 +6,7 @@ import { GameFormDescription } from '@app/classes/game-form-description';
 import { RecordTime } from '@app/classes/record-time';
 import { RecordTimesBoard } from '@app/classes/record-times-board';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
-import { RESET_MSG_GAME_LIST, SNACKBAR_DURATION } from '@app/client-consts';
+import { RESET_MSG_GAME_LIST, SNACKBAR_DURATION } from '@app/const/client-consts';
 import { CommunicationService } from '@app/services/communication.service';
 import { FormService } from '@app/services/form.service';
 import { SocketClientService } from '@app/services/socket-client.service';

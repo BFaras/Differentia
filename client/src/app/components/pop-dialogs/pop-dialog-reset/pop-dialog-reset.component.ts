@@ -8,7 +8,7 @@ import {
     RESET_INFO_CONSTANTS,
     RESET_INFO_GAME_LIST,
     RESET_INFO_RECORDS_TIME,
-} from '@app/client-consts';
+} from '@app/const/client-consts';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeConstants } from '@common/time-constants';
 
