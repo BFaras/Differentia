@@ -2,6 +2,7 @@ import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@
 import { MatDialog } from '@angular/material/dialog';
 import { PopDialogEndgameComponent } from '@app/components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
 import {
+    BLINK_CHEAT_ID,
     BLINK_ID,
     CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE,
     CLASSIC_MULTIPLAYER_LOST_MESSAGE,
@@ -259,7 +260,7 @@ export class PlayAreaComponent implements OnInit {
     private makePixelsBlinkOnCanvasCheat(pixelsToBlink: number[], canvasToCopyFrom: HTMLCanvasElement, canvasToCopyOn: HTMLCanvasElement) {
         this.drawService.setCanvasTransparent(canvasToCopyOn);
         const context = canvasToCopyOn.getContext('2d') as CanvasRenderingContext2D;
-        context.canvas.id = 'blinkCheat';
+        context.canvas.id = BLINK_CHEAT_ID;
         this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(pixelsToBlink, canvasToCopyFrom, canvasToCopyOn);
     }
 }

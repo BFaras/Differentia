@@ -115,6 +115,7 @@ export const CLUE_MIDDLE_COMPASS_OFFSET_X = COMPASS_WIDTH + 30;
 export const COMPASS_BLINK_MILISECONDS = 1500;
 export const PNG_FILE_TYPE_SRC = '.png';
 export const COMPASS_CLUE_ID = 'compassClue';
+export const BLINK_CHEAT_ID = 'blinkCheat';
 export const ADDITION_FACTOR = 1;
 export const SUBSTRACTION_FACTOR = -1;
 
