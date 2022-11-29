@@ -211,10 +211,18 @@ describe('PlayAreaComponent', () => {
         expect(spy).toHaveBeenCalledWith(CLASSIC_MULTIPLAYER_LOST_MESSAGE, false);
     });
 
-    it('should handle clue key pressed and send get clue for player', () => {
+    it('should handle clue key pressed and send get clue for player if not isMultiplayer', () => {
         const spy = spyOn(socketClientService, 'send');
+        component.isMultiplayer = false;
         component.handleKeyboardClue();
         expect(spy).toHaveBeenCalledWith('get clue for player');
+    });
+
+    it('should handle clue key pressed and do not send get clue for player if isMultiplayer', () => {
+        const spy = spyOn(socketClientService, 'send');
+        component.isMultiplayer = true;
+        component.handleKeyboardClue();
+        expect(spy).not.toHaveBeenCalled();
     });
 
     it('should handle cheat key pressed and send Cheat key pressed', () => {
