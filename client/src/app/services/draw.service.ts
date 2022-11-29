@@ -1,8 +1,17 @@
 import { Injectable } from '@angular/core';
-import { CLUE_MIDDLE_COMPASS_OFFSET_X, COMPASS_CLUE_ID, NO_OFFSET } from '@app/const/client-consts';
+import {
+    BLINK_CHEAT_ID,
+    BLINK_ID,
+    CLUE_MIDDLE_COMPASS_OFFSET_X,
+    COMPASS_CLUE_ID,
+    NO_OFFSET,
+    PAUSED_ID,
+    THREE_SECONDS,
+} from '@app/const/client-consts';
 import { CompassInformations } from '@app/interfaces/compass-informations';
 import { Position } from '@common/position';
 import { ClueHandlerService } from './clue-handler.service';
+import { ImageGeneratorService } from './image-generator.service';
 
 @Injectable({
     providedIn: 'root',
@@ -10,8 +19,9 @@ import { ClueHandlerService } from './clue-handler.service';
 export class DrawService {
     contextClickOriginalCanvas: CanvasRenderingContext2D;
     contextClickModifiedCanvas: CanvasRenderingContext2D;
+    private numberOfBlinkCalls = 0;
 
-    constructor(private readonly clueHandlerService: ClueHandlerService) {}
+    constructor(private readonly clueHandlerService: ClueHandlerService, private readonly imageGenerator: ImageGeneratorService) {}
 
     drawWord(word: string, mousePosition: Position, context: CanvasRenderingContext2D) {
         const startPosition: Position = { x: mousePosition.x, y: mousePosition.y };
@@ -43,6 +53,38 @@ export class DrawService {
     setCanvasTransparent(canvas: HTMLCanvasElement) {
         const canvasContext = canvas.getContext('2d')!;
         canvasContext.clearRect(0, 0, canvasContext.canvas.width, canvasContext.canvas.height);
+    }
+
+    //To test
+    makePixelsBlinkOnCanvas(pixelsToBlink: number[], canvasToBlink: HTMLCanvasElement, canvasToCopyFrom: HTMLCanvasElement, invertColors?: boolean) {
+        const context = canvasToBlink.getContext('2d') as CanvasRenderingContext2D;
+        this.setCanvasTransparent(canvasToBlink);
+        context.canvas.id = BLINK_ID;
+        this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(pixelsToBlink, canvasToCopyFrom, canvasToBlink, invertColors);
+
+        this.incrementNumberOfBlinkCalls();
+        setTimeout(() => {
+            this.decrementNumberOfBlinkCalls();
+            if (this.numberOfBlinkCalls <= 0 && canvasToBlink.id === BLINK_ID) {
+                context.canvas.id = PAUSED_ID;
+            }
+        }, THREE_SECONDS);
+    }
+
+    //To test
+    makePixelsBlinkOnCanvasCheat(pixelsToBlink: number[], canvasToCopyFrom: HTMLCanvasElement, canvasToCopyOn: HTMLCanvasElement) {
+        this.setCanvasTransparent(canvasToCopyOn);
+        const context = canvasToCopyOn.getContext('2d') as CanvasRenderingContext2D;
+        context.canvas.id = BLINK_CHEAT_ID;
+        this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(pixelsToBlink, canvasToCopyFrom, canvasToCopyOn);
+    }
+
+    incrementNumberOfBlinkCalls() {
+        this.numberOfBlinkCalls++;
+    }
+
+    decrementNumberOfBlinkCalls() {
+        this.numberOfBlinkCalls--;
     }
 
     private drawImageOnMiddleOfCanvas(
