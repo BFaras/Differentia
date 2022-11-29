@@ -1,6 +1,10 @@
-import { RESPONSE_DELAY } from '@app/server-consts';
-import { MSG_RESET_ALL_TIME, MSG_RESET_TIME } from '@common/const';
+/* eslint-disable max-lines */
+import { RecordTime } from '@app/classes/record-times';
+import { RESPONSE_DELAY, SOMEBODY_IS_WAITING } from '@app/server-consts';
+import { CLASSIC_MODE, LIMITED_TIME_MODE, MSG_RESET_ALL_TIME, MSG_RESET_TIME } from '@common/const';
 import { DifferencesInformations } from '@common/differences-informations';
+import { Game } from '@common/game';
+import { GameInfo } from '@common/gameInfo';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
 import { Server } from 'app/server';
@@ -8,13 +12,15 @@ import * as chai from 'chai';
 import { assert, expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import * as sinon from 'sinon';
-import * as io from 'socket.io';
 import { io as ioClient, Socket } from 'socket.io-client';
 import { Container } from 'typedi';
+import { BestTimesService } from './best-times.service';
+import { ChronometerService } from './chronometer.service';
 import { ClueManagerService } from './clue-manager.service';
 import { RecordTimesService } from './database.games.service';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
+import { GamesService } from './local.games.service';
 import { MouseHandlerService } from './mouse-handler.service';
 import { SocketManager } from './socketManager.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
@@ -33,13 +39,25 @@ describe('SocketManager service tests', () => {
         imageWidth: 1,
         offSet: 0,
     };
+    const testGame: Game = {
+        name: testGameName,
+        numberOfDifferences: 2,
+        times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
+        images: ['image1', 'image2'],
+        differencesList: [
+            [599, 666],
+            [899, 951],
+        ],
+    };
     let service: SocketManager;
     let server: Server;
     let clientSocket: Socket;
+    let clientSocketTwo: Socket;
     const differenceDetectorService: DifferenceDetectorService = new DifferenceDetectorService(imagesData);
     const mouseHandlerService: MouseHandlerService = new MouseHandlerService();
-    let gameManagerServiceBeginGameStub: sinon.SinonStub<[socket: io.Socket, gameInfo: string[], adversarySocket?: io.Socket], Promise<void>>;
+    let gameManagerServiceBeginGameStub: sinon.SinonStub<[gameInfo: GameInfo], Promise<void>>;
     const waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
+    let gameManagerServiceEndGameStub: sinon.SinonStub;
 
     const urlString = 'http://localhost:3000';
 
@@ -48,6 +66,7 @@ describe('SocketManager service tests', () => {
         server.init();
         service = server['socketManager'];
         clientSocket = ioClient(urlString);
+        clientSocketTwo = ioClient(urlString);
     });
 
     beforeEach(() => {
@@ -55,10 +74,10 @@ describe('SocketManager service tests', () => {
             return mouseHandlerService;
         });
         gameManagerServiceBeginGameStub = sinon.stub(GameManagerService.prototype, 'beginGame').callsFake(async () => {});
-        sinon.stub(GameManagerService.prototype, 'endGame').callThrough();
+        gameManagerServiceEndGameStub = sinon.stub(GameManagerService.prototype, 'endGame').callThrough();
         clickResponseStub = sinon.stub(GameManagerService.prototype, 'clickResponse').callsFake(() => {});
         getGameRoomsStub = sinon.stub(GameManagerService.prototype, 'getGameRooms').callsFake(() => {
-            let testHashMap: Map<string, string[]> = new Map<string, string[]>();
+            const testHashMap: Map<string, string[]> = new Map<string, string[]>();
             testHashMap.set('Room1', ['Hello', 'Hi']);
             testHashMap.set('Room2', ['Hello1234', 'Hi1234']);
             return testHashMap;
@@ -71,6 +90,7 @@ describe('SocketManager service tests', () => {
 
     after(() => {
         clientSocket.close();
+        clientSocketTwo.close();
         service['sio'].close();
         sinon.restore();
     });
@@ -222,7 +242,7 @@ describe('SocketManager service tests', () => {
         });
     });
 
-    it("should handle 'I am trying to join' event and call addJoiningPlayer and getCreatorPlayer", (done) => {
+    it("should handle 'I am trying to join' event and call addJoiningPlayer and getCreatorPlayer", () => {
         const testGameInfoAndUsername: string[] = [testGameName, validTestUsername];
         service['waitingLineHandlerService'].addCreatingPlayer(testGameInfoAndUsername[0], clientSocket.id);
         const addJoiningPlayerSpy = sinon.spy(service['waitingLineHandlerService'], 'addJoiningPlayer');
@@ -233,7 +253,6 @@ describe('SocketManager service tests', () => {
             expect(addJoiningPlayerSpy.calledOnce);
             expect(getCreatorPlayerSpy.calledOnce);
             service['waitingLineHandlerService'].deleteCreatorOfGame(testGameInfoAndUsername[0]);
-            done();
         });
     });
 
@@ -391,15 +410,15 @@ describe('SocketManager service tests', () => {
         }); // 1 seconde
     });
 
-    it("should handle 'Check if game is finished' on finished game and call resetDifferencesData", (done) => {
-        const spy = sinon.spy(mouseHandlerService, 'resetDifferencesData');
-        mouseHandlerService.addPlayerToGame(clientSocket.id);
-        clientSocket.emit('Check if game is finished', true);
-        setTimeout(() => {
-            expect(spy.calledOnce);
-            done();
-        }, RESPONSE_DELAY * 5); // 1 seconde
-    });
+    // it("should handle 'Check if game is finished' on finished game and call resetDifferencesData", (done) => {
+    //     const spy = sinon.spy(mouseHandlerService, 'resetDifferencesData');
+    //     mouseHandlerService.addPlayerToGame(clientSocket.id);
+    //     clientSocket.emit('Check if game is finished', true);
+    //     setTimeout(() => {
+    //         expect(spy.calledOnce);
+    //         done();
+    //     }, RESPONSE_DELAY * 5); // 1 seconde
+    // });
 
     it("should handle 'kill the game' and call handleAbandonEmit and endGame", (done) => {
         const stubAbandon = sinon.stub(GameManagerService.prototype, <any>'handleAbandonEmit').callsFake(() => {});
@@ -448,5 +467,128 @@ describe('SocketManager service tests', () => {
         const stub = sinon.stub(ClueManagerService.prototype, 'sendClueToPlayer').callsFake(() => {});
         clientSocket.emit('get clue for player');
         expect(stub.calledOnce);
+    });
+
+    // eslint-disable-next-line max-len
+    it("should handle 'solo limited time mode' and call getUsername, generateRandomGame, startLimitedTimeSocketGameHistory, beginGame", async () => {
+        const getUsernamePlayerStub = sinon.stub(WaitingLineHandlerService.prototype, 'getUsernamePlayer').callsFake((socket, server) => {
+            return validTestUsername;
+        });
+        const generateRandomGameStub = sinon.stub(GamesService.prototype, 'generateRandomGame').callsFake(async (gamesAlreadyPlayed) => {
+            return Promise.resolve(testGame);
+        });
+        const startLimitedTimeSocketGameHistoryStub = sinon
+            .stub(GameManagerService.prototype, 'startLimitedTimeSocketGameHistory')
+            .callsFake(() => {});
+        clientSocket.emit('solo limited time mode');
+        clientSocket.once(LIMITED_TIME_MODE, () => {
+            expect(getUsernamePlayerStub.calledOnce);
+            expect(generateRandomGameStub.calledOnce);
+            expect(startLimitedTimeSocketGameHistoryStub.calledOnce);
+            expect(gameManagerServiceBeginGameStub.calledOnce);
+        });
+    });
+
+    it("should handle 'gameMode is' and send Classic Mode event if the classic Flag is true", (done) => {
+        clientSocket.emit('gameMode is', true);
+        clientSocket.once(CLASSIC_MODE, () => {
+            done();
+        });
+    });
+
+    it("should handle 'gameMode is' and send open the ${LIMITED_TIME_MODE} pop-dialog event if the classic Flag is false", (done) => {
+        clientSocket.emit('gameMode is', false);
+        clientSocket.once(`open the ${LIMITED_TIME_MODE} pop-dialog`, () => {
+            done();
+        });
+    });
+
+    it("should handle 'I am trying to play a limited time game' and send response on limited time waiting line with SOMEBODY_IS_WAITING", () => {
+        service['waitingLineHandlerService'].addLimitedTimeWaitingPlayer(clientSocketTwo.id);
+        const isSomebodyWaitingForALimitedTimeGameSpy = sinon.spy(WaitingLineHandlerService.prototype, 'isSomebodyWaitingForALimitedTimeGame');
+        const getLimitedTimeWaitingPlayerIdSpy = sinon.spy(WaitingLineHandlerService.prototype, 'getLimitedTimeWaitingPlayerId');
+        clientSocket.emit('I am trying to play a limited time game');
+        clientSocket.once('response on limited time waiting line', (response: boolean) => {
+            expect(response).to.equal(SOMEBODY_IS_WAITING);
+            expect(isSomebodyWaitingForALimitedTimeGameSpy.calledOnce);
+            expect(getLimitedTimeWaitingPlayerIdSpy.calledOnce);
+        });
+        clientSocketTwo.once('response on limited time waiting line', (response: boolean) => {
+            expect(response).to.equal(SOMEBODY_IS_WAITING);
+            service['waitingLineHandlerService'].resetLimitedTimeWaitingLine();
+        });
+    });
+
+    it("should handle 'I am trying to play a limited time game' and send response on limited time waiting line with !SOMEBODY_IS_WAITING", () => {
+        const isSomebodyWaitingForALimitedTimeGameSpy = sinon.spy(WaitingLineHandlerService.prototype, 'isSomebodyWaitingForALimitedTimeGame');
+        const addLimitedTimeWaitingPlayerSpy = sinon.spy(WaitingLineHandlerService.prototype, 'addLimitedTimeWaitingPlayer');
+        clientSocket.emit('I am trying to play a limited time game');
+        clientSocket.once('response on limited time waiting line', (response: boolean) => {
+            expect(response).to.equal(!SOMEBODY_IS_WAITING);
+            expect(isSomebodyWaitingForALimitedTimeGameSpy.calledOnce);
+            expect(addLimitedTimeWaitingPlayerSpy.calledOnce);
+        });
+    });
+
+    it("should handle 'I left from LM' and call resetLimitedTimeWaitingLine", () => {
+        const resetLimitedTimeWaitingLineSpy = sinon.spy(WaitingLineHandlerService.prototype, 'resetLimitedTimeWaitingLine');
+        clientSocket.emit('I left from LM');
+        expect(resetLimitedTimeWaitingLineSpy.calledOnce);
+    });
+
+    it("should handle 'I left from LM' and call resetLimitedTimeWaitingLine", () => {
+        service['waitingLineHandlerService'].addLimitedTimeWaitingPlayer(clientSocketTwo.id);
+        const getSocketByIDSpy = sinon.spy(WaitingLineHandlerService.prototype, 'getSocketByID');
+        const getLimitedTimeWaitingPlayerIdSpy = sinon.spy(WaitingLineHandlerService.prototype, 'getLimitedTimeWaitingPlayerId');
+        const resetLimitedTimeWaitingLineSpy = sinon.spy(WaitingLineHandlerService.prototype, 'resetLimitedTimeWaitingLine');
+        const generateRandomGameSpy = sinon.spy(GamesService.prototype, 'generateRandomGame');
+        const startLimitedTimeSocketGameHistorySpy = sinon.spy(GameManagerService.prototype, 'startLimitedTimeSocketGameHistory');
+        const startMultiplayerMatchSpy = sinon.spy(GameManagerService.prototype, 'startMultiplayerMatch');
+        clientSocket.emit('launch limited time mode multiplayer match');
+        clientSocket.once('The game is', () => {
+            expect(getSocketByIDSpy.calledOnce);
+            expect(resetLimitedTimeWaitingLineSpy.calledOnce);
+            expect(getLimitedTimeWaitingPlayerIdSpy.calledOnce);
+        });
+        clientSocketTwo.once('The game is', () => {
+            expect(generateRandomGameSpy.calledOnce);
+            expect(startLimitedTimeSocketGameHistorySpy.calledOnce);
+            expect(startMultiplayerMatchSpy.calledOnce);
+            service['waitingLineHandlerService'].resetLimitedTimeWaitingLine();
+        });
+    });
+
+    it("should handle 'Check if game is finished' and call doWeHaveToSwitchGame when the match is not finished", () => {
+        const doWeHaveToSwitchGameSpy = sinon.spy(GameManagerService.prototype, 'doWeHaveToSwitchGame');
+        clientSocket.emit('Check if game is finished');
+        expect(doWeHaveToSwitchGameSpy.calledOnce);
+    });
+
+    it("should handle 'Check if game is finished' and call doWeHaveToSwitchGame when the match is not finished", (done) => {
+        const chronometerServiceTest = new ChronometerService();
+        chronometerServiceTest.mode = CLASSIC_MODE;
+        mouseHandlerService.nbDifferencesTotal = 0;
+        mouseHandlerService['differenceAmountFoundByPlayer'].set(clientSocket.id, 0);
+        service['gameManagerService']['chronometerServices'].set(clientSocket.id + 'GameRoom', chronometerServiceTest);
+        service['gameManagerService']['mouseHandlerServices'].set(clientSocket.id + 'GameRoom', mouseHandlerService);
+        mouseHandlerService.nbDifferencesTotal = 0;
+        const resetDifferencesDataSpy = sinon.spy(MouseHandlerService.prototype, 'resetDifferencesData');
+        const getSocketGameNameSpy = sinon.spy(GameManagerService.prototype, 'getSocketGameName');
+        const resetLimitedTimeWaitingLineSpy = sinon.stub(BestTimesService.prototype, 'compareGameTimeWithDbTimes').callsFake(async () => {
+            return Promise.resolve();
+        });
+        const handleEndGameEmitsSpy = sinon.spy(GameManagerService.prototype, 'handleEndGameEmits');
+        clientSocket.emit('Check if game is finished', false);
+        setTimeout(() => {
+            expect(resetDifferencesDataSpy.calledOnce);
+            expect(getSocketGameNameSpy.calledOnce);
+            expect(resetLimitedTimeWaitingLineSpy.calledOnce);
+            expect(handleEndGameEmitsSpy.notCalled);
+            expect(gameManagerServiceEndGameStub.calledOnce);
+            mouseHandlerService['differenceAmountFoundByPlayer'].delete(clientSocket.id);
+            service['gameManagerService']['chronometerServices'].delete(clientSocket.id + 'GameRoom');
+            service['gameManagerService']['mouseHandlerServices'].delete(clientSocket.id + 'GameRoom');
+            done();
+        }, RESPONSE_DELAY);
     });
 });

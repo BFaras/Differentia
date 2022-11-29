@@ -18,7 +18,7 @@ describe('Time constants service', () => {
         time1 = {
             initialTime: 30,
             penaltyTime: 5,
-            savedTime: 55,
+            savedTime: 5,
         };
         await timeConstantsService.setTimes(time1);
     });

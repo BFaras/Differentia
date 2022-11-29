@@ -1,6 +1,5 @@
-import { Game } from '@common/game';
-//import { Time } from '@common/time';
 import { RecordTime } from '@app/classes/record-times';
+import { Game } from '@common/game';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
@@ -93,21 +92,21 @@ describe('Games service', () => {
 
     it('should not validate the name of the game when a game with the same name already exists', async () => {
         await gamesService.asyncReadGamesFile();
-        expect(gamesService.validateName(invalidGameToAdd.name)).to.be.false;
+        expect(gamesService.validateName(invalidGameToAdd.name)).to.equal(false);
     });
 
     it('should validate the name of the game when a game with the same name doesnt already exists', async () => {
         await gamesService.asyncReadGamesFile();
-        expect(gamesService.validateName(validGameToAdd.name)).to.be.true;
+        expect(gamesService.validateName(validGameToAdd.name)).to.equal(true);
     });
 
     it('should not add a game when a game with the same name already exists', async () => {
-        expect(await gamesService.addGame(invalidGameToAdd)).to.be.false;
+        expect(await gamesService.addGame(invalidGameToAdd)).to.equal(false);
     });
 
     it('should add a game when a game doesnt already exists', async () => {
         const stub = sinon.stub(fs.promises, 'writeFile').callsFake(async () => {});
-        expect(await gamesService.addGame(validGameToAdd)).to.be.true;
+        expect(await gamesService.addGame(validGameToAdd)).to.equal(true);
         expect(stub.callsFake);
     });
 
@@ -155,7 +154,7 @@ describe('Games service', () => {
         });
 
         it('should throw an error when fs.promises.readFile(images_path) crashes', async () => {
-            let testImageName = 'test name';
+            const testImageName = 'test name';
             const stub = sinon.stub(fs.promises, 'readFile').callsFake(async () => {
                 throw new Error();
             });
@@ -166,9 +165,8 @@ describe('Games service', () => {
         });
 
         it('should delete a specific game when calling deleteGame', async () => {
-            const writeSpy = sinon.stub(gamesService, 'asyncWriteInGamesFile')
-            const readSpy = sinon.stub(gamesService, 'asyncReadGamesFile')
-
+            const writeSpy = sinon.stub(gamesService, 'asyncWriteInGamesFile');
+            const readSpy = sinon.stub(gamesService, 'asyncReadGamesFile');
 
             const deleteStub = sinon.stub(gamesService, 'deleteGame').callsFake(async (nameOfGameToDelete: string) => {
                 return await gamesService.getAllGames();
@@ -177,7 +175,6 @@ describe('Games service', () => {
             expect(deleteStub.calledOnce);
             expect(writeSpy.calledOnce);
             expect(readSpy.calledOnce);
-
         });
 
         it('should throw an error if the image to delete doesnt exist', async () => {
@@ -193,7 +190,7 @@ describe('Games service', () => {
         });
 
         it('should reset the game list', async () => {
-            const writeSpy = sinon.stub(gamesService, 'asyncWriteInGamesFile')
+            const writeSpy = sinon.stub(gamesService, 'asyncWriteInGamesFile');
             sinon.spy(gamesService['games'], 'filter');
             const resetStub = sinon.stub(gamesService, 'resetGameList').callsFake(async () => {
                 return [];
@@ -201,7 +198,6 @@ describe('Games service', () => {
             expect(await gamesService.resetGameList()).to.deep.equal([]);
             expect(resetStub.calledOnce);
             expect(writeSpy.calledOnce);
-
         });
 
         it('should throw an error if the reset doesnt work', async () => {
@@ -223,9 +219,9 @@ describe('Games service', () => {
             const stub = sinon.stub(fs, 'rm').callsFake(async () => {
                 throw new Error();
             });
-            
-            await gamesService['deleteImages'](im1,im2);
-            expect(stub.calledOnce)
+
+            await gamesService['deleteImages'](im1, im2);
+            expect(stub.calledOnce);
         });
     });
 });
