@@ -14,7 +14,7 @@ export class RecordTimesService {
     get collection(): Collection<GameTimes> {
         return this.databaseService.database.collection(process.env.DATABASE_COLLECTION!);
     }
-
+     // Toutes les méthodes à tester
     async getGame(nameOfWantedGame: string): Promise<GameTimes> {
         return this.collection.findOne({ name: nameOfWantedGame }).then((game: WithId<GameTimes>) => {
             if (game) {
