@@ -51,8 +51,8 @@ export class DrawService {
         xPositionOffset: number,
         yPositionOffset: number,
     ) {
-        const xMiddlePosition: number = this.calculateLeftTopCornerMiddlePosition(contextToDrawOn.canvas.width, imageToDraw.width);
-        const yMiddlePosition: number = this.calculateLeftTopCornerMiddlePosition(contextToDrawOn.canvas.height, imageToDraw.height);
+        const xMiddlePosition: number = this.getMiddlePositionInCanvas(contextToDrawOn.canvas.width, imageToDraw.width);
+        const yMiddlePosition: number = this.getMiddlePositionInCanvas(contextToDrawOn.canvas.height, imageToDraw.height);
         contextToDrawOn.drawImage(
             imageToDraw,
             xMiddlePosition + xPositionOffset,
@@ -62,7 +62,7 @@ export class DrawService {
         );
     }
 
-    private calculateLeftTopCornerMiddlePosition(canvasSize: number, imageSize: number): number {
+    private getMiddlePositionInCanvas(canvasSize: number, imageSize: number): number {
         return Math.floor(canvasSize / 2) - Math.floor(imageSize / 2);
     }
 }
