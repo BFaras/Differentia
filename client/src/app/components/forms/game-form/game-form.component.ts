@@ -32,7 +32,7 @@ export class GameFormComponent {
     isPlayerWaiting: boolean = !SOMEBODY_IS_WAITING;
     joinFlag: boolean = !JOIN_FLAG;
     createFlag: boolean = !CREATE_FLAG;
-    constructor(private dialog: MatDialog, private socketService: SocketClientService) {}
+    constructor(public dialog: MatDialog, private socketService: SocketClientService) {}
 
     ngOnInit(): void {
         this.configureGameFormSocketFeatures();
@@ -55,33 +55,27 @@ export class GameFormComponent {
         });
     }
 
-    openWarningDialog() {
-        const popDialog = this.dialog.open(PopDialogWarningComponent, {
+    private openWarningDialog(value: string) {
+        this.dialog.open(PopDialogWarningComponent, {
             height: STANDARD_POP_UP_HEIGHT,
             width: STANDARD_POP_UP_WIDTH,
             disableClose: DISABLE_CLOSE,
+            data: value,
         });
-        return popDialog;
     }
 
     deleteGameForm(value: string) {
-        this.openWarningDialog()
-            .afterClosed()
-            .subscribe((result) => {
-                if (result.event == 'Oui' && result.data) {
-                    this.newItemEvent.emit(value);
-                }
-            });
+        this.openWarningDialog('supprimer le jeu');
+        this.socketService.on('Action applied', () => {
+            this.newItemEvent.emit(value);
+        });
     }
 
     resetTimesBoard(value: string) {
-        this.openWarningDialog()
-            .afterClosed()
-            .subscribe((result) => {
-                if (result.event == 'Oui' && result.data) {
-                    this.socketService.send('Reset records time board', value);
-                }
-            });
+        this.openWarningDialog('réinitialiser le temps du jeu');
+        this.socketService.on('Action applied', () => {
+            this.socketService.send('Reset records time board', value);
+        });
     }
 
     setJoinFlag(): void {

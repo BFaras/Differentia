@@ -1,7 +1,7 @@
 <button mat-mini-fab color="warn" aria-label="close dialog" (click)="cancelAction()">
     <mat-icon>close</mat-icon>
 </button>
-<h1 mat-dialog-title id="titre">Cette action est irréversible, voulez-vous continuer?</h1>
+<h1 mat-dialog-title id="titre">Cette action est irréversible, voulez-vous continuer et {{ data }}?</h1>
 <div>
     <button mat-raised-button color="warn" (click)="cancelAction()" id="lastChoiceButtons">Non</button>
     <button mat-raised-button color="accent" (click)="applyAction()" id="lastChoiceButtons">Oui</button>

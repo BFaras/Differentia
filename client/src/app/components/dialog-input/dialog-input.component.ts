@@ -99,7 +99,7 @@ export class DialogInputComponent implements OnInit {
 
     validateTimeType(time: ElementRef, index: number) {
         if (time.nativeElement.value !== undefined) {
-            if (time.nativeElement.value.type === Number || this.verifyTimeRange(time) || time.nativeElement.value === EMPTY_TIME) {
+            if (this.verifyTimeRange(time) || time.nativeElement.value === EMPTY_TIME) {
                 this.timeValid[index] = true;
                 this.onlyQuitButton = false;
                 if (

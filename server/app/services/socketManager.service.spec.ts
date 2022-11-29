@@ -1,4 +1,5 @@
 import { RESPONSE_DELAY } from '@app/server-consts';
+import { MSG_RESET_ALL_TIME, MSG_RESET_TIME } from '@common/const';
 import { DifferencesInformations } from '@common/differences-informations';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
@@ -11,6 +12,7 @@ import * as io from 'socket.io';
 import { io as ioClient, Socket } from 'socket.io-client';
 import { Container } from 'typedi';
 import { ClueManagerService } from './clue-manager.service';
+import { RecordTimesService } from './database.games.service';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
 import { MouseHandlerService } from './mouse-handler.service';
@@ -152,6 +154,50 @@ describe('SocketManager service tests', () => {
         clientSocket.emit('Is the host still there', testGameName);
         clientSocket.once(`${testGameName} response on host presence`, (isHostPresent: boolean) => {
             expect(isHostPresent).to.equal(false);
+            done();
+        });
+    });
+
+    it("should handle 'Reset game list' event", (done) => {
+        const gameManagerServiceSPy = sinon.stub(GameManagerService.prototype, 'resetGameList').callsFake(async () => {
+            return [];
+        });
+        clientSocket.emit('Reset game list');
+        clientSocket.once('Ready to reset game list', (message) => {
+            expect(message).to.equal([]);
+            expect(gameManagerServiceSPy.calledOnce);
+            done();
+        });
+    });
+
+    it("should handle 'Reset game times board' event", (done) => {
+        let value = 'car game';
+        const recordsServiceSPy = sinon.spy(RecordTimesService.prototype, <any>'resetGameRecordTimes');
+        clientSocket.emit('Reset records time board', value);
+        clientSocket.once('Page reloaded', (message: string) => {
+            expect(message).to.equal(MSG_RESET_TIME + value);
+            expect(recordsServiceSPy.calledOnce);
+            done();
+        });
+    });
+
+    it("should handle 'Reset all games times board' event", (done) => {
+        const recordsServiceSPy = sinon.spy(RecordTimesService.prototype, <any>'resetAllGamesRecordTimes');
+        clientSocket.emit('Reset records time board');
+        clientSocket.once('Page reloaded', (message: string) => {
+            expect(message).to.equal(MSG_RESET_ALL_TIME);
+            expect(recordsServiceSPy.calledOnce);
+            done();
+        });
+    });
+
+    it("should handle 'Set time constants' event", (done) => {
+        let value = 'car game';
+        const recordsServiceSPy = sinon.spy(RecordTimesService.prototype, <any>'resetGameRecordTimes');
+        clientSocket.emit('Set time constants', value);
+        clientSocket.once('Page reloaded', (message: string) => {
+            expect(message).to.equal(MSG_RESET_TIME + value);
+            expect(recordsServiceSPy.calledOnce);
             done();
         });
     });

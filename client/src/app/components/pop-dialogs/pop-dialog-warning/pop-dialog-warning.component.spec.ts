@@ -1,25 +1,40 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { SocketTestHelper } from '@app/classes/socket-test-helper';
+import { SocketClientService } from '@app/services/socket-client.service';
+import { Socket } from 'socket.io-client';
 
 import { PopDialogWarningComponent } from './pop-dialog-warning.component';
+export class SocketClientServiceMock extends SocketClientService {}
 
 describe('PopDialogWarningComponent', () => {
     let component: PopDialogWarningComponent;
     let fixture: ComponentFixture<PopDialogWarningComponent>;
     let dialogRef: jasmine.SpyObj<MatDialogRef<PopDialogWarningComponent, any>>;
+    let socketClientServiceMock: SocketClientServiceMock;
+    let socketTestHelper: SocketTestHelper;
 
     beforeAll(async () => {
         dialogRef = jasmine.createSpyObj('MatDialogRef', ['close']);
+        socketTestHelper = new SocketTestHelper();
+        socketClientServiceMock = new SocketClientServiceMock();
+        socketClientServiceMock.socket = socketTestHelper as unknown as Socket;
     });
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [PopDialogWarningComponent],
-            providers: [{ provide: MatDialogRef, useValue: dialogRef }],
+            providers: [
+                { provide: MatDialogRef, useValue: dialogRef },
+                { provide: MAT_DIALOG_DATA, useValue: {} },
+                { provide: SocketClientService, useValue: socketClientServiceMock },
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(PopDialogWarningComponent);
         component = fixture.componentInstance;
+        TestBed.inject(SocketClientService);
+
         fixture.detectChanges();
     });
 
@@ -27,16 +42,11 @@ describe('PopDialogWarningComponent', () => {
         expect(component).toBeTruthy();
     });
     it('should apply action', () => {
-        const eventName = 'Oui';
-        component['value'] = true;
         component.applyAction();
-        expect(dialogRef['close']).toHaveBeenCalledWith({ event: eventName, data: component['value'] });
+        expect(dialogRef['close']).toHaveBeenCalled();
     });
     it('should cancel action', () => {
-        const eventName = 'Non';
-
         component.cancelAction();
-        expect(dialogRef['close']).toHaveBeenCalledWith({ event: eventName });
-        expect(component['value']).toBeFalse();
+        expect(dialogRef['close']).toHaveBeenCalled();
     });
 });

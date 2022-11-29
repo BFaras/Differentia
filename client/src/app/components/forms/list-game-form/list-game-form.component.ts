@@ -85,11 +85,15 @@ export class ListGameFormComponent implements OnInit {
     }
 
     private openSnackBar(gameName: string | string[]) {
-        let msg: string;
-        if (gameName === MSG_RESET_TIME || gameName === MSG_RESET_ALL_TIME) {
+        let msg: string = `Le jeu ${gameName} a été supprimé :(`;
+        if (gameName.includes(MSG_RESET_TIME)) {
             msg = gameName.toString();
-        } else {
-            msg = Array.isArray(gameName) ? RESET_MSG_GAME_LIST : `Le jeu ${gameName} a été supprimé :(`;
+        }
+        if (gameName === MSG_RESET_ALL_TIME) {
+            msg = gameName.toString();
+        }
+        if (Array.isArray(gameName)) {
+            msg = RESET_MSG_GAME_LIST;
         }
         this.snackBar.open(msg, 'OK', {
             horizontalPosition: this.horizontalPosition,
@@ -105,8 +109,10 @@ export class ListGameFormComponent implements OnInit {
         this.socketService.on('Page reloaded', async (message: string | string[]) => {
             if (this.router.url === '/admin' || this.router.url === '/gameSelection') {
                 this.openSnackBar(message);
-                await this.refreshGames(this.gameListToRefresh);
-                this.gameListToRefresh = true;
+                if (message) {
+                    await this.refreshGames(this.gameListToRefresh);
+                    this.gameListToRefresh = false;
+                }
             }
         });
 
@@ -119,9 +125,12 @@ export class ListGameFormComponent implements OnInit {
     }
 
     private async refreshGames(reload?: boolean) {
+        this.messageForUpdate = EMPTY_MESSAGE;
         this.gameListToRefresh = false;
         this.firstElementIndex = FIRST_GAMEFORMS_INDEX;
         this.lastElementIndex = LAST_GAMEFORMS_INDEX;
+        this.nextPageGameForms();
+        this.previousPageGameForms();
         if (reload) {
             await this.ngOnInit();
         }

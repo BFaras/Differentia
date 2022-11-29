@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { SocketClientService } from '@app/services/socket-client.service';
 
 @Component({
     selector: 'app-pop-dialog-warning',
@@ -7,18 +8,20 @@ import { MatDialogRef } from '@angular/material/dialog';
     styleUrls: ['./pop-dialog-warning.component.scss'],
 })
 export class PopDialogWarningComponent implements OnInit {
-    private value: boolean;
-    constructor(public dialogRef: MatDialogRef<PopDialogWarningComponent>) {}
+    constructor(
+        public dialogRef: MatDialogRef<PopDialogWarningComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: string,
+        private socketService: SocketClientService,
+    ) {}
 
     ngOnInit(): void {}
 
     applyAction() {
-        this.value = true;
-        this.dialogRef.close({ event: 'Oui', data: this.value });
+        this.socketService.send('Apply action');
+        this.dialogRef.close();
     }
 
     cancelAction() {
-        this.value = false;
-        this.dialogRef.close({ event: 'Non' });
+        this.dialogRef.close();
     }
 }

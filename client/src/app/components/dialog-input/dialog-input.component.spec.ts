@@ -85,13 +85,13 @@ describe('DialogInputComponent', () => {
     });
 
     it('should not validate the time ', () => {
-        component.initialTimeInput.nativeElement.value = 'bluee';
+        component.initialTimeInput.nativeElement.value = 2000;
         component.validateTimeType(component.initialTimeInput, 0);
         expect(component.timeValid[0]).toBeFalse();
         expect(component.onlyQuitButton).toBeTrue();
     });
 
-    it('should not validate the time ', () => {
+    it('should not validate the time because nothing changed ', () => {
         component.initialTimeInput.nativeElement.value = '';
         component.penaltyTimeInput.nativeElement.value = '';
         component.savedTimeInput.nativeElement.value = '';

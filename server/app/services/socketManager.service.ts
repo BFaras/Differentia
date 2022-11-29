@@ -77,6 +77,10 @@ export class SocketManager {
                 );
             });
 
+            socket.on('Apply action', () => {
+                socket.emit('Action applied');
+            });
+
             socket.on('my username is', (username: string) => {
                 if (username.charAt(0) !== ' ') {
                     this.waitingLineHandlerService.setUsernamePlayer(socket.id, username, this.sio);
@@ -105,19 +109,13 @@ export class SocketManager {
                 }
             });
 
-            socket.on('Reset game list', () => {
-                this.gameManagerService.resetGameList();
+            socket.on('Reset game list', async () => {
+                this.sio.emit('Ready to reset game list', await this.gameManagerService.resetGameList());
             });
 
             socket.on('Reset records time board', async (value?: string) => {
-                if (value)
-                    await this.recordTimesService.resetGameRecordTimes(value).then((res) => {
-                        console.log(res);
-                    });
-                else
-                    await this.recordTimesService.resetAllGamesRecordTimes().then((res) => {
-                        console.log(res);
-                    });
+                if (value) await this.recordTimesService.resetGameRecordTimes(value).then((res) => {});
+                else await this.recordTimesService.resetAllGamesRecordTimes().then((res) => {});
                 value = value ? MSG_RESET_TIME + value : MSG_RESET_ALL_TIME;
                 this.sio.except(this.gameManagerService.collectAllSocketsRooms()).emit('Page reloaded', value);
                 this.gameManagerService.allSocketsRooms = [];
@@ -136,9 +134,7 @@ export class SocketManager {
             });
 
             socket.on('Set time constants', (timeConstants) => {
-                this.timeConstantsService.setTimes(timeConstants).then((value) => {
-                    console.log(value);
-                });
+                this.timeConstantsService.setTimes(timeConstants).then((value) => {});
             });
 
             socket.on('I left', (gameName: string) => {

@@ -52,7 +52,7 @@ export class GameManagerService {
     }
 
     async resetGameList() {
-        this.sio.emit('Ready to reset game list', await this.gamesService.resetGameList());
+        return await this.gamesService.resetGameList();
     }
 
     async startMultiplayerMatch(socket: io.Socket, adversarySocket: io.Socket, gameInfo: string[]) {

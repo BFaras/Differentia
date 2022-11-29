@@ -219,4 +219,10 @@ describe('GameManagerService tests', () => {
         expect(stub.calledOnce);
         expect(spy.calledOnceWith(testGameName));
     });
+
+    it('should reset game list ()', () => {
+        const stub = sinon.stub(gamesService, 'resetGameList').resolves(['1', '2']);
+        gameManagerService.resetGameList();
+        expect(stub.calledOnce);
+    });
 });
