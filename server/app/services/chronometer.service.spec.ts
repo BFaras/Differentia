@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { CLASSIC_MODE, LIMITED_TIME_MODE, MAX_TIME, RESET_VALUE } from '@common/const';
+import { ONE_SECOND_OFFSET } from '@app/server-consts';
 import { ChronometerService } from './chronometer.service';
 import { TimeConstants } from '@common/time-constants';
 import * as sinon from 'sinon';
@@ -88,7 +89,7 @@ describe('Chronometer service', () => {
         chronometerService['timeConstants'] = timeConstants;
         const seconds = chronometerService.time.seconds;
         chronometerService.increaseTimeByBonusTime();
-        expect(chronometerService.time.seconds).to.equal(seconds + RANDOM_NUMBER);
+        expect(chronometerService.time.seconds).to.equal(seconds + RANDOM_NUMBER + ONE_SECOND_OFFSET);
     });
 
     it('decreaseTimeByPenaltyTIme should decrease the minutes and seconds by the set time in the time constants', () => {
@@ -124,19 +125,19 @@ describe('Chronometer service', () => {
         expect(spy.calledOnce);
     });
 
-    it('setChronometerMode should call limitedTimeMode if the gameMode is Limited Time', () => {
+    it('resetSeconds should set seconds to 0', () => {
         chronometerService.time.seconds = MAX_TIME;
         chronometerService['resetSeconds']();
         expect(chronometerService.time.seconds).to.equal(RESET_VALUE);
     });
 
-    it('setChronometerMode should call limitedTimeMode if the gameMode is Limited Time', () => {
+    it('decreaseMinutes should not decrease the minutes if they are already at 0', () => {
         chronometerService.time.minutes = RESET_VALUE;
         chronometerService['decreaseMinutes']();
         expect(chronometerService.time.minutes).to.equal(RESET_VALUE);
     });
 
-    it('setChronometerMode should call limitedTimeMode if the gameMode is Limited Time', () => {
+    it('setSeconds should not set the seconds to 59 if the minutes are already at 0', () => {
         chronometerService.time.minutes = RESET_VALUE;
         chronometerService['setSeconds']();
         expect(chronometerService.time.seconds).to.equal(RESET_VALUE);

@@ -16,7 +16,6 @@ describe('Games service', () => {
     let invalidGameToAdd: Game;
     let carGame: Game;
     let bikeGame: Game;
-    //let newTime: Time;
 
     beforeEach(async () => {
         gamesService = new GamesService();
@@ -139,7 +138,7 @@ describe('Games service', () => {
         });
 
         it('should throw an error when fs.promises.readFile(images_path) crashes', async () => {
-            let testImageName = 'test name';
+            const testImageName = 'test name';
             const stub = sinon.stub(fs.promises, 'readFile').callsFake(async () => {
                 throw new Error();
             });

@@ -7,9 +7,9 @@ import { WaitingLineHandlerService } from './waiting-line-handler.service';
 describe('WaitingLineHandlerService tests', () => {
     const testGameName = 'test12345';
     const testSocketId1 = 'JKHSDA125';
+    const event = 'event';
     let server: io.Server;
-    let socket: io.Socket;
-    let event = 'event';
+    // let socket: io.Socket;
     let waitingLineHandlerService: WaitingLineHandlerService;
     let addJoiningPlayerIdSpy: sinon.SinonSpy;
     let deleteJoiningPlayerIdSpy: sinon.SinonSpy;
@@ -99,9 +99,8 @@ describe('WaitingLineHandlerService tests', () => {
     });
 
     it('should call getUsernamePlayer ', () => {
-        socket.data.username = 'test';
-        expect(waitingLineHandlerService.getUsernamePlayer(socket.id, server)).to.equal('test');
-        expect(getSocketByIDSpy.calledOnce);
+        expect(waitingLineHandlerService.getUsernamePlayer(testSocketId1, server)).to.equal(undefined);
+        expect(getUsernamePlayerSpy.calledOnce);
     });
 
     it('should call getPresenceOfJoiningPlayers ', () => {
@@ -146,5 +145,26 @@ describe('WaitingLineHandlerService tests', () => {
     it('should not send an event to all the players joining', () => {
         waitingLineHandlerService.sendEventToAllJoiningPlayers(server, testGameName, event);
         expect(playergetSpy.calledOnce);
+    });
+
+    it('when adding a limited time player, the method isSomebodyWaitingForALimitedGame should return true', () => {
+        waitingLineHandlerService.addLimitedTimeWaitingPlayer(testSocketId1);
+        expect(waitingLineHandlerService.isSomebodyWaitingForALimitedTimeGame()).to.equal(true);
+    });
+
+    it('when not adding a limited time player, the method isSomebodyWaitingForALimitedGame should return false', () => {
+        expect(waitingLineHandlerService.isSomebodyWaitingForALimitedTimeGame()).to.equal(false);
+    });
+
+    it('when adding a limited time player, the method getLimitedTimeWaitingPlayerId should return testSocketId', () => {
+        waitingLineHandlerService.addLimitedTimeWaitingPlayer(testSocketId1);
+        expect(waitingLineHandlerService.getLimitedTimeWaitingPlayerId()).to.equal(testSocketId1);
+    });
+
+    it('when removing a limited time player, the method isSomebodyWaitingForALimitedGame should return false', () => {
+        waitingLineHandlerService.addLimitedTimeWaitingPlayer(testSocketId1);
+        expect(waitingLineHandlerService.getLimitedTimeWaitingPlayerId()).to.equal(testSocketId1);
+        waitingLineHandlerService.resetLimitedTimeWaitingLine();
+        expect(waitingLineHandlerService.isSomebodyWaitingForALimitedTimeGame()).to.equal(false);
     });
 });
