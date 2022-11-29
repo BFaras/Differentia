@@ -8,6 +8,7 @@ import { Position } from '@common/position';
 import * as http from 'http';
 import * as io from 'socket.io';
 import Container from 'typedi';
+import { BestTimesService } from './best-times.service';
 import { ClueManagerService } from './clue-manager.service';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
@@ -15,7 +16,6 @@ import { GamesService } from './local.games.service';
 import { MouseHandlerService } from './mouse-handler.service';
 import { TimeConstantsService } from './time-constants.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
-import { BestTimesService } from './best-times.service';
 
 export class SocketManager {
     socket: io.Socket;
@@ -232,9 +232,15 @@ export class SocketManager {
                 const playerUsername = this.gameManagerService.getSocketUsername(socket);
                 if (isGameFinished) {
                     mouseHandler.resetDifferencesData();
-                    if (mode === CLASSIC_MODE) this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
                     const playerGameTime = this.gameManagerService.getSocketChronometerService(socket).time;
-                    await this.bestTimesService.compareGameTimeWithDbTimes(playerGameTime,isMultiplayer,this.currentGameName,playerUsername);
+                    await this.bestTimesService.compareGameTimeWithDbTimes(playerGameTime, isMultiplayer, this.currentGameName, playerUsername);
+                    if (mode === CLASSIC_MODE)
+                        this.gameManagerService.handleEndGameEmits(
+                            socket,
+                            isMultiplayer,
+                            this.bestTimesService.hasNewRecord,
+                            this.bestTimesService.playerRanking,
+                        );
                     this.gameManagerService.endGame(socket, mode);
                 } else {
                     this.gameManagerService.doWeHaveToSwitchGame(socket, mode);

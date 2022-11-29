@@ -125,7 +125,7 @@ export class RecordTimesService {
     getPlayerRanking(timeArray: RecordTime[], playerRecordTime: string): number | undefined {
         for (let index = 0; index < timeArray.length; index++) {
             if (playerRecordTime === timeArray[index].time) {
-                return index;
+                return index+1;
             }
         }
         return;

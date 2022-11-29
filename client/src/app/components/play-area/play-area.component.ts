@@ -205,8 +205,25 @@ export class PlayAreaComponent implements OnInit {
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
             let endGameMessage = CLASSIC_SOLO_END_GAME_MESSAGE;
             let winFlag = WIN_FLAG;
-            if (endGameInfos.isMultiplayer && endGameInfos.isGameWon && !endGameInfos.isAbandon) {
-                endGameMessage = CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE;
+
+            if (!endGameInfos.isMultiplayer && endGameInfos.isGameWon && !endGameInfos.isAbandon) {
+                if (endGameInfos.hasNewRecord) {
+                    endGameMessage =
+                        'Bravo ' +
+                        this.localPlayerUsername +
+                        ', vous avez gagné et obtenu la place numéro ' +
+                        endGameInfos.playerRanking +
+                        ' au classement!';
+                }
+            } else if (endGameInfos.isMultiplayer && endGameInfos.isGameWon && !endGameInfos.isAbandon) {
+                if (endGameInfos.hasNewRecord) {
+                    endGameMessage =
+                        'Bravo ' +
+                        this.localPlayerUsername +
+                        ', vous avez gagné et obtenu la place numéro ' +
+                        endGameInfos.playerRanking +
+                        ' au classement!';
+                } else endGameMessage = CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE;
             } else if (endGameInfos.isMultiplayer && endGameInfos.isAbandon) {
                 endGameMessage = CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE;
             } else if (!endGameInfos.isGameWon) {

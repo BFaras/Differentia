@@ -105,11 +105,13 @@ export class GameManagerService {
         }
     }
 
-    handleEndGameEmits(socket: io.Socket, isItMultiplayer: boolean) {
+    handleEndGameEmits(socket: io.Socket, isItMultiplayer: boolean, hasNewRecord: boolean, playerRanking: number) {
         const endGameInfos: EndGameInformations = {
             isMultiplayer: isItMultiplayer,
             isAbandon: NOBODY_ABANDONNED,
             isGameWon: GAME_WON,
+            hasNewRecord: hasNewRecord,
+            playerRanking: playerRanking,
         };
         socket.emit('End game', endGameInfos);
 
@@ -126,6 +128,8 @@ export class GameManagerService {
                 isMultiplayer: IT_IS_MULTIPLAYER,
                 isAbandon: !NOBODY_ABANDONNED,
                 isGameWon: GAME_WON,
+                hasNewRecord: false,
+                playerRanking: 0,
             };
             this.sio.to(gameRoomName).emit('End game', endGameInfos);
             this.endGame(socket, gameMode);

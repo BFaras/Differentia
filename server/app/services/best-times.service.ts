@@ -7,6 +7,8 @@ import { DatabaseService } from './database.service';
 export class BestTimesService {
     private databaseService: DatabaseService;
     private recordTimesService: RecordTimesService;
+    playerRanking: number = 0;
+    hasNewRecord: boolean = false;
 
     constructor() {
         this.databaseService = Container.get(DatabaseService);
@@ -28,24 +30,26 @@ export class BestTimesService {
             const gameTimeInString = this.timeFormatToString(gameTime);
             const dbGameTimes = this.convertTimeForComparison(databaseGameTimes.multiplayerGameTimes[2].time);
             if (this.convertTimeForComparison(gameTimeInString) < dbGameTimes) {
+                this.hasNewRecord = true;
                 databaseGameTimes.multiplayerGameTimes[2].time = gameTimeInString;
                 databaseGameTimes.multiplayerGameTimes[2].playerName = playerUsername;
                 await this.recordTimesService.updateGameRecordTimes(gameName, databaseGameTimes);
                 await this.recordTimesService.sortGameTimes(gameName, isMultiplayer);
                 const sortedTimes = await this.recordTimesService.getGameTimes(gameName);
-                const playerRanking = this.recordTimesService.getPlayerRanking(sortedTimes.multiplayerGameTimes, gameTimeInString);
+                this.playerRanking = this.recordTimesService.getPlayerRanking(sortedTimes.multiplayerGameTimes, gameTimeInString)!;
 
             }
         } else {
             const gameTimeInString = this.timeFormatToString(gameTime);
             const dbGameTimes = this.convertTimeForComparison(databaseGameTimes.soloGameTimes[2].time);
             if (this.convertTimeForComparison(gameTimeInString) < dbGameTimes) {
+                this.hasNewRecord = true;
                 databaseGameTimes.soloGameTimes[2].time = gameTimeInString;
                 databaseGameTimes.soloGameTimes[2].playerName = playerUsername;
                 await this.recordTimesService.updateGameRecordTimes(gameName, databaseGameTimes);
                 await this.recordTimesService.sortGameTimes(gameName, isMultiplayer);
                 const sortedTimes = await this.recordTimesService.getGameTimes(gameName);
-                const playerRanking = this.recordTimesService.getPlayerRanking(sortedTimes.soloGameTimes, gameTimeInString);
+                this.playerRanking = this.recordTimesService.getPlayerRanking(sortedTimes.soloGameTimes, gameTimeInString)!;
             }
         }
     }
