@@ -2,7 +2,7 @@ import { MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const'
 import { Game } from '@common/game';
 import * as fs from 'fs';
 import { join } from 'path';
-import Container, { Service } from 'typedi';
+import { Container, Service } from 'typedi';
 import { RecordTimesService } from './database.games.service';
 import { DatabaseService } from './database.service';
 

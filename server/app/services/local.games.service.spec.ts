@@ -1,12 +1,11 @@
 import { Game } from '@common/game';
-//import { Time } from '@common/time';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import * as fs from 'fs';
 import * as sinon from 'sinon';
 import { GamesService } from './local.games.service';
-import {RecordTime} from '@app/classes/record-times'
+import { RecordTime } from '@app/classes/record-times';
 chai.use(chaiAsPromised);
 
 describe('Games service', () => {
@@ -23,14 +22,14 @@ describe('Games service', () => {
         carGame = {
             name: 'Car game',
             numberOfDifferences: 4,
-            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+            times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
             images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
             differencesList: [],
         };
         bikeGame = {
             name: 'Bike game',
             numberOfDifferences: 5,
-            times:{soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+            times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
             images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
             differencesList: [],
         };
@@ -38,14 +37,14 @@ describe('Games service', () => {
         validGameToAdd = {
             name: 'New Game',
             numberOfDifferences: 5,
-            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+            times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
             images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
             differencesList: [],
         };
         invalidGameToAdd = {
             name: 'Car game',
             numberOfDifferences: 5,
-            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+            times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
             images: ['image_7_diff.bmp', 'ImageBlanche.bmp'],
             differencesList: [],
         };
@@ -76,21 +75,21 @@ describe('Games service', () => {
 
     it('should not validate the name of the game when a game with the same name already exists', async () => {
         await gamesService.asyncReadGamesFile();
-        expect(gamesService.validateName(invalidGameToAdd.name)).to.be.false;
+        expect(gamesService.validateName(invalidGameToAdd.name)).to.equal(false);
     });
 
     it('should validate the name of the game when a game with the same name doesnt already exists', async () => {
         await gamesService.asyncReadGamesFile();
-        expect(gamesService.validateName(validGameToAdd.name)).to.be.true;
+        expect(gamesService.validateName(validGameToAdd.name)).to.equal(true);
     });
 
     it('should not add a game when a game with the same name already exists', async () => {
-        expect(await gamesService.addGame(invalidGameToAdd)).to.be.false;
+        expect(await gamesService.addGame(invalidGameToAdd)).to.equal(false);
     });
 
     it('should add a game when a game doesnt already exists', async () => {
         const stub = sinon.stub(fs.promises, 'writeFile').callsFake(async () => {});
-        expect(await gamesService.addGame(validGameToAdd)).to.be.true;
+        expect(await gamesService.addGame(validGameToAdd)).to.equal(true);
         expect(stub.callsFake);
     });
 
