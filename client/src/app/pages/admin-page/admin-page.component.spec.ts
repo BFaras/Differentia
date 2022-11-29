@@ -37,4 +37,10 @@ describe('AdminPageComponent', () => {
         component.openDialog();
         expect(spy).toHaveBeenCalled();
     });
+
+    it('should open dialog to reset data', () => {
+        const dialogSpy = spyOn(component['dialog'], 'open');
+        component.openResetDialog();
+        expect(dialogSpy).toHaveBeenCalled();
+    });
 });

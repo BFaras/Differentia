@@ -2,13 +2,13 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { PopDialogHostRefusedComponent } from '@app/components/pop-dialogs/pop-dialog-host-refused/pop-dialog-host-refused.component';
+import { DISABLE_CLOSE, EMPTY_PLAYER_NAME, SOMEONE_IS_JOINING, STANDARD_POP_UP_HEIGHT, STANDARD_POP_UP_WIDTH } from '@app/const/client-consts';
+import { PopUpData } from '@app/interfaces/pop-up-data';
 import { CreateGameService } from '@app/services/create-game.service';
 import { JoinGameService } from '@app/services/join-game.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
-import { STANDARD_POP_UP_HEIGHT, STANDARD_POP_UP_WIDTH, SOMEONE_IS_JOINING, DISABLE_CLOSE, EMPTY_PLAYER_NAME } from '@app/client-consts';
 import { HOST_PRESENT } from '@common/const';
-import { PopUpData } from '@app/interfaces/pop-up-data';
 
 @Component({
     selector: 'app-pop-dialog-waiting-for-player',

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CLUE_MIDDLE_COMPASS_OFFSET_X, COMPASS_CLUE_ID, NO_OFFSET } from '@app/client-consts';
+import { CLUE_MIDDLE_COMPASS_OFFSET_X, COMPASS_CLUE_ID, NO_OFFSET } from '@app/const/client-consts';
 import { CompassInformations } from '@app/interfaces/compass-informations';
 import { Position } from '@common/position';
 import { ClueHandlerService } from './clue-handler.service';

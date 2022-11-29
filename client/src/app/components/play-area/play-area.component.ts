@@ -1,5 +1,6 @@
 import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { PopDialogEndgameComponent } from '@app/components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
 import {
     BLINK_ID,
     CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE,
@@ -15,8 +16,7 @@ import {
     STANDARD_POP_UP_WIDTH,
     THREE_SECONDS,
     WIN_FLAG,
-} from '@app/client-consts';
-import { PopDialogEndgameComponent } from '@app/components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
+} from '@app/const/client-consts';
 import { Coordinate } from '@app/interfaces/coordinate';
 import { ClueHandlerService } from '@app/services/clue-handler.service';
 import { DifferenceDetectionService } from '@app/services/difference-detection.service';

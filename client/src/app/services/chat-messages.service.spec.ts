@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
-import { ABANDON_MESSAGE, MESSAGE_CLUE } from '@app/client-consts';
+import { ABANDON_MESSAGE, MESSAGE_CLUE } from '@app/const/client-consts';
 import { ChatMessage } from '@common/chat-message';
 import {
     DEFAULT_USERNAME,

@@ -10,7 +10,7 @@ import {
     CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE,
     PAUSED_ID,
     THREE_SECONDS,
-} from '@app/client-consts';
+} from '@app/const/client-consts';
 import { ClueHandlerService } from '@app/services/clue-handler.service';
 import { DifferenceDetectionService } from '@app/services/difference-detection.service';
 import { DrawService } from '@app/services/draw.service';

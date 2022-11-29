@@ -6,7 +6,7 @@ import {
     COMPASS_WIDTH,
     PNG_FILE_TYPE_SRC,
     SUBSTRACTION_FACTOR,
-} from '@app/client-consts';
+} from '@app/const/client-consts';
 import { CompassInformations } from '@app/interfaces/compass-informations';
 import {
     CARDINAL_DIRECTION_RAD_ANGLE,
