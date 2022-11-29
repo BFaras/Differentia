@@ -160,7 +160,9 @@ export class PlayAreaComponent implements OnInit {
 
     @HostListener(CLUE_KEY, ['$event'])
     handleKeyboardClue() {
-        this.socketService.send('get clue for player');
+        if (!this.isMultiplayer) {
+            this.socketService.send('get clue for player');
+        }
     }
 
     private configurePlayAreaSocket(): void {
