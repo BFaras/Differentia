@@ -58,7 +58,7 @@ export class ClueHandlerService {
 
         const compassInfo: CompassInformations = {
             compassClueImage: await this.loadCompassImageWithRightSize(compassCardinalDirection),
-            isDifferenceClueMiddle: this.isDifferenceClueInMiddleBehindCompass(differencePixels),
+            isDifferenceClueMiddle: this.isDifferenceClueInMiddle(differencePixels),
         };
 
         if (compassInfo.isDifferenceClueMiddle) {
@@ -147,13 +147,13 @@ export class ClueHandlerService {
         return cardinalDirection * CARDINAL_DIRECTION_RAD_ANGLE;
     }
 
-    private isDifferenceClueInMiddleBehindCompass(differencePixels: number[]) {
+    private isDifferenceClueInMiddle(differencePixels: number[]) {
         const canvasMiddleLimits: Positions = this.getCanvasMiddleLimits();
         let isInMiddleBehindCompass = false;
 
         for (let pixelNb of differencePixels) {
             const pixelPosition: Position = this.convertPixelNbToPosition(pixelNb);
-            if (this.isInTheBoundsOfLimitPositions(canvasMiddleLimits, pixelPosition)) {
+            if (this.isInBoundsOfPositions(canvasMiddleLimits, pixelPosition)) {
                 isInMiddleBehindCompass = true;
                 break;
             }
@@ -162,7 +162,7 @@ export class ClueHandlerService {
         return isInMiddleBehindCompass;
     }
 
-    private isInTheBoundsOfLimitPositions(limitPositions: Positions, positionToCheck: Position): boolean {
+    private isInBoundsOfPositions(limitPositions: Positions, positionToCheck: Position): boolean {
         return (
             positionToCheck.x >= limitPositions.beginningPosition.x &&
             positionToCheck.y >= limitPositions.beginningPosition.y &&
