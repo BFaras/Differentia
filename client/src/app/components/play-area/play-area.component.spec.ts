@@ -3,7 +3,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
-import { CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE, CLASSIC_MULTIPLAYER_LOST_MESSAGE, CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE } from '@app/client-consts';
+import {
+    CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE,
+    CLASSIC_MULTIPLAYER_LOST_MESSAGE,
+    CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE,
+} from '@app/const/client-consts';
 import { ClueHandlerService } from '@app/services/clue-handler.service';
 import { DifferenceDetectionService } from '@app/services/difference-detection.service';
 import { DrawService } from '@app/services/draw.service';

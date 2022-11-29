@@ -8,7 +8,7 @@ import {
     RESET_INFO_CONSTANTS,
     RESET_INFO_GAME_LIST,
     RESET_INFO_RECORDS_TIME,
-} from '@app/client-consts';
+} from '@app/const/client-consts';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeConstants } from '@common/time-constants';
 
@@ -52,7 +52,9 @@ export class PopDialogResetComponent implements OnInit {
     }
 
     resetData() {
-        if (this.resetRecordsTimeBoard) console.log('RESET');
+        if (this.resetRecordsTimeBoard) {
+            this.socketService.send('Reset records time board');
+        }
         if (this.resetTimeConstants) this.socketService.send('Set time constants', this.timeConstants);
         if (this.resetGameFormList) {
             this.socketService.send('Reset game list');

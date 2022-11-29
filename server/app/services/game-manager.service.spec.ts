@@ -138,13 +138,13 @@ describe('GameManagerService tests', () => {
     });
 
     it('should call deleteRoom() on handleEndGameEmit()', () => {
-        const stub = sinon.stub(gameManagerService, <any>'deleteRoom').callsFake(() => {});
+        const stub = sinon.stub(gameManagerService, 'deleteRoom').callsFake(() => {});
         gameManagerService.handleEndGameEmits(serverSocket, true);
         expect(stub.calledOnce);
     });
 
     it('should call deleteRoom() on handleAbandonEmit()', () => {
-        const spy = sinon.spy(gameManagerService, <any>'deleteRoom');
+        const spy = sinon.spy(gameManagerService, 'deleteRoom');
         serverSocket.join(testSocketId1 + GAME_ROOM_GENERAL_ID);
         gameManagerService.handleAbandonEmit(serverSocket, CLASSIC_MODE);
         expect(spy);
@@ -215,8 +215,14 @@ describe('GameManagerService tests', () => {
 
         const spy = sinon.spy(gameManagerService.gamesRooms, 'delete');
         const stub = sinon.stub(gameManagerService, 'findSocketGameRoomName');
-        gameManagerService['deleteRoom'](serverSocket);
+        gameManagerService.deleteRoom(serverSocket);
         expect(stub.calledOnce);
         expect(spy.calledOnceWith(testGameName));
+    });
+
+    it('should reset game list ()', () => {
+        const stub = sinon.stub(gamesService, 'resetGameList').resolves(['1', '2']);
+        gameManagerService.resetGameList();
+        expect(stub.calledOnce);
     });
 });

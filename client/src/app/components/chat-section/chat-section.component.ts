@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { GAME_MESSAGE_SENDER_NAME } from '@app/client-consts';
+import { GAME_MESSAGE_SENDER_NAME } from '@app/const/client-consts';
 import { ChatMessagesService } from '@app/services/chat-messages.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { ChatMessage } from '@common/chat-message';

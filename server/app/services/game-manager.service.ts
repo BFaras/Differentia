@@ -7,7 +7,7 @@ import {
     LIMITED_TIME_MODE,
     MODIFIED_IMAGE_POSITION,
     NO_OTHER_PLAYER_ROOM,
-    ORIGINAL_IMAGE_POSITION
+    ORIGINAL_IMAGE_POSITION,
 } from '@common/const';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
@@ -52,7 +52,7 @@ export class GameManagerService {
     }
 
     async resetGameList() {
-        this.sio.emit('Ready to reset game list', await this.gamesService.resetGameList());
+        return await this.gamesService.resetGameList();
     }
 
     async startMultiplayerMatch(socket: io.Socket, adversarySocket: io.Socket, gameInfo: string[]) {
@@ -304,7 +304,7 @@ export class GameManagerService {
         this.gamesRooms.set(gameName, rooms);
     }
 
-    private deleteRoom(socket: io.Socket): void {
+    deleteRoom(socket: io.Socket): void {
         const gameRoomName = this.findSocketGameRoomName(socket);
         let gameName = '';
         for (const rooms of this.gamesRooms.entries()) {
@@ -360,5 +360,4 @@ export class GameManagerService {
         clearInterval(this.getSocketTimeInterval(socket));
         this.getSocketChronometerService(socket)?.resetChrono();
     }
-
 }
