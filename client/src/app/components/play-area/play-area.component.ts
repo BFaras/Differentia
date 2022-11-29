@@ -1,23 +1,14 @@
 import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { PopDialogEndgameComponent } from '@app/components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
 import {
     BLINK_ID,
-    CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE,
-    CLASSIC_MULTIPLAYER_LOST_MESSAGE,
-    CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE,
-    CLASSIC_SOLO_END_GAME_MESSAGE,
     COMPASS_BLINK_MILISECONDS,
     COMPASS_CLUE_ID,
-    DISABLE_CLOSE,
-    LOSING_FLAG,
     PAUSED_ID,
     STANDARD_POP_UP_HEIGHT,
     STANDARD_POP_UP_WIDTH,
-    WIN_FLAG,
 } from '@app/const/client-consts';
 import { Coordinate } from '@app/interfaces/coordinate';
-import { ClueHandlerService } from '@app/services/clue-handler.service';
 import { DifferenceDetectionService } from '@app/services/difference-detection.service';
 import { DrawService } from '@app/services/draw.service';
 import { ImageGeneratorService } from '@app/services/image-generator.service';
@@ -33,7 +24,6 @@ import {
     MODIFIED_IMAGE_POSITION,
     ORIGINAL_IMAGE_POSITION,
 } from '@common/const';
-import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
 import { PopDialogAbandonVerificationComponent } from '../pop-dialogs/pop-dialog-abandon-verification/pop-dialog-abandon-verification.component';
@@ -66,7 +56,6 @@ export class PlayAreaComponent implements OnInit {
         private imageToImageDifferenceService: ImageToImageDifferenceService,
         private dialog: MatDialog,
         private imageGenerator: ImageGeneratorService,
-        private readonly clueHandlerService: ClueHandlerService,
     ) {}
 
     get width(): number {
@@ -128,18 +117,6 @@ export class PlayAreaComponent implements OnInit {
         this.modifiedCanvas.nativeElement.focus();
     }
 
-    private openEndGameDialog(messageToDisplay: string, winFlag: boolean) {
-        this.dialog.open(PopDialogEndgameComponent, {
-            height: STANDARD_POP_UP_HEIGHT,
-            width: STANDARD_POP_UP_WIDTH,
-            data: {
-                message: messageToDisplay,
-                winFlag,
-            },
-            disableClose: DISABLE_CLOSE,
-        });
-    }
-
     // Ajouter de la verification pour le chat
     // Oublier la fonction que le prof a conseiller, onChange? onActive?
     @HostListener(CHEAT_KEY, ['$event'])
@@ -194,17 +171,9 @@ export class PlayAreaComponent implements OnInit {
             this.drawService.makePixelsBlinkOnCanvasCheat(pixelList, this.modifiedCanvas.nativeElement, this.blinkOriginalCanvas.nativeElement);
         });
 
+        //To test that the function is called and transfer the other tests of this to draw service
         this.socketService.on('Clue with quadrant of difference', (clueInformations: ClueInformations) => {
-            const quandrantPixelsNb: number[] = this.clueHandlerService.findClueQuadrantPixels(
-                clueInformations.clueAmountLeft,
-                clueInformations.clueDifferenceQuadrant,
-            );
-            this.drawService.makePixelsBlinkOnCanvas(
-                quandrantPixelsNb,
-                this.blinkModifiedCanvas.nativeElement,
-                this.modifiedCanvas.nativeElement,
-                true,
-            );
+            this.drawService.showQuadrantClue(clueInformations, this.blinkModifiedCanvas.nativeElement, this.modifiedCanvas.nativeElement);
         });
 
         this.socketService.on('Clue with difference pixels', async (differenceCluePixels: number[]) => {
@@ -216,20 +185,6 @@ export class PlayAreaComponent implements OnInit {
                 this.drawService.decrementNumberOfBlinkCalls();
                 this.blinkModifiedCanvas.nativeElement.id = COMPASS_CLUE_ID;
             }, COMPASS_BLINK_MILISECONDS);
-        });
-
-        this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
-            let endGameMessage = CLASSIC_SOLO_END_GAME_MESSAGE;
-            let winFlag = WIN_FLAG;
-            if (endGameInfos.isMultiplayer && endGameInfos.isGameWon && !endGameInfos.isAbandon) {
-                endGameMessage = CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE;
-            } else if (endGameInfos.isMultiplayer && endGameInfos.isAbandon) {
-                endGameMessage = CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE;
-            } else if (!endGameInfos.isGameWon) {
-                endGameMessage = CLASSIC_MULTIPLAYER_LOST_MESSAGE;
-                winFlag = LOSING_FLAG;
-            }
-            this.openEndGameDialog(endGameMessage, winFlag);
         });
 
         this.socketService.on('game images', async () => {

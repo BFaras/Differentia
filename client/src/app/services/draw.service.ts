@@ -9,6 +9,7 @@ import {
     THREE_SECONDS,
 } from '@app/const/client-consts';
 import { CompassInformations } from '@app/interfaces/compass-informations';
+import { ClueInformations } from '@common/clue-informations';
 import { Position } from '@common/position';
 import { ClueHandlerService } from './clue-handler.service';
 import { ImageGeneratorService } from './image-generator.service';
@@ -48,6 +49,15 @@ export class DrawService {
         } else {
             this.drawImageOnMiddleOfCanvas(compassInfos.compassClueImage, canvasToShowOnContext, NO_OFFSET, NO_OFFSET);
         }
+    }
+
+    //To test (With the test from the Clue with quadrant of difference event in PlayAreaComponent)
+    showQuadrantClue(clueInformations: ClueInformations, canvasToBlink: HTMLCanvasElement, canvasToCopyFrom: HTMLCanvasElement) {
+        const quandrantPixelsNb: number[] = this.clueHandlerService.findClueQuadrantPixels(
+            clueInformations.clueAmountLeft,
+            clueInformations.clueDifferenceQuadrant,
+        );
+        this.makePixelsBlinkOnCanvas(quandrantPixelsNb, canvasToBlink, canvasToCopyFrom, true);
     }
 
     setCanvasTransparent(canvas: HTMLCanvasElement) {
