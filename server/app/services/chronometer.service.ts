@@ -22,7 +22,7 @@ export class ChronometerService {
         if (gameMode === LIMITED_TIME_MODE) {
             await this.limitedTimeMode(socket);
         } else {
-            this.classicMode(socket);
+            await this.classicMode(socket);
         }
     }
 
@@ -73,7 +73,8 @@ export class ChronometerService {
         }
     }
 
-    private classicMode(socket: io.Socket): void {
+    private async classicMode(socket: io.Socket): Promise<void> {
+        await this.setConstants();
         this.resetChrono();
         this.mode = CLASSIC_MODE;
         socket.data.gameMode = CLASSIC_MODE;
