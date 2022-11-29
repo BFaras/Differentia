@@ -32,6 +32,9 @@ export class BestTimesService {
                 databaseGameTimes.multiplayerGameTimes[2].playerName = playerUsername;
                 await this.recordTimesService.updateGameRecordTimes(gameName, databaseGameTimes);
                 await this.recordTimesService.sortGameTimes(gameName, isMultiplayer);
+                const sortedTimes = await this.recordTimesService.getGameTimes(gameName);
+                const playerRanking = this.recordTimesService.getPlayerRanking(sortedTimes.multiplayerGameTimes, gameTimeInString);
+
             }
         } else {
             const gameTimeInString = this.timeFormatToString(gameTime);
@@ -41,6 +44,8 @@ export class BestTimesService {
                 databaseGameTimes.soloGameTimes[2].playerName = playerUsername;
                 await this.recordTimesService.updateGameRecordTimes(gameName, databaseGameTimes);
                 await this.recordTimesService.sortGameTimes(gameName, isMultiplayer);
+                const sortedTimes = await this.recordTimesService.getGameTimes(gameName);
+                const playerRanking = this.recordTimesService.getPlayerRanking(sortedTimes.soloGameTimes, gameTimeInString);
             }
         }
     }

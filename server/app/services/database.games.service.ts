@@ -6,6 +6,7 @@ import 'dotenv/config';
 import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
 import { DatabaseService } from './database.service';
+import { RecordTime } from '@app/classes/record-times';
 
 @Service()
 export class RecordTimesService {
@@ -102,6 +103,7 @@ export class RecordTimesService {
             });
     }
 
+
     async sortGameTimes(gameName: string, isMultiplayer: boolean): Promise<void> {
         if (!isMultiplayer) {
             return this.collection
@@ -118,6 +120,15 @@ export class RecordTimesService {
                     throw new Error('Failed to sort the multiplayer game record times');
                 });
         }
+    }
+
+    getPlayerRanking(timeArray: RecordTime[], playerRecordTime: string): number | undefined {
+        for (let index = 0; index < timeArray.length; index++) {
+            if (playerRecordTime === timeArray[index].time) {
+                return index;
+            }
+        }
+        return;
     }
 
     private async validateName(gameName: string): Promise<boolean> {
