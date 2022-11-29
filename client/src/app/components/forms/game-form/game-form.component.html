@@ -18,16 +18,34 @@
     <div class="button-group">
         <ng-container *ngIf="buttonPage == 'Admin'">
             <button mat-raised-button matTooltip="Supprimer le jeu" (click)="deleteGameForm(gameForm.gameName)">{{ adminGameFormsButton[0] }}</button>
-            <button mat-raised-button matTooltip="Réinitialiser le classement" >{{ adminGameFormsButton[1] }}</button>
+            <button mat-raised-button matTooltip="Réinitialiser le classement" (click)="resetTimesBoard(gameForm.gameName)">
+                {{ adminGameFormsButton[1] }}
+            </button>
         </ng-container>
         <ng-container *ngIf="buttonPage === 'GameSelection'">
             <ng-container *ngIf="isPlayerWaiting; else noOneIsWaiting">
-                <button matTooltip="Rejoindre une partie multijoueur" mat-stroked-button (click)="setJoinFlag()" (click)="openDialog(multiplayerFlag)">{{ selectionGameFormsButton[2] }}</button>
+                <button
+                    matTooltip="Rejoindre une partie multijoueur"
+                    mat-stroked-button
+                    (click)="setJoinFlag()"
+                    (click)="openDialog(multiplayerFlag)"
+                >
+                    {{ selectionGameFormsButton[2] }}
+                </button>
             </ng-container>
             <ng-template #noOneIsWaiting>
-                <button mat-stroked-button matTooltip="Commencer une partie multijoueur"  (click)="setCreateFlag()" (click)="openDialog(multiplayerFlag)">{{ selectionGameFormsButton[0] }}</button>
+                <button
+                    mat-stroked-button
+                    matTooltip="Commencer une partie multijoueur"
+                    (click)="setCreateFlag()"
+                    (click)="openDialog(multiplayerFlag)"
+                >
+                    {{ selectionGameFormsButton[0] }}
+                </button>
             </ng-template>
-            <button mat-stroked-button matTooltip="Commencer une partie individuelle" (click)="resetFlags()" (click)="openDialog(!multiplayerFlag)">{{ selectionGameFormsButton[1] }}</button>
+            <button mat-stroked-button matTooltip="Commencer une partie individuelle" (click)="resetFlags()" (click)="openDialog(!multiplayerFlag)">
+                {{ selectionGameFormsButton[1] }}
+            </button>
         </ng-container>
     </div>
 </body>

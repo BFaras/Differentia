@@ -1,3 +1,4 @@
+import { RecordTime } from '@app/classes/record-times';
 import { Game } from '@common/game';
 import * as chai from 'chai';
 import { expect } from 'chai';
@@ -5,7 +6,6 @@ import * as chaiAsPromised from 'chai-as-promised';
 import * as fs from 'fs';
 import * as sinon from 'sinon';
 import { GamesService } from './local.games.service';
-import { RecordTime } from '@app/classes/record-times';
 chai.use(chaiAsPromised);
 
 describe('Games service', () => {
@@ -15,6 +15,9 @@ describe('Games service', () => {
     let invalidGameToAdd: Game;
     let carGame: Game;
     let bikeGame: Game;
+    let carGameWithouTime: { name: string; numberOfDifferences: number; times: never[]; images: string[]; differencesList: never[] };
+    let bikeGameWithoutTime: { name: string; numberOfDifferences: number; times: never[]; images: string[]; differencesList: never[] };
+    //let newTime: Time;
 
     beforeEach(async () => {
         gamesService = new GamesService();
@@ -30,6 +33,20 @@ describe('Games service', () => {
             name: 'Bike game',
             numberOfDifferences: 5,
             times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
+            images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
+            differencesList: [],
+        };
+        carGameWithouTime = {
+            name: 'Car game',
+            numberOfDifferences: 4,
+            times: [],
+            images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
+            differencesList: [],
+        };
+        bikeGameWithoutTime = {
+            name: 'Bike game',
+            numberOfDifferences: 5,
+            times: [],
             images: ['ImageBlanche.bmp', 'image_7_diff.bmp'],
             differencesList: [],
         };
@@ -62,15 +79,15 @@ describe('Games service', () => {
 
     it('should input all the games in the "games" attribute when the JSON file is read', async () => {
         await gamesService.asyncReadGamesFile();
-        expect(gamesService['games']).to.deep.equals(allGamesTest);
+        expect(gamesService['games']).to.deep.equals([carGameWithouTime, bikeGameWithoutTime]);
     });
 
     it('should return all the games in the JSON file', async () => {
-        expect(await gamesService.getAllGames()).to.deep.equals(allGamesTest);
+        expect(await gamesService.getAllGames()).to.deep.equals([carGameWithouTime, bikeGameWithoutTime]);
     });
 
     it('should get a specific game when calling getGame', async () => {
-        expect(await gamesService.getGame('Car game')).to.deep.equals(allGamesTest[0]);
+        expect(await gamesService.getGame('Car game')).to.deep.equals(carGameWithouTime);
     });
 
     it('should not validate the name of the game when a game with the same name already exists', async () => {
@@ -148,11 +165,16 @@ describe('Games service', () => {
         });
 
         it('should delete a specific game when calling deleteGame', async () => {
+            const writeSpy = sinon.stub(gamesService, 'asyncWriteInGamesFile');
+            const readSpy = sinon.stub(gamesService, 'asyncReadGamesFile');
+
             const deleteStub = sinon.stub(gamesService, 'deleteGame').callsFake(async (nameOfGameToDelete: string) => {
                 return await gamesService.getAllGames();
             });
-            expect(await gamesService.deleteGame('Bike game')).to.deep.equal(allGamesTest);
+            expect(await gamesService.deleteGame('Bike game')).to.deep.equal([carGameWithouTime, bikeGameWithoutTime]);
             expect(deleteStub.calledOnce);
+            expect(writeSpy.calledOnce);
+            expect(readSpy.calledOnce);
         });
 
         it('should throw an error if the image to delete doesnt exist', async () => {
@@ -165,6 +187,41 @@ describe('Games service', () => {
                 return await gamesService.getAllGames();
             });
             await gamesService.deleteGame(invalidGameToAdd.name);
+        });
+
+        it('should reset the game list', async () => {
+            const writeSpy = sinon.stub(gamesService, 'asyncWriteInGamesFile');
+            sinon.spy(gamesService['games'], 'filter');
+            const resetStub = sinon.stub(gamesService, 'resetGameList').callsFake(async () => {
+                return [];
+            });
+            expect(await gamesService.resetGameList()).to.deep.equal([]);
+            expect(resetStub.calledOnce);
+            expect(writeSpy.calledOnce);
+        });
+
+        it('should throw an error if the reset doesnt work', async () => {
+            await gamesService.addGame(invalidGameToAdd);
+            const stub = sinon.stub(fs, 'rm').callsFake(async () => {
+                throw new Error();
+            });
+            sinon.stub(gamesService, 'resetGameList').callsFake(async () => {
+                expect(stub.callsFake);
+                return [];
+            });
+            await gamesService.resetGameList();
+        });
+
+        it('should delete images', async () => {
+            let im1 = '1image';
+            let im2 = '2image';
+
+            const stub = sinon.stub(fs, 'rm').callsFake(async () => {
+                throw new Error();
+            });
+
+            await gamesService['deleteImages'](im1, im2);
+            expect(stub.calledOnce);
         });
     });
 });

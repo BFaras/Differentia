@@ -1,26 +1,30 @@
 /* eslint-disable no-console */
 import { HOST_CHOSE_ANOTHER, SOMEBODY_IS_WAITING, ZERO_GAMES_PLAYED } from '@app/server-consts';
 import { ChatMessage } from '@common/chat-message';
-import { CLASSIC_MODE, HOST_PRESENT, LIMITED_TIME_MODE } from '@common/const';
+import { CLASSIC_MODE, HOST_PRESENT, LIMITED_TIME_MODE, MSG_RESET_ALL_TIME, MSG_RESET_TIME } from '@common/const';
 import { DifferencesInformations } from '@common/differences-informations';
+import { GameInfo } from '@common/gameInfo';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
 import * as http from 'http';
 import * as io from 'socket.io';
 import Container from 'typedi';
+import { BestTimesService } from './best-times.service';
 import { ClueManagerService } from './clue-manager.service';
+import { RecordTimesService } from './database.games.service';
+import { DatabaseService } from './database.service';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
 import { GamesService } from './local.games.service';
 import { MouseHandlerService } from './mouse-handler.service';
 import { TimeConstantsService } from './time-constants.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
-import { BestTimesService } from './best-times.service';
-import { GameInfo } from '@common/gameInfo';
 
 export class SocketManager {
     socket: io.Socket;
     private sio: io.Server;
+    private databaseService: DatabaseService = Container.get(DatabaseService);
+    private recordTimesService: RecordTimesService = new RecordTimesService(this.databaseService);
     private waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
     private gameManagerService: GameManagerService;
     private gamesService: GamesService = new GamesService();
@@ -83,6 +87,10 @@ export class SocketManager {
                 );
             });
 
+            socket.on('Apply action', () => {
+                socket.emit('Action applied');
+            });
+
             socket.on('my username is', (username: string) => {
                 if (username.charAt(0) !== ' ') {
                     this.waitingLineHandlerService.setUsernamePlayer(socket.id, username, this.sio);
@@ -111,8 +119,16 @@ export class SocketManager {
                 }
             });
 
-            socket.on('Reset game list', () => {
-                this.gameManagerService.resetGameList();
+            socket.on('Reset game list', async () => {
+                this.sio.emit('Ready to reset game list', await this.gameManagerService.resetGameList());
+            });
+
+            socket.on('Reset records time board', async (value?: string) => {
+                if (value) await this.recordTimesService.resetGameRecordTimes(value).then((res) => {});
+                else await this.recordTimesService.resetAllGamesRecordTimes().then((res) => {});
+                value = value ? MSG_RESET_TIME + value : MSG_RESET_ALL_TIME;
+                this.sio.except(this.gameManagerService.collectAllSocketsRooms()).emit('Page reloaded', value);
+                this.gameManagerService.allSocketsRooms = [];
             });
 
             socket.on('Reload game selection page', (gameName: string | string[]) => {
@@ -128,9 +144,7 @@ export class SocketManager {
             });
 
             socket.on('Set time constants', (timeConstants) => {
-                this.timeConstantsService.setTimes(timeConstants).then((value) => {
-                    console.log(value);
-                });
+                this.timeConstantsService.setTimes(timeConstants).then((value) => {});
             });
 
             socket.on('I left', (gameName: string) => {

@@ -3,7 +3,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-restricted-imports */
 import { Injectable } from '@angular/core';
-import { BASE_ONE, EMPTY_SHOWABLE_TIME } from '@app/client-consts';
+import { BASE_ONE, EMPTY_SHOWABLE_TIME } from '@app/const/client-consts';
 import { Time } from '@common/time';
 
 @Injectable({

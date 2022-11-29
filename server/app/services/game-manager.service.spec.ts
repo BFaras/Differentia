@@ -162,13 +162,13 @@ describe('GameManagerService tests', () => {
     });
 
     it('should call deleteRoom() on handleEndGameEmit()', () => {
-        const stub = sinon.stub(gameManagerService, <any>'deleteRoom').callsFake(() => {});
+        const stub = sinon.stub(gameManagerService, 'deleteRoom').callsFake(() => {});
         gameManagerService.handleEndGameEmits(serverSocket, true);
         expect(stub.calledOnce);
     });
 
     it('should call deleteRoom() on handleAbandonEmit()', () => {
-        const spy = sinon.spy(gameManagerService, <any>'deleteRoom');
+        const spy = sinon.spy(gameManagerService, 'deleteRoom');
         serverSocket.join(testSocketId1 + GAME_ROOM_GENERAL_ID);
         gameManagerService.handleAbandonEmit(serverSocket, CLASSIC_MODE);
         expect(spy);
@@ -239,13 +239,13 @@ describe('GameManagerService tests', () => {
 
         const spy = sinon.spy(gameManagerService.gamesRooms, 'delete');
         const stub = sinon.stub(gameManagerService, 'findSocketGameRoomName');
-        gameManagerService['deleteRoom'](serverSocket);
+        gameManagerService.deleteRoom(serverSocket);
         expect(stub.calledOnce);
         expect(spy.calledOnceWith(testGameName));
     });
 
     it('should call endGameWithDependecies with !TIMER_HIT_ZERO and NO_MORE_GAMES_AVAILABLE as the parameters when the mode is Limited Time', () => {
-        const spy = sinon.spy(GameManagerService.prototype, <any>'endGameWithDependencies')
+        const spy = sinon.spy(GameManagerService.prototype, <any>'endGameWithDependencies');
         gameManagerService.endGame(serverSocket, LIMITED_TIME_MODE);
         expect(spy.calledOnceWith(serverSocket, !TIMER_HIT_ZERO, NO_MORE_GAMES_AVAILABLE));
     });
@@ -263,13 +263,13 @@ describe('GameManagerService tests', () => {
     });
 
     it('isGameFinished should call limitedTimeIsGameFinished when the mode is Limited Time', () => {
-        const spy = sinon.spy(GameManagerService.prototype, <any>'limitedTimeIsGameFinished')
+        const spy = sinon.spy(GameManagerService.prototype, <any>'limitedTimeIsGameFinished');
         gameManagerService.isGameFinished(serverSocket, true, LIMITED_TIME_MODE);
         expect(spy.calledOnce);
     });
 
     it('isGameFinished should call classicIsGameFinished when the mode is Classic', () => {
-        const spy = sinon.spy(GameManagerService.prototype, <any>'classicIsGameFinished')
+        const spy = sinon.spy(GameManagerService.prototype, <any>'classicIsGameFinished');
         gameManagerService.isGameFinished(serverSocket, true, CLASSIC_MODE);
         expect(spy.calledOnce);
     });
@@ -356,5 +356,10 @@ describe('GameManagerService tests', () => {
         const emitStub = sinon.spy(gameManagerService['sio'], 'emit');
         gameManagerService.handleAbandonEmit(serverSocket, LIMITED_TIME_MODE);
         expect(emitStub.calledOnceWith('Other player abandonned LM', serverSocket.data.username));
+    });
+    it('should reset game list ()', () => {
+        const stub = sinon.stub(gamesService, 'resetGameList').resolves(['1', '2']);
+        gameManagerService.resetGameList();
+        expect(stub.calledOnce);
     });
 });

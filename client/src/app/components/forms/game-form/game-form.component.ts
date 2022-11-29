@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GameFormDescription } from '@app/classes/game-form-description';
+import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
+import { PopDialogWarningComponent } from '@app/components/pop-dialogs/pop-dialog-warning/pop-dialog-warning.component';
 import {
     ADMIN_GAME_FORMS_BUTTON,
     CLASSIC_FLAG,
@@ -12,9 +14,7 @@ import {
     SOMEBODY_IS_WAITING,
     STANDARD_POP_UP_HEIGHT,
     STANDARD_POP_UP_WIDTH,
-} from '@app/client-consts';
-import { PopDialogResetComponent } from '@app/components/pop-dialogs/pop-dialog-reset/pop-dialog-reset.component';
-import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
+} from '@app/const/client-consts';
 import { SocketClientService } from '@app/services/socket-client.service';
 
 @Component({
@@ -32,7 +32,7 @@ export class GameFormComponent {
     isPlayerWaiting: boolean = !SOMEBODY_IS_WAITING;
     joinFlag: boolean = !JOIN_FLAG;
     createFlag: boolean = !CREATE_FLAG;
-    constructor(private dialog: MatDialog, private socketService: SocketClientService) {}
+    constructor(public dialog: MatDialog, private socketService: SocketClientService) {}
 
     ngOnInit(): void {
         this.configureGameFormSocketFeatures();
@@ -55,16 +55,27 @@ export class GameFormComponent {
         });
     }
 
-    openResetDialog() {
-        this.dialog.open(PopDialogResetComponent, {
-            height: '320px',
-            width: '580px',
-            disableClose: true,
+    private openWarningDialog(value: string) {
+        this.dialog.open(PopDialogWarningComponent, {
+            height: STANDARD_POP_UP_HEIGHT,
+            width: STANDARD_POP_UP_WIDTH,
+            disableClose: DISABLE_CLOSE,
+            data: value,
         });
     }
 
     deleteGameForm(value: string) {
-        this.newItemEvent.emit(value);
+        this.openWarningDialog('supprimer le jeu');
+        this.socketService.on('Action applied', () => {
+            this.newItemEvent.emit(value);
+        });
+    }
+
+    resetTimesBoard(value: string) {
+        this.openWarningDialog('réinitialiser le temps du jeu');
+        this.socketService.on('Action applied', () => {
+            this.socketService.send('Reset records time board', value);
+        });
     }
 
     setJoinFlag(): void {

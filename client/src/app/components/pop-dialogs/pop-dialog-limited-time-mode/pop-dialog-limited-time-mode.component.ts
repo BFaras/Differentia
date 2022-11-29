@@ -5,7 +5,15 @@ import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
 // eslint-disable-next-line max-len
 import { PopDialogWaitingForPlayerComponent } from '@app/components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
-import { STANDARD_POP_UP_HEIGHT, STANDARD_POP_UP_WIDTH, CREATE_FLAG, JOIN_FLAG, DISABLE_CLOSE, EMPTY_GAME_NAME, CLASSIC_FLAG } from '@app/client-consts';
+import {
+    CLASSIC_FLAG,
+    CREATE_FLAG,
+    DISABLE_CLOSE,
+    EMPTY_GAME_NAME,
+    JOIN_FLAG,
+    STANDARD_POP_UP_HEIGHT,
+    STANDARD_POP_UP_WIDTH,
+} from '@app/const/client-consts';
 
 @Component({
     selector: 'app-pop-dialog-limited-time-mode',

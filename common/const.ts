@@ -115,3 +115,7 @@ export const CONTROL_SHIFT_Z_SHORTCUT: string = 'document:keyup.control.shift.z'
 
 // Write constante
 export const WRITE_MODE: string = 'write';
+
+// Constante pour reset de tous les tableaux de temps
+export const MSG_RESET_TIME = 'Le tableau des temps records a été réinitalisé pour le jeu: ';
+export const MSG_RESET_ALL_TIME = 'Le tableau des temps records a été réinitalisé pour tous les jeux';

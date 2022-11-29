@@ -53,7 +53,7 @@ export class GameManagerService {
     }
 
     async resetGameList() {
-        this.sio.emit('Ready to reset game list', await this.gamesService.resetGameList());
+        return await this.gamesService.resetGameList();
     }
 
     async startMultiplayerMatch(gameInfo: GameInfo) {
@@ -310,7 +310,7 @@ export class GameManagerService {
         this.gamesRooms.set(gameName, rooms);
     }
 
-    private deleteRoom(socket: io.Socket): void {
+    deleteRoom(socket: io.Socket): void {
         const gameRoomName = this.findSocketGameRoomName(socket);
         let gameName = '';
         for (const rooms of this.gamesRooms.entries()) {
