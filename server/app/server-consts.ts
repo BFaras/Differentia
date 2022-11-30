@@ -18,3 +18,6 @@ export const NO_MORE_CLUES_AMOUNT = 0;
 
 //Constantes des temps record
 export const NO_AVAILABLE = 0;
+// Chronometer Service constants
+export const ONE_MINUTE_IN_SECONDS = 60;
+export const ONE_SECOND_OFFSET = 1;

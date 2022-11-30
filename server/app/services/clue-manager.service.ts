@@ -39,8 +39,7 @@ export class ClueManagerService {
                 }
             }
             this.decrementSocketClueAmount(socket);
-            //To change for saved game constant for the current game
-            gameChronometerService.increaseTimeByXSeconds(5);
+            gameChronometerService.penaliseTime();
         }
     }
 

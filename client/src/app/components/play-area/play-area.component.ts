@@ -2,23 +2,13 @@ import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@
 import { MatDialog } from '@angular/material/dialog';
 import {
     BLINK_ID,
-    CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE,
-    CLASSIC_MULTIPLAYER_LOST_MESSAGE,
-    CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE,
-    CLASSIC_SOLO_END_GAME_MESSAGE,
-    DISABLE_CLOSE,
-    LOSING_FLAG,
+    COMPASS_BLINK_MILISECONDS,
+    COMPASS_CLUE_ID,
     PAUSED_ID,
-    RECORD_END_GAME_MESSAGE_PART_ONE,
-    RECORD_END_GAME_MESSAGE_PART_THREE,
-    RECORD_END_GAME_MESSAGE_PART_TWO,
     STANDARD_POP_UP_HEIGHT,
     STANDARD_POP_UP_WIDTH,
-    WIN_FLAG,
-} from '@app/client-consts';
-import { PopDialogEndgameComponent } from '@app/components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
+} from '@app/const/client-consts';
 import { Coordinate } from '@app/interfaces/coordinate';
-import { ClueHandlerService } from '@app/services/clue-handler.service';
 import { DifferenceDetectionService } from '@app/services/difference-detection.service';
 import { DrawService } from '@app/services/draw.service';
 import { ImageGeneratorService } from '@app/services/image-generator.service';
@@ -34,7 +24,6 @@ import {
     MODIFIED_IMAGE_POSITION,
     ORIGINAL_IMAGE_POSITION,
 } from '@common/const';
-import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
 import { PopDialogAbandonVerificationComponent } from '../pop-dialogs/pop-dialog-abandon-verification/pop-dialog-abandon-verification.component';
@@ -59,7 +48,6 @@ export class PlayAreaComponent implements OnInit {
     private isCheatActivated = false;
     private isWriting = false;
     private canvasSize: Coordinate = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
-    private numberOfBlinkCalls = 0;
     reloadState: boolean = true;
     constructor(
         private socketService: SocketClientService,
@@ -68,7 +56,6 @@ export class PlayAreaComponent implements OnInit {
         private imageToImageDifferenceService: ImageToImageDifferenceService,
         private dialog: MatDialog,
         private imageGenerator: ImageGeneratorService,
-        private readonly clueHandlerService: ClueHandlerService,
     ) {}
 
     get width(): number {
@@ -85,14 +72,6 @@ export class PlayAreaComponent implements OnInit {
         await this.loadImages();
     }
 
-    async loadImages(): Promise<void> {
-        await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[ORIGINAL_IMAGE_POSITION]);
-        await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[MODIFIED_IMAGE_POSITION]);
-        this.reloadState = false;
-        this.displayImages();
-        this.setClickCanvasesTransparent();
-    }
-
     detectDifference(event: MouseEvent) {
         this.mouseDetection.mouseHitDetect(event);
     }
@@ -105,6 +84,14 @@ export class PlayAreaComponent implements OnInit {
                 gameMode: this.mode,
             },
         });
+    }
+
+    private async loadImages(): Promise<void> {
+        await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[ORIGINAL_IMAGE_POSITION]);
+        await this.imageToImageDifferenceService.waitForImageToLoad(this.differentImages[MODIFIED_IMAGE_POSITION]);
+        this.reloadState = false;
+        this.displayImages();
+        this.setClickCanvasesTransparent();
     }
 
     private setClickCanvasesTransparent() {
@@ -130,35 +117,22 @@ export class PlayAreaComponent implements OnInit {
         this.modifiedCanvas.nativeElement.focus();
     }
 
-    private openEndGameDialog(messageToDisplay: string, winFlag: boolean) {
-        this.dialog.open(PopDialogEndgameComponent, {
-            height: STANDARD_POP_UP_HEIGHT,
-            width: STANDARD_POP_UP_WIDTH,
-            data: {
-                message: messageToDisplay,
-                winFlag,
-            },
-            disableClose: DISABLE_CLOSE,
-        });
-    }
-
+    // Ajouter de la verification pour le chat
+    // Oublier la fonction que le prof a conseiller, onChange? onActive?
     @HostListener(CHEAT_KEY, ['$event'])
     handleKeyboardCheat() {
         if (this.isCheatActivated && !this.isWriting) {
-            const originalContext = this.blinkOriginalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            originalContext.canvas.id = 'paused';
-            const modifiedContext = this.blinkModifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-            modifiedContext.canvas.id = 'paused';
-            this.isCheatActivated = !this.isCheatActivated;
+            this.deactivateCheatMode();
         } else if (!this.isWriting) {
-            this.socketService.send('Cheat key pressed');
-            this.isCheatActivated = !this.isCheatActivated;
+            this.activateCheatMode();
         }
     }
 
     @HostListener(CLUE_KEY, ['$event'])
     handleKeyboardClue() {
-        this.socketService.send('get clue for player');
+        if (!this.isMultiplayer) {
+            this.socketService.send('get clue for player');
+        }
     }
 
     private configurePlayAreaSocket(): void {
@@ -170,8 +144,13 @@ export class PlayAreaComponent implements OnInit {
             this.mouseDetection.clickMessage(isDifference, isLocalPlayer);
             this.mouseDetection.verifyGameFinished(isDifference, this.isMultiplayer, isLocalPlayer);
 
-            if (isDifference && this.mode == CLASSIC_MODE) {
-                if (!this.isCheatActivated) this.makePixelsBlinkOnCanvas(differencesInfo.differencePixelsNumbers, this.modifiedCanvas.nativeElement);
+            if (isDifference && this.mode === CLASSIC_MODE) {
+                if (!this.isCheatActivated)
+                    this.drawService.makePixelsBlinkOnCanvas(
+                        differencesInfo.differencePixelsNumbers,
+                        this.blinkModifiedCanvas.nativeElement,
+                        this.modifiedCanvas.nativeElement,
+                    );
 
                 this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
                     differencesInfo.differencePixelsNumbers,
@@ -188,42 +167,23 @@ export class PlayAreaComponent implements OnInit {
         });
 
         this.socketService.on('Cheat pixel list', (pixelList: number[]) => {
-            this.makePixelsBlinkOnCanvasCheat(pixelList, this.originalCanvas.nativeElement, this.blinkModifiedCanvas.nativeElement);
-            this.makePixelsBlinkOnCanvasCheat(pixelList, this.modifiedCanvas.nativeElement, this.blinkOriginalCanvas.nativeElement);
+            this.drawService.makePixelsBlinkOnCanvasCheat(pixelList, this.originalCanvas.nativeElement, this.blinkModifiedCanvas.nativeElement);
+            this.drawService.makePixelsBlinkOnCanvasCheat(pixelList, this.modifiedCanvas.nativeElement, this.blinkOriginalCanvas.nativeElement);
         });
 
         this.socketService.on('Clue with quadrant of difference', (clueInformations: ClueInformations) => {
-            const quandrantPixelsNb: number[] = this.clueHandlerService.findClueQuadrantPixels(
-                clueInformations.clueAmountLeft,
-                clueInformations.clueDifferenceQuadrant,
-            );
-            this.makePixelsBlinkOnCanvas(quandrantPixelsNb, this.modifiedCanvas.nativeElement, true);
+            this.drawService.showQuadrantClue(clueInformations, this.blinkModifiedCanvas.nativeElement, this.modifiedCanvas.nativeElement);
         });
 
-        this.socketService.on('Clue with difference pixels', (differenceCluePixels: number[]) => {
-            this.clueHandlerService.getCompassInformationsForClue(differenceCluePixels);
-            this.makePixelsBlinkOnCanvas(differenceCluePixels, this.originalCanvas.nativeElement);
-        });
+        this.socketService.on('Clue with difference pixels', async (differenceCluePixels: number[]) => {
+            await this.drawService.showCompassClue(differenceCluePixels, this.blinkModifiedCanvas.nativeElement);
 
-        this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
-            let endGameMessage = CLASSIC_SOLO_END_GAME_MESSAGE;
-            let winFlag = WIN_FLAG;
-
-            if (!endGameInfos.isMultiplayer && endGameInfos.isGameWon && !endGameInfos.isAbandon) {
-                if (endGameInfos.hasNewRecord) {
-                    endGameMessage = this.generateRecordMessage(endGameInfos.playerRanking);
-                }
-            } else if (endGameInfos.isMultiplayer && endGameInfos.isGameWon && !endGameInfos.isAbandon) {
-                if (endGameInfos.hasNewRecord) {
-                    endGameMessage = this.generateRecordMessage(endGameInfos.playerRanking);
-                } else endGameMessage = CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE;
-            } else if (endGameInfos.isMultiplayer && endGameInfos.isAbandon) {
-                endGameMessage = CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE;
-            } else if (!endGameInfos.isGameWon) {
-                endGameMessage = CLASSIC_MULTIPLAYER_LOST_MESSAGE;
-                winFlag = LOSING_FLAG;
-            }
-            this.openEndGameDialog(endGameMessage, winFlag);
+            this.blinkModifiedCanvas.nativeElement.id = BLINK_ID;
+            this.drawService.incrementNumberOfBlinkCalls();
+            setTimeout(() => {
+                this.drawService.decrementNumberOfBlinkCalls();
+                this.blinkModifiedCanvas.nativeElement.id = COMPASS_CLUE_ID;
+            }, COMPASS_BLINK_MILISECONDS);
         });
 
         this.socketService.on('game images', async () => {
@@ -237,41 +197,16 @@ export class PlayAreaComponent implements OnInit {
         });
     }
 
-    //To test 
-    private generateRecordMessage(playerRanking: number): string {
-        return (
-            RECORD_END_GAME_MESSAGE_PART_ONE +
-            this.localPlayerUsername +
-            RECORD_END_GAME_MESSAGE_PART_TWO +
-            playerRanking +
-            RECORD_END_GAME_MESSAGE_PART_THREE
-        );
+    private activateCheatMode() {
+        this.socketService.send('Cheat key pressed');
+        this.isCheatActivated = !this.isCheatActivated;
     }
 
-    private makePixelsBlinkOnCanvas(pixelsToBlink: number[], canvasToCopyFrom: HTMLCanvasElement, invertColors?: boolean) {
-        this.drawService.setCanvasTransparent(this.blinkModifiedCanvas.nativeElement);
-        const context = this.blinkModifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        context.canvas.id = BLINK_ID;
-        this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(
-            pixelsToBlink,
-            canvasToCopyFrom,
-            this.blinkModifiedCanvas.nativeElement,
-            invertColors,
-        );
-
-        this.numberOfBlinkCalls++;
-        setTimeout(() => {
-            this.numberOfBlinkCalls--;
-            if (this.numberOfBlinkCalls <= 0) {
-                context.canvas.id = PAUSED_ID;
-            }
-        }, 3000);
-    }
-
-    private makePixelsBlinkOnCanvasCheat(pixelsToBlink: number[], canvasToCopyFrom: HTMLCanvasElement, canvasToCopyOn: HTMLCanvasElement) {
-        this.drawService.setCanvasTransparent(canvasToCopyOn);
-        const context = canvasToCopyOn.getContext('2d') as CanvasRenderingContext2D;
-        context.canvas.id = 'blinkCheat';
-        this.imageGenerator.copyCertainPixelsFromOneImageToACanvas(pixelsToBlink, canvasToCopyFrom, canvasToCopyOn);
+    private deactivateCheatMode() {
+        const originalContext = this.blinkOriginalCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        originalContext.canvas.id = PAUSED_ID;
+        const modifiedContext = this.blinkModifiedCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        modifiedContext.canvas.id = PAUSED_ID;
+        this.isCheatActivated = !this.isCheatActivated;
     }
 }

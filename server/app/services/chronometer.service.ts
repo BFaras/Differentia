@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-useless-constructor */
-/* eslint-disable no-restricted-imports */
-/* eslint-disable prettier/prettier */
-
+import { ONE_MINUTE_IN_SECONDS, ONE_SECOND_OFFSET } from '@app/server-consts';
 import { CLASSIC_MODE, LIMITED_TIME_MODE, MAX_TIME, RESET_VALUE } from '@common/const';
 import { Time } from '@common/time';
+import { TimeConstants } from '@common/time-constants';
 import * as io from 'socket.io';
 import { Service } from 'typedi';
+import { TimeConstantsService } from './time-constants.service';
 
 @Service()
 export class ChronometerService {
@@ -15,14 +13,16 @@ export class ChronometerService {
         seconds: 0,
     };
     mode: string;
+    private timeConstants: TimeConstants;
+    private timeConstantsService: TimeConstantsService = new TimeConstantsService();
 
     constructor() {}
 
-    setChronometerMode(gameMode: string, socket: io.Socket): void {
+    async setChronometerMode(gameMode: string, socket: io.Socket): Promise<void> {
         if (gameMode === LIMITED_TIME_MODE) {
-            this.limitedTimeMode(socket);
+            await this.limitedTimeMode(socket);
         } else {
-            this.classicMode(socket);
+            await this.classicMode(socket);
         }
     }
 
@@ -30,7 +30,7 @@ export class ChronometerService {
         return this.time.minutes === RESET_VALUE && this.time.seconds === RESET_VALUE;
     }
 
-    resetChrono() {
+    resetChrono(): void {
         this.time.minutes = RESET_VALUE;
         this.time.seconds = RESET_VALUE;
     }
@@ -43,7 +43,21 @@ export class ChronometerService {
         }
     }
 
-    private increaseTime() {
+    increaseTimeByBonusTime(): void {
+        for (let i = 0; i < this.timeConstants.savedTime + ONE_SECOND_OFFSET; i++) {
+            if (this.time.minutes === 2 && this.time.seconds === 1) i = this.timeConstants.savedTime;
+            else this.increaseTime();
+        }
+    }
+
+    penaliseTime(): void {
+        for (let i = 0; i < this.timeConstants.penaltyTime; i++) {
+            if (this.time.minutes === 0 && this.time.seconds === 0 && this.mode === LIMITED_TIME_MODE) i = this.timeConstants.penaltyTime;
+            else this.changeTime();
+        }
+    }
+
+    private increaseTime(): void {
         if (this.time.seconds !== MAX_TIME) this.increaseSeconds();
         else {
             this.increaseMinutes();
@@ -51,7 +65,7 @@ export class ChronometerService {
         }
     }
 
-    private decreaseTime() {
+    private decreaseTime(): void {
         if (this.time.seconds !== RESET_VALUE) this.decreaseSeconds();
         else {
             this.setSeconds();
@@ -59,60 +73,58 @@ export class ChronometerService {
         }
     }
 
-    private classicMode(socket: io.Socket): void {
+    private async classicMode(socket: io.Socket): Promise<void> {
+        await this.setConstants();
         this.resetChrono();
         this.mode = CLASSIC_MODE;
         socket.data.gameMode = CLASSIC_MODE;
     }
 
-    private limitedTimeMode(socket: io.Socket): void {
+    private async limitedTimeMode(socket: io.Socket): Promise<void> {
+        await this.setConstants();
         this.time.minutes = this.getMinutesFromDatabase();
         this.time.seconds = this.getSecondsFromDatabase();
         this.mode = LIMITED_TIME_MODE;
         socket.data.gameMode = LIMITED_TIME_MODE;
     }
 
+    private async setConstants(): Promise<void> {
+        this.timeConstants = await this.timeConstantsService.getTimes();
+    }
+
     private getMinutesFromDatabase(): number {
-        // GET MINUTES FROM DTABASE
-        return 1;
+        return Math.floor(this.timeConstants.initialTime / ONE_MINUTE_IN_SECONDS);
     }
 
     private getSecondsFromDatabase(): number {
-        // GET SECONDS FROM DATABASE
-        return 0;
+        return this.timeConstants.initialTime % ONE_MINUTE_IN_SECONDS;
     }
 
-    private increaseSeconds() {
+    private increaseSeconds(): void {
         this.time.seconds += 1;
     }
 
-    private increaseMinutes() {
+    private increaseMinutes(): void {
         this.time.minutes += 1;
     }
 
-    private decreaseSeconds() {
+    private decreaseSeconds(): void {
         this.time.seconds -= 1;
     }
 
-    private decreaseMinutes() {
+    private decreaseMinutes(): void {
         if (this.time.minutes !== RESET_VALUE) {
             this.time.minutes -= 1;
         }
     }
 
-    private resetSeconds() {
+    private resetSeconds(): void {
         this.time.seconds = 0;
     }
 
-    private setSeconds() {
+    private setSeconds(): void {
         if (this.time.minutes !== RESET_VALUE) {
             this.time.seconds = MAX_TIME;
-        }
-    }
-
-    increaseTimeByXSeconds(amountToIncrease: number) {
-        for (let i = 0; i < amountToIncrease; i++) {
-            this.increaseTime();
         }
     }
 }

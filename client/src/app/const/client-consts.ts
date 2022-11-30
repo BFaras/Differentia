@@ -18,9 +18,9 @@ export const MINIMUM_INITIAL_TIME = 15;
 export const MINIMUM_PENALTY_TIME = 2;
 export const MINIMUM_SAVED_TIME = 2;
 
-export const MAXIMUM_INITIAL_TIME = 160;
-export const MAXIMUM_PENALTY_TIME = 40;
-export const MAXIMUM_SAVED_TIME = 40;
+export const MAXIMUM_INITIAL_TIME = 120;
+export const MAXIMUM_PENALTY_TIME = 30;
+export const MAXIMUM_SAVED_TIME = 30;
 export const TIME_RATIO = 4;
 
 export const EMPTY_TIME = '';
@@ -66,7 +66,7 @@ export const MESSAGE_ERROR_DIFFERENCE_SOLO = 'Erreur, aucune nouvelle différenc
 export const MESSAGE_DIFFERENCE_FOUND_SOLO = 'Vous avez trouver une différence!';
 export const MESSAGE_DIFFERENCE_FOUND_MULTI = 'Différence trouvée par ';
 export const MESSAGE_ERROR_DIFFERENCE_MULTI = 'Erreur par ';
-export const MESSAGE_INDICE = 'Indice utilisé';
+export const MESSAGE_CLUE = 'Indice utilisé';
 export const TWO_DIGIT_TIME_VALUE = '2-digit';
 
 // End game messages
@@ -115,3 +115,25 @@ export const MESSAGE_RECORD_PART_TWO = ' dans les meilleurs temps du jeu ';
 export const MESSAGE_RECORD_SOLO = ' en solo';
 export const MESSAGE_RECORD_MULTI = ' en multijoueur';
 
+//Constantes pour les indices
+export const COMPASS_IMAGES_BASIC_PATH = 'assets/compass-images/compass';
+export const COMPASS_WIDTH = 130;
+export const COMPASS_HEIGHT = 120;
+export const NO_OFFSET = 0;
+export const CLUE_MIDDLE_COMPASS_OFFSET_X = COMPASS_WIDTH + 30;
+export const COMPASS_BLINK_MILISECONDS = 1500;
+export const PNG_FILE_TYPE_SRC = '.png';
+export const COMPASS_CLUE_ID = 'compassClue';
+export const BLINK_CHEAT_ID = 'blinkCheat';
+export const ADDITION_FACTOR = 1;
+export const SUBSTRACTION_FACTOR = -1;
+
+// Constantes popDialog de la page ADMIN
+export const HEIGHT_POP_ADMIN = '640px';
+export const TIME_SETTING_INPUT1 = 'Temps initial';
+export const TIME_SETTING_INPUT2 = 'Temps de pénalité';
+export const TIME_SETTING_INPUT3 = 'Temps gagné';
+export const TIME_PLACEHOLDER_INPUT1 = 'Temps par défaut: 30s';
+export const TIME_PLACEHOLDER_INPUT2 = 'Temps par défaut: 5s';
+export const TIME_PLACEHOLDER_INPUT3 = 'Temps par défaut: 5s';
+export const INPUT_TYPE = 'secondes';

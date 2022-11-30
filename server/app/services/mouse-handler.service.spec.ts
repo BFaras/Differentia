@@ -1,3 +1,4 @@
+import { RecordTime } from '@app/classes/record-times';
 import { FIRST_ARRAY_POSITION, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
 import { Game } from '@common/game';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
@@ -8,7 +9,6 @@ import Container from 'typedi';
 import { HashmapConverterService } from './hashmap-converter.service';
 import { GamesService } from './local.games.service';
 import { MouseHandlerService } from './mouse-handler.service';
-import {RecordTime} from '@app/classes/record-times'
 
 describe('MouseHandlerService', () => {
     const testGameName = 'name';
@@ -16,7 +16,7 @@ describe('MouseHandlerService', () => {
     const testGame: Game = {
         name: testGameName,
         numberOfDifferences: 2,
-        times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+        times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
         images: ['image1', 'image2'],
         differencesList: [
             [599, 666],
@@ -92,12 +92,11 @@ describe('MouseHandlerService', () => {
 
     it('should reset differencesHashmap and differencesFound array on resetData() call', () => {
         let differencesHashmapTest: Map<number, number> = new Map<number, number>();
-        let resetedDifferencesNbFound: Map<string, number> = new Map<string, number>();
 
         mouseService['differencesNbFound'] = testDifferencesFoundArray;
         mouseService.resetDifferencesData();
         expect(mouseService['differencesHashmap']).to.deep.equals(differencesHashmapTest);
-        expect(mouseService['differencesNbFound']).to.deep.equals(resetedDifferencesNbFound);
+        expect(mouseService['differencesNbFound']).to.deep.equals([]);
     });
 
     it('should add a socketID to the differencesNbFoundByPLayerMap on addPlayerToGame()', () => {
@@ -107,7 +106,7 @@ describe('MouseHandlerService', () => {
 
     it('should return the number of differences found by a player on getNumberOfDifferencesFoundByPlayer()', () => {
         const testNumberDiffFound = 2;
-        mouseService['differencesNbFoundByPlayer'].set(testSocketID, testNumberDiffFound);
+        mouseService['differenceAmountFoundByPlayer'].set(testSocketID, testNumberDiffFound);
         expect(mouseService.getNumberOfDifferencesFoundByPlayer(testSocketID)).to.equal(testNumberDiffFound);
     });
 

@@ -24,6 +24,19 @@ export class BestTimesService {
         this.playerRanking = NO_AVAILABLE;
         this.hasNewRecord = false;
     }
+
+    notifyAllActivePlayers(playerName: string, gameName: string, isMultiplayer:boolean) {
+        if (this.hasNewRecord) {
+            const recordInfosToSendAll: RecordTimeInformations = {
+                playerName: playerName,
+                playerRanking: this.playerRanking,
+                gameName: gameName,
+                isMultiplayer: isMultiplayer,
+            };
+            this.sio.to(this.gameManagerService.collectAllSocketsRooms()).emit('New record time', recordInfosToSendAll)
+        }
+    }
+    
     // To test
     private timeFormatToString(gameTime: Time): string {
         return (gameTime.minutes < 10 ? '0' : '') + gameTime.minutes + ':' + ((gameTime.seconds < 10 ? '0' : '') + gameTime.seconds);
@@ -71,17 +84,5 @@ export class BestTimesService {
         const gameTimeInString = this.timeFormatToString(gameTime);
         const dbGameTimesInNumber = await this.retrieveLastRecordTime(recordTimeInfos.gameName, recordTimeInfos.isMultiplayer);
         if (this.convertTimeForComparison(gameTimeInString) < dbGameTimesInNumber) await this.setValidRecordTimes(gameTimeInString, recordTimeInfos);
-    }
-
-    notifyAllActivePlayers(playerName: string, gameName: string, isMultiplayer:boolean) {
-        if (this.hasNewRecord) {
-            const recordInfosToSendAll: RecordTimeInformations = {
-                playerName: playerName,
-                playerRanking: this.playerRanking,
-                gameName: gameName,
-                isMultiplayer: isMultiplayer,
-            };
-            this.sio.to(this.gameManagerService.collectAllSocketsRooms()).emit('New record time', recordInfosToSendAll)
-        }
     }
 }

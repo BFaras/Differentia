@@ -2,7 +2,7 @@ import { MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const'
 import { Game } from '@common/game';
 import * as fs from 'fs';
 import { join } from 'path';
-import Container, { Service } from 'typedi';
+import { Container, Service } from 'typedi';
 import { RecordTimesService } from './database.games.service';
 import { DatabaseService } from './database.service';
 
@@ -12,7 +12,7 @@ const IMAGES_PATH = 'assets/images/';
 export class GamesService {
     private gamesFilePath: string = 'games.json';
     private games: Game[];
-    private databaseService: DatabaseService
+    private databaseService: DatabaseService;
     private recordTimesService: RecordTimesService;
 
     constructor() {
@@ -93,7 +93,7 @@ export class GamesService {
     }
 
     async resetGameList() {
-        let nameList: string[] = [];
+        const nameList: string[] = [];
         this.games.filter((game: Game) => {
             this.deleteImages(game.images[0], game.images[1]);
             nameList.push(game.name);

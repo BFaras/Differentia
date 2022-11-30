@@ -4,7 +4,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
-import { MSG_ALL_TIME_RATIO, MSG_PENALTY_TIME_RATIO, MSG_SAVED_TIME_RATIO } from '@app/client-consts';
+import { MSG_ALL_TIME_RATIO, MSG_PENALTY_TIME_RATIO, MSG_SAVED_TIME_RATIO } from '@app/const/client-consts';
 import { GameTimeSetting } from '@app/interfaces/game-time-setting';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { Socket } from 'socket.io-client';
@@ -85,13 +85,13 @@ describe('DialogInputComponent', () => {
     });
 
     it('should not validate the time ', () => {
-        component.initialTimeInput.nativeElement.value = 'bluee';
+        component.initialTimeInput.nativeElement.value = 2000;
         component.validateTimeType(component.initialTimeInput, 0);
         expect(component.timeValid[0]).toBeFalse();
         expect(component.onlyQuitButton).toBeTrue();
     });
 
-    it('should not validate the time ', () => {
+    it('should not validate the time because nothing changed ', () => {
         component.initialTimeInput.nativeElement.value = '';
         component.penaltyTimeInput.nativeElement.value = '';
         component.savedTimeInput.nativeElement.value = '';

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { PopDialogEndgameComponent } from '@app/components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
 import {
     ALL_GAMES_FINISHED,
     DISABLE_CLOSE,
@@ -8,10 +9,10 @@ import {
     STANDARD_POP_UP_HEIGHT,
     STANDARD_POP_UP_WIDTH,
     TIMER_HIT_ZERO_MESSAGE,
-    WIN_FLAG
-} from '@app/client-consts';
-import { PopDialogEndgameComponent } from '@app/components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
+    WIN_FLAG,
+} from '@app/const/client-consts';
 import { CommunicationService } from '@app/services/communication.service';
+import { EndGameHandlerService } from '@app/services/end-game-handler.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
 import {
@@ -22,7 +23,7 @@ import {
     LIMITED_TIME_MODE,
     LOCAL_PLR_USERNAME_POS,
     MODIFIED_IMAGE_POSITION,
-    ORIGINAL_IMAGE_POSITION
+    ORIGINAL_IMAGE_POSITION,
 } from '@common/const';
 import { Game } from '@common/game';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
@@ -49,6 +50,7 @@ export class GamePageComponent {
         private timeService: TimeService,
         private communicationService: CommunicationService,
         private dialog: MatDialog,
+        private endGameService: EndGameHandlerService,
     ) {
         this.images = [new Image(IMAGE_WIDTH, IMAGE_HEIGHT), new Image(IMAGE_WIDTH, IMAGE_HEIGHT)];
         this.isMultiplayerGame = false;
@@ -56,6 +58,7 @@ export class GamePageComponent {
 
     ngOnInit() {
         this.socketService.connect();
+        this.endGameService.configureSocket();
         this.configureGamePageSocketFeatures();
     }
 
@@ -84,7 +87,7 @@ export class GamePageComponent {
             const gameWanted = array.find((x) => x.name === nameGame);
             // gameWanted ne sera jamais undefined car le nom utilisé dans le .find est d'un jeu qui
             // existe forcément (il est dans la page de sélection )
-            this.nbDifferences = gameWanted ? gameWanted.numberOfDifferences : -1; 
+            this.nbDifferences = gameWanted ? gameWanted.numberOfDifferences : -1;
         });
     }
 
