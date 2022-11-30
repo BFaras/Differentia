@@ -18,7 +18,7 @@ import { ChatMessagesService } from './chat-messages.service';
 import { SocketClientService } from './socket-client.service';
 
 describe('ChatMessagesService', () => {
-    const littleTimeout = 200;
+    const littleTimeout = 400;
     const emptySubcriberCallbackTest = (message: ChatMessage) => {};
     const putResponseInVariableCallback = (message: ChatMessage) => {
         messageReceivedFromObservable = message;
@@ -153,6 +153,21 @@ describe('ChatMessagesService', () => {
         socketTestHelper.peerSideEmit('End game', endGameInfos);
         setTimeout(() => {
             expect(messageReceivedFromObservable.message.includes(ABANDON_MESSAGE)).toBeTruthy();
+            done();
+        }, littleTimeout);
+    });
+
+    it('should send multiplayer the abandon message and set isMultiplayerToFalse on a Other player abandonned LM event', (done) => {
+        const endGameInfos: EndGameInformations = {
+            isMultiplayer: true,
+            isAbandon: true,
+            isGameWon: true,
+        };
+        observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
+        socketTestHelper.peerSideEmit('End game', endGameInfos);
+        setTimeout(() => {
+            expect(messageReceivedFromObservable.message.includes(ABANDON_MESSAGE)).toBeTruthy();
+            expect(chatMessagesService['isMultiplayerGame']).toBeFalsy();
             done();
         }, littleTimeout);
     });
