@@ -63,7 +63,7 @@ export class ChatMessagesService {
                 observer.next(this.generateChatMessageFromGame(MESSAGE_ERROR_DIFFERENCE_SOLO));
             }
         });
-
+   // To test
         this.socketService.on('New record time', (recordTimeInfos: RecordTimeInformations) => {
             if (recordTimeInfos.isMultiplayer) {
                 observer.next(

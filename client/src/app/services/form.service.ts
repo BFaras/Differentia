@@ -51,16 +51,6 @@ export class FormService {
     }
 
     private initializeGameForm(index: number) {
-        // this.socketService.send('Need recordTimes', this.listName[index]);
-        // this.socketService.on('Send Record Times', (gameRecordTimes: GameModeTimes) => {
-        //     this.gameForms.push(
-        //         new GameFormDescription(
-        //             this.listName[index],
-        //             this.listImage[index],
-        //             new RecordTimesBoard(gameRecordTimes.soloGameTimes, gameRecordTimes.multiplayerGameTimes),
-        //         ),
-        //     );
-        // });
          this.gameForms.push(new GameFormDescription(this.listName[index], this.listImage[index], new RecordTimesBoard(this.listTimes[index].soloGameTimes,this.listTimes[index].multiplayerGameTimes)));
     }
 

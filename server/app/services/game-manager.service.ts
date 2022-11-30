@@ -1,4 +1,4 @@
-import { GAME_WON, IT_IS_MULTIPLAYER, NOBODY_ABANDONNED, NO_MORE_GAMES_AVAILABLE, ONE_SECOND_DELAY, TIMER_HIT_ZERO } from '@app/server-consts';
+import { GAME_WON, IT_IS_MULTIPLAYER, NOBODY_ABANDONNED, NO_AVAILABLE, NO_MORE_GAMES_AVAILABLE, ONE_SECOND_DELAY, TIMER_HIT_ZERO } from '@app/server-consts';
 import {
     CLASSIC_MODE,
     DEFAULT_GAME_ROOM_NAME,
@@ -105,6 +105,7 @@ export class GameManagerService {
         }
     }
 
+    // Test à modifier?
     handleEndGameEmits(socket: io.Socket, isItMultiplayer: boolean, hasNewRecord: boolean, playerRanking: number) {
         const endGameInfos: EndGameInformations = {
             isMultiplayer: isItMultiplayer,
@@ -129,7 +130,7 @@ export class GameManagerService {
                 isAbandon: !NOBODY_ABANDONNED,
                 isGameWon: GAME_WON,
                 hasNewRecord: false,
-                playerRanking: 0,
+                playerRanking: NO_AVAILABLE,
             };
             this.sio.to(gameRoomName).emit('End game', endGameInfos);
             this.endGame(socket, gameMode);

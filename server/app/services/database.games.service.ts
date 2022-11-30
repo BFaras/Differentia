@@ -15,7 +15,7 @@ export class RecordTimesService {
     get collection(): Collection<GameTimes> {
         return this.databaseService.database.collection(process.env.DATABASE_COLLECTION!);
     }
-    // Toutes les méthodes à tester
+       // To test
     async getGame(nameOfWantedGame: string): Promise<GameTimes> {
         return this.collection.findOne({ name: nameOfWantedGame }).then((game: WithId<GameTimes>) => {
             if (game) {
@@ -24,7 +24,7 @@ export class RecordTimesService {
             throw new HttpException('Game not found', StatusCodes.NOT_FOUND);
         });
     }
-
+   // To test
     async addNewGameDefaultTimes(gameName: string): Promise<void> {
         const newGameDefaultTimes: GameTimes = {
             name: gameName,
@@ -38,7 +38,7 @@ export class RecordTimesService {
             throw new Error('Game already exists');
         }
     }
-
+   // To test
     async deleteGameRecordTimes(nameOfWantedGame: string): Promise<void> {
         return this.collection
             .findOneAndDelete({ name: nameOfWantedGame })
@@ -51,7 +51,7 @@ export class RecordTimesService {
                 throw new HttpException('Failed to delete game record times', StatusCodes.INTERNAL_SERVER_ERROR);
             });
     }
-
+   // To test
     async resetGameRecordTimes(gameName: string): Promise<void> {
         let filterQuery: Filter<GameTimes> = { name: gameName };
         let updateQuery: UpdateFilter<GameTimes> = {
@@ -64,7 +64,7 @@ export class RecordTimesService {
                 throw new Error('Failed to reset the game record times');
             });
     }
-
+   // To test
     async resetAllGamesRecordTimes(): Promise<void> {
         let updateQuery: UpdateFilter<GameTimes> = {
             $set: { recordTimes: this.databaseService.defaultRecordTimes },
@@ -76,7 +76,7 @@ export class RecordTimesService {
                 throw new Error('Failed to reset all games record times');
             });
     }
-
+   // To test
     async updateGameRecordTimes(gameName: string, newRecordTimes: GameModeTimes): Promise<void> {
         let filterQuery: Filter<GameTimes> = { name: gameName };
         let updateQuery: UpdateFilter<GameTimes> = {
@@ -89,7 +89,7 @@ export class RecordTimesService {
                 throw new Error('Failed to reset this game record times');
             });
     }
-
+   // To test
     async getGameTimes(nameOfWantedGame: string): Promise<GameModeTimes> {
         let filterQuery: Filter<GameTimes> = { name: nameOfWantedGame };
 
@@ -102,7 +102,7 @@ export class RecordTimesService {
                 throw new Error('Failed to get the game times');
             });
     }
-
+   // To test
     async sortGameTimes(gameName: string, isMultiplayer: boolean): Promise<void> {
         if (isMultiplayer) {
             return this.collection
@@ -120,7 +120,7 @@ export class RecordTimesService {
                 });
         }
     }
-
+   // To test
     getPlayerRanking(timeArray: RecordTime[], playerRecordTime: string): number | undefined {
         for (let index = 0; index < timeArray.length; index++) {
             if (playerRecordTime === timeArray[index].time) {
@@ -129,7 +129,7 @@ export class RecordTimesService {
         }
         return;
     }
-
+   // To test
     private async validateName(gameName: string): Promise<boolean> {
         let filterQuery: Filter<GameTimes> = { name: gameName };
         const game = await this.collection.findOne(filterQuery);

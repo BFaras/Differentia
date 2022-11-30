@@ -25,12 +25,13 @@ export class SocketManager {
     private gameManagerService: GameManagerService;
     private gamesService: GamesService = new GamesService();
     private timeConstantsService: TimeConstantsService = new TimeConstantsService();
-    private bestTimesService: BestTimesService = new BestTimesService();
+    private bestTimesService: BestTimesService;
     private currentGameName: string;
 
     constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] }, maxHttpBufferSize: 1e7 });
         this.gameManagerService = new GameManagerService(this.sio);
+        this.bestTimesService = new BestTimesService(this.sio);
     }
 
     handleSockets(): void {
@@ -248,15 +249,7 @@ export class SocketManager {
                             this.bestTimesService.hasNewRecord,
                             this.bestTimesService.playerRanking,
                         );
-                    if (this.bestTimesService.hasNewRecord) {
-                        const recordInfosToSendAll: RecordTimeInformations = {
-                            playerName: playerUsername,
-                            playerRanking: this.bestTimesService.playerRanking,
-                            gameName: this.currentGameName,
-                            isMultiplayer: isMultiplayer,
-                        };
-                        this.sio.to(this.gameManagerService.collectAllSocketsRooms()).emit('New record time', recordInfosToSendAll)
-                    }
+                    this.bestTimesService.notifyAllActivePlayers(playerUsername, this.currentGameName, isMultiplayer);
                     this.gameManagerService.endGame(socket, mode);
                 } else {
                     this.gameManagerService.doWeHaveToSwitchGame(socket, mode);
