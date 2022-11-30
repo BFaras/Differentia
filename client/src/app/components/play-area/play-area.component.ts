@@ -171,7 +171,6 @@ export class PlayAreaComponent implements OnInit {
             this.drawService.makePixelsBlinkOnCanvasCheat(pixelList, this.modifiedCanvas.nativeElement, this.blinkOriginalCanvas.nativeElement);
         });
 
-        //To test that the function is called and transfer the other tests of this to draw service
         this.socketService.on('Clue with quadrant of difference', (clueInformations: ClueInformations) => {
             this.drawService.showQuadrantClue(clueInformations, this.blinkModifiedCanvas.nativeElement, this.modifiedCanvas.nativeElement);
         });
