@@ -12,6 +12,7 @@ import {
     WIN_FLAG,
 } from '@app/const/client-consts';
 import { CommunicationService } from '@app/services/communication.service';
+import { EndGameHandlerService } from '@app/services/end-game-handler.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
 import {
@@ -49,6 +50,7 @@ export class GamePageComponent {
         private timeService: TimeService,
         private communicationService: CommunicationService,
         private dialog: MatDialog,
+        private endGameService: EndGameHandlerService,
     ) {
         this.images = [new Image(IMAGE_WIDTH, IMAGE_HEIGHT), new Image(IMAGE_WIDTH, IMAGE_HEIGHT)];
         this.isMultiplayerGame = false;
@@ -56,6 +58,7 @@ export class GamePageComponent {
 
     ngOnInit() {
         this.socketService.connect();
+        this.endGameService.configureSocket();
         this.configureGamePageSocketFeatures();
     }
 

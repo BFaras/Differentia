@@ -1,10 +1,10 @@
-import { expect } from 'chai';
-import { CLASSIC_MODE, LIMITED_TIME_MODE, MAX_TIME, RESET_VALUE } from '@common/const';
 import { ONE_SECOND_OFFSET } from '@app/server-consts';
-import { ChronometerService } from './chronometer.service';
+import { CLASSIC_MODE, LIMITED_TIME_MODE, MAX_TIME, RESET_VALUE } from '@common/const';
 import { TimeConstants } from '@common/time-constants';
+import { expect } from 'chai';
 import * as sinon from 'sinon';
 import * as io from 'socket.io';
+import { ChronometerService } from './chronometer.service';
 
 describe('Chronometer service', () => {
     let chronometerService: ChronometerService;
@@ -95,7 +95,8 @@ describe('Chronometer service', () => {
     it('decreaseTimeByPenaltyTIme should decrease the minutes and seconds by the set time in the time constants', () => {
         chronometerService['timeConstants'] = timeConstants;
         chronometerService.time.seconds = MAX_TIME;
-        chronometerService.decreaseTimeByPenaltyTime();
+        chronometerService.mode = LIMITED_TIME_MODE;
+        chronometerService.penaliseTime();
         expect(chronometerService.time.seconds).to.equal(MAX_TIME - RANDOM_NUMBER);
     });
 
@@ -113,7 +114,8 @@ describe('Chronometer service', () => {
         chronometerService['timeConstants'] = timeConstants;
         chronometerService.time.seconds = 1;
         const spy = sinon.spy(chronometerService, <any>'decreaseTime');
-        chronometerService.decreaseTimeByPenaltyTime();
+        chronometerService.mode = LIMITED_TIME_MODE;
+        chronometerService.penaliseTime();
         expect(chronometerService.time.seconds).to.equal(RESET_VALUE);
         expect(chronometerService.time.minutes).to.equal(RESET_VALUE);
         expect(spy.calledOnce);

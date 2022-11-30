@@ -1,5 +1,5 @@
-import { CLASSIC_MODE, LIMITED_TIME_MODE, MAX_TIME, RESET_VALUE } from '@common/const';
 import { ONE_MINUTE_IN_SECONDS, ONE_SECOND_OFFSET } from '@app/server-consts';
+import { CLASSIC_MODE, LIMITED_TIME_MODE, MAX_TIME, RESET_VALUE } from '@common/const';
 import { Time } from '@common/time';
 import { TimeConstants } from '@common/time-constants';
 import * as io from 'socket.io';
@@ -22,7 +22,7 @@ export class ChronometerService {
         if (gameMode === LIMITED_TIME_MODE) {
             await this.limitedTimeMode(socket);
         } else {
-            this.classicMode(socket);
+            await this.classicMode(socket);
         }
     }
 
@@ -50,10 +50,10 @@ export class ChronometerService {
         }
     }
 
-    decreaseTimeByPenaltyTime(): void {
+    penaliseTime(): void {
         for (let i = 0; i < this.timeConstants.penaltyTime; i++) {
-            if (this.time.minutes === 0 && this.time.seconds === 0) i = this.timeConstants.penaltyTime;
-            else this.decreaseTime();
+            if (this.time.minutes === 0 && this.time.seconds === 0 && this.mode === LIMITED_TIME_MODE) i = this.timeConstants.penaltyTime;
+            else this.changeTime();
         }
     }
 
@@ -73,7 +73,8 @@ export class ChronometerService {
         }
     }
 
-    private classicMode(socket: io.Socket): void {
+    private async classicMode(socket: io.Socket): Promise<void> {
+        await this.setConstants();
         this.resetChrono();
         this.mode = CLASSIC_MODE;
         socket.data.gameMode = CLASSIC_MODE;
