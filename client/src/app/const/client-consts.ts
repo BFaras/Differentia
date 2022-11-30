@@ -66,7 +66,7 @@ export const MESSAGE_ERROR_DIFFERENCE_SOLO = 'Erreur, aucune nouvelle différenc
 export const MESSAGE_DIFFERENCE_FOUND_SOLO = 'Vous avez trouver une différence!';
 export const MESSAGE_DIFFERENCE_FOUND_MULTI = 'Différence trouvée par ';
 export const MESSAGE_ERROR_DIFFERENCE_MULTI = 'Erreur par ';
-export const MESSAGE_INDICE = 'Indice utilisé';
+export const MESSAGE_CLUE = 'Indice utilisé';
 export const TWO_DIGIT_TIME_VALUE = '2-digit';
 
 // End game messages
@@ -110,6 +110,19 @@ export const RESET_MSG_GAME_LIST = 'La liste des jeux a été réinitialisé :('
 export const RESET_INFO_CONSTANTS = 'Constantes de temps de jeu';
 export const RESET_INFO_RECORDS_TIME = 'Table des meilleurs temps de jeu';
 export const RESET_INFO_GAME_LIST = 'Liste des jeux';
+
+//Constantes pour les indices
+export const COMPASS_IMAGES_BASIC_PATH = 'assets/compass-images/compass';
+export const COMPASS_WIDTH = 130;
+export const COMPASS_HEIGHT = 120;
+export const NO_OFFSET = 0;
+export const CLUE_MIDDLE_COMPASS_OFFSET_X = COMPASS_WIDTH + 30;
+export const COMPASS_BLINK_MILISECONDS = 1500;
+export const PNG_FILE_TYPE_SRC = '.png';
+export const COMPASS_CLUE_ID = 'compassClue';
+export const BLINK_CHEAT_ID = 'blinkCheat';
+export const ADDITION_FACTOR = 1;
+export const SUBSTRACTION_FACTOR = -1;
 
 // Constantes popDialog de la page ADMIN
 export const HEIGHT_POP_ADMIN = '640px';

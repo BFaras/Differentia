@@ -1,18 +1,20 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
+import { CompassInformations } from '@app/interfaces/compass-informations';
 import { DrawService } from '@app/services/draw.service';
+import { DEFAULT_HEIGHT_CANVAS, DEFAULT_WIDTH_CANVAs } from '@common/const';
+import { ClueHandlerService } from './clue-handler.service';
 
 describe('DrawService', () => {
+    const diffCluePixelsTest = [5];
     let service: DrawService;
+    let clueHandlerService: ClueHandlerService;
     let ctxStub: CanvasRenderingContext2D;
-
-    const CANVAS_WIDTH = 540;
-    const CANVAS_HEIGHT = 400;
-
     beforeEach(() => {
         TestBed.configureTestingModule({});
         service = TestBed.inject(DrawService);
-        ctxStub = CanvasTestHelper.createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT).getContext('2d') as CanvasRenderingContext2D;
+        clueHandlerService = TestBed.inject(ClueHandlerService);
+        ctxStub = CanvasTestHelper.createCanvas(DEFAULT_WIDTH_CANVAs, DEFAULT_HEIGHT_CANVAS).getContext('2d') as CanvasRenderingContext2D;
         service.contextClickOriginalCanvas = ctxStub;
         service.contextClickModifiedCanvas = ctxStub;
     });
@@ -22,13 +24,13 @@ describe('DrawService', () => {
     });
 
     it(' width should return the width of the grid canvas', () => {
-        expect(service.contextClickOriginalCanvas.canvas.width).toEqual(CANVAS_WIDTH);
-        expect(service.contextClickModifiedCanvas.canvas.width).toEqual(CANVAS_WIDTH);
+        expect(service.contextClickOriginalCanvas.canvas.width).toEqual(DEFAULT_WIDTH_CANVAs);
+        expect(service.contextClickModifiedCanvas.canvas.width).toEqual(DEFAULT_WIDTH_CANVAs);
     });
 
     it(' height should return the height of the grid canvas', () => {
-        expect(service.contextClickOriginalCanvas.canvas.height).toEqual(CANVAS_HEIGHT);
-        expect(service.contextClickModifiedCanvas.canvas.height).toEqual(CANVAS_HEIGHT);
+        expect(service.contextClickOriginalCanvas.canvas.height).toEqual(DEFAULT_HEIGHT_CANVAS);
+        expect(service.contextClickModifiedCanvas.canvas.height).toEqual(DEFAULT_HEIGHT_CANVAS);
     });
 
     it(' drawWord should call fillText on the canvas', () => {
@@ -49,9 +51,41 @@ describe('DrawService', () => {
     }));
 
     it('should call clearRect from the canvas context', fakeAsync(() => {
-        const canvasMock = CanvasTestHelper.createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+        const canvasMock = CanvasTestHelper.createCanvas(DEFAULT_WIDTH_CANVAs, DEFAULT_HEIGHT_CANVAS);
         const spy = spyOn(canvasMock.getContext('2d')!, 'clearRect');
         service.setCanvasTransparent(canvasMock);
         expect(spy).toHaveBeenCalled();
     }));
+
+    it('should call getCompassInformationsForClue() from ClueHandlerService on showCompassClue()', async () => {
+        const fakeCompassInfo: CompassInformations = {
+            compassClueImage: new Image(),
+            isDifferenceClueMiddle: false,
+        };
+        const spy = spyOn(clueHandlerService, 'getCompassInformationsForClue').and.returnValue(Promise.resolve(fakeCompassInfo));
+        await service.showCompassClue(diffCluePixelsTest, ctxStub.canvas);
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('should call drawImageOnMiddleOfCanvas() from ClueHandlerService on showCompassClue() when clue difference is in the middle', async () => {
+        const fakeCompassInfo: CompassInformations = {
+            compassClueImage: new Image(),
+            isDifferenceClueMiddle: true,
+        };
+        const spy = spyOn(service, <any>'drawImageOnMiddleOfCanvas');
+        spyOn(clueHandlerService, 'getCompassInformationsForClue').and.returnValue(Promise.resolve(fakeCompassInfo));
+        await service.showCompassClue(diffCluePixelsTest, ctxStub.canvas);
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('should call drawImageOnMiddleOfCanvas() from ClueHandlerService on showCompassClue() when clue difference is not in the middle', async () => {
+        const fakeCompassInfo: CompassInformations = {
+            compassClueImage: new Image(),
+            isDifferenceClueMiddle: false,
+        };
+        const spy = spyOn(service, <any>'drawImageOnMiddleOfCanvas');
+        spyOn(clueHandlerService, 'getCompassInformationsForClue').and.returnValue(Promise.resolve(fakeCompassInfo));
+        await service.showCompassClue(diffCluePixelsTest, ctxStub.canvas);
+        expect(spy).toHaveBeenCalled();
+    });
 });

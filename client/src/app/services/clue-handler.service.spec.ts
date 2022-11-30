@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { FIRST_CLUE_NB } from '@common/const';
+import { FIRST_CLUE_NB, MIDDLE_OF_IMAGE_POSITION, SECOND_CLUE_NB } from '@common/const';
 import { Position } from '@common/position';
 import { Positions } from '@common/positions';
 
-import { ClueHandlerService } from './clue-handler.service';
+import { CardinalDirection, ClueHandlerService } from './clue-handler.service';
 
 describe('ClueHandlerService', () => {
     let service: ClueHandlerService;
@@ -65,5 +65,34 @@ describe('ClueHandlerService', () => {
             endingPosition: testEndingPos,
         };
         expect(service['findQuadrantLimitsFromClueNb'](testClueNb, testQuadrantNb)).toEqual(testPositionsExpected);
+    });
+
+    it('should have (0,0) in pixel positions when the clue is the quadrant 0 on clue first', () => {
+        const pixelPositionExepected: Position = { x: 0, y: 0 };
+        const testQuadrant = 0;
+        const testClueNb = FIRST_CLUE_NB;
+        const pixelNbExepected = service['convertPositionToPixelNb'](pixelPositionExepected.x, pixelPositionExepected.y);
+        expect(service.findClueQuadrantPixels(testClueNb, testQuadrant)).toContain(pixelNbExepected);
+    });
+
+    it('should have (635,478) in pixel positions when the clue is the quadrant 15 on clue second', () => {
+        const pixelPositionExepected: Position = { x: 635, y: 478 };
+        const testQuadrant = 15;
+        const testClueNb = SECOND_CLUE_NB;
+        const pixelNbExepected = service['convertPositionToPixelNb'](pixelPositionExepected.x, pixelPositionExepected.y);
+        expect(service.findClueQuadrantPixels(testClueNb, testQuadrant)).toContain(pixelNbExepected);
+    });
+
+    it('should return an image compass for the east direction in the difference is at (630, 240)', async () => {
+        const pixelPositionExepected: Position = { x: 630, y: MIDDLE_OF_IMAGE_POSITION.y };
+        const testCardinalDirection: CardinalDirection = CardinalDirection.East;
+        const pixelArrayTest = [service['convertPositionToPixelNb'](pixelPositionExepected.x, pixelPositionExepected.y)];
+        expect((await service.getCompassInformationsForClue(pixelArrayTest)).compassClueImage.src).toContain(testCardinalDirection.toString());
+    });
+
+    it('should return that the difference is in the middle if the differencePosition is at (320, 240)', async () => {
+        const pixelPositionExepected: Position = { x: MIDDLE_OF_IMAGE_POSITION.x, y: MIDDLE_OF_IMAGE_POSITION.y };
+        const pixelArrayTest = [service['convertPositionToPixelNb'](pixelPositionExepected.x, pixelPositionExepected.y)];
+        expect((await service.getCompassInformationsForClue(pixelArrayTest)).isDifferenceClueMiddle).toBeTruthy();
     });
 });
