@@ -16,6 +16,7 @@ import { GamesService } from './local.games.service';
 import { MouseHandlerService } from './mouse-handler.service';
 import { TimeConstantsService } from './time-constants.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
+import { recordTimeInformations } from '@common/record-time-infos';
 
 export class SocketManager {
     socket: io.Socket;
@@ -241,6 +242,15 @@ export class SocketManager {
                             this.bestTimesService.hasNewRecord,
                             this.bestTimesService.playerRanking,
                         );
+                    if (this.bestTimesService.hasNewRecord) {
+                        const recordTimeInfos: recordTimeInformations = {
+                            playerName: playerUsername,
+                            playerRanking: this.bestTimesService.playerRanking,
+                            gameName: this.currentGameName,
+                            isMultiplayer: isMultiplayer,
+                        };
+                        this.sio.to(this.gameManagerService.collectAllSocketsRooms()).emit('New record time', recordTimeInfos)
+                    }
                     this.gameManagerService.endGame(socket, mode);
                 } else {
                     this.gameManagerService.doWeHaveToSwitchGame(socket, mode);

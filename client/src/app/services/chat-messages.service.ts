@@ -12,6 +12,7 @@ import {
 import { ChatMessage } from '@common/chat-message';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
+import { recordTimeInformations } from '@common/record-time-infos';
 import { Observable, Subscriber } from 'rxjs';
 import { SocketClientService } from './socket-client.service';
 
@@ -62,6 +63,33 @@ export class ChatMessagesService {
                 observer.next(this.generateChatMessageFromGame(MESSAGE_ERROR_DIFFERENCE_SOLO));
             }
         });
+
+        this.socketService.on('New record time', (recordTimeInfos: recordTimeInformations) => {
+            if (recordTimeInfos.isMultiplayer) {
+                observer.next(
+                    this.generateChatMessageFromGame(
+                        recordTimeInfos.playerName +
+                            ' obtient la ' +
+                            recordTimeInfos.playerRanking +
+                            ' place dans les meilleurs temps du jeu ' +
+                            recordTimeInfos.gameName +
+                            ' en multijoueur',
+                    ),
+                );
+            } else {
+                observer.next(
+                    this.generateChatMessageFromGame(
+                        recordTimeInfos.playerName +
+                            ' obtient la ' +
+                            recordTimeInfos.playerRanking +
+                            ' place dans les meilleurs temps du jeu ' +
+                            recordTimeInfos.gameName +
+                            ' en solo',
+                    ),
+                );
+            }
+        });
+
         this.socketService.on('Send message to opponent', (message: ChatMessage) => {
             observer.next(message);
         });
