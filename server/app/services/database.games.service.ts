@@ -1,12 +1,12 @@
-import { Collection, Filter, ModifyResult, UpdateFilter, WithId } from 'mongodb';
 import { HttpException } from '@app/classes/http.exception';
+import { RecordTime } from '@app/classes/record-times';
 import { GameTimes } from '@common/game-times';
 import { GameModeTimes } from '@common/games-record-times';
 import 'dotenv/config';
 import { StatusCodes } from 'http-status-codes';
+import { Collection, Filter, ModifyResult, UpdateFilter, WithId } from 'mongodb';
 import { Service } from 'typedi';
 import { DatabaseService } from './database.service';
-import { RecordTime } from '@app/classes/record-times';
 
 @Service()
 export class RecordTimesService {
@@ -15,7 +15,7 @@ export class RecordTimesService {
     get collection(): Collection<GameTimes> {
         return this.databaseService.database.collection(process.env.DATABASE_COLLECTION!);
     }
-     // Toutes les méthodes à tester
+    // Toutes les méthodes à tester
     async getGame(nameOfWantedGame: string): Promise<GameTimes> {
         return this.collection.findOne({ name: nameOfWantedGame }).then((game: WithId<GameTimes>) => {
             if (game) {
@@ -103,21 +103,20 @@ export class RecordTimesService {
             });
     }
 
-
     async sortGameTimes(gameName: string, isMultiplayer: boolean): Promise<void> {
-        if (!isMultiplayer) {
-            return this.collection
-                .updateOne({ name: gameName }, { $push: { 'recordTimes.soloGameTimes': { $each: [], $sort: { time: 1 } } } })
-                .then(() => {})
-                .catch(() => {
-                    throw new Error('Failed to sort the solo game record times');
-                });
-        } else {
+        if (isMultiplayer) {
             return this.collection
                 .updateOne({ name: gameName }, { $push: { 'recordTimes.multiplayerGameTimes': { $each: [], $sort: { time: 1 } } } })
                 .then(() => {})
                 .catch(() => {
                     throw new Error('Failed to sort the multiplayer game record times');
+                });
+        } else {
+            return this.collection
+                .updateOne({ name: gameName }, { $push: { 'recordTimes.soloGameTimes': { $each: [], $sort: { time: 1 } } } })
+                .then(() => {})
+                .catch(() => {
+                    throw new Error('Failed to sort the solo game record times');
                 });
         }
     }
@@ -125,7 +124,7 @@ export class RecordTimesService {
     getPlayerRanking(timeArray: RecordTime[], playerRecordTime: string): number | undefined {
         for (let index = 0; index < timeArray.length; index++) {
             if (playerRecordTime === timeArray[index].time) {
-                return index+1;
+                return index + 1;
             }
         }
         return;

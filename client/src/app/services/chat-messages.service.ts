@@ -12,7 +12,7 @@ import {
 import { ChatMessage } from '@common/chat-message';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
-import { recordTimeInformations } from '@common/record-time-infos';
+import { RecordTimeInformations } from '@common/record-time-infos';
 import { Observable, Subscriber } from 'rxjs';
 import { SocketClientService } from './socket-client.service';
 
@@ -64,7 +64,7 @@ export class ChatMessagesService {
             }
         });
 
-        this.socketService.on('New record time', (recordTimeInfos: recordTimeInformations) => {
+        this.socketService.on('New record time', (recordTimeInfos: RecordTimeInformations) => {
             if (recordTimeInfos.isMultiplayer) {
                 observer.next(
                     this.generateChatMessageFromGame(

@@ -15,3 +15,6 @@ export const IT_IS_MULTIPLAYER = true;
 //Constantes des indices
 export const INCORRECT_CLUE_NB_ERROR = -1;
 export const NO_MORE_CLUES_AMOUNT = 0;
+
+//Constantes des temps record
+export const NO_AVAILABLE = 0;

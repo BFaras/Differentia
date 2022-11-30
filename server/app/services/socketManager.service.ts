@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { HOST_CHOSE_ANOTHER, SOMEBODY_IS_WAITING, ZERO_GAMES_PLAYED } from '@app/server-consts';
+import { HOST_CHOSE_ANOTHER, SOMEBODY_IS_WAITING, ZERO_GAMES_PLAYED, NO_AVAILABLE } from '@app/server-consts';
 import { ChatMessage } from '@common/chat-message';
 import { CLASSIC_MODE, HOST_PRESENT, LIMITED_TIME_MODE } from '@common/const';
 import { DifferencesInformations } from '@common/differences-informations';
@@ -16,7 +16,7 @@ import { GamesService } from './local.games.service';
 import { MouseHandlerService } from './mouse-handler.service';
 import { TimeConstantsService } from './time-constants.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
-import { recordTimeInformations } from '@common/record-time-infos';
+import { RecordTimeInformations } from '@common/record-time-infos';
 
 export class SocketManager {
     socket: io.Socket;
@@ -234,7 +234,13 @@ export class SocketManager {
                 if (isGameFinished) {
                     mouseHandler.resetDifferencesData();
                     const playerGameTime = this.gameManagerService.getSocketChronometerService(socket).time;
-                    await this.bestTimesService.compareGameTimeWithDbTimes(playerGameTime, isMultiplayer, this.currentGameName, playerUsername);
+                    const recordTimeInfos: RecordTimeInformations = {
+                        playerName: playerUsername,
+                        playerRanking: NO_AVAILABLE,
+                        gameName: this.currentGameName,
+                        isMultiplayer: isMultiplayer,
+                    };
+                    await this.bestTimesService.compareGameTimeWithDbTimes(playerGameTime, recordTimeInfos);
                     if (mode === CLASSIC_MODE)
                         this.gameManagerService.handleEndGameEmits(
                             socket,
@@ -243,13 +249,13 @@ export class SocketManager {
                             this.bestTimesService.playerRanking,
                         );
                     if (this.bestTimesService.hasNewRecord) {
-                        const recordTimeInfos: recordTimeInformations = {
+                        const recordInfosToSendAll: RecordTimeInformations = {
                             playerName: playerUsername,
                             playerRanking: this.bestTimesService.playerRanking,
                             gameName: this.currentGameName,
                             isMultiplayer: isMultiplayer,
                         };
-                        this.sio.to(this.gameManagerService.collectAllSocketsRooms()).emit('New record time', recordTimeInfos)
+                        this.sio.to(this.gameManagerService.collectAllSocketsRooms()).emit('New record time', recordInfosToSendAll)
                     }
                     this.gameManagerService.endGame(socket, mode);
                 } else {
