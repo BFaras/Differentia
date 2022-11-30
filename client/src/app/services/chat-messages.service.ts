@@ -7,6 +7,10 @@ import {
     MESSAGE_ERROR_DIFFERENCE_MULTI,
     MESSAGE_ERROR_DIFFERENCE_SOLO,
     MESSAGE_INDICE,
+    MESSAGE_RECORD_MULTI,
+    MESSAGE_RECORD_PART_ONE,
+    MESSAGE_RECORD_PART_TWO,
+    MESSAGE_RECORD_SOLO,
     TWO_DIGIT_TIME_VALUE,
 } from '@app/client-consts';
 import { ChatMessage } from '@common/chat-message';
@@ -63,31 +67,9 @@ export class ChatMessagesService {
                 observer.next(this.generateChatMessageFromGame(MESSAGE_ERROR_DIFFERENCE_SOLO));
             }
         });
-   // To test
+        // To test
         this.socketService.on('New record time', (recordTimeInfos: RecordTimeInformations) => {
-            if (recordTimeInfos.isMultiplayer) {
-                observer.next(
-                    this.generateChatMessageFromGame(
-                        recordTimeInfos.playerName +
-                            ' obtient la ' +
-                            recordTimeInfos.playerRanking +
-                            ' place dans les meilleurs temps du jeu ' +
-                            recordTimeInfos.gameName +
-                            ' en multijoueur',
-                    ),
-                );
-            } else {
-                observer.next(
-                    this.generateChatMessageFromGame(
-                        recordTimeInfos.playerName +
-                            ' obtient la ' +
-                            recordTimeInfos.playerRanking +
-                            ' place dans les meilleurs temps du jeu ' +
-                            recordTimeInfos.gameName +
-                            ' en solo',
-                    ),
-                );
-            }
+            this.sendNewRecordMessage(observer, recordTimeInfos);
         });
 
         this.socketService.on('Send message to opponent', (message: ChatMessage) => {
@@ -135,5 +117,19 @@ export class ChatMessagesService {
 
     private sendAbandonMessage(observer: Subscriber<ChatMessage>) {
         observer.next(this.generateChatMessageFromGame(this.adversaryUsername + ABANDON_MESSAGE));
+    }
+
+    //To test
+    private sendNewRecordMessage(observer: Subscriber<ChatMessage>, recordTimeInfos: RecordTimeInformations) {
+        observer.next(
+            this.generateChatMessageFromGame(
+                recordTimeInfos.playerName +
+                    MESSAGE_RECORD_PART_ONE +
+                    recordTimeInfos.playerRanking +
+                    MESSAGE_RECORD_PART_TWO +
+                    recordTimeInfos.gameName +
+                    (recordTimeInfos.isMultiplayer ? MESSAGE_RECORD_MULTI : MESSAGE_RECORD_SOLO),
+            ),
+        );
     }
 }

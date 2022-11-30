@@ -105,3 +105,9 @@ export const RESET_MSG_GAME_LIST = 'La liste des jeux a été réinitialisé :('
 export const RESET_INFO_CONSTANTS = 'Constantes de temps de jeu';
 export const RESET_INFO_RECORDS_TIME = 'Table des meilleurs temps de jeu';
 export const RESET_INFO_GAME_LIST = 'Liste des jeux';
+
+// Constantes pour nouveau records
+export const MESSAGE_RECORD_PART_ONE = ' obtient la place n°';
+export const MESSAGE_RECORD_PART_TWO = ' dans les meilleurs temps du jeu ';
+export const MESSAGE_RECORD_SOLO = ' en solo';
+export const MESSAGE_RECORD_MULTI = ' en multijoueur';
