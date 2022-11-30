@@ -77,6 +77,9 @@ export const CLASSIC_MULTIPLAYER_LOST_MESSAGE = 'Vous avez perdu contre votre ad
 export const ABANDON_MESSAGE = ' a abandonné la partie';
 export const TIMER_HIT_ZERO_MESSAGE = 'Le temps est arrivé à zéro, vous avez perdu...';
 export const ALL_GAMES_FINISHED = 'Vous avez fini tous les jeux disponibles! Vous avez gagné!';
+export const RECORD_END_GAME_MESSAGE_PART_ONE = 'Bravo ';
+export const RECORD_END_GAME_MESSAGE_PART_TWO = ', vous avez gagné et obtenu la place numéro ';
+export const RECORD_END_GAME_MESSAGE_PART_THREE = ' au classement!';
 
 //End game flags
 export const WIN_FLAG = true;
@@ -111,3 +114,4 @@ export const MESSAGE_RECORD_PART_ONE = ' obtient la place n°';
 export const MESSAGE_RECORD_PART_TWO = ' dans les meilleurs temps du jeu ';
 export const MESSAGE_RECORD_SOLO = ' en solo';
 export const MESSAGE_RECORD_MULTI = ' en multijoueur';
+

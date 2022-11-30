@@ -9,6 +9,9 @@ import {
     DISABLE_CLOSE,
     LOSING_FLAG,
     PAUSED_ID,
+    RECORD_END_GAME_MESSAGE_PART_ONE,
+    RECORD_END_GAME_MESSAGE_PART_THREE,
+    RECORD_END_GAME_MESSAGE_PART_TWO,
     STANDARD_POP_UP_HEIGHT,
     STANDARD_POP_UP_WIDTH,
     WIN_FLAG,
@@ -208,21 +211,11 @@ export class PlayAreaComponent implements OnInit {
 
             if (!endGameInfos.isMultiplayer && endGameInfos.isGameWon && !endGameInfos.isAbandon) {
                 if (endGameInfos.hasNewRecord) {
-                    endGameMessage =
-                        'Bravo ' +
-                        this.localPlayerUsername +
-                        ', vous avez gagné et obtenu la place numéro ' +
-                        endGameInfos.playerRanking +
-                        ' au classement!';
+                    endGameMessage = this.generateRecordMessage(endGameInfos.playerRanking);
                 }
             } else if (endGameInfos.isMultiplayer && endGameInfos.isGameWon && !endGameInfos.isAbandon) {
                 if (endGameInfos.hasNewRecord) {
-                    endGameMessage =
-                        'Bravo ' +
-                        this.localPlayerUsername +
-                        ', vous avez gagné et obtenu la place numéro ' +
-                        endGameInfos.playerRanking +
-                        ' au classement!';
+                    endGameMessage = this.generateRecordMessage(endGameInfos.playerRanking);
                 } else endGameMessage = CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE;
             } else if (endGameInfos.isMultiplayer && endGameInfos.isAbandon) {
                 endGameMessage = CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE;
@@ -242,6 +235,17 @@ export class PlayAreaComponent implements OnInit {
                 this.handleKeyboardCheat();
             }
         });
+    }
+
+    //To test 
+    private generateRecordMessage(playerRanking: number): string {
+        return (
+            RECORD_END_GAME_MESSAGE_PART_ONE +
+            this.localPlayerUsername +
+            RECORD_END_GAME_MESSAGE_PART_TWO +
+            playerRanking +
+            RECORD_END_GAME_MESSAGE_PART_THREE
+        );
     }
 
     private makePixelsBlinkOnCanvas(pixelsToBlink: number[], canvasToCopyFrom: HTMLCanvasElement, invertColors?: boolean) {
