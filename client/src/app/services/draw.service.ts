@@ -51,7 +51,6 @@ export class DrawService {
         }
     }
 
-    //To test (With the test from the Clue with quadrant of difference event in PlayAreaComponent)
     showQuadrantClue(clueInformations: ClueInformations, canvasToBlink: HTMLCanvasElement, canvasToCopyFrom: HTMLCanvasElement) {
         const quandrantPixelsNb: number[] = this.clueHandlerService.findClueQuadrantPixels(
             clueInformations.clueAmountLeft,
@@ -65,7 +64,6 @@ export class DrawService {
         canvasContext.clearRect(0, 0, canvasContext.canvas.width, canvasContext.canvas.height);
     }
 
-    //To test
     makePixelsBlinkOnCanvas(pixelsToBlink: number[], canvasToBlink: HTMLCanvasElement, canvasToCopyFrom: HTMLCanvasElement, invertColors?: boolean) {
         const context = canvasToBlink.getContext('2d') as CanvasRenderingContext2D;
         this.setCanvasTransparent(canvasToBlink);
@@ -81,7 +79,6 @@ export class DrawService {
         }, THREE_SECONDS);
     }
 
-    //To test
     makePixelsBlinkOnCanvasCheat(pixelsToBlink: number[], canvasToCopyFrom: HTMLCanvasElement, canvasToCopyOn: HTMLCanvasElement) {
         this.setCanvasTransparent(canvasToCopyOn);
         const context = canvasToCopyOn.getContext('2d') as CanvasRenderingContext2D;
