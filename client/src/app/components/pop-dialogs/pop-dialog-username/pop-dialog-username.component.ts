@@ -75,6 +75,7 @@ export class PopDialogUsernameComponent implements OnInit {
 
     private closeGameDialogAfterDelete(value: string) {
         if (this.gameInfo.nameGame === value) {
+            console.log('waer?');
             this.socketService.send('refresh games after closing popDialog', this.socketService.socket.id);
             this.dialog.closeAll();
         }
@@ -109,7 +110,7 @@ export class PopDialogUsernameComponent implements OnInit {
 
         this.socketService.on('close popDialogUsername', (value: string | string[]) => {
             if (Array.isArray(value)) {
-                for (let gameName of value) {
+                for (const gameName of value) {
                     this.closeGameDialogAfterDelete(gameName);
                 }
             } else {

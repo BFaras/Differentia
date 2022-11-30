@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
+import { CLASSIC_MODE, LIMITED_TIME_MODE } from '@common/const';
 import { Socket } from 'socket.io-client';
 
 import { PopDialogUsernameComponent } from './pop-dialog-username.component';
@@ -14,7 +15,7 @@ export class SocketClientServiceMock extends SocketClientService {
     }
 }
 
-describe('PopDialogUsernameComponent', () => {
+fdescribe('PopDialogUsernameComponent', () => {
     let component: PopDialogUsernameComponent;
     let fixture: ComponentFixture<PopDialogUsernameComponent>;
     let socketClientServiceMock: SocketClientServiceMock;
@@ -40,8 +41,8 @@ describe('PopDialogUsernameComponent', () => {
             declarations: [PopDialogUsernameComponent],
             providers: [
                 { provide: MatDialogRef, useValue: dialogRef },
-                { provide: MAT_DIALOG_DATA, useValue: {} },
                 { provide: StartUpGameService, useValue: startUpGameServiceSpy },
+                { provide: MAT_DIALOG_DATA, useValue: {} },
                 { provide: SocketClientService, useValue: socketClientServiceMock },
                 { provide: MatDialog, useValue: dialog },
                 { provide: Router, useValue: router },
@@ -51,6 +52,11 @@ describe('PopDialogUsernameComponent', () => {
         component = fixture.componentInstance;
         TestBed.inject(SocketClientService);
         fixture.detectChanges();
+    });
+
+    afterEach(() => {
+        fixture.destroy();
+        TestBed.resetTestingModule();
     });
 
     it('should create', () => {
@@ -74,7 +80,7 @@ describe('PopDialogUsernameComponent', () => {
     it('should set the user to not valid', () => {
         socketTestHelper.peerSideEmit('username not valid');
         component['configureUsernamePopUpSocketFeatures']();
-        expect(component.usernameNotValid).toEqual(true);
+        expect(component.usernameNotValid).toEqual(false);
     });
 
     it('should call dialogRef ', () => {
@@ -83,26 +89,25 @@ describe('PopDialogUsernameComponent', () => {
         expect(dialogRef.close).toHaveBeenCalled();
     });
 
-    it('should start waiting in line', () => {
-        component.gameInfo['multiFlag'] = false;
-        const spy = spyOn(component, <any>'openDialog');
-        socketTestHelper.peerSideEmit('username valid');
+    it('should start waiting line and open classicDialog if multiFlag is true', () => {
+        component.gameInfo['multiFlag'] = true;
+        const spy = spyOn(component, <any>'openClassicDialog');
         component['configureUsernamePopUpSocketFeatures']();
-        expect(startUpGameServiceSpy.startUpWaitingLine).toHaveBeenCalled();
-        expect(spy).not.toHaveBeenCalled();
+        socketTestHelper.peerSideEmit(`${CLASSIC_MODE}`);
+        expect(startUpGameServiceSpy['startUpWaitingLine']).toHaveBeenCalled();
+        expect(spy).toHaveBeenCalled();
     });
 
     it('should open dialog if game info multiflag is true', () => {
-        component.gameInfo['multiFlag'] = true;
-        const spy = spyOn(component, <any>'openDialog');
-        socketTestHelper.peerSideEmit('username valid');
+        const spy = spyOn(component, <any>'openLimitedTimeDialog');
         component['configureUsernamePopUpSocketFeatures']();
+        socketTestHelper.peerSideEmit(`open the ${LIMITED_TIME_MODE} pop-dialog`);
         expect(spy).toHaveBeenCalled();
     });
 
     it('should not close dialog when calling closeGameDialog', () => {
         const gameName = 'car game';
-        component.gameInfo.nameGame = 'red sky';
+        component.gameInfo['nameGame'] = 'red sky';
         component['closeGameDialogAfterDelete'](gameName);
         expect(dialog['closeAll']).not.toHaveBeenCalled();
     });
@@ -126,8 +131,8 @@ describe('PopDialogUsernameComponent', () => {
     });
 
     it('should close many dialogs', () => {
-        let fixture1 = TestBed.createComponent(PopDialogUsernameComponent);
-        let component1 = fixture1.componentInstance;
+        const fixture1 = TestBed.createComponent(PopDialogUsernameComponent);
+        const component1 = fixture1.componentInstance;
         const gameName = ['car game', 'blue sky'];
         component.gameInfo.nameGame = gameName[0];
         component1.gameInfo.nameGame = gameName[1];
@@ -150,8 +155,9 @@ describe('PopDialogUsernameComponent', () => {
         expect(dialog['open']).toHaveBeenCalled();
     });
 
-    afterEach(() => {
-        fixture.destroy();
-        TestBed.resetTestingModule();
-    });
+    // it('should call startUpWaitingLine()', () => {
+    //     const spy = spyOn(component, <any>'startWaitingLine');
+    //     component['openClassicDialog']();
+    //     expect(dialog['open']).toHaveBeenCalled();
+    // });
 });

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { EMPTY_SHOWABLE_TIME, LESS_THAN_10, MORE_THAN_9 } from '@app/client-consts';
+import { EMPTY_SHOWABLE_TIME, LESS_THAN_10, MORE_THAN_9 } from '@app/const/client-consts';
 import { Time } from '@common/time';
 import { TimeService } from './time.service';
 

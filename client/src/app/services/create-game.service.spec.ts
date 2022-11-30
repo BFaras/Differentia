@@ -22,21 +22,33 @@ describe('CreateGameService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('should createGame() call addPlayerOnWaitingList() of CreateGameService', () => {
+    it('createGame() should call addPlayerOnWaitingList() of CreateGameService', () => {
         const addWaitingPlayerSpy = spyOn<any>(service, 'addPlayerOnWaitingList').and.callThrough();
         service.createGame(testGameName);
         expect(addWaitingPlayerSpy).toHaveBeenCalled();
     });
 
-    it('should addPlayer call send()', () => {
+    it('addPlayer should call send()', () => {
         const spy = spyOn(socketService, 'send').and.callThrough();
         service['addPlayerOnWaitingList'](testGameName);
         expect(spy).toHaveBeenCalled();
     });
 
-    it('should leaveWaitingList() call send', () => {
+    it('leaveWaitingList() should call send', () => {
         const spy = spyOn(socketService, 'send').and.callThrough();
         service.leaveWaitingList(testGameName);
         expect(spy).toHaveBeenCalled();
+    });
+
+    it('createLimitedTimeGame() should call send()', () => {
+        const spy = spyOn(socketService, 'send').and.callThrough();
+        service.createLimitedTimeGame();
+        expect(spy).toHaveBeenCalledWith('I am trying to play a limited time game');
+    });
+
+    it('leaveLimitedTimeGame() should call send()', () => {
+        const spy = spyOn(socketService, 'send').and.callThrough();
+        service.leaveLimitedTimeGame();
+        expect(spy).toHaveBeenCalledWith('I left from LM');
     });
 });
