@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-useless-constructor */
-/* eslint-disable prettier/prettier */
-/* eslint-disable no-restricted-imports */
 import { Injectable } from '@angular/core';
 import { BASE_ONE, EMPTY_SHOWABLE_TIME } from '@app/const/client-consts';
 import { Time } from '@common/time';
