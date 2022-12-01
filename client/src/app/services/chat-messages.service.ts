@@ -88,6 +88,7 @@ export class ChatMessagesService {
             }
         });
 
+        // To test
         this.socketService.on('Other player abandonned LM', () => {
             this.sendAbandonMessage(observer);
             this.isMultiplayerGame = false;
@@ -118,6 +119,7 @@ export class ChatMessagesService {
         observer.next(this.generateChatMessageFromGame(this.adversaryUsername + ABANDON_MESSAGE));
     }
 
+    // To test
     private generateRecordMessageType(recordTimeInfos: RecordTimeInformations): string {
         const newRecordChatMessage =
             recordTimeInfos.playerName +

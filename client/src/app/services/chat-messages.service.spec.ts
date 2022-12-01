@@ -12,6 +12,7 @@ import {
 } from '@common/const';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
+import { RecordTimeInformations } from '@common/record-time-infos';
 import { Subscription } from 'rxjs';
 import { Socket } from 'socket.io-client';
 import { ChatMessagesService } from './chat-messages.service';
@@ -172,6 +173,21 @@ describe('ChatMessagesService', () => {
         setTimeout(() => {
             expect(messageReceivedFromObservable.message.includes(ABANDON_MESSAGE)).toBeTruthy();
             expect(chatMessagesService['isMultiplayerGame']).toBeFalsy();
+            done();
+        }, littleTimeout);
+    });
+
+    it('should handle New record time and send new records', (done) => {
+        const spy = spyOn(chatMessagesService, <any>'sendNewRecordMessage').and.callFake(() => {});
+        const recordTimeInfos: RecordTimeInformations = {
+            playerName: '',
+            playerRanking: 2,
+            gameName: 'Car game',
+            isMultiplayer: false,
+        };
+        socketTestHelper.peerSideEmit('New record time', recordTimeInfos);
+        setTimeout(() => {
+            expect(spy).toHaveBeenCalled();
             done();
         }, littleTimeout);
     });
