@@ -10,7 +10,7 @@ import { Socket } from 'socket.io-client';
 import { PopDialogUsernameComponent } from './pop-dialog-username.component';
 export class SocketClientServiceMock extends SocketClientService {
     override connect() {}
-    override off() {
+    override off(event: string) {
         this.disconnect();
     }
 }
@@ -114,8 +114,15 @@ describe('PopDialogUsernameComponent', () => {
         expect(spy).toHaveBeenCalled();
     });
 
+    it('openLimitedTimeDialog should open dialog', () => {
+        component['configureUsernamePopUpSocketFeatures']();
+        socketTestHelper.peerSideEmit(`open the ${LIMITED_TIME_MODE} pop-dialog`);
+        expect(dialog['open']).toHaveBeenCalled();
+    });
+
     it('should not close dialog when calling closeGameDialog', () => {
         const gameName = 'car game';
+        component.gameInfo['nameGame'] = 'red sky';
         component['closeGameDialogAfterDelete'](gameName);
         expect(dialog['closeAll']).not.toHaveBeenCalled();
     });
@@ -158,5 +165,12 @@ describe('PopDialogUsernameComponent', () => {
     it('should open the dialog when calling openDialog', () => {
         component['openClassicDialog']();
         expect(dialog['open']).toHaveBeenCalled();
+    });
+
+    it('ngOnDestroy should call off() twice', () => {
+        const spy = spyOn(socketClientServiceMock, 'off');
+        component['ngOnDestroy']();
+        expect(spy).toHaveBeenCalledWith('username valid');
+        expect(spy).toHaveBeenCalledWith(`${CLASSIC_MODE}`);
     });
 });
