@@ -1,10 +1,10 @@
 <div class="container">
-    <div mat-dialog-title class="dialog-title">
-        <button mat-icon-button aria-label="close dialog" routerLink="/home" mat-dialog-close>
-            <mat-icon>close</mat-icon>
-        </button>
-    </div>
     <mat-dialog-content class="dialog-content">
+        <div mat-dialog-title class="dialog-title">
+            <button mat-icon-button aria-label="close dialog" routerLink="/home" mat-dialog-close>
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
         <ng-container *ngIf="data.winFlag; else userLost">
             <h1>Bravo!</h1>
         </ng-container>

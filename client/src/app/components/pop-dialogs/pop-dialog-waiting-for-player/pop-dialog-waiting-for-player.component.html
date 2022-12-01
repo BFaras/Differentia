@@ -9,7 +9,7 @@
             </ng-template>
             <ng-container *ngIf="gameInfo.classicFlag; else limitedTime">
                 <ng-container *ngIf="gameInfo.createFlag; else joinFlag">
-                    <button mat-raised-button mat-dialog-close (click)="createGameService.leaveWaitingList(gameInfo.nameGame)">Annuler</button>
+                    <button class = "button-choice" mat-raised-button mat-dialog-close (click)="createGameService.leaveWaitingList(gameInfo.nameGame)">Annuler</button>
                 </ng-container>
                 <ng-template #joinFlag>
                     <button mat-raised-button mat-dialog-close (click)="joinGameService.leaveJoiningProcess(gameInfo.nameGame)">Annuler</button>

@@ -1,11 +1,11 @@
 <div class="container">
-    <div mat-dialog-title class="dialog-title">
-        <button mat-icon-button aria-label="close dialog" (click)="this.dialogRef.close()">
-            <mat-icon>close</mat-icon>
-        </button>
-    </div>
-    <mat-dialog-content class="dialog-content">
-        <h1>Quel est votre nom?</h1>
+    <div class="dialog-content">
+        <div mat-dialog-title class="dialog-title">
+            <button mat-icon-button aria-label="close dialog" (click)="this.dialogRef.close()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+        <h1>Veuillez entrer votre nom</h1>
         <div class="form-radius-container">
             <mat-form-field>
                 <label for="username">Nom d'utilisateur: </label>
@@ -17,7 +17,7 @@
             </mat-form-field>
         </div>
         <mat-dialog-actions>
-            <button mat-raised-button [disabled]="!username" (click)="startUpGameService.sendUsername(this.username)">Ok</button>
+            <button mat-raised-button [disabled]="!username" (click)="startUpGameService.sendUsername(this.username)" mat-dialog-close>Continuer</button>
         </mat-dialog-actions>
-    </mat-dialog-content>
+    </div>
 </div>

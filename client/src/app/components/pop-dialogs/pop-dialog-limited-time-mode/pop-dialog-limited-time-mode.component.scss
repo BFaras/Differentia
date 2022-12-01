@@ -1,0 +1,36 @@
+.container {
+    display: flex;
+    height: 100%;
+    padding: 0px 24px;
+}
+
+h1{
+    position: relative;
+    left:2%
+}
+
+.dialog-content {
+    position:relative;
+    overflow: hidden;
+    border: solid black 1px;
+    border-radius: 5px;
+    height: 100%;
+    width:100%;
+}
+.mat-dialog-actions{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    position: relative;
+    top: 35%;
+
+}
+
+.dialog-title > button {
+    position: relative;
+    left:96%;
+}
+
+.button-choice {
+    background-color: rgb(214, 169, 143);
+}
