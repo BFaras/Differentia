@@ -49,6 +49,7 @@ export class EndGameHandlerService {
     }
 
     configureSocket() {
+        // To test
         this.socketService.on('show the username', (username: string) => {
             this.localPlayerUsername = username;
         });
