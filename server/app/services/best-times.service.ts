@@ -1,13 +1,20 @@
 import { RecordTime } from '@app/classes/record-times';
-import { NO_AVAILABLE } from '@app/server-consts';
+import {
+    DECIMAL_BASE,
+    EMPTY_STRING_TO_ADD,
+    LAST_RECORD_INDEX,
+    NO_AVAILABLE,
+    TWO_DIGIT_FORMAT,
+    ZERO_TO_ADD_FOR_RIGHT_FORMAT,
+} from '@app/server-consts';
 import { GameModeTimes } from '@common/games-record-times';
 import { RecordTimeInformations } from '@common/record-time-infos';
 import { Time } from '@common/time';
+import * as io from 'socket.io';
 import Container, { Service } from 'typedi';
 import { RecordTimesService } from './database.games.service';
 import { DatabaseService } from './database.service';
 import { GameManagerService } from './game-manager.service';
-import * as io from 'socket.io';
 
 @Service()
 export class BestTimesService {
@@ -25,7 +32,7 @@ export class BestTimesService {
         this.hasNewRecord = false;
     }
 
-    notifyAllActivePlayers(playerName: string, gameName: string, isMultiplayer:boolean) {
+    notifyAllActivePlayers(playerName: string, gameName: string, isMultiplayer: boolean) {
         if (this.hasNewRecord) {
             const recordInfosToSendAll: RecordTimeInformations = {
                 playerName: playerName,
@@ -33,46 +40,52 @@ export class BestTimesService {
                 gameName: gameName,
                 isMultiplayer: isMultiplayer,
             };
-            this.sio.to(this.gameManagerService.collectAllSocketsRooms()).emit('New record time', recordInfosToSendAll)
+            this.sio.to(this.gameManagerService.collectAllSocketsRooms()).emit('New record time', recordInfosToSendAll);
+            this.hasNewRecord = false;
         }
     }
-    
+
     // To test
     private timeFormatToString(gameTime: Time): string {
-        return (gameTime.minutes < 10 ? '0' : '') + gameTime.minutes + ':' + ((gameTime.seconds < 10 ? '0' : '') + gameTime.seconds);
+        return (
+            (gameTime.minutes < TWO_DIGIT_FORMAT ? ZERO_TO_ADD_FOR_RIGHT_FORMAT : EMPTY_STRING_TO_ADD) +
+            gameTime.minutes +
+            ':' +
+            ((gameTime.seconds < TWO_DIGIT_FORMAT ? ZERO_TO_ADD_FOR_RIGHT_FORMAT : EMPTY_STRING_TO_ADD) + gameTime.seconds)
+        );
     }
     // To test
     private convertTimeForComparison(time: string): number {
         let regex = new RegExp(':', 'g');
-        return parseInt(time.replace(regex, ''), 10);
+        return parseInt(time.replace(regex, ''), DECIMAL_BASE);
     }
-   // To test
+    // To test
     private async setValidRecordTimes(gameTimeInString: string, recordTimeInfos: RecordTimeInformations): Promise<void> {
         const databaseGameTimes = await this.recordTimesService.getGameTimes(recordTimeInfos.gameName);
         this.hasNewRecord = true;
         if (recordTimeInfos.isMultiplayer) {
-            databaseGameTimes.multiplayerGameTimes[2].time = gameTimeInString;
-            databaseGameTimes.multiplayerGameTimes[2].playerName = recordTimeInfos.playerName;
+            databaseGameTimes.multiplayerGameTimes[LAST_RECORD_INDEX].time = gameTimeInString;
+            databaseGameTimes.multiplayerGameTimes[LAST_RECORD_INDEX].playerName = recordTimeInfos.playerName;
         } else {
-            databaseGameTimes.soloGameTimes[2].time = gameTimeInString;
-            databaseGameTimes.soloGameTimes[2].playerName = recordTimeInfos.playerName;
+            databaseGameTimes.soloGameTimes[LAST_RECORD_INDEX].time = gameTimeInString;
+            databaseGameTimes.soloGameTimes[LAST_RECORD_INDEX].playerName = recordTimeInfos.playerName;
         }
         const sortedTimes = await this.updateAndSortTimes(recordTimeInfos, databaseGameTimes);
         const mode = this.rankTimesByMode(sortedTimes, recordTimeInfos.isMultiplayer);
         this.playerRanking = this.recordTimesService.getPlayerRanking(mode, gameTimeInString)!;
     }
-   // To test
+    // To test
     private rankTimesByMode(sortedTimes: GameModeTimes, isMultiplayer: boolean): RecordTime[] {
         if (isMultiplayer) return sortedTimes.multiplayerGameTimes;
         else return sortedTimes.soloGameTimes;
     }
-   // To test
+    // To test
     private async updateAndSortTimes(recordTimeInfos: RecordTimeInformations, databaseGameTimes: GameModeTimes): Promise<GameModeTimes> {
         await this.recordTimesService.updateGameRecordTimes(recordTimeInfos.gameName, databaseGameTimes);
         await this.recordTimesService.sortGameTimes(recordTimeInfos.gameName, recordTimeInfos.isMultiplayer);
         return await this.recordTimesService.getGameTimes(recordTimeInfos.gameName);
     }
-   // To test
+    // To test
     private async retrieveLastRecordTime(gameName: string, isMultiplayer: boolean): Promise<number> {
         const databaseGameTimes = await this.recordTimesService.getGameTimes(gameName);
         if (isMultiplayer) return this.convertTimeForComparison(databaseGameTimes.multiplayerGameTimes[2].time);

@@ -6,7 +6,7 @@ export const SOMEBODY_IS_WAITING = true;
 export const CREATE_FLAG = true;
 export const JOIN_FLAG = true;
 
-//Contantes de temps de jeu par défault
+// Contantes de temps de jeu par défault
 export const DEFAULT_INITIAL_TIME = 30;
 export const DEFAULT_PENALTY_TIME = 5;
 export const DEFAULT_SAVED_TIME = 5;
@@ -28,7 +28,7 @@ export const MSG_PENALTY_TIME_RATIO = 'Le temps de pénalité ne doit pas dépas
 export const MSG_SAVED_TIME_RATIO = 'Le temps gagné ne doit pas  dépasser le quart du temps initial';
 export const MSG_ALL_TIME_RATIO = 'Le temps de pénalité et le temps gagné ne doivent pas dépasser le quart du temps initial';
 
-//Constantes vérification jeu avant upload
+// Constantes vérification jeu avant upload
 export const MINIMUM_NB_DIFFERENCES = 3;
 export const MAXIMUM_NB_DIFFERENCES = 9;
 
@@ -81,7 +81,7 @@ export const RECORD_END_GAME_MESSAGE_PART_ONE = 'Bravo ';
 export const RECORD_END_GAME_MESSAGE_PART_TWO = ', vous avez gagné et obtenu la place numéro ';
 export const RECORD_END_GAME_MESSAGE_PART_THREE = ' au classement!';
 
-//End game flags
+// End game flags
 export const WIN_FLAG = true;
 export const LOSING_FLAG = false;
 
@@ -95,7 +95,12 @@ export const PAUSED_ID = 'paused';
 // Time service constants
 export const BASE_ONE = 10;
 export const EMPTY_SHOWABLE_TIME = '';
-//Constantes pour ListGameForms
+
+// Time service tests constants
+export const LESS_THAN_10 = 5;
+export const MORE_THAN_9 = 10;
+
+// Constantes pour ListGameForms
 export const FIRST_GAMEFORMS_INDEX = 0;
 export const LAST_GAMEFORMS_INDEX = 3;
 export const EMPTY_MESSAGE = '';
@@ -114,6 +119,7 @@ export const MESSAGE_RECORD_PART_ONE = ' obtient la place n°';
 export const MESSAGE_RECORD_PART_TWO = ' dans les meilleurs temps du jeu ';
 export const MESSAGE_RECORD_SOLO = ' en solo';
 export const MESSAGE_RECORD_MULTI = ' en multijoueur';
+export const NO_AVAILABLE = 0;
 
 //Constantes pour les indices
 export const COMPASS_IMAGES_BASIC_PATH = 'assets/compass-images/compass';

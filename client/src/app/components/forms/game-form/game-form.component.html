@@ -16,7 +16,7 @@
     </div>
 
     <div class="button-group">
-        <ng-container *ngIf="buttonPage == 'Admin'">
+        <ng-container *ngIf="buttonPage === 'Admin'">
             <button mat-raised-button matTooltip="Supprimer le jeu" (click)="deleteGameForm(gameForm.gameName)">{{ adminGameFormsButton[0] }}</button>
             <button mat-raised-button matTooltip="Réinitialiser le classement" (click)="resetTimesBoard(gameForm.gameName)">
                 {{ adminGameFormsButton[1] }}

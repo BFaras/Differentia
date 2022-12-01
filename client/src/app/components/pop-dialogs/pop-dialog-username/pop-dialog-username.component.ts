@@ -2,6 +2,7 @@ import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { PopDialogLimitedTimeModeComponent } from '@app/components/pop-dialogs/pop-dialog-limited-time-mode/pop-dialog-limited-time-mode.component';
+// eslint-disable-next-line max-len
 import { PopDialogWaitingForPlayerComponent } from '@app/components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
 import { CLASSIC_FLAG, DISABLE_BUTTON, DISABLE_CLOSE, STANDARD_POP_UP_HEIGHT, STANDARD_POP_UP_WIDTH, USERNAME_VALID } from '@app/const/client-consts';
 import { PopUpData } from '@app/interfaces/pop-up-data';
@@ -31,6 +32,11 @@ export class PopDialogUsernameComponent implements OnInit {
     ngOnInit(): void {
         this.socketService.connect();
         this.configureUsernamePopUpSocketFeatures();
+    }
+
+    ngOnDestroy(): void {
+        this.socketService.off('username valid');
+        this.socketService.off(`${CLASSIC_MODE}`);
     }
 
     inputChanged(): void {
@@ -93,13 +99,10 @@ export class PopDialogUsernameComponent implements OnInit {
         });
 
         this.socketService.on(`${CLASSIC_MODE}`, () => {
-            this.startWaitingLine();
             this.socketService.off(`${CLASSIC_MODE}`);
-            if (this.gameInfo.multiFlag) {
-                this.openClassicDialog();
-            } else {
-                this.router.navigate(['/game']);
-            }
+            this.startWaitingLine();
+            if (this.gameInfo.multiFlag) this.openClassicDialog();
+            else this.router.navigate(['/game']);
         });
 
         this.socketService.on(`open the ${LIMITED_TIME_MODE} pop-dialog`, () => {
@@ -109,7 +112,7 @@ export class PopDialogUsernameComponent implements OnInit {
 
         this.socketService.on('close popDialogUsername', (value: string | string[]) => {
             if (Array.isArray(value)) {
-                for (let gameName of value) {
+                for (const gameName of value) {
                     this.closeGameDialogAfterDelete(gameName);
                 }
             } else {

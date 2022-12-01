@@ -6,6 +6,7 @@ import {
     CLASSIC_MULTIPLAYER_LOST_MESSAGE,
     CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE,
     LOSING_FLAG,
+    NO_AVAILABLE,
     WIN_FLAG,
 } from '@app/const/client-consts';
 import { EndGameInformations } from '@common/end-game-informations';
@@ -50,8 +51,8 @@ describe('EndGameHandlerService', () => {
             isMultiplayer: false,
             isAbandon: false,
             isGameWon: true,
-            hasNewRecord: false,
-            playerRanking: 4,
+            hasNewRecord: true,
+            playerRanking: NO_AVAILABLE,
         };
         const spy = spyOn(service, <any>'openEndGameDialog');
         socketTestHelper.peerSideEmit('End game', endGameInfos);
@@ -65,8 +66,8 @@ describe('EndGameHandlerService', () => {
             isMultiplayer: true,
             isAbandon: false,
             isGameWon: true,
-            hasNewRecord: false,
-            playerRanking: 4,
+            hasNewRecord: true,
+            playerRanking: NO_AVAILABLE,
         };
         const spy = spyOn(service, <any>'openEndGameDialog');
         socketTestHelper.peerSideEmit('End game', endGameInfos);
@@ -80,8 +81,8 @@ describe('EndGameHandlerService', () => {
             isMultiplayer: true,
             isAbandon: true,
             isGameWon: false,
-            hasNewRecord: false,
-            playerRanking: 4,
+            hasNewRecord: true,
+            playerRanking: NO_AVAILABLE,
         };
         const spy = spyOn(service, <any>'openEndGameDialog');
         socketTestHelper.peerSideEmit('End game', endGameInfos);
@@ -95,8 +96,8 @@ describe('EndGameHandlerService', () => {
             isMultiplayer: true,
             isAbandon: false,
             isGameWon: false,
-            hasNewRecord: false,
-            playerRanking: 4,
+            hasNewRecord: true,
+            playerRanking: NO_AVAILABLE,
         };
         const spy = spyOn(service, <any>'openEndGameDialog');
         socketTestHelper.peerSideEmit('End game', endGameInfos);

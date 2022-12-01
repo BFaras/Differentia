@@ -1,11 +1,12 @@
 /* eslint-disable no-console */
-import { HOST_CHOSE_ANOTHER, SOMEBODY_IS_WAITING, ZERO_GAMES_PLAYED, NO_AVAILABLE } from '@app/server-consts';
+import { HOST_CHOSE_ANOTHER, NO_AVAILABLE, SOMEBODY_IS_WAITING, ZERO_GAMES_PLAYED } from '@app/server-consts';
 import { ChatMessage } from '@common/chat-message';
 import { CLASSIC_MODE, HOST_PRESENT, LIMITED_TIME_MODE, MSG_RESET_ALL_TIME, MSG_RESET_TIME } from '@common/const';
 import { DifferencesInformations } from '@common/differences-informations';
 import { GameInfo } from '@common/gameInfo';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
+import { RecordTimeInformations } from '@common/record-time-infos';
 import * as http from 'http';
 import * as io from 'socket.io';
 import Container from 'typedi';
@@ -19,7 +20,6 @@ import { GamesService } from './local.games.service';
 import { MouseHandlerService } from './mouse-handler.service';
 import { TimeConstantsService } from './time-constants.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
-import { RecordTimeInformations } from '@common/record-time-infos';
 
 export class SocketManager {
     socket: io.Socket;
@@ -260,21 +260,21 @@ export class SocketManager {
                 const playerUsername = this.gameManagerService.getSocketUsername(socket);
                 if (isGameFinished) {
                     mouseHandler.resetDifferencesData();
-                    const playerGameTime = this.gameManagerService.getSocketChronometerService(socket).time;
-                    const recordTimeInfos: RecordTimeInformations = {
-                        playerName: playerUsername,
-                        playerRanking: NO_AVAILABLE,
-                        gameName: this.currentGameName,
-                        isMultiplayer: isMultiplayer,
-                    };
                     if (mode === CLASSIC_MODE) {
+                        const playerGameTime = this.gameManagerService.getSocketChronometerService(socket).time;
+                        const recordTimeInfos: RecordTimeInformations = {
+                            playerName: playerUsername,
+                            playerRanking: NO_AVAILABLE,
+                            gameName: this.currentGameName,
+                            isMultiplayer: isMultiplayer,
+                        };
+                        await this.bestTimesService.compareGameTimeWithDbTimes(playerGameTime, recordTimeInfos);
                         this.gameManagerService.handleEndGameEmits(
                             socket,
                             isMultiplayer,
                             this.bestTimesService.hasNewRecord,
                             this.bestTimesService.playerRanking,
                         );
-                        await this.bestTimesService.compareGameTimeWithDbTimes(playerGameTime, recordTimeInfos);
                         this.bestTimesService.notifyAllActivePlayers(playerUsername, this.currentGameName, isMultiplayer);
                     }
                     this.gameManagerService.endGame(socket, mode);

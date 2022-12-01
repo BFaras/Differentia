@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { PopUpData } from '@app/interfaces/pop-up-data';
 import { CreateGameService } from './create-game.service';
 import { JoinGameService } from './join-game.service';
 import { SocketClientService } from './socket-client.service';
@@ -15,7 +16,7 @@ export class StartUpGameService {
         private router: Router,
     ) {}
 
-    startUpWaitingLine(gameInfo: any): void {
+    startUpWaitingLine(gameInfo: PopUpData): void {
         if (gameInfo.classicFlag) {
             this.startUpClassicWaitingLine(gameInfo);
         } else {
@@ -44,7 +45,7 @@ export class StartUpGameService {
         this.createGameService.createLimitedTimeGame();
     }
 
-    private startUpClassicWaitingLine(gameInfo: any): void {
+    private startUpClassicWaitingLine(gameInfo: PopUpData): void {
         if (gameInfo.multiFlag) {
             this.multiplayerClassicGame(gameInfo);
         } else {
@@ -52,7 +53,7 @@ export class StartUpGameService {
         }
     }
 
-    private multiplayerClassicGame(gameInfo: any): void {
+    private multiplayerClassicGame(gameInfo: PopUpData): void {
         if (gameInfo.isPlayerWaiting) this.joinGameService.joinGame(gameInfo.nameGame);
         else this.createGameService.createGame(gameInfo.nameGame);
     }
