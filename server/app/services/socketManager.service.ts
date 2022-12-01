@@ -259,7 +259,7 @@ export class SocketManager {
                 const playerUsername = this.gameManagerService.getSocketUsername(socket);
                 if (isGameFinished) {
                     mouseHandler.resetDifferencesData();
-                    if (mode === CLASSIC_MODE) {
+                    if (mode === CLASSIC_MODE && (await this.gamesService.getGame(this.currentGameName)) !== undefined) {
                         const playerGameTime = this.gameManagerService.getSocketChronometerService(socket).time;
                         const recordTimeInfos: RecordTimeInformations = {
                             playerName: playerUsername,
@@ -275,6 +275,14 @@ export class SocketManager {
                             this.bestTimesService.playerRanking,
                         );
                         this.bestTimesService.notifyAllActivePlayers(playerUsername, this.currentGameName, isMultiplayer);
+                    }
+                    if (mode === CLASSIC_MODE && (await this.gamesService.getGame(this.currentGameName)) === undefined) {
+                        this.gameManagerService.handleEndGameEmits(
+                            socket,
+                            isMultiplayer,
+                            this.bestTimesService.hasNewRecord,
+                            this.bestTimesService.playerRanking,
+                        );
                     }
                     this.gameManagerService.endGame(socket, mode);
                 } else {

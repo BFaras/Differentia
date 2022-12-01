@@ -6,7 +6,15 @@
 <div mat-dialog-content class="inputs">
     <mat-form-field hintLabel="{{ datas[0].valueUnit }}" appearance="fill">
         <mat-label>{{ datas[0].inputName }}</mat-label>
-        <input type="number" matInput #timeInput1 placeholder="{{ datas[0].placeHolder }}" (change)="validateTimeType(this.initialTimeInput, 0)" />
+        <input
+            type="number"
+            matInput
+            #timeInput1
+            placeholder="{{ datas[0].placeHolder }}"
+            (change)="validateTimeType(this.initialTimeInput, 0)"
+            matTooltip="Temps de départ en mode Temps Limité"
+            [matTooltipPosition]="'after'"
+        />
         <mat-hint align="end">
             <h3 *ngIf="timeValid[0]">
                 {{ timeInput1.value || datas[0].defaultTime }}
@@ -20,7 +28,15 @@
 
     <mat-form-field hintLabel="{{ datas[1].valueUnit }}" appearance="fill">
         <mat-label>{{ datas[1].inputName }}</mat-label>
-        <input type="number" matInput #timeInput2 placeholder="{{ datas[1].placeHolder }}" (change)="validateTimeType(this.penaltyTimeInput, 1)" />
+        <input
+            type="number"
+            matInput
+            #timeInput2
+            placeholder="{{ datas[1].placeHolder }}"
+            (change)="validateTimeType(this.penaltyTimeInput, 1)"
+            matTooltip="Temps soustrait pour l'utilisation d'indice en mode Temps Limité "
+            [matTooltipPosition]="'after'"
+        />
         <mat-hint align="end">
             <h3 *ngIf="timeValid[1]">
                 {{ timeInput2.value || datas[1].defaultTime }}
@@ -34,7 +50,15 @@
 
     <mat-form-field hintLabel="{{ datas[2].valueUnit }}" appearance="fill">
         <mat-label>{{ datas[2].inputName }}</mat-label>
-        <input type="number" matInput #timeInput3 placeholder="{{ datas[2].placeHolder }}" (change)="validateTimeType(this.savedTimeInput, 2)" />
+        <input
+            type="number"
+            matInput
+            #timeInput3
+            placeholder="{{ datas[2].placeHolder }}"
+            (change)="validateTimeType(this.savedTimeInput, 2)"
+            matTooltip="Temps ajouté pour chaque bonne réponse en mode Temps Limité "
+            [matTooltipPosition]="'after'"
+        />
         <mat-hint align="end">
             <h3 *ngIf="timeValid[2]">
                 {{ timeInput3.value || datas[2].defaultTime }}

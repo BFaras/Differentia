@@ -1,9 +1,9 @@
 import { RecordTimesService } from '@app/services/database.games.service';
+import { DatabaseService } from '@app/services/database.service';
 import { GamesService } from '@app/services/local.games.service';
 import { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import Container, { Service } from 'typedi';
-import { DatabaseService } from '@app/services/database.service';
 
 @Service()
 export class GamesController {
@@ -33,8 +33,8 @@ export class GamesController {
         });
 
         this.router.delete(`/:gameName`, async (req: Request, res: Response) => {
-            res.json(await this.gamesService.deleteGame(req.params.gameName));
             await this.recordTimesService.deleteGameRecordTimes(req.params.gameName);
+            res.json(await this.gamesService.deleteGame(req.params.gameName));
         });
     }
 }
