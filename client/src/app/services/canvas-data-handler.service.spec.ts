@@ -4,7 +4,7 @@ import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
 import { CanvasDataHandlerService } from './canvas-data-handler.service';
 import { DrawingHistoryService } from './drawing-history.service';
 
-describe('CanvasDataHandlerService', () => {
+fdescribe('CanvasDataHandlerService', () => {
   let service: CanvasDataHandlerService;
   let drawingHistoryServiceSpy:jasmine.SpyObj<DrawingHistoryService>
   let mainCanvas: HTMLCanvasElement;
@@ -91,7 +91,7 @@ describe('CanvasDataHandlerService', () => {
     service.setContext(contextMock,mockIndexLeftCanvas);
     service.setContext(contextMock,mockIndexRightCanvas);
     const copyCanvasMock = spyOn(service,'copyCanvas');
-    service.shareDataWithOtherCanvas(mockIndexLeftCanvas);
+    service.shareDataWithOtherCanvas();
     expect(copyCanvasMock).toHaveBeenCalled()
   });
 
@@ -99,7 +99,7 @@ describe('CanvasDataHandlerService', () => {
     service.setContext(contextMock,mockIndexLeftCanvas);
     service.setContext(contextMock,mockIndexRightCanvas);
     const copyCanvasMock = spyOn(service,'copyCanvas');
-    service.shareDataWithOtherCanvas(mockIndexRightCanvas);
+    service.shareDataWithOtherCanvas();
     expect(copyCanvasMock).toHaveBeenCalled()
   });
 

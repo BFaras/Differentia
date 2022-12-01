@@ -84,7 +84,7 @@ export class ToolSettingComponent implements OnInit {
     }
 
     shareDataWithOtherCanvas() {
-        this.canvasDataHandle.shareDataWithOtherCanvas(this.indexTool);
+        this.canvasDataHandle.shareDataWithOtherCanvas();
     }
 
     setPencilMode(clickEvent: Event) {

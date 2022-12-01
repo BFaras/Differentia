@@ -10,7 +10,22 @@ const RIGHT_CANVAS_INDEX = 1;
 export class CanvasDataHandlerService {
   contextList:CanvasRenderingContext2D[] = [];
   canvas:HTMLCanvasElement;
-  constructor(private drawingHistoryService: DrawingHistoryService ) { }
+  leftCanvasEchange:HTMLCanvasElement;
+  rightCanvasEchange:HTMLCanvasElement;
+  contextLeft:CanvasRenderingContext2D;
+  contextRight:CanvasRenderingContext2D;
+  savedCanvas:HTMLCanvasElement;
+  constructor(private drawingHistoryService: DrawingHistoryService) {
+    this.leftCanvasEchange = document.createElement('canvas');
+    this.leftCanvasEchange.width = 640;
+    this.leftCanvasEchange.height = 480;
+    this.contextLeft = this.leftCanvasEchange.getContext('2d')!;
+
+    this.rightCanvasEchange = document.createElement('canvas');
+    this.rightCanvasEchange.width = 640;
+    this.rightCanvasEchange.height = 480;
+    this.contextRight = this.rightCanvasEchange.getContext('2d')!;
+   }
 
   setContext(context:CanvasRenderingContext2D,index:number){
     this.contextList![index] = context;
@@ -41,16 +56,25 @@ export class CanvasDataHandlerService {
       this.canvas = this.contextList[LEFT_CANVAS_INDEX].canvas;
     }
   }
-  
-  shareDataWithOtherCanvas(indexContext:number){
-    if (indexContext != RIGHT_CANVAS_INDEX){
-      this.canvas = this.contextList[LEFT_CANVAS_INDEX].canvas;
-      this.copyCanvas(RIGHT_CANVAS_INDEX);
-    } 
-    if (indexContext != LEFT_CANVAS_INDEX){
-      this.canvas = this.contextList[RIGHT_CANVAS_INDEX].canvas;
-      this.copyCanvas(LEFT_CANVAS_INDEX);
-    }
-  }
 
+  exchangeCanvas(){
+    this.contextLeft!.drawImage( this.contextList[0].canvas,0,0);
+    this.contextRight!.drawImage(this.contextList[1].canvas,0,0)
+
+    
+    this.drawingHistoryService.saveCanvas(this.contextList[0],0);
+    this.contextList[0].clearRect(0,0,IMAGE_WIDTH,IMAGE_HEIGHT)
+    this.contextList[0].drawImage(this.rightCanvasEchange,0,0);
+    this.contextRight.clearRect(0,0,IMAGE_WIDTH,IMAGE_HEIGHT)
+
+    this.drawingHistoryService.saveCanvas(this.contextList[1],1);
+    this.contextList[1].clearRect(0,0,IMAGE_WIDTH,IMAGE_HEIGHT)
+    this.contextList[1].drawImage(this.leftCanvasEchange,0,0);
+    this.contextLeft.clearRect(0,0,IMAGE_WIDTH,IMAGE_HEIGHT)
+  }
+  
+  shareDataWithOtherCanvas(){
+    this.canvas = this.contextList[LEFT_CANVAS_INDEX].canvas;
+    this.exchangeCanvas();
+  }
 }
