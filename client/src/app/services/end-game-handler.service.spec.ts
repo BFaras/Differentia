@@ -44,11 +44,14 @@ describe('EndGameHandlerService', () => {
         expect(matDialogSpy).toBeTruthy();
     });
 
+    // A verifier
     it('should open end game Dialog ', () => {
         endGameInfos = {
             isMultiplayer: false,
             isAbandon: false,
             isGameWon: true,
+            hasNewRecord: false,
+            playerRanking: 4,
         };
         const spy = spyOn(service, <any>'openEndGameDialog');
         socketTestHelper.peerSideEmit('End game', endGameInfos);
@@ -56,11 +59,14 @@ describe('EndGameHandlerService', () => {
         expect(spy).toHaveBeenCalled();
     });
 
+    // A verifier
     it('should call end game event when the user win', () => {
         endGameInfos = {
             isMultiplayer: true,
             isAbandon: false,
             isGameWon: true,
+            hasNewRecord: false,
+            playerRanking: 4,
         };
         const spy = spyOn(service, <any>'openEndGameDialog');
         socketTestHelper.peerSideEmit('End game', endGameInfos);
@@ -68,11 +74,14 @@ describe('EndGameHandlerService', () => {
         expect(spy).toHaveBeenCalledWith(CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE, WIN_FLAG);
     });
 
+    // A verifier
     it('should call end game event when the user abandon', () => {
         endGameInfos = {
             isMultiplayer: true,
             isAbandon: true,
             isGameWon: false,
+            hasNewRecord: false,
+            playerRanking: 4,
         };
         const spy = spyOn(service, <any>'openEndGameDialog');
         socketTestHelper.peerSideEmit('End game', endGameInfos);
@@ -80,11 +89,14 @@ describe('EndGameHandlerService', () => {
         expect(spy).toHaveBeenCalledWith(CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE, WIN_FLAG);
     });
 
+    // A verifier
     it('should call end game event when the user lose', () => {
         endGameInfos = {
             isMultiplayer: true,
             isAbandon: false,
             isGameWon: false,
+            hasNewRecord: false,
+            playerRanking: 4,
         };
         const spy = spyOn(service, <any>'openEndGameDialog');
         socketTestHelper.peerSideEmit('End game', endGameInfos);

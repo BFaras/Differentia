@@ -143,11 +143,14 @@ describe('ChatMessagesService', () => {
         }, littleTimeout);
     });
 
+    // A verifier
     it('should send multiplayer the abandon message when a player abandonned the game', (done) => {
         const endGameInfos: EndGameInformations = {
             isMultiplayer: true,
             isAbandon: true,
             isGameWon: true,
+            hasNewRecord: false,
+            playerRanking: 4,
         };
         observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
         socketTestHelper.peerSideEmit('End game', endGameInfos);
