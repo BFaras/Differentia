@@ -10,19 +10,7 @@ import { DatabaseService } from './database.service';
 
 @Service()
 export class RecordTimesService {
-    // public static readonly databaseErrorRecordTimes: GameModeTimes = {
-    //     soloGameTimes: [
-    //         new RecordTime('N/A', 'N/A'),
-    //         new RecordTime('N/A', 'N/A'),
-    //         new RecordTime('N/A', 'N/A'),
-    //     ],
-    //     multiplayerGameTimes: [
-    //         new RecordTime('N/A', 'N/A'),
-    //         new RecordTime('N/A', 'N/A'),
-    //         new RecordTime('N/A', 'N/A'),
-    //     ]
-    // };
-    databaseErrorRecordTimes: GameModeTimes = {
+    private databaseErrorRecordTimes: GameModeTimes = {
         soloGameTimes: [],
         multiplayerGameTimes: [],
     };
@@ -32,7 +20,7 @@ export class RecordTimesService {
     get collection(): Collection<GameTimes> {
         return this.databaseService.database.collection(process.env.DATABASE_COLLECTION!);
     }
-
+    // To test
     isDatabaseAvailable(): boolean {
         return this.databaseService.database !== undefined;
     }
