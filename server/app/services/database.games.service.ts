@@ -10,19 +10,27 @@ import { DatabaseService } from './database.service';
 
 @Service()
 export class RecordTimesService {
+    // public static readonly databaseErrorRecordTimes: GameModeTimes = {
+    //     soloGameTimes: [
+    //         new RecordTime('N/A', 'N/A'),
+    //         new RecordTime('N/A', 'N/A'),
+    //         new RecordTime('N/A', 'N/A'),
+    //     ],
+    //     multiplayerGameTimes: [
+    //         new RecordTime('N/A', 'N/A'),
+    //         new RecordTime('N/A', 'N/A'),
+    //         new RecordTime('N/A', 'N/A'),
+    //     ]
+    // };
+    databaseErrorRecordTimes: GameModeTimes = {
+        soloGameTimes: [],
+        multiplayerGameTimes: []
+    };
+    
     constructor(private databaseService: DatabaseService) {}
 
     get collection(): Collection<GameTimes> {
         return this.databaseService.database.collection(process.env.DATABASE_COLLECTION!);
-    }
-       // To test
-    async getGame(nameOfWantedGame: string): Promise<GameTimes> {
-        return this.collection.findOne({ name: nameOfWantedGame }).then((game: WithId<GameTimes>) => {
-            if (game) {
-                return game;
-            }
-            throw new HttpException('Game not found', StatusCodes.NOT_FOUND);
-        });
     }
    // To test
     async addNewGameDefaultTimes(gameName: string): Promise<void> {
@@ -99,7 +107,9 @@ export class RecordTimesService {
                 return gameTimes.recordTimes;
             })
             .catch(() => {
-                throw new Error('Failed to get the game times');
+                console.log('Failed to get the game times');
+                return this.databaseErrorRecordTimes;
+                //throw new Error('Failed to get the game times');
             });
     }
    // To test
