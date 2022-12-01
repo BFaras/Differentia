@@ -160,7 +160,7 @@ describe('ChatMessagesService', () => {
         }, littleTimeout);
     });
 
-    it('should send multiplayer the abandon message and set isMultiplayerToFalse on a Other player abandonned LM event', (done) => {
+    it('should send multiplayer the abandon message and set isMultiplayer to false on a Other player abandonned LM event', (done) => {
         const endGameInfos: EndGameInformations = {
             isMultiplayer: true,
             isAbandon: true,
@@ -172,13 +172,24 @@ describe('ChatMessagesService', () => {
         socketTestHelper.peerSideEmit('End game', endGameInfos);
         setTimeout(() => {
             expect(messageReceivedFromObservable.message.includes(ABANDON_MESSAGE)).toBeTruthy();
-            expect(chatMessagesService['isMultiplayerGame']).toBeFalsy();
+            expect(chatMessagesService['isMultiplayerGame']).toBeFalse();
             done();
         }, littleTimeout);
     });
 
+    it('should call generateRecordMessageType and create a new recordMessage', () => {
+        const recordTimeInfos: RecordTimeInformations = {
+            playerName: '',
+            playerRanking: 2,
+            gameName: 'Car game',
+            isMultiplayer: false,
+        };
+        const rep = ' obtient la place n°2 dans les meilleurs temps du jeu Car game en solo';
+        expect(chatMessagesService['generateRecordMessageType'](recordTimeInfos)).toEqual(rep);
+    });
+
     it('should handle New record time and send new records', (done) => {
-        const spy = spyOn(chatMessagesService, <any>'sendNewRecordMessage').and.callFake(() => {});
+        const spy = spyOn(chatMessagesService, <any>'sendNewRecordMessage');
         const recordTimeInfos: RecordTimeInformations = {
             playerName: '',
             playerRanking: 2,
@@ -202,6 +213,17 @@ describe('ChatMessagesService', () => {
         socketTestHelper.peerSideEmit('Clue with quadrant of difference', messageFromPlayer);
         setTimeout(() => {
             expect(messageReceivedFromObservable.message.includes(MESSAGE_CLUE)).toBeTruthy();
+            done();
+        }, littleTimeout);
+    });
+
+    it('should handle Other player abandonned LM and end the game', (done) => {
+        const spy = spyOn(chatMessagesService, <any>'sendAbandonMessage').and.callFake(() => {});
+        chatMessagesService['isMultiplayerGame'] = true;
+        socketTestHelper.peerSideEmit('Other player abandonned LM');
+        setTimeout(() => {
+            expect(spy).toHaveBeenCalled();
+            expect(chatMessagesService['isMultiplayerGame']).toBeFalse();
             done();
         }, littleTimeout);
     });
