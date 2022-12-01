@@ -4,6 +4,8 @@ import { DrawingHistoryService } from '@app/services/drawing-history.service';
 import { KeyEventHandlerService } from '@app/services/key-event-handler.service';
 import { PencilService } from '@app/services/pencil.service';
 import { BIG, BLACK_COLOR, CONTROL_SHIFT_Z_SHORTCUT, CONTROL_Z_SHORTCUT, MEDIUM, SMALL, VERY_BIG, VERY_SMALL, WRITE_MODE } from '@common/const';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { faEraser } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tool-setting',
@@ -15,6 +17,9 @@ export class ToolSettingComponent implements OnInit {
     public color: string;
     @Input() indexTool: number;
     @Input() nameTool: string;
+    public faEraser:IconDefinition = faEraser;
+    public enableWrite:boolean = false;
+    public enableErase:boolean = false;
     constructor(
         private pencilService: PencilService,
         private drawingHistoryService: DrawingHistoryService,
@@ -93,5 +98,17 @@ export class ToolSettingComponent implements OnInit {
         const currentId = (clickEvent.currentTarget as HTMLInputElement).id;
 
         this.pencilService.setStateOfPencilForRightCanvas(currentValue, parseInt(currentId));
+
+        console.log(currentValue)
+        if (currentValue == 'write'){
+            this.enableErase = false;
+            this.enableWrite = true;
+        }
+
+        if (currentValue == 'erase'){
+            this.enableErase = true;
+            this.enableWrite = false;
+        }
+        
     }
 }

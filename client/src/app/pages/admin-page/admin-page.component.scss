@@ -1,16 +1,21 @@
 body {
     background: url(../../../assets/bob.jpg);
+}
+
+app-list-game-form {
     min-width: 1920px;
     min-height: 1080px;
-}
-app-list-game-form {
     align-items: center;
     display: flex;
     justify-content: center;
-    margin: auto;
-    width: 85%;
-    height: 85%;
+    width: 100%;
 }
+
+.group-button {
+    position:relative;
+    bottom:100px;
+}
+
 .mat-flat-button.mat-primary,
 .mat-raised-button.mat-primary,
 .mat-fab.mat-primary,

@@ -1,18 +1,20 @@
 
-<div class = "name-tool"> Canvas  {{nameTool}}</div>
+<div class = "name-tool"> Toile  {{nameTool}}</div>
 
 <div class = "mouse-mode-container">
-  <button mat-mini-fab id = "{{indexTool}}" value= "write"(click)="setPencilMode($event)">
+  <button  [ngClass]="{'pressedButton' : enableWrite}" class = "pencil-mode" mat-mini-fab id = "{{indexTool}}" value= "write"(click)="setPencilMode($event)">
     <mat-icon>create</mat-icon>
   </button>
-  <button mat-mini-fab id = "{{indexTool}}" value= "erase"(click)="setPencilMode($event)">E</button>
+  <button  [ngClass]="{'pressedButton' : enableErase}" mat-mini-fab id = "{{indexTool}}" value= "erase"(click)="setPencilMode($event)">
+    <fa-icon [icon] = faEraser ></fa-icon>
+  </button>
 </div>
 <div >
     <label>Couleur : </label>
     <input (change) = "onChangeColor()" [(ngModel)]="color" type="color" />
   </div>
 <mat-form-field >
-    <mat-label>Width</mat-label>
+    <mat-label>Largeur(px):</mat-label>
     <mat-select [value] ="widths[0]" >
       <mat-option *ngFor="let width of widths"  (click) ="onChangeWidth(width)" [value]="width" #chosenWidth>
         {{width}}
@@ -27,12 +29,12 @@
     <mat-icon>redo</mat-icon>
   </button>
 </div>
-<button  mat-raised-button (click) = "clearCanvas()"> 
+<button  mat-raised-button (click) = "clearCanvas()" matTooltip="Supprimer le dessin sur la toile"> 
   <i class="material-icons">delete</i>
 </button>
-<button  mat-raised-button (click) = "copyOtherCanvas()">
+<button  mat-raised-button matTooltip="Copier le dessin de l'autre toile" (click) = "copyOtherCanvas()">
   <i class="material-icons">content_copy</i>
 </button>
-<button  mat-raised-button (click) = "shareDataWithOtherCanvas()">
+<button  mat-raised-button (click) = "shareDataWithOtherCanvas()" matTooltip="Echanger le dessin pour les 2 toiles">
   <i class="material-icons">swap_horiz</i>
 </button>

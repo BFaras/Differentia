@@ -9,6 +9,10 @@ mat-label , :host ::ng-deep .mat-select-value {
     color: white;
 }
 
+.pressedButton{
+    background-color: #ce7f4b;
+}
+
 .name-tool{
     position: relative;
     bottom : 40px;
