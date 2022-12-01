@@ -9,6 +9,7 @@ import {
     STANDARD_POP_UP_WIDTH,
 } from '@app/const/client-consts';
 import { Coordinate } from '@app/interfaces/coordinate';
+import { ChatMessagesService } from '@app/services/chat-messages.service';
 import { DifferenceDetectionService } from '@app/services/difference-detection.service';
 import { DrawService } from '@app/services/draw.service';
 import { ImageGeneratorService } from '@app/services/image-generator.service';
@@ -46,7 +47,6 @@ export class PlayAreaComponent implements OnInit {
     @Input() mode: string;
     mousePosition: Position = { x: 0, y: 0 };
     private isCheatActivated = false;
-    private isWriting = false;
     private canvasSize: Coordinate = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
     reloadState: boolean = true;
     constructor(
@@ -56,6 +56,7 @@ export class PlayAreaComponent implements OnInit {
         private imageToImageDifferenceService: ImageToImageDifferenceService,
         private dialog: MatDialog,
         private imageGenerator: ImageGeneratorService,
+        private chatMessageService: ChatMessagesService,
     ) {}
 
     get width(): number {
@@ -121,9 +122,9 @@ export class PlayAreaComponent implements OnInit {
     // Oublier la fonction que le prof a conseiller, onChange? onActive?
     @HostListener(CHEAT_KEY, ['$event'])
     handleKeyboardCheat() {
-        if (this.isCheatActivated && !this.isWriting) {
+        if (this.isCheatActivated && !this.chatMessageService.isWriting) {
             this.deactivateCheatMode();
-        } else if (!this.isWriting) {
+        } else if (!this.chatMessageService.isWriting) {
             this.activateCheatMode();
         }
     }

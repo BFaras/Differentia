@@ -23,6 +23,7 @@ export class ChatMessagesService {
     private adversaryUsername: string;
     private isMultiplayerGame: boolean;
     private date: Date;
+    isWriting: boolean = false;
 
     constructor(private socketService: SocketClientService) {
         this.date = new Date();
