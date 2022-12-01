@@ -24,21 +24,25 @@ export class RecordTimesService {
     // };
     databaseErrorRecordTimes: GameModeTimes = {
         soloGameTimes: [],
-        multiplayerGameTimes: []
+        multiplayerGameTimes: [],
     };
-    
+
     constructor(private databaseService: DatabaseService) {}
 
     get collection(): Collection<GameTimes> {
         return this.databaseService.database.collection(process.env.DATABASE_COLLECTION!);
     }
-   // To test
+
+    isDatabaseAvailable(): boolean {
+        return this.databaseService.database !== undefined;
+    }
+    // To test
     async addNewGameDefaultTimes(gameName: string): Promise<void> {
         const newGameDefaultTimes: GameTimes = {
             name: gameName,
             recordTimes: this.databaseService.defaultRecordTimes,
         };
-        if (await this.validateName(gameName)) {
+        if (this.isDatabaseAvailable() && (await this.validateName(gameName))) {
             await this.collection.insertOne(newGameDefaultTimes).catch((error: Error) => {
                 throw new HttpException('Failed to insert game and default times', StatusCodes.INTERNAL_SERVER_ERROR);
             });
@@ -46,45 +50,51 @@ export class RecordTimesService {
             throw new Error('Game already exists');
         }
     }
-   // To test
+    // To test
     async deleteGameRecordTimes(nameOfWantedGame: string): Promise<void> {
-        return this.collection
-            .findOneAndDelete({ name: nameOfWantedGame })
-            .then((res: ModifyResult<GameTimes>) => {
-                if (!res.value) {
-                    throw new HttpException('Could not find game', StatusCodes.NOT_FOUND);
-                }
-            })
-            .catch(() => {
-                throw new HttpException('Failed to delete game record times', StatusCodes.INTERNAL_SERVER_ERROR);
-            });
+        if (this.isDatabaseAvailable()) {
+            return this.collection
+                .findOneAndDelete({ name: nameOfWantedGame })
+                .then((res: ModifyResult<GameTimes>) => {
+                    if (!res.value) {
+                        throw new HttpException('Could not find game', StatusCodes.NOT_FOUND);
+                    }
+                })
+                .catch(() => {
+                    throw new HttpException('Failed to delete game record times', StatusCodes.INTERNAL_SERVER_ERROR);
+                });
+        }
     }
-   // To test
+    // To test
     async resetGameRecordTimes(gameName: string): Promise<void> {
         let filterQuery: Filter<GameTimes> = { name: gameName };
         let updateQuery: UpdateFilter<GameTimes> = {
             $set: { recordTimes: this.databaseService.defaultRecordTimes },
         };
-        return this.collection
-            .updateOne(filterQuery, updateQuery)
-            .then(() => {})
-            .catch(() => {
-                throw new Error('Failed to reset the game record times');
-            });
+        if (this.isDatabaseAvailable()) {
+            return this.collection
+                .updateOne(filterQuery, updateQuery)
+                .then(() => {})
+                .catch(() => {
+                    throw new Error('Failed to reset the game record times');
+                });
+        }
     }
-   // To test
+    // To test
     async resetAllGamesRecordTimes(): Promise<void> {
         let updateQuery: UpdateFilter<GameTimes> = {
             $set: { recordTimes: this.databaseService.defaultRecordTimes },
         };
-        return this.collection
-            .updateMany({}, updateQuery)
-            .then(() => {})
-            .catch(() => {
-                throw new Error('Failed to reset all games record times');
-            });
+        if (this.isDatabaseAvailable()) {
+            return this.collection
+                .updateMany({}, updateQuery)
+                .then(() => {})
+                .catch(() => {
+                    throw new Error('Failed to reset all games record times');
+                });
+        }
     }
-   // To test
+    // To test
     async updateGameRecordTimes(gameName: string, newRecordTimes: GameModeTimes): Promise<void> {
         let filterQuery: Filter<GameTimes> = { name: gameName };
         let updateQuery: UpdateFilter<GameTimes> = {
@@ -97,22 +107,23 @@ export class RecordTimesService {
                 throw new Error('Failed to reset this game record times');
             });
     }
-   // To test
+    // To test
     async getGameTimes(nameOfWantedGame: string): Promise<GameModeTimes> {
         let filterQuery: Filter<GameTimes> = { name: nameOfWantedGame };
 
-        return this.collection
-            .findOne(filterQuery)
-            .then((gameTimes: WithId<GameTimes>) => {
-                return gameTimes.recordTimes;
-            })
-            .catch(() => {
-                console.log('Failed to get the game times');
-                return this.databaseErrorRecordTimes;
-                //throw new Error('Failed to get the game times');
-            });
+        if (this.isDatabaseAvailable()) {
+            return this.collection
+                .findOne(filterQuery)
+                .then((gameTimes: WithId<GameTimes>) => {
+                    return gameTimes.recordTimes;
+                })
+                .catch(() => {
+                    console.log('Failed to get the game times');
+                    throw new Error('Failed to get the game times');
+                });
+        } else return this.databaseErrorRecordTimes;
     }
-   // To test
+    // To test
     async sortGameTimes(gameName: string, isMultiplayer: boolean): Promise<void> {
         if (isMultiplayer) {
             return this.collection
@@ -130,7 +141,7 @@ export class RecordTimesService {
                 });
         }
     }
-   // To test
+    // To test
     getPlayerRanking(timeArray: RecordTime[], playerRecordTime: string): number | undefined {
         for (let index = 0; index < timeArray.length; index++) {
             if (playerRecordTime === timeArray[index].time) {
@@ -139,7 +150,7 @@ export class RecordTimesService {
         }
         return;
     }
-   // To test
+    // To test
     private async validateName(gameName: string): Promise<boolean> {
         let filterQuery: Filter<GameTimes> = { name: gameName };
         const game = await this.collection.findOne(filterQuery);
