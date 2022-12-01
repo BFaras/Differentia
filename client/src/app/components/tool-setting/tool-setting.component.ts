@@ -14,6 +14,7 @@ export class ToolSettingComponent implements OnInit {
     readonly widths: number[] = [VERY_SMALL, SMALL, MEDIUM, BIG, VERY_BIG];
     public color: string;
     @Input() indexTool: number;
+    @Input() nameTool: string;
     constructor(
         private pencilService: PencilService,
         private drawingHistoryService: DrawingHistoryService,
