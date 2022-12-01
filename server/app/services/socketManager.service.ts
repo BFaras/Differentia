@@ -78,10 +78,10 @@ export class SocketManager {
                     gameName,
                     gameMode: LIMITED_TIME_MODE,
                 };
-                this.gameManagerService.startLimitedTimeSocketGameHistory(socket, gameName);
                 this.sio.to(socket.id).emit('The game is', gameName);
                 this.sio.to(socket.id).emit('show the username', username);
                 await this.gameManagerService.beginGame(gameInfo);
+                this.gameManagerService.startLimitedTimeSocketGameHistory(socket, gameName);
             });
 
             socket.on('is there someone waiting', (gameName: string) => {
@@ -211,8 +211,6 @@ export class SocketManager {
                 );
                 this.waitingLineHandlerService.resetLimitedTimeWaitingLine();
                 const gameName = (await this.gamesService.generateRandomGame(ZERO_GAMES_PLAYED)).name;
-                this.gameManagerService.startLimitedTimeSocketGameHistory(socket, gameName);
-                this.gameManagerService.startLimitedTimeSocketGameHistory(adversarySocket, gameName);
                 const gameInfo: GameInfo = {
                     socket,
                     adversarySocket,
@@ -220,6 +218,7 @@ export class SocketManager {
                     gameMode: LIMITED_TIME_MODE,
                 };
                 await this.gameManagerService.startMultiplayerMatch(gameInfo);
+                this.gameManagerService.startLimitedTimeSocketGameHistory(socket, gameName);
             });
 
             socket.on('I refuse this adversary', (gameName: string) => {

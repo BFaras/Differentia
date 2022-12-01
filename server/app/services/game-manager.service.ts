@@ -1,5 +1,13 @@
 /* eslint-disable max-lines */
-import { GAME_WON, IT_IS_MULTIPLAYER, NOBODY_ABANDONNED, NO_AVAILABLE, NO_MORE_GAMES_AVAILABLE, ONE_SECOND_DELAY, TIMER_HIT_ZERO } from '@app/server-consts';
+import {
+    GAME_WON,
+    IT_IS_MULTIPLAYER,
+    NOBODY_ABANDONNED,
+    NO_AVAILABLE,
+    NO_MORE_GAMES_AVAILABLE,
+    ONE_SECOND_DELAY,
+    TIMER_HIT_ZERO,
+} from '@app/server-consts';
 import {
     CLASSIC_MODE,
     DEFAULT_GAME_ROOM_NAME,
@@ -11,9 +19,9 @@ import {
     ORIGINAL_IMAGE_POSITION,
 } from '@common/const';
 import { EndGameInformations } from '@common/end-game-informations';
+import { GameInfo } from '@common/gameInfo';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
 import { Position } from '@common/position';
-import { GameInfo } from '@common/gameInfo';
 import * as io from 'socket.io';
 import { Container, Service } from 'typedi';
 import { ChronometerService } from './chronometer.service';
@@ -28,6 +36,7 @@ export class GameManagerService {
     private readonly timeIntervals: Map<string, NodeJS.Timer> = new Map<string, NodeJS.Timer>();
     private readonly chronometerServices: Map<string, ChronometerService> = new Map<string, ChronometerService>();
     private readonly mouseHandlerServices: Map<string, MouseHandlerService> = new Map<string, MouseHandlerService>();
+    private readonly gamesPlayedByRoom: Map<string, string[]> = new Map<string, string[]>();
     private gamesService = Container.get(GamesService);
     private clueManagerService: ClueManagerService;
 
@@ -161,12 +170,14 @@ export class GameManagerService {
         return this.gamesRooms;
     }
 
+    //To test Seb
     initializeSocketGameHistoryLimitedTimeMode(socket: io.Socket): void {
-        socket.data.gamesPlayed = [];
+        this.gamesPlayedByRoom.set(this.findSocketGameRoomName(socket), []);
     }
 
+    //To test Seb
     addGameToHistoryLimitedTimeMode(socket: io.Socket, gameName: string): void {
-        socket.data.gamesPlayed.push(gameName);
+        this.gamesPlayedByRoom.get(this.findSocketGameRoomName(socket))!.push(gameName);
     }
 
     getSocketChronometerService(socket: io.Socket): ChronometerService {
@@ -184,6 +195,7 @@ export class GameManagerService {
         this.chronometerServices.delete(gameRoomName);
         this.mouseHandlerServices.delete(gameRoomName);
         this.timeIntervals.delete(gameRoomName);
+        this.eraseGamesFromHistoryLimitedTimeMode(socket);
         if (hasTheTimerHitZero) this.sio.to(gameRoomName).emit('time hit zero');
         if (noMoreGames) this.sio.to(gameRoomName).emit('no more games available');
         this.sio.in(gameRoomName).socketsLeave(gameRoomName);
@@ -222,8 +234,9 @@ export class GameManagerService {
         this.addGameToHistoryLimitedTimeMode(socket, gameName);
     }
 
+    //To test Seb
     private async switchGame(socket: io.Socket, adversarySocket?: io.Socket): Promise<void> {
-        const gameToBePlayed = await this.gamesService.generateRandomGame(socket.data.gamesPlayed);
+        const gameToBePlayed = await this.gamesService.generateRandomGame(this.gamesPlayedByRoom.get(this.findSocketGameRoomName(socket))!);
         this.addGameToHistoryLimitedTimeMode(socket, gameToBePlayed.name);
         this.resetMouseHandlerService(socket, gameToBePlayed.name);
         if (adversarySocket) {
@@ -245,8 +258,10 @@ export class GameManagerService {
         else return this.classicIsGameFinishedSolo(socket);
     }
 
+    //To test Seb
     private async limitedTimeIsGameFinished(socket: io.Socket): Promise<boolean> {
-        return socket.data.gamesPlayed.length === (await this.gamesService.getAllGames()).length;
+        console.log(this.gamesPlayedByRoom);
+        return this.gamesPlayedByRoom.get(this.findSocketGameRoomName(socket))!.length === (await this.gamesService.getAllGames()).length;
     }
 
     private classicIsGameFinishedSolo(socket: io.Socket): boolean {
@@ -264,8 +279,9 @@ export class GameManagerService {
         }
     }
 
+    //To test Seb
     private eraseGamesFromHistoryLimitedTimeMode(socket: io.Socket): void {
-        socket.data.gamesPlayed = [];
+        this.gamesPlayedByRoom.delete(this.findSocketGameRoomName(socket));
     }
 
     private async setupNecessaryGameServices(socket: io.Socket, gameMode: string) {
