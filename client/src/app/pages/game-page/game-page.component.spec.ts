@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { RecordTime } from '@app/classes/record-time';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
-import { SidebarComponent } from '@app/components/sidebar/sidebar.component';
-import { TopbarComponent } from '@app/components/topbar/topbar.component';
 import { CommunicationService } from '@app/services/communication.service';
+import { EndGameHandlerService } from '@app/services/end-game-handler.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
 import { ADVERSARY_PLR_USERNAME_POS, CLASSIC_MODE } from '@common/const';
@@ -19,13 +18,14 @@ class SocketClientServiceMock extends SocketClientService {
     override connect() {}
 }
 
-describe('GamePageComponent', () => {
+fdescribe('GamePageComponent', () => {
     let component: GamePageComponent;
     let fixture: ComponentFixture<GamePageComponent>;
     let socketServiceMock: SocketClientServiceMock;
     let socketHelper: SocketTestHelper;
     let timeServiceSpy: SpyObj<TimeService>;
     let communicationServiceSpy: SpyObj<CommunicationService>;
+    let endGameServiceMock: SpyObj<EndGameHandlerService>;
     let testGame: Game;
 
     beforeEach(async () => {
@@ -43,26 +43,22 @@ describe('GamePageComponent', () => {
         timeServiceSpy = jasmine.createSpyObj('TimeService', ['classicMode', 'changeTime']);
         communicationServiceSpy = jasmine.createSpyObj('CommunicationService', ['getGames']);
         communicationServiceSpy.getGames.and.returnValue(of([testGame]));
+        endGameServiceMock = jasmine.createSpyObj('EndGameHandlerService', ['configureSocket']);
         await TestBed.configureTestingModule({
-            declarations: [GamePageComponent, SidebarComponent, TopbarComponent],
+            declarations: [GamePageComponent],
             providers: [
                 { provide: SocketClientService, useValue: socketServiceMock },
                 { provide: TimeService, useValue: timeServiceSpy },
                 { provide: CommunicationService, useValue: communicationServiceSpy },
                 { provide: MatDialog, useValue: {} },
-                { provide: MatDialogRef, useValue: {} },
+                { provide: EndGameHandlerService, useValue: endGameServiceMock },
             ],
         }).compileComponents();
-    });
 
-    beforeEach(() => {
         fixture = TestBed.createComponent(GamePageComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-    });
-
-    it('should create', () => {
-        expect(component).toBeTruthy();
+        component.ngOnInit();
     });
 
     describe('Receiving events', () => {
