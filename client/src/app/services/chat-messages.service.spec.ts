@@ -149,7 +149,7 @@ describe('ChatMessagesService', () => {
             isAbandon: true,
             isGameWon: true,
             hasNewRecord: true,
-            playerRanking: NO_AVAILABLE
+            playerRanking: NO_AVAILABLE,
         };
         observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
         socketTestHelper.peerSideEmit('End game', endGameInfos);
@@ -164,6 +164,8 @@ describe('ChatMessagesService', () => {
             isMultiplayer: true,
             isAbandon: true,
             isGameWon: true,
+            hasNewRecord: true,
+            playerRanking: NO_AVAILABLE,
         };
         observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
         socketTestHelper.peerSideEmit('End game', endGameInfos);
