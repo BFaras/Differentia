@@ -1,16 +1,16 @@
 <div class="container">
-    <div mat-dialog-title class="dialog-title">
-        <button mat-icon-button aria-label="close dialog" mat-dialog-close>
-            <mat-icon>close</mat-icon>
-        </button>
-    </div>
     <mat-dialog-content class="dialog-content">
+        <div mat-dialog-title class="dialog-title">
+            <button mat-icon-button aria-label="close dialog" mat-dialog-close>
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
         <h1> Êtes vous sur de vouloir abandonner cette partie ?</h1>
         <div class = "group-buttons">
-            <button mat-icon-button aria-label="close dialog" mat-dialog-close>
+            <button class = "button-close"  mat-raised-button  aria-label="close dialog" mat-dialog-close>
                 Non
             </button>
-            <button mat-icon-button aria-label="close dialog" (click)="abandonGame()" routerLink="/home" mat-dialog-close >
+            <button class = "button-close" mat-raised-button  aria-label="close dialog" (click)="abandonGame()" routerLink="/home" mat-dialog-close >
                 Oui
             </button>
         </div>

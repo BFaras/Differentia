@@ -1,7 +1,7 @@
 <div class="container">
     <mat-dialog-content class="dialog-content">
         <div mat-dialog-title class="dialog-title">
-            <button mat-icon-button aria-label="close dialog" routerLink="/home" mat-dialog-close>
+            <button class="close-button" mat-icon-button aria-label="close dialog" routerLink="/home" mat-dialog-close>
                 <mat-icon>close</mat-icon>
             </button>
         </div>
@@ -15,7 +15,7 @@
             <p>{{ data.message }}</p>
         </div>
         <mat-dialog-actions>
-            <button mat-raised-button mat-dialog-close routerLink="/home">Ok</button>
+            <button class = "return-button" mat-raised-button mat-dialog-close routerLink="/home">Ok</button>
         </mat-dialog-actions>
     </mat-dialog-content>
 </div>

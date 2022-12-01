@@ -2,13 +2,21 @@
     display: flex;
     height: 100%;
     padding: 0px 24px;
+    border: solid black 1px;
 }
 
+.close-button{
+    position:relative;
+    left: 96%;
+}
 .dialog-content {
     position:relative;
     overflow: hidden;
-    border: solid black 1px;
     border-radius: 5px;
     height: 100%;
     width:100%;
+}
+
+.return-button{
+    position:relative
 }
