@@ -26,6 +26,13 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
         this.messagesSent = [];
     }
 
+    onFocus() {
+        this.chatMessagesService.isWriting = true;
+    }
+
+    outFocus() {
+        this.chatMessagesService.isWriting = false;
+    }
     sendMessage(): void {
         this.chatMessagesService.sendMessage(this.localPlayerUsername, this.playerMsg.nativeElement.value);
         this.playerMsg.nativeElement.value = '';
