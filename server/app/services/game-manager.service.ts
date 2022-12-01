@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { GAME_WON, IT_IS_MULTIPLAYER, NOBODY_ABANDONNED, NO_MORE_GAMES_AVAILABLE, ONE_SECOND_DELAY, TIMER_HIT_ZERO } from '@app/server-consts';
+import { GAME_WON, IT_IS_MULTIPLAYER, NOBODY_ABANDONNED, NO_AVAILABLE, NO_MORE_GAMES_AVAILABLE, ONE_SECOND_DELAY, TIMER_HIT_ZERO } from '@app/server-consts';
 import {
     CLASSIC_MODE,
     DEFAULT_GAME_ROOM_NAME,
@@ -79,11 +79,6 @@ export class GameManagerService {
         const differencesInfo: GameplayDifferenceInformations = this.getSocketMouseHandlerService(socket).isValidClick(mousePosition, socket.id);
         differencesInfo.socketId = socket.id;
         differencesInfo.playerUsername = this.getSocketUsername(socket);
-        if (differencesInfo.isValidDifference && socket.data.gameMode === LIMITED_TIME_MODE) {
-            const gameRoomName = this.findSocketGameRoomName(socket);
-            const chronometerService = this.getRoomChronometerService(gameRoomName);
-            chronometerService.increaseTimeByBonusTime();
-        }
         this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
     }
 
@@ -112,11 +107,14 @@ export class GameManagerService {
         }
     }
 
-    handleEndGameEmits(socket: io.Socket, isItMultiplayer: boolean) {
+    // Test à modifier?
+    handleEndGameEmits(socket: io.Socket, isItMultiplayer: boolean, hasNewRecord: boolean, playerRanking: number) {
         const endGameInfos: EndGameInformations = {
             isMultiplayer: isItMultiplayer,
             isAbandon: NOBODY_ABANDONNED,
             isGameWon: GAME_WON,
+            hasNewRecord: hasNewRecord,
+            playerRanking: playerRanking,
         };
         socket.emit('End game', endGameInfos);
 
@@ -133,6 +131,8 @@ export class GameManagerService {
                 isMultiplayer: IT_IS_MULTIPLAYER,
                 isAbandon: !NOBODY_ABANDONNED,
                 isGameWon: GAME_WON,
+                hasNewRecord: false,
+                playerRanking: NO_AVAILABLE,
             };
             this.sio.to(gameRoomName).emit('End game', endGameInfos);
             this.endGame(socket, gameMode);
@@ -178,7 +178,7 @@ export class GameManagerService {
         if (mode === LIMITED_TIME_MODE) await this.switchGame(socket, adversarySocket);
     }
 
-    endGameWithDependencies(socket: io.Socket, hasTheTimerHitZero?: boolean, noMoreGames?: boolean): void {
+    endGameWithDependencies(socket: io.Socket, hasTheTimerHitZero?: boolean, noMoreGames?: boolean) {
         const gameRoomName: string = this.findSocketGameRoomName(socket);
         this.endChrono(socket);
         this.chronometerServices.delete(gameRoomName);

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
-import { ABANDON_MESSAGE, MESSAGE_CLUE } from '@app/const/client-consts';
+import { ABANDON_MESSAGE, MESSAGE_CLUE, NO_AVAILABLE } from '@app/const/client-consts';
 import { ChatMessage } from '@common/chat-message';
 import {
     DEFAULT_USERNAME,
@@ -148,6 +148,8 @@ describe('ChatMessagesService', () => {
             isMultiplayer: true,
             isAbandon: true,
             isGameWon: true,
+            hasNewRecord: true,
+            playerRanking: NO_AVAILABLE
         };
         observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
         socketTestHelper.peerSideEmit('End game', endGameInfos);
