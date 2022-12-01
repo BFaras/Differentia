@@ -117,17 +117,21 @@ export class ChatMessagesService {
         observer.next(this.generateChatMessageFromGame(this.adversaryUsername + ABANDON_MESSAGE));
     }
 
+    private generateRecordMessageType(recordTimeInfos: RecordTimeInformations): string {
+        const newRecordChatMessage =
+            recordTimeInfos.playerName +
+            MESSAGE_RECORD_PART_ONE +
+            recordTimeInfos.playerRanking +
+            MESSAGE_RECORD_PART_TWO +
+            recordTimeInfos.gameName +
+            (recordTimeInfos.isMultiplayer ? MESSAGE_RECORD_MULTI : MESSAGE_RECORD_SOLO);
+
+        return newRecordChatMessage;
+    }
+
     //To test
     private sendNewRecordMessage(observer: Subscriber<ChatMessage>, recordTimeInfos: RecordTimeInformations) {
-        observer.next(
-            this.generateChatMessageFromGame(
-                recordTimeInfos.playerName +
-                    MESSAGE_RECORD_PART_ONE +
-                    recordTimeInfos.playerRanking +
-                    MESSAGE_RECORD_PART_TWO +
-                    recordTimeInfos.gameName +
-                    (recordTimeInfos.isMultiplayer ? MESSAGE_RECORD_MULTI : MESSAGE_RECORD_SOLO),
-            ),
-        );
+        const newRecordChatMessage: string = this.generateRecordMessageType(recordTimeInfos);
+        observer.next(this.generateChatMessageFromGame(newRecordChatMessage));
     }
 }
