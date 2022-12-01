@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
-import { ABANDON_MESSAGE, MESSAGE_CLUE, NO_AVAILABLE } from '@app/const/client-consts';
+import { ABANDON_MESSAGE, MESSAGE_CLUE, MESSAGE_RECORD_PART_ONE, NO_AVAILABLE } from '@app/const/client-consts';
 import { ChatMessage } from '@common/chat-message';
 import {
     DEFAULT_USERNAME,
@@ -178,6 +178,7 @@ describe('ChatMessagesService', () => {
     });
 
     it('should call generateRecordMessageType and create a new recordMessage', () => {
+        observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
         const recordTimeInfos: RecordTimeInformations = {
             playerName: '',
             playerRanking: 2,
@@ -189,16 +190,31 @@ describe('ChatMessagesService', () => {
     });
 
     it('should handle New record time and send new records', (done) => {
-        const spy = spyOn(chatMessagesService, <any>'sendNewRecordMessage');
         const recordTimeInfos: RecordTimeInformations = {
             playerName: '',
             playerRanking: 2,
             gameName: 'Car game',
             isMultiplayer: false,
         };
+        observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
         socketTestHelper.peerSideEmit('New record time', recordTimeInfos);
         setTimeout(() => {
-            expect(spy).toHaveBeenCalled();
+            expect(messageReceivedFromObservable.message.includes(MESSAGE_RECORD_PART_ONE)).toBeTruthy();
+            done();
+        }, littleTimeout);
+    });
+
+    it('should handle New record time and send new records', (done) => {
+        const recordTimeInfos: RecordTimeInformations = {
+            playerName: '',
+            playerRanking: 2,
+            gameName: 'Car game',
+            isMultiplayer: true,
+        };
+        observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
+        socketTestHelper.peerSideEmit('New record time', recordTimeInfos);
+        setTimeout(() => {
+            expect(messageReceivedFromObservable.message.includes(MESSAGE_RECORD_PART_ONE)).toBeTruthy();
             done();
         }, littleTimeout);
     });
