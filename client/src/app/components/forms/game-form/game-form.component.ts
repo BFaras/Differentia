@@ -40,6 +40,7 @@ export class GameFormComponent {
     }
 
     openDialog(multiplayerFlag: boolean): void {
+        console.log(multiplayerFlag);
         this.dialog.open(PopDialogUsernameComponent, {
             height: STANDARD_POP_UP_HEIGHT,
             width: STANDARD_POP_UP_WIDTH,
@@ -52,15 +53,6 @@ export class GameFormComponent {
                 createFlag: this.createFlag,
                 isPlayerWaiting: this.isPlayerWaiting,
             },
-        });
-    }
-
-    private openWarningDialog(value: string) {
-        this.dialog.open(PopDialogWarningComponent, {
-            height: STANDARD_POP_UP_HEIGHT,
-            width: STANDARD_POP_UP_WIDTH,
-            disableClose: DISABLE_CLOSE,
-            data: value,
         });
     }
 
@@ -92,6 +84,16 @@ export class GameFormComponent {
         this.createFlag = !JOIN_FLAG;
         this.joinFlag = !CREATE_FLAG;
     }
+
+    private openWarningDialog(value: string) {
+        this.dialog.open(PopDialogWarningComponent, {
+            height: STANDARD_POP_UP_HEIGHT,
+            width: STANDARD_POP_UP_WIDTH,
+            disableClose: DISABLE_CLOSE,
+            data: value,
+        });
+    }
+
 
     private configureGameFormSocketFeatures(): void {
         this.socketService.connect();

@@ -1,6 +1,8 @@
+/* eslint-disable max-len */
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
+import { PopUpData } from '@app/interfaces/pop-up-data';
 import { Socket } from 'socket.io-client';
 import { CreateGameService } from './create-game.service';
 import { JoinGameService } from './join-game.service';
@@ -9,15 +11,20 @@ import { StartUpGameService } from './start-up-game.service';
 
 describe('StartUpGameService', () => {
     const testGameName = 'Test Game';
-    const multiPlayerGameInfo: any = {
-        isPlayerWaiting: true,
+    let testGameInfo: PopUpData = {
+        nameGame: '',
+        classicFlag: true,
         multiFlag: true,
+        joinFlag: false,
+        createFlag: true,
+        isPlayerWaiting: true,
+        username: '',
+        didHostChoseAnotherFlag: false,
+        message: '',
+        winFlag: false,
+        gameMode: '',
     };
-    const createGameInfo: any = {
-        isPlayerWaiting: false,
-        multiFlag: false,
-    };
-    let routerSpy = { navigate: jasmine.createSpy('navigate') };
+    const routerSpy = { navigate: jasmine.createSpy('navigate') };
     let startUpGameService: StartUpGameService;
     let createGameService: CreateGameService;
     let joinGameService: JoinGameService;
@@ -28,7 +35,19 @@ describe('StartUpGameService', () => {
         TestBed.configureTestingModule({
             providers: [{ provide: Router, useValue: routerSpy }],
         });
-
+        testGameInfo = {
+            nameGame: '',
+            classicFlag: true,
+            multiFlag: true,
+            joinFlag: false,
+            createFlag: true,
+            isPlayerWaiting: true,
+            username: '',
+            didHostChoseAnotherFlag: false,
+            message: '',
+            winFlag: false,
+            gameMode: '',
+        };
         startUpGameService = TestBed.inject(StartUpGameService);
         createGameService = TestBed.inject(CreateGameService);
         socketService = TestBed.inject(SocketClientService);
@@ -41,55 +60,73 @@ describe('StartUpGameService', () => {
         expect(startUpGameService).toBeTruthy();
     });
 
-    it('should multiplayerGame() call joinGame() of JoinGameService if a player is waiting ', () => {
-        const spy = spyOn(joinGameService, 'joinGame').and.callThrough();
-        startUpGameService['multiplayerClassicGame'](multiPlayerGameInfo);
-        expect(spy).toHaveBeenCalled();
+    it('startUpWaitingLine() should call startUpClassicWaitingLine(), multiplayerClassicGame() and joinGame() if its a classic multiplayer game and there is already a creator', () => {
+        const startUpClassicWaitingLineSpy = spyOn(startUpGameService, <any>'startUpClassicWaitingLine').and.callThrough();
+        const multiplayerClassicGameSpy = spyOn(startUpGameService, <any>'multiplayerClassicGame').and.callThrough();
+        const joinGameSpy = spyOn(joinGameService, 'joinGame').and.callFake(() => {});
+        startUpGameService['startUpWaitingLine'](testGameInfo);
+        expect(startUpClassicWaitingLineSpy).toHaveBeenCalled();
+        expect(multiplayerClassicGameSpy).toHaveBeenCalled();
+        expect(joinGameSpy).toHaveBeenCalled();
     });
 
-    it('should multiplayerGame() call createGame() of CreateGameService if no player is waiting ', () => {
-        const spy = spyOn(createGameService, 'createGame').and.callThrough();
-        startUpGameService['multiplayerClassicGame'](createGameInfo);
-        expect(spy).toHaveBeenCalled();
+    it('startUpWaitingLine() should call startUpClassicWaitingLine(), multiplayerClassicGame() and createGame() if its a classic multiplayer game and there is not a creator', () => {
+        const startUpClassicWaitingLineSpy = spyOn(startUpGameService, <any>'startUpClassicWaitingLine').and.callThrough();
+        const multiplayerClassicGameSpy = spyOn(startUpGameService, <any>'multiplayerClassicGame').and.callThrough();
+        const createGameSpy = spyOn(createGameService, 'createGame').and.callFake(() => {});
+        testGameInfo.isPlayerWaiting = false;
+        startUpGameService['startUpWaitingLine'](testGameInfo);
+        expect(startUpClassicWaitingLineSpy).toHaveBeenCalled();
+        expect(multiplayerClassicGameSpy).toHaveBeenCalled();
+        expect(createGameSpy).toHaveBeenCalled();
     });
 
-    it('should startUpWaitingLine() call multiplayerGame() of StartUpGameService if there is the multiplayer flag', () => {
-        const spy = spyOn(startUpGameService, <any>'multiplayerGame').and.callThrough();
-        startUpGameService.startUpWaitingLine(multiPlayerGameInfo);
-        expect(spy).toHaveBeenCalled();
+    it('startUpWaitingLine() should call startUpClassicWaitingLine(), soloClassicGameInfo() and send() if its a classic solo game', () => {
+        const startUpClassicWaitingLineSpy = spyOn(startUpGameService, <any>'startUpClassicWaitingLine').and.callThrough();
+        const soloClassicGameSpy = spyOn(startUpGameService, <any>'soloClassicGame').and.callThrough();
+        const socketServiceSpy = spyOn(socketService, 'send').and.callFake(() => {});
+        testGameInfo.multiFlag = false;
+        startUpGameService['startUpWaitingLine'](testGameInfo);
+        expect(startUpClassicWaitingLineSpy).toHaveBeenCalled();
+        expect(soloClassicGameSpy).toHaveBeenCalled();
+        expect(socketServiceSpy).toHaveBeenCalled();
     });
 
-    it('should startUpWaitingLine() call soloGame() of StartUpGameService if there is not the multiplayer flag', () => {
-        const spy = spyOn(startUpGameService, <any>'soloGame').and.callThrough();
-        startUpGameService.startUpWaitingLine(createGameInfo);
-        expect(spy).toHaveBeenCalled();
+    it('startUpWaitingLine() should call startUpLimitedTimeWaitingLine() and createLimitedTimeGame() if its a limited time multiplayer game', () => {
+        const startUpLimitedTimeWaitingLineSpy = spyOn(startUpGameService, <any>'startUpLimitedTimeWaitingLine').and.callThrough();
+        const createLimitedTimeGameSpy = spyOn(createGameService, 'createLimitedTimeGame').and.callFake(() => {});
+        testGameInfo.classicFlag = false;
+        testGameInfo.multiFlag = true;
+        startUpGameService['startUpWaitingLine'](testGameInfo);
+        expect(startUpLimitedTimeWaitingLineSpy).toHaveBeenCalled();
+        expect(createLimitedTimeGameSpy).toHaveBeenCalled();
     });
 
-    it('should soloGame call send()', () => {
-        const spy = spyOn(socketService, 'send').and.callThrough();
-        startUpGameService['soloClassicGame'](testGameName);
-        expect(spy).toHaveBeenCalled();
+    it('soloLimitedTimeGame() should call the send() with solo limited time mode', () => {
+        const socketServiceSpy = spyOn(socketService, 'send').and.callFake(() => {});
+        startUpGameService['soloLimitedTimeGame']();
+        expect(socketServiceSpy).toHaveBeenCalledWith('solo limited time mode');
     });
 
-    it('should declineAdversary() call send', () => {
+    it('declineAdversary() should call send', () => {
         const spy = spyOn(socketService, 'send').and.callThrough();
         startUpGameService.declineAdversary(testGameName);
         expect(spy).toHaveBeenCalled();
     });
 
-    it('should sendUsername() call send', () => {
+    it('sendUsername() should call send', () => {
         const spy = spyOn(socketService, 'send').and.callThrough();
         startUpGameService.sendUsername(testGameName);
         expect(spy).toHaveBeenCalled();
     });
 
-    it('should startMatch() call send()', () => {
+    it('startMatch() should call send()', () => {
         const spy = spyOn(socketService, 'send').and.callThrough();
         startUpGameService.startMatch(testGameName);
         expect(spy).toHaveBeenCalled();
     });
 
-    it('should startMatch() navigate to the right URL', () => {
+    it('startMatch() should navigate to the right URL', () => {
         startUpGameService.startMatch(testGameName);
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/game']);
     });

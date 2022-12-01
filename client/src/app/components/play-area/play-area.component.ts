@@ -138,7 +138,7 @@ export class PlayAreaComponent implements OnInit {
 
     private configurePlayAreaSocket(): void {
         this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {
-            const isLocalPlayer = differencesInfo.socketId === this.socketService.socket.id;
+            const isLocalPlayer = differencesInfo.socketId == this.socketService.socket.id;
 
             const isDifference: boolean = differencesInfo.isValidDifference;
             this.mouseDetection.playSound(isDifference, isLocalPlayer);

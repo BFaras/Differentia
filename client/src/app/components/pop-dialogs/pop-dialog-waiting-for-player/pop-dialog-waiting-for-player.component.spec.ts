@@ -8,13 +8,14 @@ import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
 import { Socket } from 'socket.io-client';
 import { PopDialogHostRefusedComponent } from '../pop-dialog-host-refused/pop-dialog-host-refused.component';
-
 import { PopDialogWaitingForPlayerComponent } from './pop-dialog-waiting-for-player.component';
+
 export class SocketClientServiceMock extends SocketClientService {
     override connect() {}
     override off() {
         this.disconnect();
     }
+    override send() {}
 }
 
 describe('PopDialogWaitingForPlayerComponent', () => {
@@ -23,12 +24,13 @@ describe('PopDialogWaitingForPlayerComponent', () => {
     let socketClientServiceMock: SocketClientServiceMock;
     let socketTestHelper: SocketTestHelper;
     let startUpGameService: jasmine.SpyObj<StartUpGameService>;
-    let dialogRef: jasmine.SpyObj<MatDialogRef<PopDialogHostRefusedComponent, any>>;
+    let dialogRef: jasmine.SpyObj<MatDialogRef<PopDialogHostRefusedComponent, unknown>>;
     let dialog: jasmine.SpyObj<MatDialog>;
     let joinGameService: jasmine.SpyObj<JoinGameService>;
     let createGameService: jasmine.SpyObj<CreateGameService>;
     let router: jasmine.SpyObj<Router>;
-    let username: string = 'username1';
+    const username = 'username1';
+    const classicFlag = true;
 
     beforeAll(async () => {
         socketTestHelper = new SocketTestHelper();
@@ -45,7 +47,7 @@ describe('PopDialogWaitingForPlayerComponent', () => {
             declarations: [PopDialogWaitingForPlayerComponent],
             providers: [
                 { provide: MatDialogRef, useValue: dialogRef },
-                { provide: MAT_DIALOG_DATA, useValue: {} },
+                { provide: MAT_DIALOG_DATA, useValue: { classicFlag } },
                 { provide: StartUpGameService, useValue: startUpGameService },
                 { provide: SocketClientService, useValue: socketClientServiceMock },
                 { provide: MatDialog, useValue: dialog },
@@ -105,5 +107,18 @@ describe('PopDialogWaitingForPlayerComponent', () => {
         component['configureWaitingPopUpSocketFeatures']();
         expect(dialogRef.close).toHaveBeenCalled();
         expect(router['navigate']).toHaveBeenCalledWith(['/game']);
+    });
+
+    it('should configure socket if the host accept the request', () => {
+        component['configureWaitingPopUpSocketFeatures']();
+        socketTestHelper.peerSideEmit('response on limited time waiting line', true);
+        expect(dialogRef.close).toHaveBeenCalled();
+        expect(router['navigate']).toHaveBeenCalledWith(['/game']);
+    });
+
+    it('ngOnInit() should call send() if gameInfo.classicFlag = true;', () => {
+        const spy = spyOn(socketClientServiceMock, 'send');
+        component['ngOnInit']();
+        expect(spy).toHaveBeenCalled();
     });
 });

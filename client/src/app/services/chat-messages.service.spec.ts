@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
-import { ABANDON_MESSAGE, MESSAGE_CLUE } from '@app/const/client-consts';
+import { ABANDON_MESSAGE, MESSAGE_CLUE, NO_AVAILABLE } from '@app/const/client-consts';
 import { ChatMessage } from '@common/chat-message';
 import {
     DEFAULT_USERNAME,
@@ -18,7 +18,7 @@ import { ChatMessagesService } from './chat-messages.service';
 import { SocketClientService } from './socket-client.service';
 
 describe('ChatMessagesService', () => {
-    const littleTimeout = 200;
+    const littleTimeout = 400;
     const emptySubcriberCallbackTest = (message: ChatMessage) => {};
     const putResponseInVariableCallback = (message: ChatMessage) => {
         messageReceivedFromObservable = message;
@@ -148,11 +148,28 @@ describe('ChatMessagesService', () => {
             isMultiplayer: true,
             isAbandon: true,
             isGameWon: true,
+            hasNewRecord: true,
+            playerRanking: NO_AVAILABLE
         };
         observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
         socketTestHelper.peerSideEmit('End game', endGameInfos);
         setTimeout(() => {
             expect(messageReceivedFromObservable.message.includes(ABANDON_MESSAGE)).toBeTruthy();
+            done();
+        }, littleTimeout);
+    });
+
+    it('should send multiplayer the abandon message and set isMultiplayerToFalse on a Other player abandonned LM event', (done) => {
+        const endGameInfos: EndGameInformations = {
+            isMultiplayer: true,
+            isAbandon: true,
+            isGameWon: true,
+        };
+        observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
+        socketTestHelper.peerSideEmit('End game', endGameInfos);
+        setTimeout(() => {
+            expect(messageReceivedFromObservable.message.includes(ABANDON_MESSAGE)).toBeTruthy();
+            expect(chatMessagesService['isMultiplayerGame']).toBeFalsy();
             done();
         }, littleTimeout);
     });

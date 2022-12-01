@@ -106,6 +106,11 @@ describe('ChatSectionComponent', () => {
         expect(chatSectionComponent.isMultiplayerGame).toBeTruthy();
     });
 
+    it('should change the multiplayer game to false on a Other player abandonned LM is event', () => {
+        socketTestHelper.peerSideEmit('Other player abandonned LM');
+        expect(chatSectionComponent.isMultiplayerGame).toBeFalsy();
+    });
+
     it('should sendMessage() of ChatSectionComponent call sendMessage() of ChatMessageService and clear the input', () => {
         const sendMessageSpy = spyOn(chatMessagesService, 'sendMessage');
         chatSectionComponent.playerMsg = { nativeElement: { value: 'Hi' } };

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { SocketClientService } from '@app/services/socket-client.service';
+import { TimeService } from '@app/services/time.service';
 import { ClueInformations } from '@common/clue-informations';
 import { Socket } from 'socket.io-client';
 import { TopbarComponent } from './topbar.component';
@@ -10,15 +11,20 @@ describe('TopbarComponent', () => {
     let fixture: ComponentFixture<TopbarComponent>;
     let socketTestHelper: SocketTestHelper;
     let socketService: SocketClientService;
+    let timeServiceMock: jasmine.SpyObj<TimeService>;
 
     beforeEach(async () => {
         socketService = new SocketClientService();
         socketTestHelper = new SocketTestHelper();
         socketService.socket = socketTestHelper as unknown as Socket;
+        timeServiceMock = jasmine.createSpyObj('TimeService', ['resetTime']);
 
         await TestBed.configureTestingModule({
             declarations: [TopbarComponent],
-            providers: [{ provide: SocketClientService, useValue: socketService }],
+            providers: [
+                { provide: SocketClientService, useValue: socketService },
+                { provide: TimeService, useValue: timeServiceMock },
+            ],
         }).compileComponents();
         fixture = TestBed.createComponent(TopbarComponent);
         component = fixture.componentInstance;
@@ -45,5 +51,10 @@ describe('TopbarComponent', () => {
         const expectedAmountOfClues = 0;
         socketTestHelper.peerSideEmit('Clue with difference pixels');
         expect(component.clueAmountLeft).toEqual(expectedAmountOfClues);
+    });
+
+    it('should call resetTime() from TimeService on ngOnDestroy()', () => {
+        component.ngOnDestroy();
+        expect(timeServiceMock.resetTime).toHaveBeenCalled();
     });
 });

@@ -28,6 +28,7 @@ export class FormService {
             .catch((error: Error) => console.log(error));
     }
 
+    //  test à finir
     private parseGameList() {
         for (let index = 0; index < this.gamelist?.length; index++) {
             this.fillListGameName(this.gamelist[index].name, this.listName);
@@ -44,22 +45,12 @@ export class FormService {
     private fillListGameImage(gameImage: string, listImage: string[]) {
         listImage.push(gameImage);
     }
-
+     //To test
     private fillListGameTimes(gameTimes:GameModeTimes, listTimes: GameModeTimes[]) {
         listTimes.push(gameTimes);
     }
 
     private initializeGameForm(index: number) {
-        // this.socketService.send('Need recordTimes', this.listName[index]);
-        // this.socketService.on('Send Record Times', (gameRecordTimes: GameModeTimes) => {
-        //     this.gameForms.push(
-        //         new GameFormDescription(
-        //             this.listName[index],
-        //             this.listImage[index],
-        //             new RecordTimesBoard(gameRecordTimes.soloGameTimes, gameRecordTimes.multiplayerGameTimes),
-        //         ),
-        //     );
-        // });
          this.gameForms.push(new GameFormDescription(this.listName[index], this.listImage[index], new RecordTimesBoard(this.listTimes[index].soloGameTimes,this.listTimes[index].multiplayerGameTimes)));
     }
 
@@ -68,5 +59,6 @@ export class FormService {
         this.gamelist = [];
         this.listImage = [];
         this.listName = [];
+        this.listTimes = [];
     }
 }
