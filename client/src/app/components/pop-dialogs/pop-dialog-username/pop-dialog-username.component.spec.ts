@@ -24,6 +24,7 @@ describe('PopDialogUsernameComponent', () => {
     let dialogRef: jasmine.SpyObj<MatDialogRef<PopDialogUsernameComponent, any>>;
     let dialog: jasmine.SpyObj<MatDialog>;
     let router: jasmine.SpyObj<Router>;
+    const nameGame = 'red sky';
 
     beforeAll(async () => {
         socketTestHelper = new SocketTestHelper();
@@ -42,7 +43,7 @@ describe('PopDialogUsernameComponent', () => {
             providers: [
                 { provide: MatDialogRef, useValue: dialogRef },
                 { provide: StartUpGameService, useValue: startUpGameServiceSpy },
-                { provide: MAT_DIALOG_DATA, useValue: {} },
+                { provide: MAT_DIALOG_DATA, useValue: { nameGame } },
                 { provide: SocketClientService, useValue: socketClientServiceMock },
                 { provide: MatDialog, useValue: dialog },
                 { provide: Router, useValue: router },
@@ -98,6 +99,14 @@ describe('PopDialogUsernameComponent', () => {
         expect(spy).toHaveBeenCalled();
     });
 
+    it('should start waiting line and navigate to /game if multiFlag is false', () => {
+        component.gameInfo['multiFlag'] = false;
+        component['configureUsernamePopUpSocketFeatures']();
+        socketTestHelper.peerSideEmit(`${CLASSIC_MODE}`);
+        expect(startUpGameServiceSpy['startUpWaitingLine']).toHaveBeenCalled();
+        expect(router['navigate']).toHaveBeenCalledWith(['/game']);
+    });
+
     it('should open dialog if game info multiflag is true', () => {
         const spy = spyOn(component, <any>'openLimitedTimeDialog');
         component['configureUsernamePopUpSocketFeatures']();
@@ -107,7 +116,6 @@ describe('PopDialogUsernameComponent', () => {
 
     it('should not close dialog when calling closeGameDialog', () => {
         const gameName = 'car game';
-        component.gameInfo['nameGame'] = 'red sky';
         component['closeGameDialogAfterDelete'](gameName);
         expect(dialog['closeAll']).not.toHaveBeenCalled();
     });
@@ -143,21 +151,12 @@ describe('PopDialogUsernameComponent', () => {
     });
 
     it('should not close dialog another game is deleted', () => {
-        const gameName = 'car game';
-        component.gameInfo.nameGame = 'blue game';
-        socketTestHelper.peerSideEmit('close popDialogUsername', gameName);
-        component['closeGameDialogAfterDelete'](gameName);
-        expect(dialog['closeAll']).not.toHaveBeenCalled();
+        socketTestHelper.peerSideEmit('close popDialogUsername', nameGame);
+        expect(dialog['closeAll']).toHaveBeenCalled();
     });
 
     it('should open the dialog when calling openDialog', () => {
         component['openClassicDialog']();
         expect(dialog['open']).toHaveBeenCalled();
     });
-
-    // it('should call startUpWaitingLine()', () => {
-    //     const spy = spyOn(component, <any>'startWaitingLine');
-    //     component['openClassicDialog']();
-    //     expect(dialog['open']).toHaveBeenCalled();
-    // });
 });

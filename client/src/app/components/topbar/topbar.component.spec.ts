@@ -6,7 +6,7 @@ import { ClueInformations } from '@common/clue-informations';
 import { Socket } from 'socket.io-client';
 import { TopbarComponent } from './topbar.component';
 
-fdescribe('TopbarComponent', () => {
+describe('TopbarComponent', () => {
     let component: TopbarComponent;
     let fixture: ComponentFixture<TopbarComponent>;
     let socketTestHelper: SocketTestHelper;
