@@ -9,7 +9,7 @@
         <div class="form-radius-container">
             <mat-form-field>
                 <label for="username">Nom d'utilisateur: </label>
-                <input #userName matInput name="username" (change)="inputChanged()" type="text"/>
+                <input #userName matInput name="username" [(ngModel)] = "username" type="text"/>
                 <!-- corriger le css de usernameNotvalid -->
                 <ng-container *ngIf="usernameNotValid">
                     <h3>Votre nom ne peux pas commencer par un espace...</h3>
@@ -17,7 +17,7 @@
             </mat-form-field>
         </div>
         <mat-dialog-actions>
-            <button mat-raised-button [disabled]="disabledButton" (click)="startUpGameService.sendUsername(this.username.nativeElement.value)">Ok</button>
+            <button mat-raised-button [disabled]="!username" (click)="startUpGameService.sendUsername(this.username)">Ok</button>
         </mat-dialog-actions>
     </mat-dialog-content>
 </div>

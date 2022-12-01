@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component,  Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CLASSIC_FLAG, DISABLE_BUTTON, DISABLE_CLOSE, STANDARD_POP_UP_HEIGHT, STANDARD_POP_UP_WIDTH, USERNAME_VALID } from '@app/client-consts';
@@ -15,7 +15,7 @@ import { CLASSIC_MODE, LIMITED_TIME_MODE } from '@common/const';
     styleUrls: ['./pop-dialog-username.component.scss'],
 })
 export class PopDialogUsernameComponent implements OnInit {
-    @ViewChild('userName') username: ElementRef;
+    username: string;
     disabledButton: boolean = DISABLE_BUTTON;
     usernameNotValid: boolean = !USERNAME_VALID;
 
@@ -33,11 +33,6 @@ export class PopDialogUsernameComponent implements OnInit {
         this.configureUsernamePopUpSocketFeatures();
     }
 
-    inputChanged(): void {
-        if (this.username.nativeElement.value) this.disabledButton = !DISABLE_BUTTON;
-        else this.disabledButton = DISABLE_BUTTON;
-    }
-
     private startWaitingLine(): void {
         this.startUpGameService.startUpWaitingLine(this.gameInfo);
     }
@@ -51,7 +46,7 @@ export class PopDialogUsernameComponent implements OnInit {
                 nameGame: this.gameInfo.nameGame,
                 joinFlag: this.gameInfo.joinFlag,
                 createFlag: this.gameInfo.createFlag,
-                username: this.username.nativeElement.value,
+                username: this.username,
                 classicFlag: CLASSIC_FLAG,
             },
         });
@@ -64,7 +59,7 @@ export class PopDialogUsernameComponent implements OnInit {
             disableClose: DISABLE_CLOSE,
             data: {
                 classicFlag: !CLASSIC_FLAG,
-                username: this.username.nativeElement.value,
+                username: this.username,
             },
         });
     }
