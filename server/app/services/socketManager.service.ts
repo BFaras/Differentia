@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { HOST_CHOSE_ANOTHER, NO_AVAILABLE, SOMEBODY_IS_WAITING, ZERO_GAMES_PLAYED } from '@app/server-consts';
+import { AbandonData } from '@common/abandon-data';
 import { ChatMessage } from '@common/chat-message';
 import { CLASSIC_MODE, HOST_PRESENT, LIMITED_TIME_MODE, MSG_RESET_ALL_TIME, MSG_RESET_TIME } from '@common/const';
 import { DifferencesInformations } from '@common/differences-informations';
@@ -248,8 +249,8 @@ export class SocketManager {
                 this.gameManagerService.sendDifferentPixelsNotFound(socket);
             });
 
-            socket.on('kill the game', (gameMode: string) => {
-                this.gameManagerService.handleAbandonEmit(socket, gameMode);
+            socket.on('kill the game', (abandonInfo: AbandonData) => {
+                this.gameManagerService.handleAbandonEmit(socket, abandonInfo);
             });
 
             //To test

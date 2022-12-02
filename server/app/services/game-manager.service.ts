@@ -8,6 +8,7 @@ import {
     ONE_SECOND_DELAY,
     TIMER_HIT_ZERO,
 } from '@app/server-consts';
+import { AbandonData } from '@common/abandon-data';
 import {
     CLASSIC_MODE,
     DEFAULT_GAME_ROOM_NAME,
@@ -135,10 +136,10 @@ export class GameManagerService {
         socket.broadcast.to(this.findSocketGameRoomName(socket)).emit('End game', endGameInfos);
     }
 
-    handleAbandonEmit(socket: io.Socket, gameMode: string) {
+    handleAbandonEmit(socket: io.Socket, abandonInfo: AbandonData) {
         const gameRoomName = this.findSocketGameRoomName(socket);
         let endGameInfos: EndGameInformations;
-        if (gameMode === CLASSIC_MODE) {
+        if (abandonInfo.gameMode === CLASSIC_MODE) {
             endGameInfos = {
                 isMultiplayer: IT_IS_MULTIPLAYER,
                 isAbandon: !NOBODY_ABANDONNED,
@@ -147,9 +148,13 @@ export class GameManagerService {
                 playerRanking: NO_AVAILABLE,
             };
             this.sio.to(gameRoomName).emit('End game', endGameInfos);
-            this.endGame(socket, gameMode);
+            this.endGame(socket, abandonInfo.gameMode);
         } else {
-            this.sio.in(gameRoomName).emit('Other player abandonned LM', socket.data.username);
+            this.sio.in(gameRoomName).emit('Other player abandonned LM');
+            //To test Seb
+            if (!abandonInfo.isMultiplayerMatch) {
+                this.endGame(socket, abandonInfo.gameMode);
+            }
         }
     }
 

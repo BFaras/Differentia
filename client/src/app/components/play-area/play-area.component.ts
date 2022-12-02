@@ -83,6 +83,7 @@ export class PlayAreaComponent implements OnInit {
             width: STANDARD_POP_UP_WIDTH,
             data: {
                 gameMode: this.mode,
+                multiFlag: this.isMultiplayer,
             },
         });
     }
