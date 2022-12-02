@@ -33,7 +33,6 @@ let getGameRoomsStub: sinon.SinonStub;
 describe('SocketManager service tests', () => {
     const testGameName = 'test12345';
     const validTestUsername = 'validTestUsername';
-    const unvalidTestUsername = ' unvalidTestUsername';
     const imagesData: ImageDataToCompare = {
         originalImageData: new Uint8ClampedArray(1),
         modifiedImageData: new Uint8ClampedArray(1),
@@ -116,13 +115,12 @@ describe('SocketManager service tests', () => {
         });
     });
 
-    it("should handle 'my username is' when the username is valid", (done) => {
+    it("should handle 'my username is' when the username is valid", () => {
         const validUsername = 'user1234';
-        const spyUsernamePlayer = sinon.spy(waitingLineHandlerService, 'setUsernamePlayer');
+        const spyUsernamePlayer = sinon.spy(WaitingLineHandlerService.prototype, 'setUsernamePlayer');
         clientSocket.emit('my username is', validUsername);
         clientSocket.once('username valid', () => {
             expect(spyUsernamePlayer.calledOnce);
-            done();
         });
     });
 
@@ -352,20 +350,6 @@ describe('SocketManager service tests', () => {
             expect(deleteJoiningPlayerSpy.calledOnce);
             service['waitingLineHandlerService'].deleteCreatorOfGame(testGameName);
             service['waitingLineHandlerService'].deleteJoiningPlayer(clientSocket.id, testGameName);
-        });
-    });
-
-    it("should handle 'my username is' event and emit a 'username valid' event when the username is valid", (done) => {
-        clientSocket.emit('my username is', validTestUsername);
-        clientSocket.once('username valid', () => {
-            done();
-        });
-    });
-
-    it("should handle 'my username is' event and emit a 'username not valid' event when the username is unvalid", (done) => {
-        clientSocket.emit('my username is', unvalidTestUsername);
-        clientSocket.once('username not valid', () => {
-            done();
         });
     });
 

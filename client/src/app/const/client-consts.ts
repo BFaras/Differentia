@@ -48,7 +48,7 @@ export const MAIN_PAGE_BUTTONS = ['Mode classique', 'Temps limité', 'Administra
 export const DISABLE_BUTTON = true;
 
 // Constantes pour la validation du username
-export const USERNAME_VALID = true;
+export const USERNAME_NOT_VALID = true;
 
 // Constantes pour le pop-up de temps limité
 export const EMPTY_GAME_NAME = '';
