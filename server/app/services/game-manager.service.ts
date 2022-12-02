@@ -229,6 +229,19 @@ export class GameManagerService {
         this.addGameToHistoryLimitedTimeMode(socket, gameName);
     }
 
+    getSocketGameName(socket: io.Socket): string {
+        const gameRoomName = this.findSocketGameRoomName(socket);
+        let gameName = '';
+        for (const rooms of this.gamesRooms.entries()) {
+            rooms[1].forEach((value) => {
+                if (value === gameRoomName) {
+                    gameName = rooms[0];
+                }
+            });
+        }
+        return gameName;
+    }
+
     //To test Seb
     private async switchGame(socket: io.Socket, adversarySocket?: io.Socket): Promise<void> {
         const gameToBePlayed = await this.gamesService.generateRandomGame(this.gamesPlayedByRoom.get(this.findSocketGameRoomName(socket))!);
