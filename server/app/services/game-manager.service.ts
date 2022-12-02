@@ -86,8 +86,11 @@ export class GameManagerService {
 
     clickResponse(socket: io.Socket, mousePosition: Position) {
         const differencesInfo: GameplayDifferenceInformations = this.getSocketMouseHandlerService(socket).isValidClick(mousePosition, socket.id);
+        const gameRoomName = this.findSocketGameRoomName(socket);
+        const chronometerService: ChronometerService = this.getRoomChronometerService(gameRoomName);
         differencesInfo.socketId = socket.id;
         differencesInfo.playerUsername = this.getSocketUsername(socket);
+        if (differencesInfo.isValidDifference) chronometerService.increaseTimeByBonusTime();
         this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
     }
 

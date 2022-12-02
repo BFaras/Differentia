@@ -46,9 +46,9 @@ export class PlayAreaComponent implements OnInit {
     @Input() isMultiplayer: boolean;
     @Input() mode: string;
     mousePosition: Position = { x: 0, y: 0 };
+    reloadState: boolean = true;
     private isCheatActivated = false;
     private canvasSize: Coordinate = { x: DEFAULT_WIDTH_CANVAs, y: DEFAULT_HEIGHT_CANVAS };
-    reloadState: boolean = true;
     constructor(
         private socketService: SocketClientService,
         private readonly drawService: DrawService,
@@ -138,7 +138,7 @@ export class PlayAreaComponent implements OnInit {
 
     private configurePlayAreaSocket(): void {
         this.socketService.on('Valid click', (differencesInfo: GameplayDifferenceInformations) => {
-            const isLocalPlayer = differencesInfo.socketId == this.socketService.socket.id;
+            const isLocalPlayer = differencesInfo.socketId === this.socketService.socket.id;
 
             const isDifference: boolean = differencesInfo.isValidDifference;
             this.mouseDetection.playSound(isDifference, isLocalPlayer);

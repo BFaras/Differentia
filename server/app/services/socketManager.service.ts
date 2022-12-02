@@ -265,7 +265,7 @@ export class SocketManager {
                             playerName: playerUsername,
                             playerRanking: NO_AVAILABLE,
                             gameName: this.currentGameName,
-                            isMultiplayer: isMultiplayer,
+                            isMultiplayer,
                         };
                         await this.bestTimesService.compareGameTimeWithDbTimes(playerGameTime, recordTimeInfos);
                         this.gameManagerService.handleEndGameEmits(
