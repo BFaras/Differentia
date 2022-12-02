@@ -127,7 +127,7 @@ describe('Games service', () => {
         for (let i = FIRST_GAME; i <= LAST_GAME; i++) {
             expect(gamesWithImagesData[i].name).to.equal(allGamesTest[i].name);
             expect(gamesWithImagesData[i].numberOfDifferences).to.equal(allGamesTest[i].numberOfDifferences);
-            expect(gamesWithImagesData[i].times).to.deep.equals(allGamesTest[i].times);
+            expect(gamesWithImagesData[i].times).to.deep.equals({ soloGameTimes: [], multiplayerGameTimes: [] });
             expect(gamesWithImagesData[i].images).to.not.deep.equals(allGamesTest[i].images);
         }
     });
