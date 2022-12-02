@@ -137,7 +137,6 @@ export class GamePageComponent {
             this.openDialog(ALL_GAMES_FINISHED, WIN_FLAG);
         });
 
-        //To test Seb
         this.socketService.on('Other player abandonned LM', () => {
             this.usernames[ADVERSARY_PLR_USERNAME_POS] = EMPTY_PLAYER_NAME;
             this.isMultiplayerGame = false;
