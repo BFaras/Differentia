@@ -61,15 +61,16 @@ export class CanvasDataHandlerService {
     this.contextLeft!.drawImage( this.contextList[0].canvas,0,0);
     this.contextRight!.drawImage(this.contextList[1].canvas,0,0)
 
-    
     this.drawingHistoryService.saveCanvas(this.contextList[0],0);
     this.contextList[0].clearRect(0,0,IMAGE_WIDTH,IMAGE_HEIGHT)
     this.contextList[0].drawImage(this.rightCanvasEchange,0,0);
+    this.drawingHistoryService.saveCanvas(this.contextList[0],0);
     this.contextRight.clearRect(0,0,IMAGE_WIDTH,IMAGE_HEIGHT)
 
     this.drawingHistoryService.saveCanvas(this.contextList[1],1);
     this.contextList[1].clearRect(0,0,IMAGE_WIDTH,IMAGE_HEIGHT)
     this.contextList[1].drawImage(this.leftCanvasEchange,0,0);
+    this.drawingHistoryService.saveCanvas(this.contextList[1],1);
     this.contextLeft.clearRect(0,0,IMAGE_WIDTH,IMAGE_HEIGHT)
   }
   

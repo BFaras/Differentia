@@ -18,7 +18,7 @@ export class ToolSettingComponent implements OnInit {
     @Input() indexTool: number;
     @Input() nameTool: string;
     public faEraser:IconDefinition = faEraser;
-    public enableWrite:boolean = false;
+    public enableWrite:boolean = true;
     public enableErase:boolean = false;
     constructor(
         private pencilService: PencilService,
@@ -98,8 +98,6 @@ export class ToolSettingComponent implements OnInit {
         const currentId = (clickEvent.currentTarget as HTMLInputElement).id;
 
         this.pencilService.setStateOfPencilForRightCanvas(currentValue, parseInt(currentId));
-
-        console.log(currentValue)
         if (currentValue == 'write'){
             this.enableErase = false;
             this.enableWrite = true;
