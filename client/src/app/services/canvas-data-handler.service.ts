@@ -52,5 +52,4 @@ export class CanvasDataHandlerService {
       this.copyCanvas(LEFT_CANVAS_INDEX);
     }
   }
-
 }
