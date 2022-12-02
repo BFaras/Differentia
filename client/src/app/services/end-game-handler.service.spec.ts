@@ -6,8 +6,8 @@ import {
     CLASSIC_MULTIPLAYER_LOST_MESSAGE,
     CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE,
     LOSING_FLAG,
-    WIN_FLAG,
     NO_AVAILABLE,
+    WIN_FLAG,
 } from '@app/const/client-consts';
 import { EndGameInformations } from '@common/end-game-informations';
 
@@ -45,13 +45,14 @@ describe('EndGameHandlerService', () => {
         expect(matDialogSpy).toBeTruthy();
     });
 
+    // A verifier
     it('should open end game Dialog ', () => {
         endGameInfos = {
             isMultiplayer: false,
             isAbandon: false,
             isGameWon: true,
             hasNewRecord: true,
-            playerRanking: NO_AVAILABLE
+            playerRanking: NO_AVAILABLE,
         };
         const spy = spyOn(service, <any>'openEndGameDialog');
         socketTestHelper.peerSideEmit('End game', endGameInfos);
@@ -59,13 +60,14 @@ describe('EndGameHandlerService', () => {
         expect(spy).toHaveBeenCalled();
     });
 
+    // A verifier
     it('should call end game event when the user win', () => {
         endGameInfos = {
             isMultiplayer: true,
             isAbandon: false,
             isGameWon: true,
             hasNewRecord: true,
-            playerRanking: NO_AVAILABLE
+            playerRanking: NO_AVAILABLE,
         };
         const spy = spyOn(service, <any>'openEndGameDialog');
         socketTestHelper.peerSideEmit('End game', endGameInfos);
@@ -73,13 +75,14 @@ describe('EndGameHandlerService', () => {
         expect(spy).toHaveBeenCalledWith(CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE, WIN_FLAG);
     });
 
+    // A verifier
     it('should call end game event when the user abandon', () => {
         endGameInfos = {
             isMultiplayer: true,
             isAbandon: true,
             isGameWon: false,
             hasNewRecord: true,
-            playerRanking: NO_AVAILABLE
+            playerRanking: NO_AVAILABLE,
         };
         const spy = spyOn(service, <any>'openEndGameDialog');
         socketTestHelper.peerSideEmit('End game', endGameInfos);
@@ -87,13 +90,14 @@ describe('EndGameHandlerService', () => {
         expect(spy).toHaveBeenCalledWith(CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE, WIN_FLAG);
     });
 
+    // A verifier
     it('should call end game event when the user lose', () => {
         endGameInfos = {
             isMultiplayer: true,
             isAbandon: false,
             isGameWon: false,
             hasNewRecord: true,
-            playerRanking: NO_AVAILABLE
+            playerRanking: NO_AVAILABLE,
         };
         const spy = spyOn(service, <any>'openEndGameDialog');
         socketTestHelper.peerSideEmit('End game', endGameInfos);

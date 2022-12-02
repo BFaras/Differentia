@@ -94,8 +94,11 @@ export class BestTimesService {
 
     // To test
     async compareGameTimeWithDbTimes(gameTime: Time, recordTimeInfos: RecordTimeInformations): Promise<void> {
-        const gameTimeInString = this.timeFormatToString(gameTime);
-        const dbGameTimesInNumber = await this.retrieveLastRecordTime(recordTimeInfos.gameName, recordTimeInfos.isMultiplayer);
-        if (this.convertTimeForComparison(gameTimeInString) < dbGameTimesInNumber) await this.setValidRecordTimes(gameTimeInString, recordTimeInfos);
+        if (this.recordTimesService.isDatabaseAvailable()) {
+            const gameTimeInString = this.timeFormatToString(gameTime);
+            const dbGameTimesInNumber = await this.retrieveLastRecordTime(recordTimeInfos.gameName, recordTimeInfos.isMultiplayer);
+            if (this.convertTimeForComparison(gameTimeInString) < dbGameTimesInNumber)
+                await this.setValidRecordTimes(gameTimeInString, recordTimeInfos);
+        }
     }
 }
