@@ -9,20 +9,25 @@
             </ng-template>
             <ng-container *ngIf="gameInfo.classicFlag; else limitedTime">
                 <ng-container *ngIf="gameInfo.createFlag; else joinFlag">
-                    <button class = "button-choice" mat-raised-button mat-dialog-close (click)="createGameService.leaveWaitingList(gameInfo.nameGame)">Annuler</button>
+                    <button class = "cancel-button" mat-raised-button mat-dialog-close (click)="createGameService.leaveWaitingList(gameInfo.nameGame)">Annuler</button>
                 </ng-container>
                 <ng-template #joinFlag>
-                    <button mat-raised-button mat-dialog-close (click)="joinGameService.leaveJoiningProcess(gameInfo.nameGame)">Annuler</button>
+                    <button class = "cancel-button" mat-raised-button mat-dialog-close (click)="joinGameService.leaveJoiningProcess(gameInfo.nameGame)">Annuler</button>
                 </ng-template>
             </ng-container>
             <ng-template #limitedTime>
-                <button mat-raised-button mat-dialog-close (click)="createGameService.leaveLimitedTimeGame()" (click)="close()">Annuler</button>
+                <button class = "cancel-button" mat-raised-button mat-dialog-close (click)="createGameService.leaveLimitedTimeGame()" (click)="close()">Annuler</button>
             </ng-template>
-            <ng-container *ngIf="isSomeoneJoining">
+            <ng-container *ngIf="isSomeoneJoining;else progressBar" >
                 <h3>{{ playerTryingToJoin }} is trying to join</h3>
+                <div class = "group-button">
                 <button mat-raised-button mat-dialog-close (click)="startUpGameService.startMatch(gameInfo.nameGame)">Laisser le joueur rejoindre</button>
                 <button mat-raised-button (click)="startUpGameService.declineAdversary(gameInfo.nameGame)">Refuser le joueur</button>
+                </div>
             </ng-container>
+            <ng-template class = "progressBar" #progressBar>
+                <mat-progress-spinner #progressBar [diameter]="70" mode="indeterminate"></mat-progress-spinner>
+            </ng-template>
         </mat-dialog-actions>
     </mat-dialog-content>
 </div>

@@ -20,8 +20,24 @@ h2{
 
 button {
     background-color: rgb(214, 169, 143);
+}
+
+.cancel-button{
     position: relative;
-    top: 200px;
+    top: 220px;
     left: 200px;
 }
+.mat-progress-spinner{
+    position: relative;
+    left: 24%;
+    top: 80px;
+
+    
+}
+
+:host ::ng-deep .mat-progress-spinner circle, .mat-spinner circle{
+    stroke: rgb(214, 169, 143);
+    
+}
+.group-button{}
     
