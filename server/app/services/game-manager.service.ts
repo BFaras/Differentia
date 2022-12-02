@@ -151,7 +151,7 @@ export class GameManagerService {
             this.endGame(socket, abandonInfo.gameMode);
         } else {
             this.sio.in(gameRoomName).emit('Other player abandonned LM');
-            //To test Seb
+
             if (!abandonInfo.isMultiplayerMatch) {
                 this.endGame(socket, abandonInfo.gameMode);
             }
@@ -178,12 +178,10 @@ export class GameManagerService {
         return this.gamesRooms;
     }
 
-    //To test Seb
     initializeSocketGameHistoryLimitedTimeMode(socket: io.Socket): void {
         this.gamesPlayedByRoom.set(this.findSocketGameRoomName(socket), []);
     }
 
-    //To test Seb
     addGameToHistoryLimitedTimeMode(socket: io.Socket, gameName: string): void {
         this.gamesPlayedByRoom.get(this.findSocketGameRoomName(socket))!.push(gameName);
     }
@@ -266,9 +264,8 @@ export class GameManagerService {
         else return this.classicIsGameFinishedSolo(socket);
     }
 
-    //To test Seb
+    //To test Seb?
     private async limitedTimeIsGameFinished(socket: io.Socket): Promise<boolean> {
-        console.log(this.gamesPlayedByRoom);
         return this.gamesPlayedByRoom.get(this.findSocketGameRoomName(socket))!.length === (await this.gamesService.getAllGames()).length;
     }
 
@@ -287,7 +284,6 @@ export class GameManagerService {
         }
     }
 
-    //To test Seb
     private eraseGamesFromHistoryLimitedTimeMode(socket: io.Socket): void {
         this.gamesPlayedByRoom.delete(this.findSocketGameRoomName(socket));
     }

@@ -4,7 +4,7 @@ import { ServerIOTestHelper } from '@app/classes/server-io-test-helper';
 import { ServerSocketTestHelper } from '@app/classes/server-socket-test-helper';
 import { NO_MORE_GAMES_AVAILABLE, TIMER_HIT_ZERO } from '@app/server-consts';
 import { AbandonData } from '@common/abandon-data';
-import { CLASSIC_MODE, GAME_ROOM_GENERAL_ID, LIMITED_TIME_MODE, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
+import { CLASSIC_MODE, GAME_ROOM_GENERAL_ID, LIMITED_TIME_MODE, NO_DIFFERENCE_FOUND_ARRAY, NO_OTHER_PLAYER_ROOM } from '@common/const';
 import { Game } from '@common/game';
 import { GameInfo } from '@common/gameInfo';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
@@ -279,15 +279,17 @@ describe('GameManagerService tests', () => {
         expect(spy.calledOnce);
     });
 
-    it('initializeSocketGameHistoryLimitedTimeMode should set the attribute gamesPlayed from the socket data to a empty array', () => {
+    it('initializeSocketGameHistoryLimitedTimeMode should set the attribute gamesPlayed from the map data to an empty array', () => {
+        gameManagerService['setupSocketGameRoom'](serverSocket, NO_OTHER_PLAYER_ROOM);
         gameManagerService.initializeSocketGameHistoryLimitedTimeMode(serverSocket);
-        expect(serverSocket.data.gamesPlayed).to.deep.equal([]);
+        expect(gameManagerService['gamesPlayedByRoom'].get(gameManagerService.findSocketGameRoomName(serverSocket))!).to.deep.equal([]);
     });
 
     it('addGameToHistoryLimitedTimeMode should add a gameName to the attribute gamesPlayed from the socket data', () => {
+        gameManagerService['setupSocketGameRoom'](serverSocket, NO_OTHER_PLAYER_ROOM);
         gameManagerService.initializeSocketGameHistoryLimitedTimeMode(serverSocket);
         gameManagerService.addGameToHistoryLimitedTimeMode(serverSocket, testGameName);
-        expect(serverSocket.data.gamesPlayed[0]).to.equal(testGameName);
+        expect(gameManagerService['gamesPlayedByRoom'].get(gameManagerService.findSocketGameRoomName(serverSocket))![0]).to.equal(testGameName);
     });
 
     it('startLimitedTimeSocketGameHistory should call the methods initialize and addGameToHistoryLimitedTimeMode', () => {
