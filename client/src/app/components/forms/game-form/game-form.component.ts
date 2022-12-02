@@ -58,14 +58,14 @@ export class GameFormComponent {
 
     deleteGameForm(value: string) {
         this.openWarningDialog('supprimer le jeu');
-        this.socketService.on('Action applied', () => {
+        this.socketService.on('Delete or reset applied on gameForm', () => {
             this.newItemEvent.emit(value);
         });
     }
 
     resetTimesBoard(value: string) {
         this.openWarningDialog('réinitialiser le temps du jeu');
-        this.socketService.on('Action applied', () => {
+        this.socketService.on('Delete or reset applied on gameForm', () => {
             this.socketService.send('Reset records time board', value);
         });
     }
@@ -93,7 +93,6 @@ export class GameFormComponent {
             data: value,
         });
     }
-
 
     private configureGameFormSocketFeatures(): void {
         this.socketService.connect();

@@ -68,7 +68,7 @@ describe('GameFormComponent', () => {
         expect(warningSpy).toHaveBeenCalledWith('supprimer le jeu');
         const emitSpy = spyOn(gameFormComp['newItemEvent'], 'emit');
 
-        socketTestHelper.peerSideEmit('Action applied');
+        socketTestHelper.peerSideEmit('Delete or reset applied on gameForm');
         expect(emitSpy).toHaveBeenCalled();
     });
 
@@ -144,7 +144,7 @@ describe('GameFormComponent', () => {
         gameFormComp.resetTimesBoard(gameFormComp.gameForm.gameName);
         expect(warningSpy).toHaveBeenCalledWith('réinitialiser le temps du jeu');
         const socketSpy = spyOn(socketClientServiceMock, 'send');
-        socketTestHelper.peerSideEmit('Action applied');
+        socketTestHelper.peerSideEmit('Delete or reset applied on gameForm');
 
         expect(socketSpy).toHaveBeenCalled();
     });
