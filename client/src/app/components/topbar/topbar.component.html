@@ -26,10 +26,10 @@
         </ng-container>
         <ng-template #limitedTime>
             <ng-container *ngIf="isMultiplayer; else solo">
-                <div>{{ nbrDifferencesFound[0] + nbrDifferencesFound[1] }} différences trouvées par {{ playerNames[0] }} et {{ playerNames[1] }}</div>
+                <div class = "nameUsers">{{ nbrDifferencesFound[0] + nbrDifferencesFound[1] }} différences trouvées par {{ playerNames[0] }} et {{ playerNames[1] }}</div>
             </ng-container>
             <ng-template #solo>
-                <div>{{ nbrDifferencesFound[0] + nbrDifferencesFound[1] }} différences trouvées par {{ playerNames[localPlayerUsernamePos] }}</div>
+                <div class = "nameUsers">{{ nbrDifferencesFound[0] + nbrDifferencesFound[1] }} différences trouvées par {{ playerNames[localPlayerUsernamePos] }}</div>
             </ng-template>
         </ng-template>
     </span>

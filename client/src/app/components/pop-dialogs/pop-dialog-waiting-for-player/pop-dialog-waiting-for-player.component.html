@@ -18,13 +18,13 @@
             <ng-template #limitedTime>
                 <button class = "cancel-button" mat-raised-button mat-dialog-close (click)="createGameService.leaveLimitedTimeGame()" (click)="close()">Annuler</button>
             </ng-template>
-            <ng-container *ngIf="isSomeoneJoining;else progressBar" >
-                <h3>{{ playerTryingToJoin }} is trying to join</h3>
+            <div class = "waiting-list"*ngIf="isSomeoneJoining;else progressBar" >
+                <h3>{{ playerTryingToJoin }} essaye de vous rejoindre</h3>
                 <div class = "group-button">
                 <button mat-raised-button mat-dialog-close (click)="startUpGameService.startMatch(gameInfo.nameGame)">Laisser le joueur rejoindre</button>
                 <button mat-raised-button (click)="startUpGameService.declineAdversary(gameInfo.nameGame)">Refuser le joueur</button>
                 </div>
-            </ng-container>
+            </div>
             <ng-template class = "progressBar" #progressBar>
                 <mat-progress-spinner #progressBar [diameter]="70" mode="indeterminate"></mat-progress-spinner>
             </ng-template>

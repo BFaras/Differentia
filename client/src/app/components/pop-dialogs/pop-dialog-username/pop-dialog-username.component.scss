@@ -1,14 +1,22 @@
 .container {
     height: 100%;
     width: 100%;
+    padding: 3px 4px 4px 3px;
+    background-image: url(../../../../assets/bob.jpg);
 }
 
+::ng-deep.mat-form-field-underline {
+    background-color: white !important;
+  } 
+
+  
 .dialog-content {
     height: 100%;
     width: 100%;
     overflow: hidden;
     border: solid black 1px;
     border-radius: 5px;
+    color:white;
 
 
 }

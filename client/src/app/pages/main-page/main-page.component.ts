@@ -39,6 +39,7 @@ export class MainPageComponent {
             height: STANDARD_POP_UP_HEIGHT,
             width: STANDARD_POP_UP_WIDTH,
             disableClose: DISABLE_CLOSE,
+            panelClass: 'custom-dialog-container',
             data: {
                 nameGame: EMPTY_GAME_NAME,
                 classicFlag: !CLASSIC_FLAG,
