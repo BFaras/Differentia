@@ -3,6 +3,7 @@ import { RecordTime } from '@app/classes/record-times';
 import { ServerIOTestHelper } from '@app/classes/server-io-test-helper';
 import { ServerSocketTestHelper } from '@app/classes/server-socket-test-helper';
 import { NO_MORE_GAMES_AVAILABLE, TIMER_HIT_ZERO } from '@app/server-consts';
+import { AbandonData } from '@common/abandon-data';
 import { CLASSIC_MODE, GAME_ROOM_GENERAL_ID, LIMITED_TIME_MODE, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
 import { Game } from '@common/game';
 import { GameInfo } from '@common/gameInfo';
@@ -163,14 +164,18 @@ describe('GameManagerService tests', () => {
 
     it('should call deleteRoom() on handleEndGameEmit()', () => {
         const stub = sinon.stub(gameManagerService, 'deleteRoom').callsFake(() => {});
-        gameManagerService.handleEndGameEmits(serverSocket, true);
+        gameManagerService.handleEndGameEmits(serverSocket, true, true, 1);
         expect(stub.calledOnce);
     });
 
     it('should call deleteRoom() on handleAbandonEmit()', () => {
         const spy = sinon.spy(gameManagerService, 'deleteRoom');
+        const abandonInfo: AbandonData = {
+            gameMode: CLASSIC_MODE,
+            isMultiplayerMatch: true,
+        };
         serverSocket.join(testSocketId1 + GAME_ROOM_GENERAL_ID);
-        gameManagerService.handleAbandonEmit(serverSocket, CLASSIC_MODE);
+        gameManagerService.handleAbandonEmit(serverSocket, abandonInfo);
         expect(spy);
     });
 
@@ -354,7 +359,11 @@ describe('GameManagerService tests', () => {
 
     it('handleAbandonEmit should emit the Other player abandonned LM event when it is called with gameMode = Limited time', () => {
         const emitStub = sinon.spy(gameManagerService['sio'], 'emit');
-        gameManagerService.handleAbandonEmit(serverSocket, LIMITED_TIME_MODE);
+        const abandonInfo: AbandonData = {
+            gameMode: CLASSIC_MODE,
+            isMultiplayerMatch: true,
+        };
+        gameManagerService.handleAbandonEmit(serverSocket, abandonInfo);
         expect(emitStub.calledOnceWith('Other player abandonned LM', serverSocket.data.username));
     });
     it('should reset game list ()', () => {
