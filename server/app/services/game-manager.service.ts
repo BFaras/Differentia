@@ -216,19 +216,6 @@ export class GameManagerService {
         return socket.data.username;
     }
 
-    getSocketGameName(socket: io.Socket): string {
-        const gameRoomName = this.findSocketGameRoomName(socket);
-        let gameName = '';
-        for (const rooms of this.gamesRooms.entries()) {
-            rooms[1].forEach((value) => {
-                if (value === gameRoomName) {
-                    gameName = rooms[0];
-                }
-            });
-        }
-        return gameName;
-    }
-
     startLimitedTimeSocketGameHistory(socket: io.Socket, gameName: string) {
         this.initializeSocketGameHistoryLimitedTimeMode(socket);
         this.addGameToHistoryLimitedTimeMode(socket, gameName);
