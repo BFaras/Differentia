@@ -36,16 +36,16 @@ describe('username valid service', () => {
     });
 
     it('isUsernameValid() should return true with a valid username and call the two other methods', () => {
-        const isUsernameTooLongSpy = sinon.spy(usernameValidateService, <unknown>'isUsernameTooLong');
-        const doesUsernameStartWithASpaceSpy = sinon.spy(usernameValidateService, <unknown>'doesUsernameStartWithASpace');
+        const isUsernameTooLongSpy = sinon.spy(usernameValidateService, <any>'isUsernameTooLong');
+        const doesUsernameStartWithASpaceSpy = sinon.spy(usernameValidateService, <any>'doesUsernameStartWithASpace');
         expect(usernameValidateService.isUsernameValid(validUsername)).to.equals(true);
         expect(isUsernameTooLongSpy.calledOnce);
         expect(doesUsernameStartWithASpaceSpy.calledOnce);
     });
 
-    t('isUsernameValid() should return false with an unvalid username and call the two other methods', () => {
-        const isUsernameTooLongSpy = sinon.spy(usernameValidateService, <unknown>'isUsernameTooLong');
-        const doesUsernameStartWithASpaceSpy = sinon.spy(usernameValidateService, <unknown>'doesUsernameStartWithASpace');
+    it('isUsernameValid() should return false with an unvalid username and call the two other methods', () => {
+        const isUsernameTooLongSpy = sinon.spy(usernameValidateService, <any>'isUsernameTooLong');
+        const doesUsernameStartWithASpaceSpy = sinon.spy(usernameValidateService, <any>'doesUsernameStartWithASpace');
         expect(usernameValidateService.isUsernameValid(usernameTooLong)).to.equals(false);
         expect(usernameValidateService.isUsernameValid(usernameStartsWithSpace)).to.equals(false);
         expect(isUsernameTooLongSpy.called);
