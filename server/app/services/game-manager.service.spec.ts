@@ -2,7 +2,7 @@
 import { RecordTime } from '@app/classes/record-times';
 import { ServerIOTestHelper } from '@app/classes/server-io-test-helper';
 import { ServerSocketTestHelper } from '@app/classes/server-socket-test-helper';
-import { NO_MORE_GAMES_AVAILABLE, TIMER_HIT_ZERO } from '@app/server-consts';
+import { NO_MORE_GAMES_AVAILABLE, TIMER_HIT_ZERO, NO_AVAILABLE } from '@app/server-consts';
 import { CLASSIC_MODE, GAME_ROOM_GENERAL_ID, LIMITED_TIME_MODE, NO_DIFFERENCE_FOUND_ARRAY } from '@common/const';
 import { Game } from '@common/game';
 import { GameInfo } from '@common/gameInfo';
@@ -163,7 +163,7 @@ describe('GameManagerService tests', () => {
 
     it('should call deleteRoom() on handleEndGameEmit()', () => {
         const stub = sinon.stub(gameManagerService, 'deleteRoom').callsFake(() => {});
-        gameManagerService.handleEndGameEmits(serverSocket, true);
+        gameManagerService.handleEndGameEmits(serverSocket, true, false, NO_AVAILABLE);
         expect(stub.calledOnce);
     });
 

@@ -31,7 +31,7 @@ describe("Database service", () => {
     const mongoUri = mongoServer.getUri();
     await databaseService.start(mongoUri);
     expect(databaseService["client"]).to.not.be.undefined;
-    expect(databaseService["db"].databaseName).to.equal("Projet_2");
+    expect(databaseService["db"].databaseName).to.equal("LOG2990");
   });
 
   it("should not connect to the database when start is called with wrong URL", async () => {
@@ -48,29 +48,29 @@ describe("Database service", () => {
     const mongoUri = mongoServer.getUri();
     const client = new MongoClient(mongoUri);
     await client.connect();
-    databaseService["db"] = client.db("Projet_2");
+    databaseService["db"] = client.db("LOG2990");
     await databaseService.populateDB();
-    let courses = await databaseService.database
-      .collection("Games")
+    let recordTimes = await databaseService.database
+      .collection("GamesRecordTimes")
       .find({})
       .toArray();
-    expect(courses.length).to.equal(6);
+    expect(recordTimes.length).to.equal(5);
   });
 
   it("should not populate the database with start function if it is already populated", async () => {
     const mongoUri = mongoServer.getUri();
     await databaseService.start(mongoUri);
-    let courses = await databaseService.database
-      .collection("Games")
+    let recordTimes = await databaseService.database
+      .collection("GamesRecordTimes")
       .find({})
       .toArray();
-    expect(courses.length).to.equal(6);
+    expect(recordTimes.length).to.equal(5);
     await databaseService.closeConnection();
     await databaseService.start(mongoUri);
-    courses = await databaseService.database
-      .collection("Games")
+    recordTimes = await databaseService.database
+      .collection("GamesRecordTimes")
       .find({})
       .toArray();
-    expect(courses.length).to.equal(6);
+    expect(recordTimes.length).to.equal(5);
   });
 });

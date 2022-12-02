@@ -276,7 +276,7 @@ export class SocketManager {
                         );
                         this.bestTimesService.notifyAllActivePlayers(playerUsername, this.currentGameName, isMultiplayer);
                     }
-                    if (mode === CLASSIC_MODE && (await this.gamesService.getGame(this.currentGameName)) === undefined) {
+                    else if (mode === CLASSIC_MODE && (await this.gamesService.getGame(this.currentGameName)) === undefined) {
                         this.gameManagerService.handleEndGameEmits(
                             socket,
                             isMultiplayer,
