@@ -1,9 +1,9 @@
 <div class="container">
     <mat-dialog-content class="dialog-content">
         <mat-dialog-actions>
-            <ng-container *ngIf="!isHostPresent && gameInfo.joinFlag; else hostPresent">
-                <h3>L'hôte a quitté</h3>
-            </ng-container>
+            <div class = "hostQuit" *ngIf="!isHostPresent && gameInfo.joinFlag; else hostPresent">
+                <h2>L'hôte a quitté</h2>
+            </div>
             <ng-template #hostPresent>
                 <h2>Vous êtes maintenant en attente d'un autre joueur</h2>
             </ng-template>

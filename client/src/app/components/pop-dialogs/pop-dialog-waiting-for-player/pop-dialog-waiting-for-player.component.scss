@@ -41,7 +41,15 @@ button {
     stroke: rgb(214, 169, 143);
     
 }
-.group-button{}
+.hostQuit{
+    position: relative;
+    color: white;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    width: 100%;
+    right: 5%;
+}
     
 
 .waiting-list{
