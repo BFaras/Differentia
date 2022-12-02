@@ -163,7 +163,12 @@ describe('GameManagerService tests', () => {
 
     it('should call deleteRoom() on handleEndGameEmit()', () => {
         const stub = sinon.stub(gameManagerService, 'deleteRoom').callsFake(() => {});
-        gameManagerService.handleEndGameEmits(serverSocket, true);
+        gameManagerService.handleEndGameEmits(serverSocket, true, true, 1);
+        expect(stub.calledOnce);
+    });
+    it('should call deleteRoom() on handleEndGameEmit()', () => {
+        const stub = sinon.stub(gameManagerService, 'deleteRoom').callsFake(() => {});
+        gameManagerService.handleEndGameEmits(serverSocket, true, false, 4);
         expect(stub.calledOnce);
     });
 

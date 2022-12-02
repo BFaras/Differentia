@@ -125,12 +125,8 @@ export class GamesService {
     }
 
     private deleteImages(image1: string, image2: string) {
-        fs.rm(IMAGES_PATH + image1, (err) => {
-            if (err) throw err;
-        });
-        fs.rm(IMAGES_PATH + image2, (err) => {
-            if (err) throw err;
-        });
+        fs.rm(IMAGES_PATH + image1, () => {});
+        fs.rm(IMAGES_PATH + image2, () => {});
     }
 
     private async getGameImagesNames(gameName: string): Promise<string[]> {

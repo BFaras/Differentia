@@ -165,16 +165,13 @@ describe('Games service', () => {
         });
 
         it('should delete a specific game when calling deleteGame', async () => {
-            const writeSpy = sinon.stub(gamesService, 'asyncWriteInGamesFile');
-            const readSpy = sinon.stub(gamesService, 'asyncReadGamesFile');
+            const stub = sinon.stub(fs.promises, 'writeFile').callsFake(async () => {});
+            await gamesService.asyncReadGamesFile();
 
-            const deleteStub = sinon.stub(gamesService, 'deleteGame').callsFake(async (nameOfGameToDelete: string) => {
-                return await gamesService.getAllGames();
-            });
-            expect(await gamesService.deleteGame('Bike game')).to.deep.equal([carGameWithouTime, bikeGameWithoutTime]);
+            const deleteStub = sinon.stub(gamesService, <any>'deleteImages').callsFake(async () => {});
+            expect(await gamesService.deleteGame('Bike game')).to.deep.equal([carGameWithouTime]);
             expect(deleteStub.calledOnce);
-            expect(writeSpy.calledOnce);
-            expect(readSpy.calledOnce);
+            expect(stub.calledOnce);
         });
 
         it('should throw an error if the image to delete doesnt exist', async () => {
@@ -190,14 +187,15 @@ describe('Games service', () => {
         });
 
         it('should reset the game list', async () => {
-            const writeSpy = sinon.stub(gamesService, 'asyncWriteInGamesFile');
+            const stub = sinon.stub(fs.promises, 'writeFile').callsFake(async () => {});
+            await gamesService.asyncReadGamesFile();
+
             sinon.spy(gamesService['games'], 'filter');
-            const resetStub = sinon.stub(gamesService, 'resetGameList').callsFake(async () => {
-                return [];
-            });
-            expect(await gamesService.resetGameList()).to.deep.equal([]);
+            const resetStub = sinon.stub(gamesService, <any>'deleteImages').callsFake(async () => {});
+            await gamesService.resetGameList();
+            expect(gamesService['games']).to.deep.equal([]);
             expect(resetStub.calledOnce);
-            expect(writeSpy.calledOnce);
+            expect(stub.calledOnce);
         });
 
         it('should throw an error if the reset doesnt work', async () => {
@@ -219,6 +217,15 @@ describe('Games service', () => {
             const stub = sinon.stub(fs, 'rm').callsFake(async () => {
                 throw new Error();
             });
+
+            await gamesService['deleteImages'](im1, im2);
+            expect(stub.calledOnce);
+        });
+
+        it('should not delete images', async () => {
+            let im1 = '1image';
+            let im2 = '2image';
+            const stub = sinon.stub(fs, 'rm').callThrough();
 
             await gamesService['deleteImages'](im1, im2);
             expect(stub.calledOnce);

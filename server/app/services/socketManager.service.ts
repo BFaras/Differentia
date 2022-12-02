@@ -91,8 +91,8 @@ export class SocketManager {
                 );
             });
 
-            socket.on('Apply action', () => {
-                socket.emit('Action applied');
+            socket.on('Apply delete or reset on gameForm', () => {
+                socket.emit('Delete or reset applied on gameForm');
             });
 
             socket.on('my username is', (username: string) => {
