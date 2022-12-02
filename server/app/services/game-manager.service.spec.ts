@@ -366,6 +366,17 @@ describe('GameManagerService tests', () => {
         gameManagerService.handleAbandonEmit(serverSocket, abandonInfo);
         expect(emitStub.calledOnceWith('Other player abandonned LM', serverSocket.data.username));
     });
+
+    it('handleAbandonEmit should call endGame when it is called with gameMode = Limited time and it is not a multiplayer game', () => {
+        const endGameSpy = sinon.spy(gameManagerService, 'endGame');
+        const abandonInfo: AbandonData = {
+            gameMode: CLASSIC_MODE,
+            isMultiplayerMatch: false,
+        };
+        gameManagerService.handleAbandonEmit(serverSocket, abandonInfo);
+        expect(endGameSpy.calledOnce).to.be.true;
+    });
+
     it('should reset game list ()', () => {
         const stub = sinon.stub(gamesService, 'resetGameList').resolves(['1', '2']);
         gameManagerService.resetGameList();
