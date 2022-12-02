@@ -98,15 +98,15 @@ export class SocketManager {
             });
 
             socket.on('my username is', (username: string) => {
-                if (!this.usernameValidateService.isUsernameValid(username)) {
+                if (this.usernameValidateService.isUsernameValid(username)) {
                     this.waitingLineHandlerService.setUsernamePlayer(socket.id, username, this.sio);
-                    this.sio.to(socket.id).emit('username valid');
-                } else this.sio.to(socket.id).emit('username not valid');
+                    socket.emit('username valid');
+                } else socket.emit('username not valid');
             });
 
             socket.on('gameMode is', (classicFlag: boolean) => {
-                if (classicFlag) this.sio.to(socket.id).emit(CLASSIC_MODE);
-                else this.sio.to(socket.id).emit(`open the ${LIMITED_TIME_MODE} pop-dialog`);
+                if (classicFlag) socket.emit(CLASSIC_MODE);
+                else socket.emit(`open the ${LIMITED_TIME_MODE} pop-dialog`);
             });
 
             socket.on('I am waiting', (gameName: string) => {
