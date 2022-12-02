@@ -19,6 +19,7 @@ import { GameManagerService } from './game-manager.service';
 import { GamesService } from './local.games.service';
 import { MouseHandlerService } from './mouse-handler.service';
 import { TimeConstantsService } from './time-constants.service';
+import { UsernameValidateService } from './username-validate.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
 
 export class SocketManager {
@@ -30,6 +31,7 @@ export class SocketManager {
     private gameManagerService: GameManagerService;
     private gamesService: GamesService = new GamesService();
     private timeConstantsService: TimeConstantsService = new TimeConstantsService();
+    private usernameValidateService: UsernameValidateService = new UsernameValidateService();
     private bestTimesService: BestTimesService;
     private currentGameName: string;
 
@@ -96,8 +98,7 @@ export class SocketManager {
             });
 
             socket.on('my username is', (username: string) => {
-                if (username.charAt(0) !== ' ') {
-                    console.log('jtenvoie valid username' + username);
+                if (!this.usernameValidateService.isUsernameValid(username)) {
                     this.waitingLineHandlerService.setUsernamePlayer(socket.id, username, this.sio);
                     this.sio.to(socket.id).emit('username valid');
                 } else this.sio.to(socket.id).emit('username not valid');
