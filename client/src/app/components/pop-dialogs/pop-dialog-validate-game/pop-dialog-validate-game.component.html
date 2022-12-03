@@ -4,8 +4,8 @@
     </div>
     <mat-dialog-content class="dialog-content">
         <h1>Validation</h1>
-        <p>rayon d’élargissement</p>
-        <mat-radio-group labelPosition="before">
+        <p>Veuillez choisir un rayon d'élargissement</p>
+        <mat-radio-group class ="listRadio">
             <mat-radio-button value="0" (change) = "onRadiusChanged($event.value)">0 :</mat-radio-button>
             <mat-radio-button value="3"  (change) = "onRadiusChanged($event.value)" checked >3 :</mat-radio-button>
             <mat-radio-button value="9" (change) = "onRadiusChanged($event.value)">9 :</mat-radio-button>
@@ -13,8 +13,8 @@
         </mat-radio-group>
         <app-image-difference [offset] = "valueChosen" *ngIf = areImageDifferenceAndNumberDifferenceReady  class ="image-difference"></app-image-difference>
         <mat-dialog-actions>
-            <button mat-raised-button [disabled]="isChecked" mat-dialog-close (click)="onCreateCreateGame()">Continuer</button>
-            <button mat-raised-button  (click)="startsGeneratingImageDifferenceAndNumberDifference()">Générer Image Diff</button>
+            <button class = "button-group" mat-raised-button [disabled]="isChecked" mat-dialog-close (click)="onCreateCreateGame()">Continuer</button>
+            <button class = "button-group" mat-raised-button  (click)="startsGeneratingImageDifferenceAndNumberDifference()">Générer une image de différence</button>
         </mat-dialog-actions>
     </mat-dialog-content>
 </div>
