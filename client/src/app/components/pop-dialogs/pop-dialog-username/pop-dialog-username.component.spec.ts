@@ -120,13 +120,6 @@ describe('PopDialogUsernameComponent', () => {
         expect(dialog['open']).toHaveBeenCalled();
     });
 
-    it('should not close dialog when calling closeGameDialog', () => {
-        const gameName = 'car game';
-        component.gameInfo['nameGame'] = 'red sky';
-        component['closeGameDialogAfterDelete'](gameName);
-        expect(dialog['closeAll']).not.toHaveBeenCalled();
-    });
-
     it('should close dialog when calling closeGameDialog', () => {
         const gameName = 'car game';
         component.gameInfo.nameGame = gameName;
