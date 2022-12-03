@@ -126,8 +126,8 @@ export class GameManagerService {
             isMultiplayer: isItMultiplayer,
             isAbandon: NOBODY_ABANDONNED,
             isGameWon: GAME_WON,
-            hasNewRecord: hasNewRecord,
-            playerRanking: playerRanking,
+            hasNewRecord,
+            playerRanking,
         };
         socket.emit('End game', endGameInfos);
 

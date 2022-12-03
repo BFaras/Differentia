@@ -81,7 +81,7 @@ describe('PopDialogUsernameComponent', () => {
     it('should set the user to not valid', () => {
         socketTestHelper.peerSideEmit('username not valid');
         component['configureUsernamePopUpSocketFeatures']();
-        expect(component.usernameNotValid).toEqual(false);
+        expect(component.usernameNotValid).toEqual(true);
     });
 
     it('should call dialogRef ', () => {

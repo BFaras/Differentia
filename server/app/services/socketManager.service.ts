@@ -121,7 +121,6 @@ export class SocketManager {
                     this.sio.to(adversarySocketId).emit('response on limited time waiting line', SOMEBODY_IS_WAITING);
                     this.sio.to(socket.id).emit('response on limited time waiting line', SOMEBODY_IS_WAITING);
                 } else {
-                    console.log('attend bitch');
                     this.waitingLineHandlerService.addLimitedTimeWaitingPlayer(socket.id);
                     this.sio.to(socket.id).emit('response on limited time waiting line', !SOMEBODY_IS_WAITING);
                 }
@@ -277,8 +276,7 @@ export class SocketManager {
                             this.bestTimesService.playerRanking,
                         );
                         this.bestTimesService.notifyAllActivePlayers(playerUsername, this.currentGameName, isMultiplayer);
-                    }
-                    else if (mode === CLASSIC_MODE && (await this.gamesService.getGame(this.currentGameName)) === undefined) {
+                    } else if (mode === CLASSIC_MODE && (await this.gamesService.getGame(this.currentGameName)) === undefined) {
                         this.gameManagerService.handleEndGameEmits(
                             socket,
                             isMultiplayer,

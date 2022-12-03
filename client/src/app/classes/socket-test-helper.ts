@@ -27,6 +27,10 @@ export class SocketTestHelper {
         }
     }
 
+    off(event: string): void {
+        return;
+    }
+
     private callbacks = new Map<string, CallbackSignature[]>();
     public connected = true;
     public id = 'SDAJ125DASGHV';

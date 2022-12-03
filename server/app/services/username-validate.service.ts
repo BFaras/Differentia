@@ -6,7 +6,7 @@ export class UsernameValidateService {
     constructor() {}
 
     isUsernameValid(username: string): boolean {
-        return !this.isUsernameTooLong(username) && !this.doesUsernameStartWithASpace(username);
+        return !(this.isUsernameTooLong(username) || this.doesUsernameStartWithASpace(username));
     }
 
     private isUsernameTooLong(username: string): boolean {
