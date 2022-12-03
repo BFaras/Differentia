@@ -42,7 +42,7 @@ export class ToolSettingComponent implements OnInit {
     }
 
     checkIfThereAreSavedDrawnLines() {
-        if (this.drawingHistoryService.getCancelDrawingHistory()[this.indexTool].length != 0) {
+        if (this.drawingHistoryService.getCancelDrawingHistory()[this.indexTool].length !== 0) {
             return false;
         } else {
             return true;
@@ -50,7 +50,7 @@ export class ToolSettingComponent implements OnInit {
     }
 
     checkIfThereAreSavedDeletedDrawnLines() {
-        if (this.drawingHistoryService.getRedoDrawingHistory()[this.indexTool].length != 0) {
+        if (this.drawingHistoryService.getRedoDrawingHistory()[this.indexTool].length !== 0) {
             return false;
         } else {
             return true;

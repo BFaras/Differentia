@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { ElementRef, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { MESSAGE_JEU_CREER, MESSAGE_JEU_NON_CREER, MESSAGE_NOMBRE_DIFFERENCE_ERREUR } from '@common/const';
 import { Game } from '@common/game';
@@ -35,12 +35,12 @@ export class GameToServerService {
         return this.numberDifference >= 3 && this.numberDifference <= 9;
     }
 
-    addGame(inputName: ElementRef) {
-        this.uploadFileService.setNameGame(inputName.nativeElement.value);
+    addGame(nameOfGame: string) {
+        this.uploadFileService.setNameGame(nameOfGame);
         this.uploadFileService.setNameImageUpload(0);
         this.uploadFileService.setNameImageUpload(1);
         const gameToAdd: Game = {
-            name: inputName.nativeElement.value,
+            name: nameOfGame,
             numberOfDifferences: this.numberDifference,
             times: [],
             images: [this.uploadFileService.getNameImageUpload(0)!, this.uploadFileService.getNameImageUpload(1)!],

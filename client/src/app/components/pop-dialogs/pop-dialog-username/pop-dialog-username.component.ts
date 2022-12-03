@@ -32,7 +32,6 @@ export class PopDialogUsernameComponent implements OnInit {
         this.socketService.connect();
         this.configureUsernamePopUpSocketFeatures();
     }
-
     private startWaitingLine(): void {
         this.startUpGameService.startUpWaitingLine(this.gameInfo);
     }

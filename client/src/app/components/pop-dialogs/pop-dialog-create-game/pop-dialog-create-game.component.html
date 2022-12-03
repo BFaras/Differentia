@@ -6,12 +6,12 @@
         <div class="form-radius-container">
             <mat-form-field class="gameForm">
                 <label for="name">Nom du Jeu : </label>
-                <input #name matInput name="name" />
+                <input  maxlength="8" (keydown.space)="$event.preventDefault()" #name matInput name="name" [(ngModel)] = "nameOfGame" />
             </mat-form-field>
             <div>Nombre de differences trouvées :  {{numberOfDifference}} </div>
         </div>
         <mat-dialog-actions>
-            <button class = "createButton"mat-raised-button mat-dialog-close (click)="addGame()">Créer</button>
+            <button [disabled] = "!nameOfGame" class = "createButton"mat-raised-button mat-dialog-close (click)="addGame()">Créer un jeu</button>
         </mat-dialog-actions>
     </mat-dialog-content>
 </div>
