@@ -44,6 +44,7 @@ h1 {
 li {
     line-height: 3;
     text-align: center;
+    width: 120px;
 }
 
 .button-group {
@@ -76,11 +77,11 @@ button {
 .recordTimeSolo{
     position: relative;
     top: 40px;
-    right:80px
+    right:110px;
 }
 
 .recordTimeVersus{
     position: relative;
     top: 40px;
-    right:40px
+    right:70px;
 }
