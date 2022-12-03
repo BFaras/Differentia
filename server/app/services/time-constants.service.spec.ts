@@ -23,10 +23,6 @@ describe('Time constants service', () => {
         await timeConstantsService.setTimes(time1);
     });
 
-    afterEach(async () => {
-        sinon.restore();
-    });
-
     it('should input the times when the JSON file is read', async () => {
         await timeConstantsService.getTimes();
         expect(timeConstantsService['timeConstants']).to.deep.equals(time1);
@@ -35,6 +31,6 @@ describe('Time constants service', () => {
     it('should write in json the times', async () => {
         const stub = sinon.stub(fs.promises, 'writeFile').callsFake(async () => {});
         await timeConstantsService.setTimes(time1);
-        expect(stub.callsFake);
+        expect(stub.calledOnce);
     });
 });

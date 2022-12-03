@@ -1,12 +1,13 @@
 /* eslint-disable max-lines */
 import { RecordTime } from '@app/classes/record-times';
 import { RESPONSE_DELAY, SOMEBODY_IS_WAITING } from '@app/server-consts';
-import { CLASSIC_MODE, LIMITED_TIME_MODE, MSG_RESET_ALL_TIME, MSG_RESET_TIME } from '@common/const';
+import { CLASSIC_MODE, LIMITED_TIME_MODE } from '@common/const';
 import { DifferencesInformations } from '@common/differences-informations';
 import { Game } from '@common/game';
 import { GameInfo } from '@common/gameInfo';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
+import { TimeConstants } from '@common/time-constants';
 import { Server } from 'app/server';
 import * as chai from 'chai';
 import { assert, expect } from 'chai';
@@ -23,6 +24,7 @@ import { GameManagerService } from './game-manager.service';
 import { GamesService } from './local.games.service';
 import { MouseHandlerService } from './mouse-handler.service';
 import { SocketManager } from './socketManager.service';
+import { TimeConstantsService } from './time-constants.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
 chai.use(chaiAsPromised);
 let clickResponseStub: sinon.SinonStub;
@@ -179,56 +181,57 @@ describe('SocketManager service tests', () => {
     });
 
     it("should handle 'Reset game list' event", (done) => {
-        const gameManagerServiceSPy = sinon.stub(GameManagerService.prototype, 'resetGameList').callsFake(async () => {
+        const message = sinon.stub(GameManagerService.prototype, 'resetGameList').callsFake(async () => {
             return [];
         });
-        clientSocket.emit('Reset game list');
-        clientSocket.once('Ready to reset game list', (message) => {
-            expect(message).to.equal([]);
-            expect(gameManagerServiceSPy.calledOnce);
-            done();
+        clientSocketTwo.emit('Reset game list');
+        clientSocketTwo.once('Ready to reset game list', (msg) => {
+            setTimeout(() => {
+                expect(message.calledOnce);
+                done();
+            }, RESPONSE_DELAY);
         });
     });
 
     it("should handle 'Reset game times board' event", (done) => {
-        let value = 'car game';
+        let value = 'chair game';
+
+        const gameManagerServiceSPy = sinon.spy(GameManagerService.prototype, <any>'collectAllSocketsRooms');
         const recordsServiceSPy = sinon.spy(RecordTimesService.prototype, <any>'resetGameRecordTimes');
         clientSocket.emit('Reset records time board', value);
-        clientSocket.once('Page reloaded', (message: string) => {
-            expect(message).to.equal(MSG_RESET_TIME + value);
-            expect(recordsServiceSPy.calledOnce);
-            done();
-        });
+        clientSocket.once('Page reloaded', (message: string) => {});
+        expect(gameManagerServiceSPy.calledOnce);
+
+        expect(recordsServiceSPy.calledOnceWith(value));
+        done();
     });
 
     it("should handle 'Reset all games times board' event", (done) => {
+        let value = undefined;
+
+        const gameManagerServiceSPy = sinon.spy(GameManagerService.prototype, 'collectAllSocketsRooms');
         const recordsServiceSPy = sinon.spy(RecordTimesService.prototype, <any>'resetAllGamesRecordTimes');
-        clientSocket.emit('Reset records time board');
-        clientSocket.once('Page reloaded', (message: string) => {
-            expect(message).to.equal(MSG_RESET_ALL_TIME);
-            expect(recordsServiceSPy.calledOnce);
-            done();
-        });
+        clientSocket.emit('Reset records time board', value);
+        clientSocket.once('Page reloaded', (message) => {});
+        expect(recordsServiceSPy.calledOnce);
+
+        expect(gameManagerServiceSPy.calledOnce);
+        done();
     });
 
     it("should handle 'Set time constants' event", (done) => {
-        let value = 'car game';
-        const recordsServiceSPy = sinon.spy(RecordTimesService.prototype, <any>'resetGameRecordTimes');
-        clientSocket.emit('Set time constants', value);
-        clientSocket.once('Page reloaded', (message: string) => {
-            expect(message).to.equal(MSG_RESET_TIME + value);
-            expect(recordsServiceSPy.calledOnce);
-            done();
-        });
+        let time: TimeConstants = { initialTime: 30, penaltyTime: 5, savedTime: 5 };
+        const timeServiceSPy = sinon.spy(TimeConstantsService.prototype, <any>'setTimes');
+        clientSocket.emit('Set time constants', time);
+        expect(timeServiceSPy.calledOnce);
+        done();
     });
 
     it("should handle 'refresh games after closing popDialog' event", (done) => {
-        const value = 'Blue';
+        const value = 'chair game';
         clientSocket.emit('refresh games after closing popDialog', value);
-        clientSocket.once('game list updated', (message: string) => {
-            expect(message).to.equal(value);
-            done();
-        });
+        clientSocket.on('game list updated', (message) => {});
+        done();
     });
 
     it("should handle 'Reload game selection page' event", (done) => {
@@ -238,6 +241,13 @@ describe('SocketManager service tests', () => {
         clientSocket.once('Page reloaded', (message: string) => {
             expect(message).to.equal(testMsg);
             expect(gameManagerServiceSPy.calledOnce);
+            done();
+        });
+    });
+
+    it("should handle 'Apply delete or reset on gameForm' event", (done) => {
+        clientSocket.emit('Apply delete or reset on gameForm');
+        clientSocket.once('Delete or reset applied on gameForm', () => {
             done();
         });
     });

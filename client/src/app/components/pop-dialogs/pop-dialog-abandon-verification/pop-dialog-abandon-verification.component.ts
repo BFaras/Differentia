@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PopUpData } from '@app/interfaces/pop-up-data';
 import { SocketClientService } from '@app/services/socket-client.service';
+import { AbandonData } from '@common/abandon-data';
 
 @Component({
     selector: 'app-pop-dialog-abandon-verification',
@@ -14,6 +15,10 @@ export class PopDialogAbandonVerificationComponent implements OnInit {
     ngOnInit(): void {}
 
     abandonGame(): void {
-        this.socketService.send('kill the game', this.gameInfo.gameMode);
+        const abandonInfo: AbandonData = {
+            gameMode: this.gameInfo.gameMode,
+            isMultiplayerMatch: this.gameInfo.multiFlag,
+        };
+        this.socketService.send('kill the game', abandonInfo);
     }
 }

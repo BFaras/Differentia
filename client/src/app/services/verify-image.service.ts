@@ -19,13 +19,13 @@ export class VerifyImageService {
     }
 
     transformByteToImage(buffer : any) {
-        let bytes = new Uint8Array(buffer)
-        let blob = new Blob([bytes.buffer])
+        let bytes = new Uint8Array(buffer);
+        let blob = new Blob([bytes.buffer]);
         this.imageToVerify.src = URL.createObjectURL(blob);
     }
 
     processBuffer(e:any){
-        let buffer = e.target!.result as ArrayBuffer
+        let buffer = e.target!.result as ArrayBuffer;
         this.getBmp(buffer);
         this.transformByteToImage(buffer);
     }
@@ -77,7 +77,6 @@ export class VerifyImageService {
                 this.uploadFileService.setOriginalImage(this.file)
             }
             if (imageInfo.indexOfImage == 1){
-
                 this.uploadFileService.setModifiedImage(this.file)
             }
         }

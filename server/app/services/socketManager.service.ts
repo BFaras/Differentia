@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { HOST_CHOSE_ANOTHER, NO_AVAILABLE, SOMEBODY_IS_WAITING, ZERO_GAMES_PLAYED } from '@app/server-consts';
+import { AbandonData } from '@common/abandon-data';
 import { ChatMessage } from '@common/chat-message';
 import { CLASSIC_MODE, HOST_PRESENT, LIMITED_TIME_MODE, MSG_RESET_ALL_TIME, MSG_RESET_TIME } from '@common/const';
 import { DifferencesInformations } from '@common/differences-informations';
@@ -19,6 +20,7 @@ import { GameManagerService } from './game-manager.service';
 import { GamesService } from './local.games.service';
 import { MouseHandlerService } from './mouse-handler.service';
 import { TimeConstantsService } from './time-constants.service';
+import { UsernameValidateService } from './username-validate.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
 
 export class SocketManager {
@@ -30,6 +32,7 @@ export class SocketManager {
     private gameManagerService: GameManagerService;
     private gamesService: GamesService = new GamesService();
     private timeConstantsService: TimeConstantsService = new TimeConstantsService();
+    private usernameValidateService: UsernameValidateService = new UsernameValidateService();
     private bestTimesService: BestTimesService;
     private currentGameName: string;
 
@@ -91,21 +94,20 @@ export class SocketManager {
                 );
             });
 
-            socket.on('Apply action', () => {
-                socket.emit('Action applied');
+            socket.on('Apply delete or reset on gameForm', () => {
+                socket.emit('Delete or reset applied on gameForm');
             });
 
             socket.on('my username is', (username: string) => {
-                if (username.charAt(0) !== ' ') {
-                    console.log('jtenvoie valid username' + username);
+                if (this.usernameValidateService.isUsernameValid(username)) {
                     this.waitingLineHandlerService.setUsernamePlayer(socket.id, username, this.sio);
-                    this.sio.to(socket.id).emit('username valid');
-                } else this.sio.to(socket.id).emit('username not valid');
+                    socket.emit('username valid');
+                } else socket.emit('username not valid');
             });
 
             socket.on('gameMode is', (classicFlag: boolean) => {
-                if (classicFlag) this.sio.to(socket.id).emit(CLASSIC_MODE);
-                else this.sio.to(socket.id).emit(`open the ${LIMITED_TIME_MODE} pop-dialog`);
+                if (classicFlag) socket.emit(CLASSIC_MODE);
+                else socket.emit(`open the ${LIMITED_TIME_MODE} pop-dialog`);
             });
 
             socket.on('I am waiting', (gameName: string) => {
@@ -247,8 +249,8 @@ export class SocketManager {
                 this.gameManagerService.sendDifferentPixelsNotFound(socket);
             });
 
-            socket.on('kill the game', (gameMode: string) => {
-                this.gameManagerService.handleAbandonEmit(socket, gameMode);
+            socket.on('kill the game', (abandonInfo: AbandonData) => {
+                this.gameManagerService.handleAbandonEmit(socket, abandonInfo);
             });
 
             //To test
@@ -265,7 +267,7 @@ export class SocketManager {
                             playerName: playerUsername,
                             playerRanking: NO_AVAILABLE,
                             gameName: this.currentGameName,
-                            isMultiplayer: isMultiplayer,
+                            isMultiplayer,
                         };
                         await this.bestTimesService.compareGameTimeWithDbTimes(playerGameTime, recordTimeInfos);
                         this.gameManagerService.handleEndGameEmits(

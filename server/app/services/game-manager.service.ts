@@ -8,6 +8,7 @@ import {
     ONE_SECOND_DELAY,
     TIMER_HIT_ZERO,
 } from '@app/server-consts';
+import { AbandonData } from '@common/abandon-data';
 import {
     CLASSIC_MODE,
     DEFAULT_GAME_ROOM_NAME,
@@ -86,8 +87,11 @@ export class GameManagerService {
 
     clickResponse(socket: io.Socket, mousePosition: Position) {
         const differencesInfo: GameplayDifferenceInformations = this.getSocketMouseHandlerService(socket).isValidClick(mousePosition, socket.id);
+        const gameRoomName = this.findSocketGameRoomName(socket);
+        const chronometerService: ChronometerService = this.getRoomChronometerService(gameRoomName);
         differencesInfo.socketId = socket.id;
         differencesInfo.playerUsername = this.getSocketUsername(socket);
+        if (differencesInfo.isValidDifference) chronometerService.increaseTimeByBonusTime();
         this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
     }
 
@@ -132,10 +136,10 @@ export class GameManagerService {
         socket.broadcast.to(this.findSocketGameRoomName(socket)).emit('End game', endGameInfos);
     }
 
-    handleAbandonEmit(socket: io.Socket, gameMode: string) {
+    handleAbandonEmit(socket: io.Socket, abandonInfo: AbandonData) {
         const gameRoomName = this.findSocketGameRoomName(socket);
         let endGameInfos: EndGameInformations;
-        if (gameMode === CLASSIC_MODE) {
+        if (abandonInfo.gameMode === CLASSIC_MODE) {
             endGameInfos = {
                 isMultiplayer: IT_IS_MULTIPLAYER,
                 isAbandon: !NOBODY_ABANDONNED,
@@ -144,9 +148,13 @@ export class GameManagerService {
                 playerRanking: NO_AVAILABLE,
             };
             this.sio.to(gameRoomName).emit('End game', endGameInfos);
-            this.endGame(socket, gameMode);
+            this.endGame(socket, abandonInfo.gameMode);
         } else {
-            this.sio.in(gameRoomName).emit('Other player abandonned LM', socket.data.username);
+            this.sio.in(gameRoomName).emit('Other player abandonned LM');
+
+            if (!abandonInfo.isMultiplayerMatch) {
+                this.endGame(socket, abandonInfo.gameMode);
+            }
         }
     }
 
@@ -170,12 +178,10 @@ export class GameManagerService {
         return this.gamesRooms;
     }
 
-    //To test Seb
     initializeSocketGameHistoryLimitedTimeMode(socket: io.Socket): void {
         this.gamesPlayedByRoom.set(this.findSocketGameRoomName(socket), []);
     }
 
-    //To test Seb
     addGameToHistoryLimitedTimeMode(socket: io.Socket, gameName: string): void {
         this.gamesPlayedByRoom.get(this.findSocketGameRoomName(socket))!.push(gameName);
     }
@@ -221,6 +227,19 @@ export class GameManagerService {
         this.addGameToHistoryLimitedTimeMode(socket, gameName);
     }
 
+    getSocketGameName(socket: io.Socket): string {
+        const gameRoomName = this.findSocketGameRoomName(socket);
+        let gameName = '';
+        for (const rooms of this.gamesRooms.entries()) {
+            rooms[1].forEach((value) => {
+                if (value === gameRoomName) {
+                    gameName = rooms[0];
+                }
+            });
+        }
+        return gameName;
+    }
+
     //To test Seb
     private async switchGame(socket: io.Socket, adversarySocket?: io.Socket): Promise<void> {
         const gameToBePlayed = await this.gamesService.generateRandomGame(this.gamesPlayedByRoom.get(this.findSocketGameRoomName(socket))!);
@@ -245,9 +264,8 @@ export class GameManagerService {
         else return this.classicIsGameFinishedSolo(socket);
     }
 
-    //To test Seb
+    //To test Seb?
     private async limitedTimeIsGameFinished(socket: io.Socket): Promise<boolean> {
-        console.log(this.gamesPlayedByRoom);
         return this.gamesPlayedByRoom.get(this.findSocketGameRoomName(socket))!.length === (await this.gamesService.getAllGames()).length;
     }
 
@@ -266,7 +284,6 @@ export class GameManagerService {
         }
     }
 
-    //To test Seb
     private eraseGamesFromHistoryLimitedTimeMode(socket: io.Socket): void {
         this.gamesPlayedByRoom.delete(this.findSocketGameRoomName(socket));
     }

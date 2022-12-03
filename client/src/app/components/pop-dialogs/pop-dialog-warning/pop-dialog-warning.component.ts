@@ -17,7 +17,7 @@ export class PopDialogWarningComponent implements OnInit {
     ngOnInit(): void {}
 
     applyAction() {
-        this.socketService.send('Apply action');
+        this.socketService.send('Apply delete or reset on gameForm');
         this.dialogRef.close();
     }
 
