@@ -4,7 +4,7 @@ import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
 import { CanvasDataHandlerService } from './canvas-data-handler.service';
 import { DrawingHistoryService } from './drawing-history.service';
 
-describe('CanvasDataHandlerService', () => {
+fdescribe('CanvasDataHandlerService', () => {
     let service: CanvasDataHandlerService;
     let drawingHistoryServiceSpy: jasmine.SpyObj<DrawingHistoryService>;
     let mainCanvas: HTMLCanvasElement;
