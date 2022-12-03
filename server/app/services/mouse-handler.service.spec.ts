@@ -91,7 +91,7 @@ describe('MouseHandlerService', () => {
     });
 
     it('should reset differencesHashmap and differencesFound array on resetData() call', () => {
-        let differencesHashmapTest: Map<number, number> = new Map<number, number>();
+        const differencesHashmapTest: Map<number, number> = new Map<number, number>();
 
         mouseService['differencesNbFound'] = testDifferencesFoundArray;
         mouseService.resetDifferencesData();

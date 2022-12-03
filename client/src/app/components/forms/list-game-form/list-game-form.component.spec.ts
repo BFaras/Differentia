@@ -142,7 +142,7 @@ describe('ListGameFormComponent', () => {
     });
 
     it('should not call socket in config', () => {
-        let gameName = '';
+        const gameName = '';
         const routerMock = TestBed.inject(Router);
         // @ts-ignore: force this private property value for testing.
         routerMock.url = '/fakeLocation';
@@ -161,7 +161,7 @@ describe('ListGameFormComponent', () => {
     });
 
     it('should call socket <Page reloaded> in config', () => {
-        let gameName = 'Lucky';
+        const gameName = 'Lucky';
         const routerMock = TestBed.inject(Router);
         // @ts-ignore: force this private property value for testing.
         routerMock.url = '/admin';
@@ -177,7 +177,7 @@ describe('ListGameFormComponent', () => {
     });
 
     it('should execute instructions in socket <game list updated>', () => {
-        let gameName = 'Lucky';
+        const gameName = 'Lucky';
         socketClientServiceMock.socket.id = 'Lucky';
         const spy = spyOn(listGameFormComp, <any>'refreshGames');
         socketTestHelper.peerSideEmit('game list updated', gameName);
@@ -187,7 +187,7 @@ describe('ListGameFormComponent', () => {
     });
 
     it('should not execute instructions in socket <game list updated>', () => {
-        let gameName = 'Lucky';
+        const gameName = 'Lucky';
         socketClientServiceMock.socket.id = 'Bruh';
         const spy = spyOn(listGameFormComp, <any>'refreshGames');
         socketTestHelper.peerSideEmit('game list updated', gameName);
@@ -197,8 +197,8 @@ describe('ListGameFormComponent', () => {
 
     it('should call refreshGames and ngOnInit', () => {
         const spy = spyOn(listGameFormComp, <any>'ngOnInit');
-        let nextPageSpy = spyOn(listGameFormComp, 'nextPageGameForms');
-        let previousPageSpy = spyOn(listGameFormComp, 'previousPageGameForms');
+        const nextPageSpy = spyOn(listGameFormComp, 'nextPageGameForms');
+        const previousPageSpy = spyOn(listGameFormComp, 'previousPageGameForms');
 
         listGameFormComp['refreshGames'](true);
         expect(listGameFormComp['gameListToRefresh']).toBeFalse();
@@ -217,7 +217,7 @@ describe('ListGameFormComponent', () => {
     });
 
     it('should open snackbar to delete one game', () => {
-        let gameName = 'hi';
+        const gameName = 'hi';
         listGameFormComp['openSnackBar'](gameName);
         expect(snackBarSpy['open']).toHaveBeenCalledWith(`Le jeu ${gameName} a été supprimé :(`, 'OK', {
             horizontalPosition: listGameFormComp['horizontalPosition'],
@@ -227,7 +227,7 @@ describe('ListGameFormComponent', () => {
     });
 
     it('should open snackbar to delete all the games', () => {
-        let gameName = ['hi', 'AUGH'];
+        const gameName = ['hi', 'AUGH'];
         listGameFormComp['openSnackBar'](gameName);
         expect(snackBarSpy['open']).toHaveBeenCalledWith(RESET_MSG_GAME_LIST, 'OK', {
             horizontalPosition: listGameFormComp['horizontalPosition'],

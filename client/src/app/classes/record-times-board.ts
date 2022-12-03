@@ -1,19 +1,11 @@
 import { RecordTime } from './record-time';
 
 export class RecordTimesBoard {
-    public static readonly DEFAULT_SOLO_RECORD_TIMES = [
-        new RecordTime('N/A', 'N/A'),
-        new RecordTime('N/A', 'N/A'),
-        new RecordTime('N/A', 'N/A'),
-    ];
-    public static readonly DEFAULT_VERSUS_RECORD_TIMES = [
-        new RecordTime('N/A', 'N/A'),
-        new RecordTime('N/A', 'N/A'),
-        new RecordTime('N/A', 'N/A'),
-    ];
+    static readonly DEFAULT_SOLO_RECORD_TIMES = [new RecordTime('N/A', 'N/A'), new RecordTime('N/A', 'N/A'), new RecordTime('N/A', 'N/A')];
+    static readonly DEFAULT_VERSUS_RECORD_TIMES = [new RecordTime('N/A', 'N/A'), new RecordTime('N/A', 'N/A'), new RecordTime('N/A', 'N/A')];
 
-    public recordTimesSolo: RecordTime[];
-    public recordTimesVersus: RecordTime[];
+    recordTimesSolo: RecordTime[];
+    recordTimesVersus: RecordTime[];
 
     constructor(soloRecord: RecordTime[], versusRecords: RecordTime[]) {
         if (this.isArrayEmpty(soloRecord)) {

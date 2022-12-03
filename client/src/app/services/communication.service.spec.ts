@@ -3,89 +3,88 @@ import { TestBed } from '@angular/core/testing';
 import { CommunicationService } from '@app/services/communication.service';
 import { Game } from '@common/game';
 import { StatusCodes } from 'http-status-codes';
-import {RecordTime} from '@app/classes/record-time'
-
+import { RecordTime } from '@app/classes/record-time';
 
 describe('CommunicationService', () => {
     let httpMock: HttpTestingController;
     let service: CommunicationService;
     let baseUrl: string;
-    let allGames: Game[] = [
+    const allGames: Game[] = [
         {
             name: 'Car game',
             numberOfDifferences: 4,
-            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+            times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
             images: [],
             differencesList: [],
         },
         {
             name: 'Bike game',
             numberOfDifferences: 5,
-            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+            times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
             images: [],
             differencesList: [],
         },
         {
             name: 'House game',
             numberOfDifferences: 6,
-            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+            times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
             images: [],
             differencesList: [],
         },
         {
             name: 'Plane game',
             numberOfDifferences: 7,
-            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+            times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
             images: [],
             differencesList: [],
         },
         {
             name: 'TV game',
             numberOfDifferences: 8,
-            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+            times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
             images: [],
             differencesList: [],
         },
         {
             name: 'Table game',
             numberOfDifferences: 9,
-            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+            times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
             images: [],
             differencesList: [],
         },
         {
             name: 'Chair game',
             numberOfDifferences: 9,
-            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+            times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
             images: [],
             differencesList: [],
         },
         {
             name: 'Clown game',
             numberOfDifferences: 9,
-            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+            times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
             images: [],
             differencesList: [],
         },
         {
             name: 'Dog game',
             numberOfDifferences: 9,
-            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+            times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
             images: [],
             differencesList: [],
         },
     ];
-    let validGameToAdd: Game = {
+    const validGameToAdd: Game = {
         name: 'New Game',
         numberOfDifferences: 5,
-        times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+        times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
         images: ['image1', 'image2'],
         differencesList: [],
     };
-    let unvalidGameToAdd: Game = {
+    const unvalidGameToAdd: Game = {
         name: 'Car game',
         numberOfDifferences: 5,
-        times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+        times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
         images: ['image3', 'image4'],
         differencesList: [],
     };

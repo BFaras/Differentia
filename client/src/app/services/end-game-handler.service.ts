@@ -37,7 +37,7 @@ export class EndGameHandlerService {
         });
     }
 
-    //To test
+    // To test
     private generateRecordMessage(playerRanking: number): string {
         const endGameWithRecordMessage: string =
             RECORD_END_GAME_MESSAGE_PART_ONE +
@@ -49,7 +49,7 @@ export class EndGameHandlerService {
         return endGameWithRecordMessage;
     }
 
-    //To test
+    // To test
     private generateEndGameMessage(endGameInfos: EndGameInformations) {
         if (endGameInfos.hasNewRecord) return this.generateRecordMessage(endGameInfos.playerRanking);
         else if (!endGameInfos.hasNewRecord && !endGameInfos.isMultiplayer) return CLASSIC_SOLO_END_GAME_MESSAGE;

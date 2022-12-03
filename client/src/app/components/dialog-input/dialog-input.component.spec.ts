@@ -65,11 +65,11 @@ describe('DialogInputComponent', () => {
         component.initialTimeInput.nativeElement.value = 64;
         component.penaltyTimeInput.nativeElement.value = 10;
         component.savedTimeInput.nativeElement.value = 10;
-        let initialTime = Number(component.initialTimeInput.nativeElement.value);
-        let penaltyTime = Number(component.penaltyTimeInput.nativeElement.value);
-        let savedTime = Number(component.savedTimeInput.nativeElement.value);
-        let spySetDefault = spyOn(component, <any>'setDefaultValue');
-        let spySocket = spyOn(socketClientServiceMock, 'send');
+        const initialTime = Number(component.initialTimeInput.nativeElement.value);
+        const penaltyTime = Number(component.penaltyTimeInput.nativeElement.value);
+        const savedTime = Number(component.savedTimeInput.nativeElement.value);
+        const spySetDefault = spyOn(component, <any>'setDefaultValue');
+        const spySocket = spyOn(socketClientServiceMock, 'send');
         component.submitTimes();
         expect(component.timeConstants).toEqual({ initialTime, penaltyTime, savedTime });
         expect(dialogRef['close']).toHaveBeenCalled();

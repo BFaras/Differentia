@@ -27,6 +27,7 @@ export const LAST_RECORD_INDEX = 2;
 // Chronometer Service constants
 export const ONE_MINUTE_IN_SECONDS = 60;
 export const ONE_SECOND_OFFSET = 1;
+export const MAX_LIMITED_TIME_MINUTES = 2;
 
 // Constantes de validation du username
 export const MAX_USERNAME_LENGTH = 8;

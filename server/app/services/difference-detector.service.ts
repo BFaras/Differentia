@@ -43,7 +43,7 @@ export class DifferenceDetectorService {
     }
 
     private generateDifferencesInformation() {
-        let differentPixelsNumbersArray: number[] = [];
+        const differentPixelsNumbersArray: number[] = [];
 
         this.compareImagesPixels(differentPixelsNumbersArray);
 
@@ -85,7 +85,7 @@ export class DifferenceDetectorService {
         // r = rayon du cercle
         const centerPixelLine = Math.floor(centerPixelPosition / this.imageDatasToCompare.imageWidth);
         const centerPixelColumn = centerPixelPosition % this.imageDatasToCompare.imageWidth;
-        let offsetCloumnBeginning = this.clampValue(centerPixelColumn - this.offset, MINIMUM_PIXEL_POSITION, this.imageDatasToCompare.imageWidth);
+        const offsetCloumnBeginning = this.clampValue(centerPixelColumn - this.offset, MINIMUM_PIXEL_POSITION, this.imageDatasToCompare.imageWidth);
 
         for (let column = offsetCloumnBeginning; column <= centerPixelColumn + this.offset; column++) {
             this.addOffsetPixelToColumnToVisit(column, centerPixelLine, centerPixelColumn);
@@ -144,7 +144,7 @@ export class DifferenceDetectorService {
     private determinePixelsAround(diffPixelNumber: number, pixelsToVisit: number[]) {
         const centerPixelLine = Math.floor(diffPixelNumber / this.imageDatasToCompare.imageWidth);
         const centerPixelColumn = diffPixelNumber % this.imageDatasToCompare.imageWidth;
-        let offsetCloumnBeginning = this.clampValue(
+        const offsetCloumnBeginning = this.clampValue(
             centerPixelColumn - RADIUS_AROUND_PIXEL,
             MINIMUM_PIXEL_POSITION,
             this.imageDatasToCompare.imageWidth,

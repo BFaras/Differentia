@@ -18,7 +18,7 @@ export class ClueFinderService {
     constructor() {}
 
     findClueQuandrantFromClueNumber(clueNumber: number, differencesList: number[][]): number {
-        //Bonjour
+        // Bonjour
         if (clueNumber == FIRST_CLUE_NB) {
             return this.findClueQuadrant(FIRST_CLUE_QUANDRANT_NB, differencesList);
         } else if (clueNumber == SECOND_CLUE_NB) {
@@ -74,7 +74,7 @@ export class ClueFinderService {
     }
 
     private findQuadrantOfPosition(position: Position, quadrantsLimits: Positions[]): number {
-        let quadrantNb: number = 0;
+        let quadrantNb = 0;
 
         for (let i = 0; i < quadrantsLimits.length; i++) {
             if (this.isPositionInQuadrant(position, quadrantsLimits[i])) {

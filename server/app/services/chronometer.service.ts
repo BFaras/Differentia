@@ -1,4 +1,4 @@
-import { ONE_MINUTE_IN_SECONDS, ONE_SECOND_OFFSET } from '@app/server-consts';
+import { MAX_LIMITED_TIME_MINUTES, ONE_MINUTE_IN_SECONDS, ONE_SECOND_OFFSET } from '@app/server-consts';
 import { CLASSIC_MODE, LIMITED_TIME_MODE, MAX_TIME, RESET_VALUE } from '@common/const';
 import { Time } from '@common/time';
 import { TimeConstants } from '@common/time-constants';
@@ -45,7 +45,7 @@ export class ChronometerService {
 
     increaseTimeByBonusTime(): void {
         for (let i = 0; i < this.timeConstants.savedTime + ONE_SECOND_OFFSET; i++) {
-            if (this.time.minutes === 2 && this.time.seconds === 1) i = this.timeConstants.savedTime;
+            if (this.time.minutes === MAX_LIMITED_TIME_MINUTES && this.time.seconds === 1) i = this.timeConstants.savedTime;
             else this.increaseTime();
         }
     }

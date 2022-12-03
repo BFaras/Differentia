@@ -11,7 +11,7 @@ import SpyObj = jasmine.SpyObj;
 describe('GameCreationPageComponent', () => {
     let component: GameCreationPageComponent;
     let fixture: ComponentFixture<GameCreationPageComponent>;
-    let dialogRefSpyObj = jasmine.createSpyObj({ close: null });
+    const dialogRefSpyObj = jasmine.createSpyObj({ close: null });
     let dialogSpy: jasmine.Spy;
     dialogRefSpyObj.componentInstance = { body: '' };
     let listImagesRenderedSpy: SpyObj<ListImagesRenderedService>;

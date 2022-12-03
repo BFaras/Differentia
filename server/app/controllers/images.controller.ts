@@ -15,7 +15,7 @@ export class ImagesController {
 
         this.router.post('/', (req: Request, res: Response) => {
             if (req['files']) {
-                let sampleFile = req['files'].file;
+                const sampleFile = req['files'].file;
                 const filePath = './assets/images/' + sampleFile.name;
                 sampleFile.mv(filePath);
                 res.sendStatus(StatusCodes.CREATED);

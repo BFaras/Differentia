@@ -12,7 +12,7 @@ import { BIG, BLACK_COLOR, CONTROL_SHIFT_Z_SHORTCUT, CONTROL_Z_SHORTCUT, MEDIUM,
 })
 export class ToolSettingComponent implements OnInit {
     readonly widths: number[] = [VERY_SMALL, SMALL, MEDIUM, BIG, VERY_BIG];
-    public color: string;
+    color: string;
     @Input() indexTool: number;
     constructor(
         private pencilService: PencilService,

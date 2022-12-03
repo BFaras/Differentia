@@ -6,7 +6,7 @@ import { PopDialogValidateGameComponent } from './pop-dialog-validate-game.compo
 describe('PopDialogValidateGameComponent', () => {
     let component: PopDialogValidateGameComponent;
     let fixture: ComponentFixture<PopDialogValidateGameComponent>;
-    let dialogRefSpyObj = jasmine.createSpyObj({ close: null });
+    const dialogRefSpyObj = jasmine.createSpyObj({ close: null });
     let dialogSpy: jasmine.Spy;
     dialogRefSpyObj.componentInstance = { body: '' };
 

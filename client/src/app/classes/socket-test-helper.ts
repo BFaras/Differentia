@@ -32,6 +32,6 @@ export class SocketTestHelper {
     }
 
     private callbacks = new Map<string, CallbackSignature[]>();
-    public connected = true;
-    public id = 'SDAJ125DASGHV';
+    connected = true;
+    id = 'SDAJ125DASGHV';
 }

@@ -35,7 +35,7 @@ describe('PlayAreaComponent', () => {
     let imageDifferenceSpy: SpyObj<ImageToImageDifferenceService>;
     let clueHandlerServiceMock: SpyObj<ClueHandlerService>;
     let mouseEvent: MouseEvent;
-    let position: Position = { x: 10, y: 20 };
+    const position: Position = { x: 10, y: 20 };
     let socketTestHelper: SocketTestHelper;
     const differencesFoundInfo: GameplayDifferenceInformations = {
         differencePixelsNumbers: [],
@@ -43,9 +43,9 @@ describe('PlayAreaComponent', () => {
         socketId: 'socket1',
         playerUsername: DEFAULT_USERNAME,
     };
-    let firstImage: HTMLImageElement = new Image(IMAGE_WIDTH, IMAGE_HEIGHT);
-    let secondImage: HTMLImageElement = new Image(IMAGE_WIDTH, IMAGE_HEIGHT);
-    let differenceImage: HTMLImageElement[] = [firstImage, secondImage];
+    const firstImage: HTMLImageElement = new Image(IMAGE_WIDTH, IMAGE_HEIGHT);
+    const secondImage: HTMLImageElement = new Image(IMAGE_WIDTH, IMAGE_HEIGHT);
+    const differenceImage: HTMLImageElement[] = [firstImage, secondImage];
 
     beforeEach(async () => {
         socketTestHelper = new SocketTestHelper();

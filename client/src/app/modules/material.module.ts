@@ -46,7 +46,7 @@ const modules = [
     MatTooltipModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    MatCheckboxModule
+    MatCheckboxModule,
 ];
 
 /**

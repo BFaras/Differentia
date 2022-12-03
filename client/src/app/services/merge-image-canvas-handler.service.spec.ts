@@ -28,7 +28,7 @@ describe('MergeImageCanvasHandlerService', () => {
     it('should test SetCanvas', () => {
         service.setLeftContextAndCanvas(contextMock, canvasMock);
         service.setRightContextAndCanvas(contextMock, canvasMock);
-        const expectedLength: number = 2;
+        const expectedLength = 2;
         expect(service['context']?.length).toEqual(expectedLength);
         expect(service['context']?.length).toEqual(expectedLength);
     });

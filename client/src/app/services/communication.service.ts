@@ -18,8 +18,8 @@ export class CommunicationService {
         return () => of(result as T);
     }
 
-    getGames(): Observable<Array<Game>> {
-        return this.http.get<Array<Game>>(`${this.baseUrl}/games`).pipe(catchError(this.handleError<Array<Game>>('getGames')));
+    getGames(): Observable<Game[]> {
+        return this.http.get<Game[]>(`${this.baseUrl}/games`).pipe(catchError(this.handleError<Game[]>('getGames')));
     }
 
     addGame(game: Game): Observable<HttpResponse<any>> {
@@ -28,8 +28,8 @@ export class CommunicationService {
             .pipe(catchError(this.handleError<HttpResponse<any>>('addGame')));
     }
 
-    deleteGame(gameName: string): Observable<Array<Game>> {
-        return this.http.delete<Array<Game>>(`${this.baseUrl}/games/${gameName}`).pipe(catchError(this.handleError<Array<Game>>('deleteGame')));
+    deleteGame(gameName: string): Observable<Game[]> {
+        return this.http.delete<Game[]>(`${this.baseUrl}/games/${gameName}`).pipe(catchError(this.handleError<Game[]>('deleteGame')));
     }
 
     uploadFiles(formData: FormData): Observable<Object> {

@@ -55,8 +55,8 @@ export class RecordTimesService {
     }
     // To test
     async resetGameRecordTimes(gameName: string): Promise<void> {
-        let filterQuery: Filter<GameTimes> = { name: gameName };
-        let updateQuery: UpdateFilter<GameTimes> = {
+        const filterQuery: Filter<GameTimes> = { name: gameName };
+        const updateQuery: UpdateFilter<GameTimes> = {
             $set: { recordTimes: this.databaseService.defaultRecordTimes },
         };
         if (this.isDatabaseAvailable()) {
@@ -70,7 +70,7 @@ export class RecordTimesService {
     }
     // To test
     async resetAllGamesRecordTimes(): Promise<void> {
-        let updateQuery: UpdateFilter<GameTimes> = {
+        const updateQuery: UpdateFilter<GameTimes> = {
             $set: { recordTimes: this.databaseService.defaultRecordTimes },
         };
         if (this.isDatabaseAvailable()) {
@@ -84,8 +84,8 @@ export class RecordTimesService {
     }
     // To test
     async updateGameRecordTimes(gameName: string, newRecordTimes: GameModeTimes): Promise<void> {
-        let filterQuery: Filter<GameTimes> = { name: gameName };
-        let updateQuery: UpdateFilter<GameTimes> = {
+        const filterQuery: Filter<GameTimes> = { name: gameName };
+        const updateQuery: UpdateFilter<GameTimes> = {
             $set: { recordTimes: newRecordTimes },
         };
         return this.collection
@@ -97,7 +97,7 @@ export class RecordTimesService {
     }
     // To test
     async getGameTimes(nameOfWantedGame: string): Promise<GameModeTimes> {
-        let filterQuery: Filter<GameTimes> = { name: nameOfWantedGame };
+        const filterQuery: Filter<GameTimes> = { name: nameOfWantedGame };
 
         if (this.isDatabaseAvailable()) {
             return this.collection
@@ -139,7 +139,7 @@ export class RecordTimesService {
     }
     // To test
     private async validateName(gameName: string): Promise<boolean> {
-        let filterQuery: Filter<GameTimes> = { name: gameName };
+        const filterQuery: Filter<GameTimes> = { name: gameName };
         const game = await this.collection.findOne(filterQuery);
         return game?.name !== gameName;
     }

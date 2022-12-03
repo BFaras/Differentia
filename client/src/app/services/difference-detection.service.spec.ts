@@ -9,7 +9,7 @@ describe('DifferenceDetectionService', () => {
     let socketSpy: jasmine.SpyObj<SocketClientService>;
     let drawServiceSpy: jasmine.SpyObj<DrawService>;
     let mouseEvent: MouseEvent;
-    let position: Position = { x: 10, y: 20 };
+    const position: Position = { x: 10, y: 20 };
 
     beforeAll(async () => {
         drawServiceSpy = jasmine.createSpyObj('DrawService', ['drawWord']);
@@ -66,7 +66,7 @@ describe('DifferenceDetectionService', () => {
     });
 
     it('should verify if game sound has been called', () => {
-        const audioSourceMock: string = 'mock';
+        const audioSourceMock = 'mock';
         const spyLoad = spyOn(HTMLAudioElement.prototype, 'load');
         const spyPlay = spyOn(HTMLAudioElement.prototype, 'play');
         service['playAudio'](audioSourceMock);
@@ -81,9 +81,9 @@ describe('DifferenceDetectionService', () => {
     });
 
     it('should call verifyGameFinished', () => {
-        let isMultiplayer = true;
-        let differenceIsValid = true;
-        let isLocalPlayer = true;
+        const isMultiplayer = true;
+        const differenceIsValid = true;
+        const isLocalPlayer = true;
         service.verifyGameFinished(differenceIsValid, isMultiplayer, isLocalPlayer);
         expect(socketSpy['send']).toHaveBeenCalled();
     });
