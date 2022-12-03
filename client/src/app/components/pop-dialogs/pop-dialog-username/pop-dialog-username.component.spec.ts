@@ -64,19 +64,6 @@ describe('PopDialogUsernameComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('the button should not be disabled if the input value is not undefined', () => {
-        component.disabledButton = true;
-        component.username.nativeElement.value = 'test';
-        component.inputChanged();
-        expect(component.disabledButton).toBeFalsy();
-    });
-
-    it('the button should be disabled if the input value is undefined', () => {
-        component.disabledButton = true;
-        component.username.nativeElement.value = '';
-        component.inputChanged();
-        expect(component.disabledButton).toBeTrue();
-    });
 
     it('should set the user to not valid', () => {
         socketTestHelper.peerSideEmit('username not valid');

@@ -44,7 +44,7 @@ describe('PopDialogValidateGameComponent', () => {
         const mockValue = 5;
         component.valueChosen = mockValue;
         component.startsGeneratingImageDifferenceAndNumberDifference();
-        expect(component.areImageDifferenceAndNumberDifferenceReady).toBeTruthy();
+        expect(component.isImageDifferenceReady).toBeTruthy();
     });
 
     afterEach(() => {
