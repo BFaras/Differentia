@@ -107,6 +107,16 @@ describe('GameManagerService tests', () => {
         expect(spy.calledOnce);
     });
 
+    it('should call eraseGamesFromHistoryLimitedTimeMode() and endGameWithDependencies() on emitTime() when LM and chrono has hit zero', async () => {
+        const eraseGamesFromHistoryLimitedTimeModeSpy = sinon.spy(gameManagerService, <any>'eraseGamesFromHistoryLimitedTimeMode');
+        const endGameWithDependenciesSpy = sinon.spy(gameManagerService, <any>'endGameWithDependencies');
+        chronometerService.mode = LIMITED_TIME_MODE;
+        chronometerService.resetChrono();
+        await gameManagerService['emitTime'](chronometerService, 'unvalidGameRoomName', serverSocket);
+        expect(eraseGamesFromHistoryLimitedTimeModeSpy.calledOnce);
+        expect(endGameWithDependenciesSpy.calledOnce);
+    });
+
     it('should beginGame() should call generateDifferencesInformations() from MouseHandlerService on beginGame()', async () => {
         const spy = sinon.spy(mouseHandlerService, 'generateDifferencesInformations');
         testGameInfo.gameMode = CLASSIC_MODE;
