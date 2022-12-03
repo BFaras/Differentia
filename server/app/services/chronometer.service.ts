@@ -13,7 +13,7 @@ export class ChronometerService {
         seconds: 0,
     };
     mode: string;
-    private timeConstants: TimeConstants;
+    timeConstants: TimeConstants;
     private timeConstantsService: TimeConstantsService = new TimeConstantsService();
 
     constructor() {}

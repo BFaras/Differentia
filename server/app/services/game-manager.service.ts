@@ -60,6 +60,7 @@ export class GameManagerService {
         }
         this.logRoomsWithGames(gameInfo.gameName, gameRoomName);
         await this.sendImagesToClient(gameInfo.gameName, gameInfo.socket);
+        this.sio.to(gameRoomName).emit('Clue Time Penalty', this.getSocketChronometerService(gameInfo.socket).timeConstants.penaltyTime);
     }
 
     async resetGameList() {
