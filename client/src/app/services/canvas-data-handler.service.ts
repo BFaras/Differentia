@@ -41,8 +41,6 @@ export class CanvasDataHandlerService {
     drawOnFakeCanvas() {
         this.contextLeft!.drawImage(this.contextList[0].canvas, 0, 0);
         this.contextRight!.drawImage(this.contextList[1].canvas, 0, 0);
-
-
     }
 
     drawOnOtherCanvas(index: number, canvas: HTMLCanvasElement) {
