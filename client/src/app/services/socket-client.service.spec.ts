@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { Socket } from 'socket.io-client';
+// import Emitter from 'socket.io-client';
 import { SocketTestHelper } from '../classes/socket-test-helper';
 import { SocketClientService } from './socket-client.service';
 
@@ -70,6 +71,13 @@ describe('SocketClientService', () => {
         const spy = spyOn(service.socket, 'emit');
         service.send(event, data);
         expect(spy).toHaveBeenCalled();
+        expect(spy).toHaveBeenCalledWith(event);
+    });
+
+    it('should call socket.off on off()', () => {
+        const event = 'helloWorld';
+        const spy = spyOn(service.socket, 'off');
+        service.off(event);
         expect(spy).toHaveBeenCalledWith(event);
     });
 });
