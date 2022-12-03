@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { EMPTY_MESSAGE, RESET_INFO_CONSTANTS, RESET_INFO_GAME_LIST, RESET_INFO_RECORDS_TIME } from '@app/const/client-consts';
 import { SocketClientService } from '@app/services/socket-client.service';
@@ -31,6 +34,7 @@ describe('PopDialogResetComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [PopDialogResetComponent],
+            imports: [MatIconModule, MatCheckboxModule, FormsModule],
             providers: [
                 { provide: MatDialogRef, useValue: dialogRef },
                 { provide: SocketClientService, useValue: socketClientServiceMock },
