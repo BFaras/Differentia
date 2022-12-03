@@ -3,13 +3,15 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
 import { GameFormDescription } from '@app/classes/game-form-description';
+import { RecordTime } from '@app/classes/record-time';
 import { RecordTimesBoard } from '@app/classes/record-times-board';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
-import { RESET_MSG_GAME_LIST, SNACKBAR_DURATION } from '@app/client-consts';
+import { RESET_MSG_GAME_LIST, SNACKBAR_DURATION } from '@app/const/client-consts';
 import { CommunicationService } from '@app/services/communication.service';
 import { FormService } from '@app/services/form.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { Constants } from '@common/config';
+import { MSG_RESET_ALL_TIME, MSG_RESET_TIME } from '@common/const';
 import { Game } from '@common/game';
 import { of } from 'rxjs/internal/observable/of';
 
@@ -37,7 +39,7 @@ describe('ListGameFormComponent', () => {
         {
             name: 'Car game',
             numberOfDifferences: 7,
-            times: [],
+            times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
             images: ['Car.bmp', 'Cardiff.bmp'],
             differencesList: [[]],
         },
@@ -195,12 +197,17 @@ describe('ListGameFormComponent', () => {
 
     it('should call refreshGames and ngOnInit', () => {
         const spy = spyOn(listGameFormComp, <any>'ngOnInit');
+        let nextPageSpy = spyOn(listGameFormComp, 'nextPageGameForms');
+        let previousPageSpy = spyOn(listGameFormComp, 'previousPageGameForms');
+
         listGameFormComp['refreshGames'](true);
         expect(listGameFormComp['gameListToRefresh']).toBeFalse();
         expect(listGameFormComp['messageForUpdate']).toEqual('');
         expect(listGameFormComp['firstElementIndex']).toEqual(0);
         expect(listGameFormComp['lastElementIndex']).toEqual(3);
         expect(spy).toHaveBeenCalled();
+        expect(nextPageSpy).toHaveBeenCalled();
+        expect(previousPageSpy).toHaveBeenCalled();
     });
 
     it('should call refreshGames but not ngOnInit', () => {
@@ -209,7 +216,7 @@ describe('ListGameFormComponent', () => {
         expect(spy).not.toHaveBeenCalled();
     });
 
-    it('should open snackbar for all the games', () => {
+    it('should open snackbar to delete one game', () => {
         let gameName = 'hi';
         listGameFormComp['openSnackBar'](gameName);
         expect(snackBarSpy['open']).toHaveBeenCalledWith(`Le jeu ${gameName} a été supprimé :(`, 'OK', {
@@ -219,10 +226,28 @@ describe('ListGameFormComponent', () => {
         });
     });
 
-    it('should open snackbar for one game', () => {
+    it('should open snackbar to delete all the games', () => {
         let gameName = ['hi', 'AUGH'];
         listGameFormComp['openSnackBar'](gameName);
         expect(snackBarSpy['open']).toHaveBeenCalledWith(RESET_MSG_GAME_LIST, 'OK', {
+            horizontalPosition: listGameFormComp['horizontalPosition'],
+            verticalPosition: listGameFormComp['verticalPosition'],
+            duration: SNACKBAR_DURATION,
+        });
+    });
+
+    it('should open snackbar for the reset of all times board', () => {
+        listGameFormComp['openSnackBar'](MSG_RESET_ALL_TIME);
+        expect(snackBarSpy['open']).toHaveBeenCalledWith(MSG_RESET_ALL_TIME, 'OK', {
+            horizontalPosition: listGameFormComp['horizontalPosition'],
+            verticalPosition: listGameFormComp['verticalPosition'],
+            duration: SNACKBAR_DURATION,
+        });
+    });
+
+    it('should open snackbar for the reset of one times board', () => {
+        listGameFormComp['openSnackBar'](MSG_RESET_TIME);
+        expect(snackBarSpy['open']).toHaveBeenCalledWith(MSG_RESET_TIME, 'OK', {
             horizontalPosition: listGameFormComp['horizontalPosition'],
             verticalPosition: listGameFormComp['verticalPosition'],
             duration: SNACKBAR_DURATION,

@@ -2,16 +2,21 @@ import { Injectable } from '@angular/core';
 import {
     ABANDON_MESSAGE,
     GAME_MESSAGE_SENDER_NAME,
+    MESSAGE_CLUE,
     MESSAGE_DIFFERENCE_FOUND_MULTI,
     MESSAGE_DIFFERENCE_FOUND_SOLO,
     MESSAGE_ERROR_DIFFERENCE_MULTI,
     MESSAGE_ERROR_DIFFERENCE_SOLO,
-    MESSAGE_INDICE,
+    MESSAGE_RECORD_MULTI,
+    MESSAGE_RECORD_PART_ONE,
+    MESSAGE_RECORD_PART_TWO,
+    MESSAGE_RECORD_SOLO,
     TWO_DIGIT_TIME_VALUE,
-} from '@app/client-consts';
+} from '@app/const/client-consts';
 import { ChatMessage } from '@common/chat-message';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
+import { RecordTimeInformations } from '@common/record-time-infos';
 import { Observable, Subscriber } from 'rxjs';
 import { SocketClientService } from './socket-client.service';
 
@@ -23,6 +28,7 @@ export class ChatMessagesService {
     private adversaryUsername: string;
     private isMultiplayerGame: boolean;
     private date: Date;
+    isWriting: boolean = false;
 
     constructor(private socketService: SocketClientService) {
         this.date = new Date();
@@ -62,6 +68,11 @@ export class ChatMessagesService {
                 observer.next(this.generateChatMessageFromGame(MESSAGE_ERROR_DIFFERENCE_SOLO));
             }
         });
+        // To test
+        this.socketService.on('New record time', (recordTimeInfos: RecordTimeInformations) => {
+            this.sendNewRecordMessage(observer, recordTimeInfos);
+        });
+
         this.socketService.on('Send message to opponent', (message: ChatMessage) => {
             observer.next(message);
         });
@@ -82,14 +93,12 @@ export class ChatMessagesService {
             this.isMultiplayerGame = false;
         });
 
-        //To test Raph
-        this.socketService.on('Clue with quadrant of difference', (endGameInfos: EndGameInformations) => {
-            observer.next(this.generateChatMessageFromGame(MESSAGE_INDICE));
+        this.socketService.on('Clue with quadrant of difference', () => {
+            observer.next(this.generateChatMessageFromGame(MESSAGE_CLUE));
         });
 
-        //To test Raph
-        this.socketService.on('Clue with difference pixels', (endGameInfos: EndGameInformations) => {
-            observer.next(this.generateChatMessageFromGame(MESSAGE_INDICE));
+        this.socketService.on('Clue with difference pixels', () => {
+            observer.next(this.generateChatMessageFromGame(MESSAGE_CLUE));
         });
     }
 
@@ -107,5 +116,23 @@ export class ChatMessagesService {
 
     private sendAbandonMessage(observer: Subscriber<ChatMessage>) {
         observer.next(this.generateChatMessageFromGame(this.adversaryUsername + ABANDON_MESSAGE));
+    }
+
+    private generateRecordMessageType(recordTimeInfos: RecordTimeInformations): string {
+        const newRecordChatMessage =
+            recordTimeInfos.playerName +
+            MESSAGE_RECORD_PART_ONE +
+            recordTimeInfos.playerRanking +
+            MESSAGE_RECORD_PART_TWO +
+            recordTimeInfos.gameName +
+            (recordTimeInfos.isMultiplayer ? MESSAGE_RECORD_MULTI : MESSAGE_RECORD_SOLO);
+
+        return newRecordChatMessage;
+    }
+
+    //To test
+    private sendNewRecordMessage(observer: Subscriber<ChatMessage>, recordTimeInfos: RecordTimeInformations) {
+        const newRecordChatMessage: string = this.generateRecordMessageType(recordTimeInfos);
+        observer.next(this.generateChatMessageFromGame(newRecordChatMessage));
     }
 }

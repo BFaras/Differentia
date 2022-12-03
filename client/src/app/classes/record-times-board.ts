@@ -2,14 +2,14 @@ import { RecordTime } from './record-time';
 
 export class RecordTimesBoard {
     public static readonly DEFAULT_SOLO_RECORD_TIMES = [
-        new RecordTime('02:00', 'Mark'),
-        new RecordTime('02:00', 'Jean'),
-        new RecordTime('02:00', 'Paul'),
+        new RecordTime('N/A', 'N/A'),
+        new RecordTime('N/A', 'N/A'),
+        new RecordTime('N/A', 'N/A'),
     ];
     public static readonly DEFAULT_VERSUS_RECORD_TIMES = [
-        new RecordTime('02:00', 'Brook'),
-        new RecordTime('02:00', 'Leon'),
-        new RecordTime('02:00', 'Mike'),
+        new RecordTime('N/A', 'N/A'),
+        new RecordTime('N/A', 'N/A'),
+        new RecordTime('N/A', 'N/A'),
     ];
 
     public recordTimesSolo: RecordTime[];

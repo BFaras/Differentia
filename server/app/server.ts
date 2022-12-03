@@ -4,6 +4,7 @@ import * as http from 'http';
 import { AddressInfo } from 'net';
 import { Service } from 'typedi';
 import { SocketManager } from './services/socketManager.service';
+import { DatabaseService} from './services/database.service';
 
 
 @Service()
@@ -16,6 +17,7 @@ export class Server {
 
     constructor(
         private readonly application: Application,
+        private databaseService: DatabaseService
     ) {}
 
     private static normalizePort(val: number | string): number | string | boolean {
@@ -39,6 +41,13 @@ export class Server {
         this.server.listen(Server.appPort);
         this.server.on('error', (error: NodeJS.ErrnoException) => this.onError(error));
         this.server.on('listening', () => this.onListening());
+        try {
+            await this.databaseService.start();
+            console.log("Database connection successful !");
+          } catch {
+            console.log("Database connection failed !");
+            //process.exit(1);
+          }      
     }
 
     private onError(error: NodeJS.ErrnoException): void {

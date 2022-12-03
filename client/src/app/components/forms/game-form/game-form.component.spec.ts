@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
+import { PopDialogWarningComponent } from '@app/components/pop-dialogs/pop-dialog-warning/pop-dialog-warning.component';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { Socket } from 'socket.io-client';
 import { GameFormDescription } from '../../../classes/game-form-description';
@@ -19,9 +20,13 @@ describe('GameFormComponent', () => {
     let socketClientServiceMock: SocketClientServiceMock;
     let socketTestHelper: SocketTestHelper;
     let fixture: ComponentFixture<GameFormComponent>;
+    let dialogRef: jasmine.SpyObj<MatDialogRef<PopDialogWarningComponent, any>>;
+    let dialog: jasmine.SpyObj<MatDialog>;
 
     beforeAll(async () => {
         jasmine.createSpyObj('GameFormComponent', ['joinFLag', 'createFlag', 'configureGameFormSocketFeatures']);
+        dialogRef = jasmine.createSpyObj('MatDialogRef', ['afterClosed']);
+        dialog = jasmine.createSpyObj('MatDialog', ['open', 'closeAll']);
 
         socketTestHelper = new SocketTestHelper();
         socketClientServiceMock = new SocketClientServiceMock();
@@ -33,8 +38,8 @@ describe('GameFormComponent', () => {
             declarations: [GameFormComponent],
             imports: [MatFormFieldModule, MatInputModule, MatDialogModule],
             providers: [
-                { provide: MatDialogRef, useValue: {} },
-                { provide: MAT_DIALOG_DATA, useValue: {} },
+                { provide: MatDialogRef, useValue: dialogRef },
+                { provide: MatDialog, useValue: dialog },
                 { provide: SocketClientService, useValue: socketClientServiceMock },
             ],
         }).compileComponents();
@@ -42,6 +47,8 @@ describe('GameFormComponent', () => {
         fixture = TestBed.createComponent(GameFormComponent);
         gameFormComp = fixture.componentInstance;
         gameFormComp.gameForm = new GameFormDescription(gameName, gameImage, recordTimesBoard);
+        TestBed.inject(SocketClientService);
+
         fixture.detectChanges();
     });
 
@@ -56,21 +63,32 @@ describe('GameFormComponent', () => {
     });
 
     it('should emit the name of the game to delete', () => {
+        const warningSpy = spyOn(gameFormComp, <any>'openWarningDialog');
+        gameFormComp.deleteGameForm(gameFormComp.gameForm.gameName);
+        expect(warningSpy).toHaveBeenCalledWith('supprimer le jeu');
         const emitSpy = spyOn(gameFormComp['newItemEvent'], 'emit');
-        gameFormComp.deleteGameForm(gameName);
+
+        socketTestHelper.peerSideEmit('Delete or reset applied on gameForm');
         expect(emitSpy).toHaveBeenCalled();
     });
 
-    it('should open dialog to get the players username ', () => {
-        const dialogSpy = spyOn(gameFormComp['dialog'], 'open');
-        gameFormComp.openDialog(true);
-        expect(dialogSpy).toHaveBeenCalled();
+    it('should not emit the name of the game to delete', () => {
+        const warningSpy = spyOn(gameFormComp, <any>'openWarningDialog');
+        const emitSpy = spyOn(gameFormComp['newItemEvent'], 'emit');
+        gameFormComp.deleteGameForm(gameFormComp.gameForm.gameName);
+
+        expect(warningSpy).toHaveBeenCalled();
+        expect(emitSpy).not.toHaveBeenCalled();
     });
 
-    it('should open dialog to reset data', () => {
-        const dialogSpy = spyOn(gameFormComp['dialog'], 'open');
-        gameFormComp.openResetDialog();
-        expect(dialogSpy).toHaveBeenCalled();
+    it('should open dialog to get the players username ', () => {
+        gameFormComp.openDialog(true);
+        expect(dialog['open']).toHaveBeenCalled();
+    });
+
+    it('should open dialog to warn User ', () => {
+        gameFormComp['openWarningDialog']('supprimer le jeu');
+        expect(dialog['open']).toHaveBeenCalled();
     });
 
     it('should set join flag', () => {
@@ -119,6 +137,16 @@ describe('GameFormComponent', () => {
         socketTestHelper.peerSideEmit(`${gameFormComp.gameForm.gameName} nobody is waiting no more`);
         gameFormComp['configureGameFormSocketFeatures']();
         expect(gameFormComp.isPlayerWaiting).toBeFalse();
+    });
+
+    it('should reset times board', () => {
+        const warningSpy = spyOn(gameFormComp, <any>'openWarningDialog');
+        gameFormComp.resetTimesBoard(gameFormComp.gameForm.gameName);
+        expect(warningSpy).toHaveBeenCalledWith('réinitialiser le temps du jeu');
+        const socketSpy = spyOn(socketClientServiceMock, 'send');
+        socketTestHelper.peerSideEmit('Delete or reset applied on gameForm');
+
+        expect(socketSpy).toHaveBeenCalled();
     });
 
     afterEach(() => {

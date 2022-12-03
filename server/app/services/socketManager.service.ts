@@ -1,32 +1,45 @@
 /* eslint-disable no-console */
-import { HOST_CHOSE_ANOTHER, SOMEBODY_IS_WAITING, ZERO_GAMES_PLAYED } from '@app/server-consts';
+import { HOST_CHOSE_ANOTHER, NO_AVAILABLE, SOMEBODY_IS_WAITING, ZERO_GAMES_PLAYED } from '@app/server-consts';
+import { AbandonData } from '@common/abandon-data';
 import { ChatMessage } from '@common/chat-message';
-import { CLASSIC_MODE, HOST_PRESENT, LIMITED_TIME_MODE } from '@common/const';
+import { CLASSIC_MODE, HOST_PRESENT, LIMITED_TIME_MODE, MSG_RESET_ALL_TIME, MSG_RESET_TIME } from '@common/const';
 import { DifferencesInformations } from '@common/differences-informations';
+import { GameInfo } from '@common/gameInfo';
 import { ImageDataToCompare } from '@common/image-data-to-compare';
 import { Position } from '@common/position';
+import { RecordTimeInformations } from '@common/record-time-infos';
 import * as http from 'http';
 import * as io from 'socket.io';
 import Container from 'typedi';
+import { BestTimesService } from './best-times.service';
 import { ClueManagerService } from './clue-manager.service';
+import { RecordTimesService } from './database.games.service';
+import { DatabaseService } from './database.service';
 import { DifferenceDetectorService } from './difference-detector.service';
 import { GameManagerService } from './game-manager.service';
 import { GamesService } from './local.games.service';
 import { MouseHandlerService } from './mouse-handler.service';
 import { TimeConstantsService } from './time-constants.service';
+import { UsernameValidateService } from './username-validate.service';
 import { WaitingLineHandlerService } from './waiting-line-handler.service';
 
 export class SocketManager {
     socket: io.Socket;
     private sio: io.Server;
+    private databaseService: DatabaseService = Container.get(DatabaseService);
+    private recordTimesService: RecordTimesService = new RecordTimesService(this.databaseService);
     private waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
     private gameManagerService: GameManagerService;
     private gamesService: GamesService = new GamesService();
     private timeConstantsService: TimeConstantsService = new TimeConstantsService();
+    private usernameValidateService: UsernameValidateService = new UsernameValidateService();
+    private bestTimesService: BestTimesService;
+    private currentGameName: string;
 
     constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] }, maxHttpBufferSize: 1e7 });
         this.gameManagerService = new GameManagerService(this.sio);
+        this.bestTimesService = new BestTimesService(this.sio);
     }
 
     handleSockets(): void {
@@ -46,20 +59,32 @@ export class SocketManager {
             socket.on('solo classic mode', async (gameName: string) => {
                 this.sio.to(socket.id).emit(CLASSIC_MODE);
                 this.sio.to(socket.id).emit('The game is', gameName);
+                this.currentGameName = gameName;
                 const username = this.waitingLineHandlerService.getUsernamePlayer(socket.id, this.sio);
+                const gameInfo: GameInfo = {
+                    socket,
+                    adversarySocket: undefined,
+                    gameName,
+                    gameMode: CLASSIC_MODE,
+                };
                 this.sio.to(socket.id).emit('show the username', username);
-                await this.gameManagerService.beginGame(socket, [gameName, CLASSIC_MODE]);
+                await this.gameManagerService.beginGame(gameInfo);
             });
 
             socket.on('solo limited time mode', async () => {
                 this.sio.to(socket.id).emit(LIMITED_TIME_MODE);
                 const username = this.waitingLineHandlerService.getUsernamePlayer(socket.id, this.sio);
                 const gameName = (await this.gamesService.generateRandomGame(ZERO_GAMES_PLAYED)).name;
-                this.gameManagerService.initializeSocketGameHistoryLimitedTimeMode(socket);
-                this.gameManagerService.addGameToHistoryLimitedTimeMode(socket, gameName);
+                const gameInfo: GameInfo = {
+                    socket,
+                    adversarySocket: undefined,
+                    gameName,
+                    gameMode: LIMITED_TIME_MODE,
+                };
                 this.sio.to(socket.id).emit('The game is', gameName);
                 this.sio.to(socket.id).emit('show the username', username);
-                await this.gameManagerService.beginGame(socket, [gameName, LIMITED_TIME_MODE]);
+                await this.gameManagerService.beginGame(gameInfo);
+                this.gameManagerService.startLimitedTimeSocketGameHistory(socket, gameName);
             });
 
             socket.on('is there someone waiting', (gameName: string) => {
@@ -69,17 +94,20 @@ export class SocketManager {
                 );
             });
 
+            socket.on('Apply delete or reset on gameForm', () => {
+                socket.emit('Delete or reset applied on gameForm');
+            });
+
             socket.on('my username is', (username: string) => {
-                if (username.charAt(0) !== ' ') {
-                    console.log('jtenvoie valid username' + username);
+                if (this.usernameValidateService.isUsernameValid(username)) {
                     this.waitingLineHandlerService.setUsernamePlayer(socket.id, username, this.sio);
-                    this.sio.to(socket.id).emit('username valid');
-                } else this.sio.to(socket.id).emit('username not valid');
+                    socket.emit('username valid');
+                } else socket.emit('username not valid');
             });
 
             socket.on('gameMode is', (classicFlag: boolean) => {
-                if (classicFlag) this.sio.to(socket.id).emit(CLASSIC_MODE);
-                else this.sio.to(socket.id).emit(`open the ${LIMITED_TIME_MODE} pop-dialog`);
+                if (classicFlag) socket.emit(CLASSIC_MODE);
+                else socket.emit(`open the ${LIMITED_TIME_MODE} pop-dialog`);
             });
 
             socket.on('I am waiting', (gameName: string) => {
@@ -99,8 +127,16 @@ export class SocketManager {
                 }
             });
 
-            socket.on('Reset game list', () => {
-                this.gameManagerService.resetGameList();
+            socket.on('Reset game list', async () => {
+                this.sio.emit('Ready to reset game list', await this.gameManagerService.resetGameList());
+            });
+
+            socket.on('Reset records time board', async (value?: string) => {
+                if (value) await this.recordTimesService.resetGameRecordTimes(value).then((res) => {});
+                else await this.recordTimesService.resetAllGamesRecordTimes().then((res) => {});
+                value = value ? MSG_RESET_TIME + value : MSG_RESET_ALL_TIME;
+                this.sio.except(this.gameManagerService.collectAllSocketsRooms()).emit('Page reloaded', value);
+                this.gameManagerService.allSocketsRooms = [];
             });
 
             socket.on('Reload game selection page', (gameName: string | string[]) => {
@@ -116,9 +152,7 @@ export class SocketManager {
             });
 
             socket.on('Set time constants', (timeConstants) => {
-                this.timeConstantsService.setTimes(timeConstants).then((value) => {
-                    console.log(value);
-                });
+                this.timeConstantsService.setTimes(timeConstants).then((value) => {});
             });
 
             socket.on('I left', (gameName: string) => {
@@ -162,32 +196,31 @@ export class SocketManager {
                 this.waitingLineHandlerService.deleteJoiningPlayer(adversarySocketId, gameName);
                 this.waitingLineHandlerService.deleteCreatorOfGame(gameName);
                 this.waitingLineHandlerService.sendEventToAllJoiningPlayers(this.sio, gameName, 'you have been declined');
-                await this.gameManagerService.startMultiplayerMatch(
+                const gameInfo: GameInfo = {
                     socket,
-                    this.waitingLineHandlerService.getSocketByID(adversarySocketId, this.sio),
-                    [gameName, CLASSIC_MODE],
-                );
+                    adversarySocket: this.waitingLineHandlerService.getSocketByID(adversarySocketId, this.sio),
+                    gameName,
+                    gameMode: CLASSIC_MODE,
+                };
+                await this.gameManagerService.startMultiplayerMatch(gameInfo);
                 this.sio.emit(`${gameName} nobody is waiting no more`);
             });
 
             socket.on('launch limited time mode multiplayer match', async () => {
-                console.log('adversary id is ' + this.waitingLineHandlerService.getLimitedTimeWaitingPlayerId());
                 const adversarySocket = this.waitingLineHandlerService.getSocketByID(
                     this.waitingLineHandlerService.getLimitedTimeWaitingPlayerId(),
                     this.sio,
                 );
-                console.log(adversarySocket + 'is the adversary socket');
                 this.waitingLineHandlerService.resetLimitedTimeWaitingLine();
                 const gameName = (await this.gamesService.generateRandomGame(ZERO_GAMES_PLAYED)).name;
-                // DUPLICATION DE CODE
-                this.gameManagerService.initializeSocketGameHistoryLimitedTimeMode(socket);
-                console.log('initaliser gamePlayed de socket');
-                this.gameManagerService.initializeSocketGameHistoryLimitedTimeMode(adversarySocket);
-                console.log('initaliser gamePlayed de adversary socket');
-                this.gameManagerService.addGameToHistoryLimitedTimeMode(socket, gameName);
-                this.gameManagerService.addGameToHistoryLimitedTimeMode(adversarySocket, gameName);
-                // SALUT
-                await this.gameManagerService.startMultiplayerMatch(socket, adversarySocket, [gameName, LIMITED_TIME_MODE]);
+                const gameInfo: GameInfo = {
+                    socket,
+                    adversarySocket,
+                    gameName,
+                    gameMode: LIMITED_TIME_MODE,
+                };
+                await this.gameManagerService.startMultiplayerMatch(gameInfo);
+                this.gameManagerService.startLimitedTimeSocketGameHistory(socket, gameName);
             });
 
             socket.on('I refuse this adversary', (gameName: string) => {
@@ -216,17 +249,43 @@ export class SocketManager {
                 this.gameManagerService.sendDifferentPixelsNotFound(socket);
             });
 
-            socket.on('kill the game', (gameMode: string) => {
-                this.gameManagerService.handleAbandonEmit(socket, gameMode);
+            socket.on('kill the game', (abandonInfo: AbandonData) => {
+                this.gameManagerService.handleAbandonEmit(socket, abandonInfo);
             });
 
+            //To test
             socket.on('Check if game is finished', async (isMultiplayer: boolean) => {
                 const mouseHandler: MouseHandlerService = this.gameManagerService.getSocketMouseHandlerService(socket);
                 const mode = this.gameManagerService.getSocketChronometerService(socket).mode;
                 const isGameFinished = await this.gameManagerService.isGameFinished(socket, isMultiplayer, mode);
+                const playerUsername = this.gameManagerService.getSocketUsername(socket);
                 if (isGameFinished) {
                     mouseHandler.resetDifferencesData();
-                    if (mode === CLASSIC_MODE) this.gameManagerService.handleEndGameEmits(socket, isMultiplayer);
+                    if (mode === CLASSIC_MODE && (await this.gamesService.getGame(this.currentGameName)) !== undefined) {
+                        const playerGameTime = this.gameManagerService.getSocketChronometerService(socket).time;
+                        const recordTimeInfos: RecordTimeInformations = {
+                            playerName: playerUsername,
+                            playerRanking: NO_AVAILABLE,
+                            gameName: this.currentGameName,
+                            isMultiplayer,
+                        };
+                        await this.bestTimesService.compareGameTimeWithDbTimes(playerGameTime, recordTimeInfos);
+                        this.gameManagerService.handleEndGameEmits(
+                            socket,
+                            isMultiplayer,
+                            this.bestTimesService.hasNewRecord,
+                            this.bestTimesService.playerRanking,
+                        );
+                        this.bestTimesService.notifyAllActivePlayers(playerUsername, this.currentGameName, isMultiplayer);
+                    }
+                    else if (mode === CLASSIC_MODE && (await this.gamesService.getGame(this.currentGameName)) === undefined) {
+                        this.gameManagerService.handleEndGameEmits(
+                            socket,
+                            isMultiplayer,
+                            this.bestTimesService.hasNewRecord,
+                            this.bestTimesService.playerRanking,
+                        );
+                    }
                     this.gameManagerService.endGame(socket, mode);
                 } else {
                     this.gameManagerService.doWeHaveToSwitchGame(socket, mode);

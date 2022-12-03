@@ -82,10 +82,33 @@ describe('ChatSectionComponent', () => {
         expect(chatSectionComponent.localPlayerUsername).toEqual(testUsername);
     });
 
+    it('should call onFocus and change the value of is writing when the user is in the chat', () => {
+        chatMessagesService.isWriting = false;
+        chatSectionComponent.onFocus();
+        expect(chatMessagesService.isWriting).toBeTrue();
+    });
+
+    it('should call outFocus and change the value of is writing when the user leaves the chat', () => {
+        chatMessagesService.isWriting = true;
+        chatSectionComponent.outFocus();
+        expect(chatMessagesService.isWriting).toBeFalse();
+    });
+
+    it('should handle Other player abandonned LM and change the value of isMultiplayerGame', () => {
+        chatMessagesService['isMultiplayerGame'] = true;
+        socketTestHelper.peerSideEmit('Other player abandonned LM');
+        expect(chatMessagesService['isMultiplayerGame']).toBeTrue();
+    });
+
     it('should change the multiplayer game to true', () => {
         const testAdversaryName = 'testName1234';
         socketTestHelper.peerSideEmit('The adversary username is', testAdversaryName);
         expect(chatSectionComponent.isMultiplayerGame).toBeTruthy();
+    });
+
+    it('should change the multiplayer game to false on a Other player abandonned LM is event', () => {
+        socketTestHelper.peerSideEmit('Other player abandonned LM');
+        expect(chatSectionComponent.isMultiplayerGame).toBeFalsy();
     });
 
     it('should sendMessage() of ChatSectionComponent call sendMessage() of ChatMessageService and clear the input', () => {

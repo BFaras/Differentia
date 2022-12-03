@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
 import {
     CLASSIC_FLAG,
     CREATE_FLAG,
     DISABLE_CLOSE,
     EMPTY_GAME_NAME,
-    JOIN_FLAG, MULTI_FLAG,
+    JOIN_FLAG,
+    MULTI_FLAG,
     SOMEBODY_IS_WAITING,
     STANDARD_POP_UP_HEIGHT,
-    STANDARD_POP_UP_WIDTH
-} from '@app/client-consts';
-import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
+    STANDARD_POP_UP_WIDTH,
+} from '@app/const/client-consts';
 import { SocketClientService } from '@app/services/socket-client.service';
 
 @Component({

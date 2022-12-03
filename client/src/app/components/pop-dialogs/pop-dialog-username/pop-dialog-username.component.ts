@@ -1,9 +1,10 @@
-import { Component,  Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { CLASSIC_FLAG, DISABLE_BUTTON, DISABLE_CLOSE, STANDARD_POP_UP_HEIGHT, STANDARD_POP_UP_WIDTH, USERNAME_VALID } from '@app/client-consts';
 import { PopDialogLimitedTimeModeComponent } from '@app/components/pop-dialogs/pop-dialog-limited-time-mode/pop-dialog-limited-time-mode.component';
+// eslint-disable-next-line max-len
 import { PopDialogWaitingForPlayerComponent } from '@app/components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
+import { CLASSIC_FLAG, DISABLE_BUTTON, DISABLE_CLOSE, STANDARD_POP_UP_HEIGHT, STANDARD_POP_UP_WIDTH, USERNAME_VALID } from '@app/const/client-consts';
 import { PopUpData } from '@app/interfaces/pop-up-data';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { StartUpGameService } from '@app/services/start-up-game.service';
@@ -31,6 +32,11 @@ export class PopDialogUsernameComponent implements OnInit {
     ngOnInit(): void {
         this.socketService.connect();
         this.configureUsernamePopUpSocketFeatures();
+    }
+
+    ngOnDestroy(): void {
+        this.socketService.off('username valid');
+        this.socketService.off(`${CLASSIC_MODE}`);
     }
     private startWaitingLine(): void {
         this.startUpGameService.startUpWaitingLine(this.gameInfo);
@@ -67,7 +73,7 @@ export class PopDialogUsernameComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    private closeGameDialog(value: string) {
+    private closeGameDialogAfterDelete(value: string) {
         if (this.gameInfo.nameGame === value) {
             this.socketService.send('refresh games after closing popDialog', this.socketService.socket.id);
             this.dialog.closeAll();
@@ -87,13 +93,10 @@ export class PopDialogUsernameComponent implements OnInit {
         });
 
         this.socketService.on(`${CLASSIC_MODE}`, () => {
-            this.startWaitingLine();
             this.socketService.off(`${CLASSIC_MODE}`);
-            if (this.gameInfo.multiFlag) {
-                this.openClassicDialog();
-            } else {
-                this.router.navigate(['/game']);
-            }
+            this.startWaitingLine();
+            if (this.gameInfo.multiFlag) this.openClassicDialog();
+            else this.router.navigate(['/game']);
         });
 
         this.socketService.on(`open the ${LIMITED_TIME_MODE} pop-dialog`, () => {
@@ -103,11 +106,11 @@ export class PopDialogUsernameComponent implements OnInit {
 
         this.socketService.on('close popDialogUsername', (value: string | string[]) => {
             if (Array.isArray(value)) {
-                for (let gameName of value) {
-                    this.closeGameDialog(gameName);
+                for (const gameName of value) {
+                    this.closeGameDialogAfterDelete(gameName);
                 }
             } else {
-                this.closeGameDialog(value);
+                this.closeGameDialogAfterDelete(value);
             }
         });
     }

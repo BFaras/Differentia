@@ -1,3 +1,5 @@
+import { Position } from './position';
+
 // ChronometerService constants
 export const ONE_SECOND = 1000;
 export const HALF_A_SECOND = 500;
@@ -24,6 +26,7 @@ export const BLUE_POS = 2;
 export const ALPHA_POS = 3;
 export const BLACK_RGB = 0;
 export const ALPHA_OPAQUE = 255;
+export const MAX_RGB_VALUE = 255;
 export const DEFAULT_DIFFERENCE_POSITION = -1;
 export const RADIUS_AROUND_PIXEL = 1;
 export const UP = -1;
@@ -97,6 +100,12 @@ export const FIRST_CLUE_NB = CLUE_AMOUNT_DEFAULT;
 export const SECOND_CLUE_NB = FIRST_CLUE_NB - 1;
 export const FIRST_CLUE_QUANDRANT_NB = 4;
 export const SECOND_CLUE_QUANDRANT_NB = 16;
+export const CARDINAL_DIRECTION_RAD_ANGLE = Math.PI / 4;
+export const CIRCLE_CIRCONFERENCE = Math.PI * 2;
+export const MIDDLE_OF_IMAGE_POSITION: Position = {
+    x: IMAGE_WIDTH / 2,
+    y: IMAGE_HEIGHT / 2,
+};
 
 // Constantes de touches
 export const CHEAT_KEY: string = 'document:keyup.t';
@@ -106,3 +115,7 @@ export const CONTROL_SHIFT_Z_SHORTCUT: string = 'document:keyup.control.shift.z'
 
 // Write constante
 export const WRITE_MODE: string = 'write';
+
+// Constante pour reset de tous les tableaux de temps
+export const MSG_RESET_TIME = 'Le tableau des temps records a été réinitalisé pour le jeu: ';
+export const MSG_RESET_ALL_TIME = 'Le tableau des temps records a été réinitalisé pour tous les jeux';

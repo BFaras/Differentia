@@ -22,23 +22,13 @@ export class TimeConstantsService {
     }
 
     private async asyncWriteInTimesFile() {
-        try {
-            await fs.promises.writeFile(join(this.timeFilePath), JSON.stringify({ times: this.timeConstants }), {
-                flag: 'w',
-            });
-        } catch (err) {
-            console.log('Something went wrong trying to write into the json file' + err);
-            throw new Error(err);
-        }
+        await fs.promises.writeFile(join(this.timeFilePath), JSON.stringify({ times: this.timeConstants }), {
+            flag: 'w',
+        });
     }
 
     private async asyncReadTimeFile() {
-        try {
-            const result = await fs.promises.readFile(join(this.timeFilePath), 'utf-8');
-            this.timeConstants = JSON.parse(result).times;
-        } catch (err) {
-            console.log('Something went wrong trying to read the json file:' + err);
-            throw new Error(err);
-        }
+        const result = await fs.promises.readFile(join(this.timeFilePath), 'utf-8');
+        this.timeConstants = JSON.parse(result).times;
     }
 }

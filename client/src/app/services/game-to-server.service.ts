@@ -7,6 +7,7 @@ import { ImageToSendToServer } from '@common/imageToSendToServer';
 import { StatusCodes } from 'http-status-codes';
 import { CommunicationService } from './communication.service';
 import { UploadFileService } from './upload-file.service';
+import {RecordTime} from '@app/classes/record-time';
 @Injectable({
     providedIn: 'root',
 })
@@ -42,7 +43,7 @@ export class GameToServerService {
         const gameToAdd: Game = {
             name: nameOfGame,
             numberOfDifferences: this.numberDifference,
-            times: [],
+            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
             images: [this.uploadFileService.getNameImageUpload(0)!, this.uploadFileService.getNameImageUpload(1)!],
             differencesList: this.differencesList,
         };

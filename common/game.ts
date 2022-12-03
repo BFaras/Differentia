@@ -1,9 +1,9 @@
-import { Time } from '@common/time';
+import { GameModeTimes } from './games-record-times';
 
 export interface Game {
     name: string;
     numberOfDifferences: number;
-    times: Time[];
+    times: GameModeTimes;
     images: string[];
     differencesList: number[][];
 }

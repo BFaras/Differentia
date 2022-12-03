@@ -20,11 +20,11 @@
     width: 640px;
     height: 480px;
 }
-button{
+button {
     background-color: rgb(214, 169, 143);
 }
 
-.title{
+.title {
     color: rgb(214, 169, 143);
     font-size: 40px;
     position: relative;
@@ -61,6 +61,12 @@ canvas {
     pointer-events: none;
 }
 
+#compassClue {
+    opacity: 1;
+    animation-play-state: paused;
+    pointer-events: none;
+}
+
 #blink {
     animation: blink 3s infinite;
     pointer-events: none;
@@ -89,15 +95,13 @@ canvas {
     }
 }
 
-.mat-progress-spinner{
-    position:relative;
-    left:42%;
-    top:42%;
-
-    
+.mat-progress-spinner {
+    position: relative;
+    left: 42%;
+    top: 42%;
 }
 
-:host ::ng-deep .mat-progress-spinner circle, .mat-spinner circle{
+:host ::ng-deep .mat-progress-spinner circle,
+.mat-spinner circle {
     stroke: rgb(214, 169, 143);
-    
 }

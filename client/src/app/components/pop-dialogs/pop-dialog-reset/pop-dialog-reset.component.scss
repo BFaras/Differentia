@@ -40,3 +40,10 @@ h1:first-of-type {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     text-align: center;
 }
+
+.mat-flat-button.mat-accent,
+.mat-raised-button.mat-accent,
+.mat-fab.mat-accent,
+.mat-mini-fab.mat-accent {
+    background-color: #3f51b5;
+}

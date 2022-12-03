@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { GAME_MESSAGE_SENDER_NAME } from '@app/client-consts';
+import { GAME_MESSAGE_SENDER_NAME } from '@app/const/client-consts';
 import { ChatMessagesService } from '@app/services/chat-messages.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { ChatMessage } from '@common/chat-message';
@@ -26,6 +26,13 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
         this.messagesSent = [];
     }
 
+    onFocus() {
+        this.chatMessagesService.isWriting = true;
+    }
+
+    outFocus() {
+        this.chatMessagesService.isWriting = false;
+    }
     sendMessage(): void {
         this.chatMessagesService.sendMessage(this.localPlayerUsername, this.playerMsg.nativeElement.value);
         this.playerMsg.nativeElement.value = '';
