@@ -33,9 +33,29 @@ export class UploadFileService {
     }
 
     setOriginalMergedCanvasImage(orignalImageMerged: HTMLImageElement) {
-        const nameImage = this.getNameOriginalImage().name;
+        let nameImage:string; 
+        console.log(this.getNameOriginalImage())
+        if (this.getNameOriginalImage() !== undefined){
+            nameImage = this.getNameOriginalImage().name;
+        }
+        else{
+            nameImage = "originalDrawing"
+        }
         const blobImage = this.dataURItoBlob(orignalImageMerged.src);
         this.setOriginalImage(new File([blobImage], nameImage));
+    }
+
+    setModifiedMergedCanvasImage(modifiedImageMerged: HTMLImageElement) {
+        let nameImage:string; 
+        if (this.getNameModifiedImage()){
+            nameImage = this.getNameModifiedImage().name;
+        }
+        else{
+            nameImage = "modifiedDrawing"
+        }
+
+        const blobImage = this.dataURItoBlob(modifiedImageMerged.src);
+        this.setModifiedImage(new File([blobImage], nameImage, { type: 'image/jpeg' }));
     }
 
     dataURItoBlob(dataURI: string) {
@@ -53,11 +73,6 @@ export class UploadFileService {
         return new Blob([byteBuffer], { type: mimeString });
     }
 
-    async setModifiedMergedCanvasImage(modifiedImageMerged: HTMLImageElement) {
-        const nameImage = this.getNameModifiedImage().name;
-        const blobImage = this.dataURItoBlob(modifiedImageMerged.src);
-        this.setModifiedImage(new File([blobImage], nameImage, { type: 'image/jpeg' }));
-    }
 
     setNameImageUpload(indexImage: number) {
         if (indexImage == 0) {

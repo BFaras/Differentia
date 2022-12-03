@@ -61,6 +61,9 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
     }
 
     private async loadImages() {
+        //faut clean le code
+        if (this.gameToServerService.getOriginalImageUploaded().image !== undefined){
+
         const unwrappedOriginalModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getOriginalImageUploaded().image as SafeValue);
         const unwrappedModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getModifiedImageUploaded().image as SafeValue);
 
@@ -68,12 +71,23 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
             unwrappedOriginalModifiedSafeUrl,
             this.gameToServerService.getOriginalImageUploaded().index as number,
         );
+        this.modifiedImage.src = this.mergeImageCanvas(
+            unwrappedModifiedSafeUrl, 
+            this.gameToServerService.getModifiedImageUploaded().index as number);
+
+        } else {
+            this.originalImage.src = this.mergeImageCanvasService.canvas[0].toDataURL();
+            this.modifiedImage.src = this.mergeImageCanvasService.canvas[1].toDataURL();
+        }
+
         await this.imageToImageDifferenceService.waitForImageToLoad(this.originalImage);
         this.uploadFileService.setOriginalMergedCanvasImage(this.originalImage);
 
-        this.modifiedImage.src = this.mergeImageCanvas(unwrappedModifiedSafeUrl, this.gameToServerService.getModifiedImageUploaded().index as number);
+    
         await this.imageToImageDifferenceService.waitForImageToLoad(this.modifiedImage);
         this.uploadFileService.setModifiedMergedCanvasImage(this.modifiedImage);
+        
+
     }
 
     private configureGameCreationPageSocketFeatures() {

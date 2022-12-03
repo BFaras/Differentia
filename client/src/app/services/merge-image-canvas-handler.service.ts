@@ -5,7 +5,7 @@ import { IMAGE_HEIGHT, IMAGE_WIDTH, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSI
     providedIn: 'root',
 })
 export class MergeImageCanvasHandlerService {
-    private canvas: HTMLCanvasElement[];
+    public canvas: HTMLCanvasElement[];
     private context: CanvasRenderingContext2D[] | null;
     private formerCanvas: HTMLCanvasElement[];
     private imageDownloaded: HTMLImageElement[];
@@ -35,7 +35,6 @@ export class MergeImageCanvasHandlerService {
 
     async initializeImage(url: string, index: number) {
         this.imageDownloaded[index].src = url;
-        console.log(this.imageDownloaded[index].src);
         await this.waitForImageToLoad(this.imageDownloaded[index]);
     }
 
