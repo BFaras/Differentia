@@ -26,7 +26,10 @@ describe('RecordTimes service', () => {
         databaseService = new DatabaseServiceMock();
         client = (await databaseService.start()) as MongoClient;
         recordTimesService = new RecordTimesService(databaseService as any);
-        testTimes = { soloGameTimes: [new RecordTime('00:15', 'player1')], multiplayerGameTimes: [new RecordTime('00:30', 'player2')] };
+        testTimes = {
+            soloGameTimes: [new RecordTime('00:15', 'player1'), new RecordTime('00:17', 'player2'), new RecordTime('00:20', 'player3')],
+            multiplayerGameTimes: [new RecordTime('00:11', 'player4'), new RecordTime('00:13', 'player5'), new RecordTime('00:15', 'player6')],
+        };
         defaultRecordTimes = {
             soloGameTimes: [new RecordTime('02:00', 'David'), new RecordTime('02:15', 'Jean'), new RecordTime('02:30', 'Paul')],
             multiplayerGameTimes: [new RecordTime('02:00', 'Brook'), new RecordTime('02:15', 'Leon'), new RecordTime('02:30', 'Tom')],
@@ -59,7 +62,6 @@ describe('RecordTimes service', () => {
     // });
 
     it('should get specific game times with valid name', async () => {
-        //recordTimesService.isDatabaseAvailable();
         let times = await recordTimesService.getGameTimes('Test game');
         expect(times).to.deep.equals(testGameRecordTimes.recordTimes);
     });
@@ -106,13 +108,39 @@ describe('RecordTimes service', () => {
 
     it('should update an existing game record times if a valid name is sent', async () => {
         const newRecordTimes: GameModeTimes = {
-            soloGameTimes: [new RecordTime('00:08', 'player3')],
-            multiplayerGameTimes: [new RecordTime('00:11', 'player4')],
+            soloGameTimes: [new RecordTime('00:08', 'player8')],
+            multiplayerGameTimes: [new RecordTime('00:11', 'player9')],
         };
         await recordTimesService.updateGameRecordTimes(testGameRecordTimes.name, newRecordTimes);
         let gamesTimes = await recordTimesService.collection.find({}).toArray();
         expect(gamesTimes.length).to.equal(1);
         expect(gamesTimes.find((x) => x.name === testGameRecordTimes.name)?.recordTimes).to.deep.equals(newRecordTimes);
+    });
+
+    it('should sort the game record times when is multiplayer game', async () => {
+        const isMultiplayer: boolean = true;
+        const newRecordTimes: GameModeTimes = {
+            soloGameTimes: [new RecordTime('00:20', 'player1'), new RecordTime('00:15', 'player2'), new RecordTime('00:17', 'player3')],
+            multiplayerGameTimes: [new RecordTime('00:15', 'player4'), new RecordTime('00:11', 'player5'), new RecordTime('00:13', 'player6')],
+        };
+        await recordTimesService.updateGameRecordTimes(testGameRecordTimes.name, newRecordTimes);
+        await recordTimesService.sortGameTimes(testGameRecordTimes.name, isMultiplayer);
+        let gamesTimes = await recordTimesService.collection.find({}).toArray();
+        expect(gamesTimes.find((x) => x.name === testGameRecordTimes.name)?.recordTimes.multiplayerGameTimes).to.deep.equals(
+            testTimes.multiplayerGameTimes,
+        );
+    });
+
+    it('should sort the game record times when is solo game', async () => {
+        const isMultiplayer: boolean = true;
+        const newRecordTimes: GameModeTimes = {
+            soloGameTimes: [new RecordTime('00:20', 'player1'), new RecordTime('00:15', 'player2'), new RecordTime('00:17', 'player3')],
+            multiplayerGameTimes: [new RecordTime('00:15', 'player4'), new RecordTime('00:11', 'player5'), new RecordTime('00:13', 'player6')],
+        };
+        await recordTimesService.updateGameRecordTimes(testGameRecordTimes.name, newRecordTimes);
+        await recordTimesService.sortGameTimes(testGameRecordTimes.name, !isMultiplayer);
+        let gamesTimes = await recordTimesService.collection.find({}).toArray();
+        expect(gamesTimes.find((x) => x.name === testGameRecordTimes.name)?.recordTimes.soloGameTimes).to.deep.equals(testTimes.soloGameTimes);
     });
 
     // it('should not modify an existing game data if no valid name is passed', async () => {
