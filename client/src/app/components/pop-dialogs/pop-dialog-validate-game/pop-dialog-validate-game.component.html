@@ -11,9 +11,9 @@
             <mat-radio-button value="9" (change) = "onRadiusChanged($event.value)">9 :</mat-radio-button>
             <mat-radio-button  value="15" (change) = "onRadiusChanged($event.value)">15 : </mat-radio-button>
         </mat-radio-group>
-        <app-image-difference [offset] = "valueChosen" *ngIf = areImageDifferenceAndNumberDifferenceReady  class ="image-difference"></app-image-difference>
+        <app-image-difference [offset] = "valueChosen" *ngIf = isImageDifferenceReady  class ="image-difference"></app-image-difference>
         <mat-dialog-actions>
-            <button class = "button-group" mat-raised-button [disabled]="isChecked" mat-dialog-close (click)="onCreateCreateGame()">Continuer</button>
+            <button [disabled] = !isImageDifferenceReady class = "button-group" mat-raised-button mat-dialog-close (click)="onCreateCreateGame()">Continuer</button>
             <button class = "button-group" mat-raised-button  (click)="startsGeneratingImageDifferenceAndNumberDifference()">Générer une image de différence</button>
         </mat-dialog-actions>
     </mat-dialog-content>

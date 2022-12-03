@@ -8,12 +8,8 @@ import { PopDialogCreateGameComponent } from '../pop-dialog-create-game/pop-dial
     styleUrls: ['./pop-dialog-validate-game.component.scss'],
 })
 export class PopDialogValidateGameComponent implements OnDestroy {
-    areImageDifferenceAndNumberDifferenceReady: boolean = false;
-    isChecked = false;
-    isDisabled: boolean;
+    isImageDifferenceReady: boolean = false;
     valueChosen: number = 3;
-    numberDifference: number;
-    imageDifference: any;
     constructor(private dialog: MatDialog, private mergeImageDataHandler: MergeImageCanvasHandlerService) {}
 
     ngOnDestroy(): void {
@@ -28,8 +24,7 @@ export class PopDialogValidateGameComponent implements OnDestroy {
 
     startsGeneratingImageDifferenceAndNumberDifference() {
         if (this.valueChosen) {
-            this.areImageDifferenceAndNumberDifferenceReady = true;
-            this.isChecked = false;
+            this.isImageDifferenceReady = true;
         }
     }
 
