@@ -192,7 +192,7 @@ describe('SocketManager service tests', () => {
     });
 
     it("should handle 'Reset game times board' event", (done) => {
-        let value = 'chair game';
+        const value = 'chair game';
 
         const gameManagerServiceSPy = sinon.spy(GameManagerService.prototype, <any>'collectAllSocketsRooms');
         const recordsServiceSPy = sinon.spy(RecordTimesService.prototype, <any>'resetGameRecordTimes');
@@ -205,7 +205,7 @@ describe('SocketManager service tests', () => {
     });
 
     it("should handle 'Reset all games times board' event", (done) => {
-        let value = undefined;
+        const value = undefined;
 
         const gameManagerServiceSPy = sinon.spy(GameManagerService.prototype, 'collectAllSocketsRooms');
         const recordsServiceSPy = sinon.spy(RecordTimesService.prototype, <any>'resetAllGamesRecordTimes');
@@ -218,7 +218,7 @@ describe('SocketManager service tests', () => {
     });
 
     it("should handle 'Set time constants' event", (done) => {
-        let time: TimeConstants = { initialTime: 30, penaltyTime: 5, savedTime: 5 };
+        const time: TimeConstants = { initialTime: 30, penaltyTime: 5, savedTime: 5 };
         const timeServiceSPy = sinon.spy(TimeConstantsService.prototype, <any>'setTimes');
         clientSocket.emit('Set time constants', time);
         expect(timeServiceSPy.calledOnce);

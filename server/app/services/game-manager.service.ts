@@ -240,7 +240,7 @@ export class GameManagerService {
         return gameName;
     }
 
-    //To test Seb
+    // To test Seb
     private async switchGame(socket: io.Socket, adversarySocket?: io.Socket): Promise<void> {
         const gameToBePlayed = await this.gamesService.generateRandomGame(this.gamesPlayedByRoom.get(this.findSocketGameRoomName(socket))!);
         this.addGameToHistoryLimitedTimeMode(socket, gameToBePlayed.name);
@@ -264,7 +264,7 @@ export class GameManagerService {
         else return this.classicIsGameFinishedSolo(socket);
     }
 
-    //To test Seb?
+    // To test Seb?
     private async limitedTimeIsGameFinished(socket: io.Socket): Promise<boolean> {
         return this.gamesPlayedByRoom.get(this.findSocketGameRoomName(socket))!.length === (await this.gamesService.getAllGames()).length;
     }
