@@ -10,6 +10,7 @@ export class UploadFileService {
     nameOfGame: string;
     nameOfImageToUploadOriginal: string;
     nameOfImageToUploadModified: string;
+    nameOfFile: string;
     constructor(private communicationService: CommunicationService) {}
 
     getNameOriginalImage() {
@@ -33,29 +34,24 @@ export class UploadFileService {
     }
 
     setOriginalMergedCanvasImage(orignalImageMerged: HTMLImageElement) {
-        let nameImage:string; 
-        console.log(this.getNameOriginalImage())
-        if (this.getNameOriginalImage() !== undefined){
-            nameImage = this.getNameOriginalImage().name;
-        }
-        else{
-            nameImage = "originalDrawing"
-        }
+        this.setNameOfFile(this.getNameOriginalImage(),"originalDrawing")
         const blobImage = this.dataURItoBlob(orignalImageMerged.src);
-        this.setOriginalImage(new File([blobImage], nameImage));
+        this.setOriginalImage(new File([blobImage], this.nameOfFile));
     }
 
-    setModifiedMergedCanvasImage(modifiedImageMerged: HTMLImageElement) {
-        let nameImage:string; 
-        if (this.getNameModifiedImage()){
-            nameImage = this.getNameModifiedImage().name;
+    setModifiedMergedCanvasImage(modifiedImageMerged: HTMLImageElement) { 
+        this.setNameOfFile(this.getNameModifiedImage(),"modifiedDrawing")
+        const blobImage = this.dataURItoBlob(modifiedImageMerged.src);
+        this.setModifiedImage(new File([blobImage], this.nameOfFile, { type: 'image/jpeg' }));
+    }
+
+    setNameOfFile(file:File,nameOfNamelessFile:string){
+        if (file){
+            this.nameOfFile = this.getNameModifiedImage().name;
         }
         else{
-            nameImage = "modifiedDrawing"
+            this.nameOfFile = nameOfNamelessFile;
         }
-
-        const blobImage = this.dataURItoBlob(modifiedImageMerged.src);
-        this.setModifiedImage(new File([blobImage], nameImage, { type: 'image/jpeg' }));
     }
 
     dataURItoBlob(dataURI: string) {
