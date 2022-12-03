@@ -91,7 +91,7 @@ export class GameManagerService {
         const chronometerService: ChronometerService = this.getRoomChronometerService(gameRoomName);
         differencesInfo.socketId = socket.id;
         differencesInfo.playerUsername = this.getSocketUsername(socket);
-        if (differencesInfo.isValidDifference) chronometerService.increaseTimeByBonusTime();
+        if (differencesInfo.isValidDifference && chronometerService.mode === LIMITED_TIME_MODE) chronometerService.increaseTimeByBonusTime();
         this.sio.to(this.findSocketGameRoomName(socket)).emit('Valid click', differencesInfo);
     }
 
