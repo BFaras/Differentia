@@ -102,7 +102,6 @@ export class PopDialogUsernameComponent implements OnInit {
 
         this.socketService.on('username not valid', () => {
             this.socketService.off('username not valid');
-            console.log('salut');
             this.usernameNotValid = USERNAME_NOT_VALID;
         });
 
