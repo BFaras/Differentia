@@ -45,11 +45,10 @@ export class UploadFileService {
         this.setModifiedImage(new File([blobImage], this.nameOfFile, { type: 'image/jpeg' }));
     }
 
-    setNameOfFile(file:File,nameOfNamelessFile:string){
+    setNameOfFile(file: File, nameOfNamelessFile: string) {
         if (file){
             this.nameOfFile = file.name;
-        }
-        else{
+        } else {
             this.nameOfFile = nameOfNamelessFile;
         }
     }
@@ -59,10 +58,10 @@ export class UploadFileService {
         if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);
         else byteString = unescape(dataURI.split(',')[1]);
 
-        let mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+        const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
 
-        let byteBuffer = new Uint8Array(byteString.length);
-        for (var index = 0; index < byteString.length; index++) {
+        const byteBuffer = new Uint8Array(byteString.length);
+        for (let index = 0; index < byteString.length; index++) {
             byteBuffer[index] = byteString.charCodeAt(index);
         }
 
@@ -71,17 +70,17 @@ export class UploadFileService {
 
 
     setNameImageUpload(indexImage: number) {
-        if (indexImage == 0) {
+        if (indexImage === 0) {
             this.nameOfImageToUploadOriginal = this.nameOfGame + '_' + indexImage + '_' + this.getNameOriginalImage().name;
-        } else if (indexImage == 1) {
+        } else if (indexImage === 1) {
             this.nameOfImageToUploadModified = this.nameOfGame + '_' + indexImage + '_' + this.getNameModifiedImage().name;
         }
     }
 
     getNameImageUpload(index: number) {
-        if (index == 0) {
+        if (index === 0) {
             return this.nameOfImageToUploadOriginal;
-        } else if (index == 1) {
+        } else if (index === 1) {
             return this.nameOfImageToUploadModified;
         } else return;
     }

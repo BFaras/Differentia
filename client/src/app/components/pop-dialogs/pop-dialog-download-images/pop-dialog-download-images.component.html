@@ -5,12 +5,15 @@
         </button>
     </div>
     <mat-dialog-content class="dialog-content">
-        <h1>Televersement</h1>
+        <h1>Téléversement</h1>
         <p [ngClass] = "{
             'warning': warningActivated === true}
-        ">Contrainte: images en format BMP 24-bit de taille 640x480</p>
+        ">Contrainte: images en format BMP 24-bit et de taille 640x480 </p>
         <mat-dialog-actions>
-            <input type="file" (change)="onClickUploadImage($event)" />
+            <button class = "buttonDownload" mat-raised-button (click) = "fileInput.click()">
+                Téléverser une image
+            <input style="display:none;" #fileInput type="file" (change)="onClickUploadImage($event)" />
+            </button>
         </mat-dialog-actions>
     </mat-dialog-content>
 </div>

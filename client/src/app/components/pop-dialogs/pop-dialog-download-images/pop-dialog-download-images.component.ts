@@ -13,11 +13,11 @@ export class PopDialogDownloadImagesComponent {
     constructor(@Inject(MAT_DIALOG_DATA) private imageInfo: any, private verifyImageService: VerifyImageService) {}
 
     onClickUploadImage(event: any) {
-        let target = event.target as HTMLInputElement;
+        const target = event.target as HTMLInputElement;
         let file = target.files![0];
-        if (file.type == 'image/bmp') {
+        if (file.type === 'image/bmp') {
             this.verifyImageService.setFile(file);
-            let reader = new FileReader();
+            const reader = new FileReader();
             reader.readAsArrayBuffer(file);
             reader.onload = (e) => {
                 this.verifyImageService.processBuffer(e);
