@@ -17,7 +17,7 @@ describe('Games service', () => {
     let bikeGame: Game;
     let carGameWithouTime: { name: string; numberOfDifferences: number; times: never[]; images: string[]; differencesList: never[] };
     let bikeGameWithoutTime: { name: string; numberOfDifferences: number; times: never[]; images: string[]; differencesList: never[] };
-    //let newTime: Time;
+    // let newTime: Time;
 
     beforeEach(async () => {
         gamesService = new GamesService();
@@ -211,8 +211,8 @@ describe('Games service', () => {
         });
 
         it('should delete images', async () => {
-            let im1 = '1image';
-            let im2 = '2image';
+            const im1 = '1image';
+            const im2 = '2image';
 
             const stub = sinon.stub(fs, 'rm').callsFake(async () => {
                 throw new Error();
@@ -223,8 +223,8 @@ describe('Games service', () => {
         });
 
         it('should not delete images', async () => {
-            let im1 = '1image';
-            let im2 = '2image';
+            const im1 = '1image';
+            const im2 = '2image';
             const stub = sinon.stub(fs, 'rm').callThrough();
 
             await gamesService['deleteImages'](im1, im2);

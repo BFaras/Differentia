@@ -45,13 +45,19 @@ export class FormService {
     private fillListGameImage(gameImage: string, listImage: string[]) {
         listImage.push(gameImage);
     }
-     //To test
-    private fillListGameTimes(gameTimes:GameModeTimes, listTimes: GameModeTimes[]) {
+    // To test
+    private fillListGameTimes(gameTimes: GameModeTimes, listTimes: GameModeTimes[]) {
         listTimes.push(gameTimes);
     }
 
     private initializeGameForm(index: number) {
-         this.gameForms.push(new GameFormDescription(this.listName[index], this.listImage[index], new RecordTimesBoard(this.listTimes[index].soloGameTimes,this.listTimes[index].multiplayerGameTimes)));
+        this.gameForms.push(
+            new GameFormDescription(
+                this.listName[index],
+                this.listImage[index],
+                new RecordTimesBoard(this.listTimes[index].soloGameTimes, this.listTimes[index].multiplayerGameTimes),
+            ),
+        );
     }
 
     private resetGameForms() {

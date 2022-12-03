@@ -33,7 +33,6 @@ let getGameRoomsStub: sinon.SinonStub;
 describe('SocketManager service tests', () => {
     const testGameName = 'test12345';
     const validTestUsername = 'validTestUsername';
-    const unvalidTestUsername = ' unvalidTestUsername';
     const imagesData: ImageDataToCompare = {
         originalImageData: new Uint8ClampedArray(1),
         modifiedImageData: new Uint8ClampedArray(1),
@@ -116,13 +115,12 @@ describe('SocketManager service tests', () => {
         });
     });
 
-    it("should handle 'my username is' when the username is valid", (done) => {
+    it("should handle 'my username is' when the username is valid", () => {
         const validUsername = 'user1234';
-        const spyUsernamePlayer = sinon.spy(waitingLineHandlerService, 'setUsernamePlayer');
+        const spyUsernamePlayer = sinon.spy(WaitingLineHandlerService.prototype, 'setUsernamePlayer');
         clientSocket.emit('my username is', validUsername);
         clientSocket.once('username valid', () => {
             expect(spyUsernamePlayer.calledOnce);
-            done();
         });
     });
 
@@ -194,7 +192,7 @@ describe('SocketManager service tests', () => {
     });
 
     it("should handle 'Reset game times board' event", (done) => {
-        let value = 'chair game';
+        const value = 'chair game';
 
         const gameManagerServiceSPy = sinon.spy(GameManagerService.prototype, <any>'collectAllSocketsRooms');
         const recordsServiceSPy = sinon.spy(RecordTimesService.prototype, <any>'resetGameRecordTimes');
@@ -207,7 +205,7 @@ describe('SocketManager service tests', () => {
     });
 
     it("should handle 'Reset all games times board' event", (done) => {
-        let value = undefined;
+        const value = undefined;
 
         const gameManagerServiceSPy = sinon.spy(GameManagerService.prototype, 'collectAllSocketsRooms');
         const recordsServiceSPy = sinon.spy(RecordTimesService.prototype, <any>'resetAllGamesRecordTimes');
@@ -220,7 +218,7 @@ describe('SocketManager service tests', () => {
     });
 
     it("should handle 'Set time constants' event", (done) => {
-        let time: TimeConstants = { initialTime: 30, penaltyTime: 5, savedTime: 5 };
+        const time: TimeConstants = { initialTime: 30, penaltyTime: 5, savedTime: 5 };
         const timeServiceSPy = sinon.spy(TimeConstantsService.prototype, <any>'setTimes');
         clientSocket.emit('Set time constants', time);
         expect(timeServiceSPy.calledOnce);
@@ -352,20 +350,6 @@ describe('SocketManager service tests', () => {
             expect(deleteJoiningPlayerSpy.calledOnce);
             service['waitingLineHandlerService'].deleteCreatorOfGame(testGameName);
             service['waitingLineHandlerService'].deleteJoiningPlayer(clientSocket.id, testGameName);
-        });
-    });
-
-    it("should handle 'my username is' event and emit a 'username valid' event when the username is valid", (done) => {
-        clientSocket.emit('my username is', validTestUsername);
-        clientSocket.once('username valid', () => {
-            done();
-        });
-    });
-
-    it("should handle 'my username is' event and emit a 'username not valid' event when the username is unvalid", (done) => {
-        clientSocket.emit('my username is', unvalidTestUsername);
-        clientSocket.once('username not valid', () => {
-            done();
         });
     });
 
@@ -583,7 +567,6 @@ describe('SocketManager service tests', () => {
         service['gameManagerService']['mouseHandlerServices'].set(clientSocket.id + 'GameRoom', mouseHandlerService);
         mouseHandlerService.nbDifferencesTotal = 0;
         const resetDifferencesDataSpy = sinon.spy(MouseHandlerService.prototype, 'resetDifferencesData');
-        const getSocketGameNameSpy = sinon.spy(GameManagerService.prototype, 'getSocketGameName');
         const resetLimitedTimeWaitingLineSpy = sinon.stub(BestTimesService.prototype, 'compareGameTimeWithDbTimes').callsFake(async () => {
             return Promise.resolve();
         });
@@ -591,7 +574,6 @@ describe('SocketManager service tests', () => {
         clientSocket.emit('Check if game is finished', false);
         setTimeout(() => {
             expect(resetDifferencesDataSpy.calledOnce);
-            expect(getSocketGameNameSpy.calledOnce);
             expect(resetLimitedTimeWaitingLineSpy.calledOnce);
             expect(handleEndGameEmitsSpy.notCalled);
             expect(gameManagerServiceEndGameStub.calledOnce);

@@ -16,10 +16,10 @@ export class ToolSettingComponent implements OnInit {
     @Input() indexTool: number;
     @Input() nameTool: string;
     readonly widths: number[] = [VERY_SMALL, SMALL, MEDIUM, BIG, VERY_BIG];
-    public color: string;
-    public faEraser: IconDefinition = faEraser;
-    public enableWrite: boolean = true;
-    public enableErase:boolean = false;
+    color: string;
+    faEraser: IconDefinition = faEraser;
+    enableWrite: boolean = true;
+    enableErase: boolean = false;
     constructor(
         private pencilService: PencilService,
         private drawingHistoryService: DrawingHistoryService,

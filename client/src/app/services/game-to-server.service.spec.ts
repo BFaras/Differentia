@@ -25,7 +25,7 @@ describe('GameToServerService', () => {
         },
     };
 
-    let mockRouter = {
+    const mockRouter = {
         navigate: jasmine.createSpy('navigate'),
     };
 
@@ -86,9 +86,9 @@ describe('GameToServerService', () => {
     });
 
     it('should add new game', () => {
-        let mockNumberDiff: number = 5;
-        let mockIndex: number = 2;
-        let mockImage: string = 'src';
+        const mockNumberDiff = 5;
+        const mockIndex = 2;
+        const mockImage = 'src';
 
         const spy = spyOn(service, <any>'statusCodeTreatment');
 
@@ -104,9 +104,9 @@ describe('GameToServerService', () => {
     });
 
     it('should not add new game', () => {
-        let mockNumberDiff: number = 2;
-        let mockIndex: number = 2;
-        let mockImage: string = 'src';
+        const mockNumberDiff = 2;
+        const mockIndex = 2;
+        const mockImage = 'src';
 
         const spy = spyOn(service, <any>'statusCodeTreatment');
 

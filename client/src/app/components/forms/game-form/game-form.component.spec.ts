@@ -117,7 +117,7 @@ describe('GameFormComponent', () => {
     });
 
     it('should set attribute isPlayerWaiting to true if someone is waiting', () => {
-        let response = true;
+        const response = true;
         gameFormComp.gameForm.gameName = 'Lucky';
         socketClientServiceMock.connect();
 

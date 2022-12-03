@@ -123,18 +123,18 @@ describe('DifferenceDetectorService', () => {
     });
 
     it('should call clampValue and verify the value given', () => {
-        const value: number = 0;
-        const min: number = 5;
-        const max: number = 10;
+        const value = 0;
+        const min = 5;
+        const max = 10;
         const diffDetector = new DifferenceDetectorService(DEFAULT_IMAGES_DATA);
 
         expect(diffDetector['clampValue'](value, min, max)).to.be.equal(min);
     });
 
     it('should call clampValue and verify the value given', () => {
-        const value: number = 15;
-        const min: number = 5;
-        const max: number = 10;
+        const value = 15;
+        const min = 5;
+        const max = 10;
         const diffDetector = new DifferenceDetectorService(DEFAULT_IMAGES_DATA);
 
         expect(diffDetector['clampValue'](value, min, max)).to.be.equal(max);

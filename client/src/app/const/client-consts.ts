@@ -48,7 +48,7 @@ export const MAIN_PAGE_BUTTONS = ['Mode classique', 'Temps limité', 'Administra
 export const DISABLE_BUTTON = true;
 
 // Constantes pour la validation du username
-export const USERNAME_VALID = true;
+export const USERNAME_NOT_VALID = true;
 
 // Constantes pour le pop-up de temps limité
 export const EMPTY_GAME_NAME = '';
@@ -121,7 +121,7 @@ export const MESSAGE_RECORD_SOLO = ' en solo';
 export const MESSAGE_RECORD_MULTI = ' en multijoueur';
 export const NO_AVAILABLE = 0;
 
-//Constantes pour les indices
+// Constantes pour les indices
 export const COMPASS_IMAGES_BASIC_PATH = 'assets/compass-images/compass';
 export const COMPASS_WIDTH = 130;
 export const COMPASS_HEIGHT = 120;

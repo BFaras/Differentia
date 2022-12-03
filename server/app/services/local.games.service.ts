@@ -37,7 +37,7 @@ export class GamesService {
             return !gamesAlreadyPlayed.find((gameAlreadyPlayed) => gameAlreadyPlayed === game.name);
         });
         const max = gamesToPlay.length - 1;
-        return gamesToPlay[Math.floor(Math.random() * max)] as Game;
+        return gamesToPlay[Math.round(Math.random() * max)] as Game;
     }
     // test a finir: ligne ajoutée
     async getAllGamesWithImagesData() {

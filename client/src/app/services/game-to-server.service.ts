@@ -7,7 +7,7 @@ import { ImageToSendToServer } from '@common/imageToSendToServer';
 import { StatusCodes } from 'http-status-codes';
 import { CommunicationService } from './communication.service';
 import { UploadFileService } from './upload-file.service';
-import {RecordTime} from '@app/classes/record-time';
+import { RecordTime } from '@app/classes/record-time';
 @Injectable({
     providedIn: 'root',
 })
@@ -43,7 +43,7 @@ export class GameToServerService {
         const gameToAdd: Game = {
             name: nameOfGame,
             numberOfDifferences: this.numberDifference,
-            times: {soloGameTimes: [(new RecordTime('00:00', 'playerUsername'))], multiplayerGameTimes:[(new RecordTime('00:00', 'playerUsername'))]},
+            times: { soloGameTimes: [new RecordTime('00:00', 'playerUsername')], multiplayerGameTimes: [new RecordTime('00:00', 'playerUsername')] },
             images: [this.uploadFileService.getNameImageUpload(0)!, this.uploadFileService.getNameImageUpload(1)!],
             differencesList: this.differencesList,
         };
@@ -68,7 +68,7 @@ export class GameToServerService {
     setOriginalUrlUploaded(index: any, imageSrc: any) {
         this.originalImagesUploaded = {
             image: imageSrc,
-            index: index,
+            index,
         };
     }
 
@@ -79,7 +79,7 @@ export class GameToServerService {
     setModifiedUrlUploaded(index: any, imageSrc: any) {
         this.modifiedImageUploaded = {
             image: imageSrc,
-            index: index,
+            index,
         };
     }
 

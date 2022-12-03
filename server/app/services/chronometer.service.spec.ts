@@ -1,4 +1,4 @@
-import { ONE_SECOND_OFFSET } from '@app/server-consts';
+import { MAX_LIMITED_TIME_MINUTES, ONE_SECOND_OFFSET } from '@app/server-consts';
 import { CLASSIC_MODE, LIMITED_TIME_MODE, MAX_TIME, RESET_VALUE } from '@common/const';
 import { TimeConstants } from '@common/time-constants';
 import { expect } from 'chai';
@@ -10,7 +10,6 @@ describe('Chronometer service', () => {
     let chronometerService: ChronometerService;
     let testSocket: io.Socket;
     const RANDOM_NUMBER = 5;
-    const TWO_MINUTES = 2;
     const timeConstants: TimeConstants = {
         penaltyTime: RANDOM_NUMBER,
         savedTime: RANDOM_NUMBER,
@@ -102,11 +101,11 @@ describe('Chronometer service', () => {
 
     it('increaseTimeByBonusTime should not increase the minutes and seconds by the set time in the time constants if the time hits 02:01', () => {
         chronometerService['timeConstants'] = timeConstants;
-        chronometerService.time.minutes = TWO_MINUTES;
+        chronometerService.time.minutes = MAX_LIMITED_TIME_MINUTES;
         const spy = sinon.spy(chronometerService, <any>'increaseTime');
         chronometerService.increaseTimeByBonusTime();
         expect(chronometerService.time.seconds).to.equal(1);
-        expect(chronometerService.time.minutes).to.equal(TWO_MINUTES);
+        expect(chronometerService.time.minutes).to.equal(MAX_LIMITED_TIME_MINUTES);
         expect(spy.calledOnce);
     });
 

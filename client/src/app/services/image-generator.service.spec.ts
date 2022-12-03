@@ -19,7 +19,7 @@ describe('DifferenceImageGeneratorService', () => {
 
     it('should return the right image according to the array sent', () => {
         let imageHasDifferencesPixelsAtRightPosition = true;
-        let differenceImageData: Uint8ClampedArray = imageGeneratorService.generateBlackImageFromPixelsDataArray(
+        const differenceImageData: Uint8ClampedArray = imageGeneratorService.generateBlackImageFromPixelsDataArray(
             TEST_DIFFERENCES_ARRAY,
             mainCanvas,
         ).data;

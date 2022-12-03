@@ -14,8 +14,8 @@ export class PopDialogDownloadImagesComponent {
 
     onClickUploadImage(event: any) {
         const target = event.target as HTMLInputElement;
-        let file = target.files![0];
-        if (file.type === 'image/bmp') {
+        const file = target.files![0];
+        if (file.type == 'image/bmp') {
             this.verifyImageService.setFile(file);
             const reader = new FileReader();
             reader.readAsArrayBuffer(file);

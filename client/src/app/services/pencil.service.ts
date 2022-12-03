@@ -3,8 +3,8 @@ import { MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSITION } from '@common/const'
 
 const ROUND_LINE_CAP: CanvasLineCap = 'round';
 const SQUARE_LINE_CAP: CanvasLineCap = 'square';
-const WRITE_MODE: string = 'write';
-const ERASE_MODE: string = 'erase';
+const WRITE_MODE = 'write';
+const ERASE_MODE = 'erase';
 @Injectable({
     providedIn: 'root',
 })

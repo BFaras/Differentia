@@ -61,7 +61,7 @@ export class ImageGeneratorService {
         for (let currentRGBIndex = 0; currentRGBIndex <= ALPHA_POS; currentRGBIndex++) {
             const positionInDataArray = pixelPositionInImage + currentRGBIndex;
 
-            //To test
+            // To test
             if (!invertColors || currentRGBIndex == ALPHA_POS) {
                 imageDataToDrawOn.data[positionInDataArray] = imageDataToCopy.data[positionInDataArray];
             } else {

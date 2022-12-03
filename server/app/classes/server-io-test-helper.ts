@@ -2,7 +2,7 @@ import * as io from 'socket.io';
 import { ServerSocketTestHelper } from './server-socket-test-helper';
 
 export class ServerIOTestHelper {
-    public sockets: ServerIOTestHelper;
+    sockets: ServerIOTestHelper;
     constructor() {
         this.sockets = this;
     }

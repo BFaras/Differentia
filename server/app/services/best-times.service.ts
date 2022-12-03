@@ -35,10 +35,10 @@ export class BestTimesService {
     notifyAllActivePlayers(playerName: string, gameName: string, isMultiplayer: boolean) {
         if (this.hasNewRecord) {
             const recordInfosToSendAll: RecordTimeInformations = {
-                playerName: playerName,
+                playerName,
                 playerRanking: this.playerRanking,
-                gameName: gameName,
-                isMultiplayer: isMultiplayer,
+                gameName,
+                isMultiplayer,
             };
             this.sio.to(this.gameManagerService.collectAllSocketsRooms()).emit('New record time', recordInfosToSendAll);
             this.hasNewRecord = false;
@@ -56,7 +56,7 @@ export class BestTimesService {
     }
     // To test
     private convertTimeForComparison(time: string): number {
-        let regex = new RegExp(':', 'g');
+        const regex = new RegExp(':', 'g');
         return parseInt(time.replace(regex, ''), DECIMAL_BASE);
     }
     // To test
