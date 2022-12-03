@@ -47,7 +47,7 @@ export class UploadFileService {
 
     setNameOfFile(file:File,nameOfNamelessFile:string){
         if (file){
-            this.nameOfFile = this.getNameModifiedImage().name;
+            this.nameOfFile = file.name;
         }
         else{
             this.nameOfFile = nameOfNamelessFile;

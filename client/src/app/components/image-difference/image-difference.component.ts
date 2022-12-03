@@ -42,7 +42,7 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
         this.socketService.disconnect();
     }
 
-    loaded() {
+    loaded(): boolean {
         if (this.finalDifferencesImage.src !== '' && this.numberOfDifferences !== undefined) {
             this.gameToServerService.setNumberDifference(this.numberOfDifferences);
             this.gameToServerService.setUrlImageOfDifference(this.finalDifferencesImage.src);
@@ -54,16 +54,13 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
         }
     }
 
-    mergeImageCanvas(urlImage: string, index: number): string {
+    private mergeImageCanvas(urlImage: string, index: number): string {
         this.mergeImageCanvasService.initializeImage(urlImage, index);
         this.mergeImageCanvasService.drawImageOnCanvas(index);
         return this.mergeImageCanvasService.obtainUrlForMerged(index);
     }
 
-    private async loadImages() {
-        //faut clean le code
-        if (this.gameToServerService.getOriginalImageUploaded().image !== undefined){
-
+    private createImagesWithCanvas(): void {
         const unwrappedOriginalModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getOriginalImageUploaded().image as SafeValue);
         const unwrappedModifiedSafeUrl = unwrapSafeValue(this.gameToServerService.getModifiedImageUploaded().image as SafeValue);
 
@@ -71,23 +68,26 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
             unwrappedOriginalModifiedSafeUrl,
             this.gameToServerService.getOriginalImageUploaded().index as number,
         );
-        this.modifiedImage.src = this.mergeImageCanvas(
-            unwrappedModifiedSafeUrl, 
-            this.gameToServerService.getModifiedImageUploaded().index as number);
+        this.modifiedImage.src = this.mergeImageCanvas(unwrappedModifiedSafeUrl, this.gameToServerService.getModifiedImageUploaded().index as number);
+    }
 
+    private createImagesWithoutCanvas(): void {
+        this.originalImage.src = this.mergeImageCanvasService.getCanvas()[0].toDataURL();
+        this.modifiedImage.src = this.mergeImageCanvasService.getCanvas()[1].toDataURL();
+    }
+
+    private async loadImages(): Promise<void> {
+        if (this.gameToServerService.getOriginalImageUploaded().image !== undefined) {
+            this.createImagesWithCanvas();
         } else {
-            this.originalImage.src = this.mergeImageCanvasService.canvas[0].toDataURL();
-            this.modifiedImage.src = this.mergeImageCanvasService.canvas[1].toDataURL();
+            this.createImagesWithoutCanvas();
         }
 
         await this.imageToImageDifferenceService.waitForImageToLoad(this.originalImage);
         this.uploadFileService.setOriginalMergedCanvasImage(this.originalImage);
 
-    
         await this.imageToImageDifferenceService.waitForImageToLoad(this.modifiedImage);
         this.uploadFileService.setModifiedMergedCanvasImage(this.modifiedImage);
-        
-
     }
 
     private configureGameCreationPageSocketFeatures() {

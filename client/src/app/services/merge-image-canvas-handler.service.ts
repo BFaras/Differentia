@@ -5,7 +5,7 @@ import { IMAGE_HEIGHT, IMAGE_WIDTH, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSI
     providedIn: 'root',
 })
 export class MergeImageCanvasHandlerService {
-    public canvas: HTMLCanvasElement[];
+    private canvas: HTMLCanvasElement[];
     private context: CanvasRenderingContext2D[] | null;
     private formerCanvas: HTMLCanvasElement[];
     private imageDownloaded: HTMLImageElement[];
@@ -16,6 +16,9 @@ export class MergeImageCanvasHandlerService {
         this.imageDownloaded = [new Image(), new Image()];
     }
 
+    getCanvas(): HTMLCanvasElement[] {
+        return this.canvas;
+    }
     resetAllCanvas() {
         this.canvas = [];
         this.context = [];
@@ -24,12 +27,12 @@ export class MergeImageCanvasHandlerService {
     }
 
     setLeftContextAndCanvas(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
-        this.context!.push(context);
+        this.context?.push(context);
         this.canvas.push(canvas);
     }
 
     setRightContextAndCanvas(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
-        this.context!.push(context);
+        this.context?.push(context);
         this.canvas.push(canvas);
     }
 
@@ -46,27 +49,31 @@ export class MergeImageCanvasHandlerService {
     }
 
     cloneCanvas(oldCanvas: HTMLCanvasElement) {
-        let newCanvas = document.createElement('canvas');
-        let context = newCanvas.getContext('2d');
+        const newCanvas = document.createElement('canvas');
+        const context = newCanvas.getContext('2d');
 
         newCanvas.width = oldCanvas.width;
         newCanvas.height = oldCanvas.height;
 
-        context!.drawImage(oldCanvas, 0, 0);
+        context?.drawImage(oldCanvas, 0, 0);
 
         return newCanvas;
     }
 
     resetCanvas() {
-        this.context![ORIGINAL_IMAGE_POSITION].clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
-        this.context![MODIFIED_IMAGE_POSITION].clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+        if (this.context != null) {
+            this.context[ORIGINAL_IMAGE_POSITION].clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+            this.context[MODIFIED_IMAGE_POSITION].clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+        }
     }
 
     async drawImageOnCanvas(index: number) {
         this.formerCanvas[index] = this.cloneCanvas(this.canvas[index]);
-        this.context![index].globalCompositeOperation = 'source-over';
-        this.context![index].drawImage(this.imageDownloaded[index], 0, 0);
-        this.context![index].drawImage(this.formerCanvas[index], 0, 0);
+        if (this.context !== null) {
+            this.context[index].globalCompositeOperation = 'source-over';
+            this.context[index].drawImage(this.imageDownloaded[index], 0, 0);
+            this.context[index].drawImage(this.formerCanvas[index], 0, 0);
+        }
     }
 
     obtainUrlForMerged(index: number) {

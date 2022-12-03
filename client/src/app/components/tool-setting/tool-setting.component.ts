@@ -13,12 +13,12 @@ import { faEraser } from '@fortawesome/free-solid-svg-icons';
     styleUrls: ['./tool-setting.component.scss'],
 })
 export class ToolSettingComponent implements OnInit {
-    readonly widths: number[] = [VERY_SMALL, SMALL, MEDIUM, BIG, VERY_BIG];
-    public color: string;
     @Input() indexTool: number;
     @Input() nameTool: string;
-    public faEraser:IconDefinition = faEraser;
-    public enableWrite:boolean = true;
+    readonly widths: number[] = [VERY_SMALL, SMALL, MEDIUM, BIG, VERY_BIG];
+    public color: string;
+    public faEraser: IconDefinition = faEraser;
+    public enableWrite: boolean = true;
     public enableErase:boolean = false;
     constructor(
         private pencilService: PencilService,
@@ -26,10 +26,6 @@ export class ToolSettingComponent implements OnInit {
         private canvasDataHandle: CanvasDataHandlerService,
         private keyEventHandlerService: KeyEventHandlerService,
     ) {}
-
-    ngOnInit(): void {
-        this.setOriginalSetting();
-    }
 
     @HostListener(CONTROL_Z_SHORTCUT, ['$event'])
     handleKeyboardToCancelDrawnLine() {
@@ -39,6 +35,10 @@ export class ToolSettingComponent implements OnInit {
     @HostListener(CONTROL_SHIFT_Z_SHORTCUT, ['$event'])
     handleKeyboardToCancelDeletedDrawnLine() {
         this.keyEventHandlerService.cancelDeleteDrawnLineShortCut();
+    }
+
+    ngOnInit(): void {
+        this.setOriginalSetting();
     }
 
     checkIfThereAreSavedDrawnLines() {
@@ -93,20 +93,23 @@ export class ToolSettingComponent implements OnInit {
         this.canvasDataHandle.shareDataWithOtherCanvas();
     }
 
-    setPencilMode(clickEvent: Event) {
-        const currentValue = (clickEvent.currentTarget as HTMLInputElement).value;
-        const currentId = (clickEvent.currentTarget as HTMLInputElement).id;
-
-        this.pencilService.setStateOfPencilForRightCanvas(currentValue, parseInt(currentId));
-        if (currentValue == 'write'){
+    setMode(value: string): void {
+        if (value === 'write') {
             this.enableErase = false;
             this.enableWrite = true;
         }
 
-        if (currentValue == 'erase'){
+        if (value === 'erase') {
             this.enableErase = true;
             this.enableWrite = false;
         }
-        
+    }
+
+    setPencilMode(clickEvent: Event) {
+        const currentValue = (clickEvent.currentTarget as HTMLInputElement).value;
+        const currentId = (clickEvent.currentTarget as HTMLInputElement).id;
+
+        this.pencilService.setStateOfPencilForRightCanvas(currentValue, parseInt(currentId, 10));
+        this.setMode(currentValue);
     }
 }
