@@ -151,7 +151,7 @@ export class ClueHandlerService {
         const canvasMiddleLimits: Positions = this.getCanvasMiddleLimits();
         let isInMiddleBehindCompass = false;
 
-        for (let pixelNb of differencePixels) {
+        for (const pixelNb of differencePixels) {
             const pixelPosition: Position = this.convertPixelNbToPosition(pixelNb);
             if (this.isInBoundsOfPositions(canvasMiddleLimits, pixelPosition)) {
                 isInMiddleBehindCompass = true;

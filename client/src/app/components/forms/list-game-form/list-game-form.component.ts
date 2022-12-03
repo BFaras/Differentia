@@ -78,14 +78,14 @@ export class ListGameFormComponent implements OnInit {
 
     private addCurrentPageGameForms() {
         this.currentPageGameFormList = new Array(this.lastElementIndex - this.firstElementIndex + 1);
-        for (let index: number = 0; index < this.currentPageGameFormList.length; index++) {
+        for (let index = 0; index < this.currentPageGameFormList.length; index++) {
             this.currentPageGameFormList[index] = this.formService.gameForms[index + this.firstElementIndex];
         }
         this.numberOfGames = this.currentPageGameFormList.length;
     }
 
     private openSnackBar(gameName: string | string[]) {
-        let msg: string = `Le jeu ${gameName} a été supprimé :(`;
+        let msg = `Le jeu ${gameName} a été supprimé :(`;
         if (gameName.includes(MSG_RESET_TIME)) {
             msg = gameName.toString();
         }

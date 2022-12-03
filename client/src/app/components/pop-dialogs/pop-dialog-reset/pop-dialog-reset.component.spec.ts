@@ -87,15 +87,15 @@ describe('PopDialogResetComponent', () => {
     it('should reset the records timeBoard and game constants', () => {
         component.resetRecordsTimeBoard = true;
         component.resetTimeConstants = true;
-        let socketSpy = spyOn(socketClientServiceMock, 'send');
+        const socketSpy = spyOn(socketClientServiceMock, 'send');
         component.resetData();
         expect(socketSpy).toHaveBeenCalled();
     });
 
     it('should reset the game form list', () => {
-        let value = 'Hello';
+        const value = 'Hello';
         component.resetGameFormList = true;
-        let socketSpy = spyOn(socketClientServiceMock, 'send');
+        const socketSpy = spyOn(socketClientServiceMock, 'send');
         component.resetData();
         socketTestHelper.peerSideEmit('Ready to reset game list', value);
         expect(socketSpy).toHaveBeenCalledTimes(2);

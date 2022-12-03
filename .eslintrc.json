@@ -94,7 +94,7 @@
                 "@typescript-eslint/no-explicit-any": [
                     "error",
                     {
-                        "fixToUnknown": true
+                        "fixToUnknown": false
                     }
                 ],
                 "@typescript-eslint/no-inferrable-types": [

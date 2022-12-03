@@ -43,10 +43,10 @@ export class UploadFileService {
         if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);
         else byteString = unescape(dataURI.split(',')[1]);
 
-        let mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+        const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
 
-        let byteBuffer = new Uint8Array(byteString.length);
-        for (var index = 0; index < byteString.length; index++) {
+        const byteBuffer = new Uint8Array(byteString.length);
+        for (let index = 0; index < byteString.length; index++) {
             byteBuffer[index] = byteString.charCodeAt(index);
         }
 

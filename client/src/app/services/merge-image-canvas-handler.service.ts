@@ -47,8 +47,8 @@ export class MergeImageCanvasHandlerService {
     }
 
     cloneCanvas(oldCanvas: HTMLCanvasElement) {
-        let newCanvas = document.createElement('canvas');
-        let context = newCanvas.getContext('2d');
+        const newCanvas = document.createElement('canvas');
+        const context = newCanvas.getContext('2d');
 
         newCanvas.width = oldCanvas.width;
         newCanvas.height = oldCanvas.height;

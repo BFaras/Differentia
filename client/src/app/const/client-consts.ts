@@ -121,7 +121,7 @@ export const MESSAGE_RECORD_SOLO = ' en solo';
 export const MESSAGE_RECORD_MULTI = ' en multijoueur';
 export const NO_AVAILABLE = 0;
 
-//Constantes pour les indices
+// Constantes pour les indices
 export const COMPASS_IMAGES_BASIC_PATH = 'assets/compass-images/compass';
 export const COMPASS_WIDTH = 130;
 export const COMPASS_HEIGHT = 120;

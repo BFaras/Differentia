@@ -15,7 +15,7 @@ export class DrawingHistoryService {
         this.context = [];
     }
 
-    clearHistory(){
+    clearHistory() {
         this.cancelDrawingHistory = [[], []];
         this.redoDrawingHistory = [[], []];
         this.context = [];
@@ -31,13 +31,13 @@ export class DrawingHistoryService {
 
     saveCanvas(context: CanvasRenderingContext2D, index: number) {
         this.context[index] = context;
-        let imageData = this.context[index].getImageData(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+        const imageData = this.context[index].getImageData(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
         this.cancelDrawingHistory[index].push(imageData);
     }
 
     cancelCanvas(index: number) {
         if (this.cancelDrawingHistory[index].length != 0) {
-            let imageDataToPop = this.cancelDrawingHistory[index].pop() as ImageData;
+            const imageDataToPop = this.cancelDrawingHistory[index].pop() as ImageData;
             this.context[index].putImageData(imageDataToPop, 0, 0);
             this.redoDrawingHistory[index].push(imageDataToPop);
         }
@@ -45,7 +45,7 @@ export class DrawingHistoryService {
 
     redoCanvas(index: number) {
         if (this.redoDrawingHistory[index].length != 0) {
-            let DeletedImageDataToPop = this.redoDrawingHistory[index].pop() as ImageData;
+            const DeletedImageDataToPop = this.redoDrawingHistory[index].pop() as ImageData;
             this.context[index].putImageData(DeletedImageDataToPop, 0, 0);
             this.cancelDrawingHistory[index].push(DeletedImageDataToPop);
         }

@@ -6,9 +6,9 @@ import { Observable } from 'rxjs/internal/Observable';
     providedIn: 'root',
 })
 export class ListImagesRenderedService {
-    public activatedEmitterUrlImageBoth: EventEmitter<string> = new EventEmitter<string>();
-    public activatedEmitterUrlImageSingle: EventEmitter<ImageRenderedInformations> = new EventEmitter<ImageRenderedInformations>();
-    public activatedEmitterRemoveImage: EventEmitter<number> = new EventEmitter<number>();
+    activatedEmitterUrlImageBoth: EventEmitter<string> = new EventEmitter<string>();
+    activatedEmitterUrlImageSingle: EventEmitter<ImageRenderedInformations> = new EventEmitter<ImageRenderedInformations>();
+    activatedEmitterRemoveImage: EventEmitter<number> = new EventEmitter<number>();
 
     sendUrlImageBoth(url: string) {
         this.activatedEmitterUrlImageBoth.emit(url);

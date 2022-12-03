@@ -12,12 +12,12 @@ describe('ListImagesRenderedService', () => {
     });
 
     it('should emit a number through activatedEmitterRemoveImage ', () => {
-        let fakeNumber: number = 10;
-        let fakeUrl: string = "fake";
-        let fakeInfo: ImageRenderedInformations = {
-            url:fakeUrl,
-            index:fakeNumber
-        }
+        const fakeNumber = 10;
+        const fakeUrl = 'fake';
+        const fakeInfo: ImageRenderedInformations = {
+            url: fakeUrl,
+            index: fakeNumber,
+        };
         expect(service.sendIdImageToRemove(fakeNumber)).toEqual(service['activatedEmitterRemoveImage'].emit(fakeNumber));
         expect(service.sendUrlImageBoth(fakeUrl)).toEqual(service['activatedEmitterUrlImageBoth'].emit(fakeUrl));
         expect(service.sendUrlImageSingle(fakeInfo)).toEqual(service['activatedEmitterUrlImageSingle'].emit(fakeInfo));

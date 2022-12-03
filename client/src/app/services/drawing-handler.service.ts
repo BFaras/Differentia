@@ -35,9 +35,9 @@ export class DrawingHandlerService {
         return mouseEvent.clientY - canvasReact.top;
     }
 
-    savingProcess(indexOfCanvas:number){
+    savingProcess(indexOfCanvas: number) {
         this.drawingHistoryService.saveCanvas(this.context!, indexOfCanvas);
-    
+
         if (this.drawingHistoryService.getRedoDrawingHistory()[indexOfCanvas].length != 0) {
             this.drawingHistoryService.getRedoDrawingHistory()[indexOfCanvas] = [];
         }

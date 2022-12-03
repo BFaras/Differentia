@@ -130,7 +130,7 @@ export class ChatMessagesService {
         return newRecordChatMessage;
     }
 
-    //To test
+    // To test
     private sendNewRecordMessage(observer: Subscriber<ChatMessage>, recordTimeInfos: RecordTimeInformations) {
         const newRecordChatMessage: string = this.generateRecordMessageType(recordTimeInfos);
         observer.next(this.generateChatMessageFromGame(newRecordChatMessage));

@@ -75,7 +75,7 @@ export class DialogInputComponent implements OnInit {
     }
 
     validateTimesRatio() {
-        let timeRatio = (this.initialTimeInput.nativeElement.value | this.timeConstants.initialTime) / TIME_RATIO;
+        const timeRatio = (this.initialTimeInput.nativeElement.value | this.timeConstants.initialTime) / TIME_RATIO;
 
         if (
             this.penaltyTimeInput.nativeElement.value <= this.initialTimeInput.nativeElement.value / TIME_RATIO &&

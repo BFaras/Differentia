@@ -53,7 +53,7 @@ export class ImageToImageDifferenceService {
             modifiedImageData: canvasModifiedData,
             imageHeight: this.originalImage.height,
             imageWidth: this.originalImage.width,
-            offSet: offSet,
+            offSet,
         };
 
         return imagesdata;

@@ -22,14 +22,14 @@ describe('KeyEventHandlerService', () => {
     });
 
     it('should verify if setindexImageOnDrawing was called', () => {
-        const numberMocked: number = 2;
+        const numberMocked = 2;
         service.setIndexImageOnDrawing(numberMocked);
         service.deleteDrawnLineShortCut();
         expect(drawingHistoryServiceSpy.cancelCanvas).toHaveBeenCalled();
     });
 
     it('should verify if cancelDeletedcanvas was called ', () => {
-        const numberMocked: number = 2;
+        const numberMocked = 2;
         service.setIndexImageOnDrawing(numberMocked);
         service.cancelDeleteDrawnLineShortCut();
         expect(drawingHistoryServiceSpy.redoCanvas).toHaveBeenCalled();
