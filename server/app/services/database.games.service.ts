@@ -106,7 +106,6 @@ export class RecordTimesService {
                     return gameTimes.recordTimes;
                 })
                 .catch(() => {
-                    console.log('Failed to get the game times');
                     throw new Error('Failed to get the game times');
                 });
         } else return this.databaseErrorRecordTimes;

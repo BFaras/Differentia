@@ -573,7 +573,6 @@ describe('SocketManager service tests', () => {
         service['gameManagerService']['mouseHandlerServices'].set(clientSocket.id + 'GameRoom', mouseHandlerService);
         mouseHandlerService.nbDifferencesTotal = 0;
         const resetDifferencesDataSpy = sinon.spy(MouseHandlerService.prototype, 'resetDifferencesData');
-        const getSocketGameNameSpy = sinon.spy(GameManagerService.prototype, 'getSocketGameName');
         const resetLimitedTimeWaitingLineSpy = sinon.stub(BestTimesService.prototype, 'compareGameTimeWithDbTimes').callsFake(async () => {
             return Promise.resolve();
         });
@@ -581,7 +580,6 @@ describe('SocketManager service tests', () => {
         clientSocket.emit('Check if game is finished', false);
         setTimeout(() => {
             expect(resetDifferencesDataSpy.calledOnce);
-            expect(getSocketGameNameSpy.calledOnce);
             expect(resetLimitedTimeWaitingLineSpy.calledOnce);
             expect(handleEndGameEmitsSpy.notCalled);
             expect(gameManagerServiceEndGameStub.calledOnce);
