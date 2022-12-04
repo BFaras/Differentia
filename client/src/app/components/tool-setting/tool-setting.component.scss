@@ -2,15 +2,15 @@
 .mat-mini-fab{
     height: 35px;
     width: 35px;
-    background-color: #ebcdb9;
-    color: black;
+    background-color: #203647;
+    color: #eefbfe;
 }
 mat-label , :host ::ng-deep .mat-select-value {
     color: white;
 }
 
 .pressedButton{
-    background-color: #ce7f4b;
+    background-color: #007cc7;
 }
 
 .name-tool{
@@ -31,6 +31,14 @@ div{
     gap: 5px;
 }
 
-button{
-    background-color: #ebcdb9;
+
+
+button {
+    background-color: #203647;
+    color: #eefbfe;
+}
+
+button:hover{
+    background-color: #007cc7;
+    transition: ease-in 0.25s;
 }
