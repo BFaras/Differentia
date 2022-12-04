@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy, OnInit, Renderer2, ɵunwrapSafeValue as unwrapSafeValue } from '@angular/core';
 import { SafeValue } from '@angular/platform-browser';
+import { DRAW_BACKGROUND_MODE, MODIFIED_CANVAS_INDEX, ORIGINAL_CANVAS_INDEX } from '@app/const/client-consts';
 import { GameToServerService } from '@app/services/game-to-server.service';
 import { ImageToImageDifferenceService } from '@app/services/image-to-image-difference.service';
 import { MergeImageCanvasHandlerService } from '@app/services/merge-image-canvas-handler.service';
@@ -72,20 +73,24 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
         this.modifiedImage.src = this.mergeImageCanvas(unwrappedModifiedSafeUrl, this.gameToServerService.getModifiedImageUploaded().index as number);
     }
 
+    private createBackgroundForImages(indexCanvas: number): void {
+        const canvas = this.mergeImageCanvasService.getCanvas()[indexCanvas];
+        const context = canvas.getContext('2d');
+        if (context != null) {
+            context.globalCompositeOperation = DRAW_BACKGROUND_MODE;
+            context.fillStyle = '#FFF';
+            context.fillRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+        }
+    }
+
     private createImagesWithoutCanvas(): void {
-        const canvasOriginal = this.mergeImageCanvasService.getCanvas()[0];
-        const ctxOriginal = canvasOriginal.getContext('2d')!;
-        ctxOriginal.globalCompositeOperation = "destination-over"
-        ctxOriginal.fillStyle = '#FFF';
-        ctxOriginal.fillRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+        const canvasOriginal = this.mergeImageCanvasService.getCanvas()[ORIGINAL_CANVAS_INDEX];
+        const canvasModified = this.mergeImageCanvasService.getCanvas()[MODIFIED_CANVAS_INDEX];
+
+        this.createBackgroundForImages(ORIGINAL_CANVAS_INDEX);
+        this.createBackgroundForImages(MODIFIED_CANVAS_INDEX);
 
         this.originalImage.src = canvasOriginal.toDataURL();
-
-        const canvasModified = this.mergeImageCanvasService.getCanvas()[1];
-        const ctxModified = canvasModified.getContext('2d')!;
-        ctxModified.globalCompositeOperation = "destination-over"
-        ctxModified.fillStyle = '#FFF';
-        ctxModified.fillRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
 
         this.modifiedImage.src = canvasModified.toDataURL();
     }
