@@ -1,10 +1,13 @@
 <body>
     <app-list-game-form [page]="nameOfPage"></app-list-game-form>
-    <div class = group-button>
+    <div class="group-button">
         <button mat-raised-button matTooltip="Créer un nouveau Jeu" color="primary" routerLink="/gameCreation">
             Créer <mat-icon>create_new_folder</mat-icon>
         </button>
         <button mat-raised-button color="primary" (click)="openResetDialog()">Réinitialisation <mat-icon>autorenew</mat-icon></button>
+        <button mat-raised-button color="primary" (click)="openDeleteGamesDialog('supprimer la liste des jeux')">
+            Liste des jeux <mat-icon>delete</mat-icon>
+        </button>
         <button mat-raised-button color="primary" (click)="openDialog()">Paramètres <mat-icon>alarm</mat-icon></button>
     </div>
 </body>

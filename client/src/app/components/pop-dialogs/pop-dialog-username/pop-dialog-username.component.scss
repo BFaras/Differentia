@@ -7,18 +7,14 @@
 
 ::ng-deep.mat-form-field-underline {
     background-color: white !important;
-  } 
+}
 
-  
 .dialog-content {
     height: 100%;
     width: 100%;
-    overflow: hidden;
     border: solid black 1px;
     border-radius: 5px;
-    color:white;
-
-
+    color: white;
 }
 
 .dialog-content > h1 {
@@ -28,17 +24,16 @@
 .form-radius-container > * {
     position: relative;
     left: 5%;
-
 }
-mat-dialog-actions > button{
+mat-dialog-actions > button {
     position: relative;
-    left:35%;
-    top:70px;
+    left: 35%;
+    top: 70px;
     width: 30%;
     background-color: rgb(214, 169, 143);
 }
 
 .dialog-title > button {
     position: relative;
-    left:92%;
+    left: 92%;
 }

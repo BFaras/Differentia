@@ -1,13 +1,24 @@
 .section {
-    display: flex;
+    display: block;
     align-content: center;
     align-items: center;
     height: 30px;
     font-size: medium;
 }
+h1 {
+    text-align: center;
+}
 
 button {
     font-size: medium;
+}
+
+#checkbox {
+    text-align: center;
+}
+
+#contenu {
+    margin-top: 5%;
 }
 
 h1:first-of-type {
@@ -45,5 +56,22 @@ h1:first-of-type {
 .mat-raised-button.mat-accent,
 .mat-fab.mat-accent,
 .mat-mini-fab.mat-accent {
-    background-color: #3f51b5;
+    background-color: rgb(214, 169, 143);
+    color: black;
+}
+
+#body {
+    background-image: url(../../../../assets/bob.jpg);
+    color: white;
+    height: 100%;
+    width: 100%;
+}
+
+mat-checkbox {
+    background-color: rgb(237 176 140 / 86%);
+    padding-top: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: black;
+    margin-top: 10px;
 }

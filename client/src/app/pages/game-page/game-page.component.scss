@@ -4,14 +4,13 @@
     min-width: 1920px;
     min-height: 1080px;
     background: url(../../../assets/bob.jpg);
-    color:white;
+    color: white;
 }
 
 .play-area-container {
-    overflow: auto;
     flex: 1 1 auto;
     width: 80%;
-    left : 30px;
+    left: 30px;
     vertical-align: auto;
 }
 

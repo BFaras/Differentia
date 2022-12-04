@@ -1,79 +1,84 @@
-<button mat-mini-fab color="warn" aria-label="close dialog" (click)="this.dialogRef.close()">
-    <mat-icon>close</mat-icon>
-</button>
-<h1 mat-dialog-title>Constantes de jeu</h1>
+<div id="body">
+    <button mat-mini-fab color="warn" aria-label="close dialog" (click)="this.dialogRef.close()">
+        <mat-icon>close</mat-icon>
+    </button>
+    <h1 mat-dialog-title>Constantes de jeu</h1>
 
-<div mat-dialog-content class="inputs">
-    <mat-form-field hintLabel="{{ datas[0].valueUnit }}" appearance="fill">
-        <mat-label>{{ datas[0].inputName }}</mat-label>
-        <input
-            type="number"
-            matInput
-            #timeInput1
-            placeholder="{{ datas[0].placeHolder }}"
-            (change)="validateTimeType(this.initialTimeInput, 0)"
-            matTooltip="Temps de départ en mode Temps Limité"
-            [matTooltipPosition]="'after'"
-        />
-        <mat-hint align="end">
-            <h3 *ngIf="timeValid[0]">
-                {{ timeInput1.value || datas[0].defaultTime }}
-            </h3>
-            <mat-error *ngIf="!timeValid[0]">
-                Le temps initial doit être un nombre entre {{ this.minTimeConstants.initialTime }} et
-                {{ this.maxTimeConstants.initialTime }}
-            </mat-error>
-        </mat-hint>
-    </mat-form-field>
+    <div mat-dialog-content class="inputs">
+        <mat-form-field hintLabel="{{ datas[0].valueUnit }}" appearance="fill" id="entries">
+            <mat-label>{{ datas[0].inputName }}</mat-label>
+            <input
+                type="number"
+                matInput
+                #timeInput1
+                placeholder="{{ datas[0].placeHolder }}"
+                (change)="validateTimeType(this.initialTimeInput, 0)"
+                matTooltip="Temps de départ en mode Temps Limité"
+                [matTooltipPosition]="'after'"
+            />
+            <mat-hint align="end">
+                <h3 *ngIf="timeValid[0]">
+                    {{ timeInput1.value || datas[0].defaultTime }}
+                </h3>
+                <mat-error *ngIf="!timeValid[0]">
+                    Le temps initial doit être un nombre entre {{ this.minTimeConstants.initialTime }} et
+                    {{ this.maxTimeConstants.initialTime }}
+                </mat-error>
+            </mat-hint>
+        </mat-form-field>
 
-    <mat-form-field hintLabel="{{ datas[1].valueUnit }}" appearance="fill">
-        <mat-label>{{ datas[1].inputName }}</mat-label>
-        <input
-            type="number"
-            matInput
-            #timeInput2
-            placeholder="{{ datas[1].placeHolder }}"
-            (change)="validateTimeType(this.penaltyTimeInput, 1)"
-            matTooltip="Temps soustrait pour l'utilisation d'indice en mode Temps Limité "
-            [matTooltipPosition]="'after'"
-        />
-        <mat-hint align="end">
-            <h3 *ngIf="timeValid[1]">
-                {{ timeInput2.value || datas[1].defaultTime }}
-            </h3>
-            <mat-error *ngIf="!timeValid[1]">
-                Le temps de pénalité doit être un nombre entre {{ this.minTimeConstants.penaltyTime }} et
-                {{ this.maxTimeConstants.penaltyTime }}
-            </mat-error>
-        </mat-hint>
-    </mat-form-field>
+        <mat-form-field hintLabel="{{ datas[1].valueUnit }}" appearance="fill" id="entries">
+            <mat-label>{{ datas[1].inputName }}</mat-label>
+            <input
+                type="number"
+                matInput
+                #timeInput2
+                placeholder="{{ datas[1].placeHolder }}"
+                (change)="validateTimeType(this.penaltyTimeInput, 1)"
+                matTooltip="Temps soustrait pour l'utilisation d'indice en mode Temps Limité "
+                [matTooltipPosition]="'after'"
+            />
+            <mat-hint align="end">
+                <h3 *ngIf="timeValid[1]">
+                    {{ timeInput2.value || datas[1].defaultTime }}
+                </h3>
+                <mat-error *ngIf="!timeValid[1]">
+                    Le temps de pénalité doit être un nombre entre {{ this.minTimeConstants.penaltyTime }} et
+                    {{ this.maxTimeConstants.penaltyTime }}
+                </mat-error>
+            </mat-hint>
+        </mat-form-field>
 
-    <mat-form-field hintLabel="{{ datas[2].valueUnit }}" appearance="fill">
-        <mat-label>{{ datas[2].inputName }}</mat-label>
-        <input
-            type="number"
-            matInput
-            #timeInput3
-            placeholder="{{ datas[2].placeHolder }}"
-            (change)="validateTimeType(this.savedTimeInput, 2)"
-            matTooltip="Temps ajouté pour chaque bonne réponse en mode Temps Limité "
-            [matTooltipPosition]="'after'"
-        />
-        <mat-hint align="end">
-            <h3 *ngIf="timeValid[2]">
-                {{ timeInput3.value || datas[2].defaultTime }}
-            </h3>
-            <mat-error *ngIf="!timeValid[2]">
-                Le temps gagné doit être un nombre entre {{ this.minTimeConstants.savedTime }} et {{ this.maxTimeConstants.savedTime }}
-            </mat-error>
-        </mat-hint>
-    </mat-form-field>
-    <div>
-        <ng-container *ngIf="!timeRatioValid">
-            <h3 id="ratioMsg">{{ msgTimeRatio }}</h3>
-        </ng-container>
-        <ng-container *ngIf="timeValid[0] && timeValid[1] && timeValid[2] && timeRatioValid">
-            <button id="submitButton" mat-raised-button color="accent" *ngIf="!onlyQuitButton" (click)="submitTimes()">Valider</button>
-        </ng-container>
+        <mat-form-field hintLabel="{{ datas[2].valueUnit }}" appearance="fill" id="entries">
+            <mat-label>{{ datas[2].inputName }}</mat-label>
+            <input
+                type="number"
+                matInput
+                #timeInput3
+                placeholder="{{ datas[2].placeHolder }}"
+                (change)="validateTimeType(this.savedTimeInput, 2)"
+                matTooltip="Temps ajouté pour chaque bonne réponse en mode Temps Limité "
+                [matTooltipPosition]="'after'"
+            />
+            <mat-hint align="end">
+                <h3 *ngIf="timeValid[2]">
+                    {{ timeInput3.value || datas[2].defaultTime }}
+                </h3>
+                <mat-error *ngIf="!timeValid[2]">
+                    Le temps gagné doit être un nombre entre {{ this.minTimeConstants.savedTime }} et {{ this.maxTimeConstants.savedTime }}
+                </mat-error>
+            </mat-hint>
+        </mat-form-field>
+        <div>
+            <ng-container *ngIf="!timeRatioValid">
+                <h3 id="ratioMsg">{{ msgTimeRatio }}</h3>
+            </ng-container>
+            <ng-container *ngIf="timeValid[0] && timeValid[1] && timeValid[2] && timeRatioValid">
+                <button id="submitButton" mat-raised-button color="accent" *ngIf="!onlyQuitButton" (click)="submitTimes()">Valider</button>
+            </ng-container>
+            <ng-container *ngIf="onlyQuitButton">
+                <button id="submitButton" mat-raised-button color="accent"></button>
+            </ng-container>
+        </div>
     </div>
 </div>

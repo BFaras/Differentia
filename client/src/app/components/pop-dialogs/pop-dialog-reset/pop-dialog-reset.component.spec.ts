@@ -4,7 +4,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
-import { EMPTY_MESSAGE, RESET_INFO_CONSTANTS, RESET_INFO_GAME_LIST, RESET_INFO_RECORDS_TIME } from '@app/const/client-consts';
+import { EMPTY_MESSAGE, RESET_INFO_CONSTANTS, RESET_INFO_RECORDS_TIME } from '@app/const/client-consts';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { Socket } from 'socket.io-client';
 import { PopDialogResetComponent } from './pop-dialog-reset.component';
@@ -53,27 +53,22 @@ describe('PopDialogResetComponent', () => {
     it('should get the info to reset', () => {
         component.resetRecordsTimeBoard = true;
         component.resetTimeConstants = true;
-        component.resetGameFormList = true;
         component.getInfoToReset();
         expect(component.recordsTime).toEqual(RESET_INFO_RECORDS_TIME);
         expect(component.gameConstants).toEqual(RESET_INFO_CONSTANTS);
-        expect(component.gameFormList).toEqual(RESET_INFO_GAME_LIST);
     });
 
     it('should not have info to reset', () => {
         component.resetRecordsTimeBoard = false;
         component.resetTimeConstants = false;
-        component.resetGameFormList = false;
         component.getInfoToReset();
         expect(component.recordsTime).toEqual(EMPTY_MESSAGE);
         expect(component.gameConstants).toEqual(EMPTY_MESSAGE);
-        expect(component.gameFormList).toEqual(EMPTY_MESSAGE);
     });
 
     it('should let a last chance to the client to validate the choice', () => {
         component.resetRecordsTimeBoard = true;
         component.resetTimeConstants = false;
-        component.resetGameFormList = true;
         component.validateChoice();
         expect(component.isLastChance).toEqual(true);
         expect(component.isValidChoice).toEqual(true);
@@ -82,7 +77,6 @@ describe('PopDialogResetComponent', () => {
     it('should not let a last chance to the client to validate the choice', () => {
         component.resetRecordsTimeBoard = false;
         component.resetTimeConstants = false;
-        component.resetGameFormList = false;
         component.validateChoice();
         expect(component.isLastChance).toEqual(false);
         expect(component.isValidChoice).toEqual(false);
@@ -96,19 +90,9 @@ describe('PopDialogResetComponent', () => {
         expect(socketSpy).toHaveBeenCalled();
     });
 
-    it('should reset the game form list', () => {
-        const value = 'Hello';
-        component.resetGameFormList = true;
-        const socketSpy = spyOn(socketClientServiceMock, 'send');
-        component.resetData();
-        socketTestHelper.peerSideEmit('Ready to reset game list', value);
-        expect(socketSpy).toHaveBeenCalledTimes(2);
-    });
-
     it('should not reset the data', () => {
         component.resetRecordsTimeBoard = false;
         component.resetTimeConstants = false;
-        component.resetGameFormList = false;
         component.resetData();
         expect(dialogRef['close']).toHaveBeenCalled();
     });
