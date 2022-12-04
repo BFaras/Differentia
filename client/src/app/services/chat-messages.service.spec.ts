@@ -78,7 +78,7 @@ describe('ChatMessagesService', () => {
         const emptyMessage = '';
         const sendMessageSpy = spyOn(socketService, 'send').and.callThrough();
         chatMessagesService.sendMessage(DEFAULT_USERNAME, emptyMessage);
-        expect(sendMessageSpy).toHaveBeenCalled();
+        expect(sendMessageSpy).not.toHaveBeenCalled;
     });
 
     it('should create an observable which we can subscribe to on construction', () => {
@@ -179,7 +179,6 @@ describe('ChatMessagesService', () => {
         socketTestHelper.peerSideEmit('End game', endGameInfos);
         setTimeout(() => {
             expect(messageReceivedFromObservable.message.includes(ABANDON_MESSAGE)).toBeTruthy();
-            expect(chatMessagesService['isMultiplayerGame']).toBeFalse();
             done();
         }, littleTimeout);
     });
