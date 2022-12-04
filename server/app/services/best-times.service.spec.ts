@@ -7,20 +7,11 @@ import * as sinon from 'sinon';
 import * as io from 'socket.io';
 import { BestTimesService } from './best-times.service';
 import { RecordTimesService } from './database.games.service';
-//import { DatabaseServiceMock } from './database.service.mock';
-//import { GameManagerService } from './game-manager.service';
+
 import { Time } from '@common/time';
 
 describe('BestTimesService tests', () => {
     let bestTimesService: BestTimesService;
-    //let recordTimesService: RecordTimesService;
-    // let databaseService: DatabaseServiceMock;
-    // let gameManagerService: GameManagerService;
-
-    // before(() => {
-    //     //databaseService = new DatabaseServiceMock();
-    //   //  recordTimesService = new RecordTimesService(databaseService as any);
-    // });
 
     beforeEach(() => {
         bestTimesService = new BestTimesService(new ServerIOTestHelper() as unknown as io.Server);
@@ -29,7 +20,7 @@ describe('BestTimesService tests', () => {
         sinon.restore();
     });
 
-    it('should emit the new record time to all active players', async () => {
+    it('should emit the new record time to all active players when there is new record', async () => {
         const testRecordTimeInfos: RecordTimeInformations = {
             playerName: 'playerTest',
             playerRanking: 1,
@@ -41,6 +32,18 @@ describe('BestTimesService tests', () => {
         bestTimesService['notifyAllActivePlayers'](testRecordTimeInfos.playerName, testRecordTimeInfos.gameName, testRecordTimeInfos.isMultiplayer);
         expect(emitStub.calledOnce);
         expect(bestTimesService.hasNewRecord).to.equal(false);
+    });
+
+    it('should not emit new record time to all active players when there is not new record time', async () => {
+        const testRecordTimeInfos: RecordTimeInformations = {
+            playerName: 'playerTest',
+            playerRanking: 1,
+            gameName: 'Test game',
+            isMultiplayer: false,
+        };
+        const emitStub = sinon.spy(bestTimesService['sio'], 'emit');
+        bestTimesService['notifyAllActivePlayers'](testRecordTimeInfos.playerName, testRecordTimeInfos.gameName, testRecordTimeInfos.isMultiplayer);
+        expect(emitStub.notCalled);
     });
 
     it('should convert from time type to string if minute and second are not two digit format', async () => {

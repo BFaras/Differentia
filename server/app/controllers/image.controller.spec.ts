@@ -17,7 +17,7 @@ describe('ImagesController', () => {
         return await supertest(expressApp)
             .post('/images')
             .field('Content-Type', 'multipart/form-data')
-            .attach('file', './assets/images/Bike game_1_image_7_diff_2.bmp')
+            .attach('file', './assets/images/Chair game_1_image_7_diff.bmp')
             .then((response) => {
                 expect(response.status).to.deep.equal(StatusCodes.CREATED);
             });
