@@ -34,7 +34,6 @@ export class SocketManager {
     private timeConstantsService: TimeConstantsService = new TimeConstantsService();
     private usernameValidateService: UsernameValidateService = new UsernameValidateService();
     private bestTimesService: BestTimesService;
-    private currentGameName: string;
 
     constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] }, maxHttpBufferSize: 1e7 });
@@ -59,7 +58,6 @@ export class SocketManager {
             socket.on('solo classic mode', async (gameName: string) => {
                 this.sio.to(socket.id).emit(CLASSIC_MODE);
                 this.sio.to(socket.id).emit('The game is', gameName);
-                this.currentGameName = gameName;
                 const username = this.waitingLineHandlerService.getUsernamePlayer(socket.id, this.sio);
                 const gameInfo: GameInfo = {
                     socket,
@@ -258,14 +256,15 @@ export class SocketManager {
                 const mode = this.gameManagerService.getSocketChronometerService(socket).mode;
                 const isGameFinished = await this.gameManagerService.isGameFinished(socket, isMultiplayer, mode);
                 const playerUsername = this.gameManagerService.getSocketUsername(socket);
+                const currentGameName: string = this.gameManagerService.getSocketGameName(socket);
                 if (isGameFinished) {
                     mouseHandler.resetDifferencesData();
-                    if (mode === CLASSIC_MODE && (await this.gamesService.getGame(this.currentGameName)) !== undefined) {
+                    if (mode === CLASSIC_MODE && (await this.gamesService.getGame(currentGameName)) !== undefined) {
                         const playerGameTime = this.gameManagerService.getSocketChronometerService(socket).time;
                         const recordTimeInfos: RecordTimeInformations = {
                             playerName: playerUsername,
                             playerRanking: NO_AVAILABLE,
-                            gameName: this.currentGameName,
+                            gameName: currentGameName,
                             isMultiplayer,
                         };
                         await this.bestTimesService.compareGameTimeWithDbTimes(playerGameTime, recordTimeInfos);
@@ -275,8 +274,8 @@ export class SocketManager {
                             this.bestTimesService.hasNewRecord,
                             this.bestTimesService.playerRanking,
                         );
-                        this.bestTimesService.notifyAllActivePlayers(playerUsername, this.currentGameName, isMultiplayer);
-                    } else if (mode === CLASSIC_MODE && (await this.gamesService.getGame(this.currentGameName)) === undefined) {
+                        this.bestTimesService.notifyAllActivePlayers(playerUsername, currentGameName, isMultiplayer);
+                    } else if (mode === CLASSIC_MODE && (await this.gamesService.getGame(currentGameName)) === undefined) {
                         this.gameManagerService.handleEndGameEmits(
                             socket,
                             isMultiplayer,

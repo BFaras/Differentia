@@ -44,6 +44,7 @@ export class GamePageComponent {
     isMultiplayerGame: boolean;
     images: HTMLImageElement[];
     nbDifferencesFound: number[] = [0, 0];
+    timeCluePenalty: number = 0;
 
     constructor(
         private socketService: SocketClientService,
@@ -140,6 +141,11 @@ export class GamePageComponent {
         this.socketService.on('Other player abandonned LM', () => {
             this.usernames[ADVERSARY_PLR_USERNAME_POS] = EMPTY_PLAYER_NAME;
             this.isMultiplayerGame = false;
+        });
+
+        //To test
+        this.socketService.on('Clue Time Penalty', (penalty: number) => {
+            this.timeCluePenalty = penalty;
         });
     }
 }

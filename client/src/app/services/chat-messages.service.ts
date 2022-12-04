@@ -39,7 +39,9 @@ export class ChatMessagesService {
     }
 
     sendMessage(senderName: string, message: string) {
-        this.socketService.send('playerMessage', this.generateChatMessage(senderName, message));
+        if (message.trim() != '') {
+            this.socketService.send('playerMessage', this.generateChatMessage(senderName, message));
+        }
     }
 
     resetIsMultiplayer() {

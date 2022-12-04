@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { CreateGameService } from '@app/services/create-game.service';
@@ -45,6 +45,7 @@ describe('PopDialogWaitingForPlayerComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [PopDialogWaitingForPlayerComponent],
+            imports: [MatDialogModule],
             providers: [
                 { provide: MatDialogRef, useValue: dialogRef },
                 { provide: MAT_DIALOG_DATA, useValue: { classicFlag } },

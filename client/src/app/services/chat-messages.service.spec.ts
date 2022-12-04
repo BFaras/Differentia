@@ -74,6 +74,13 @@ describe('ChatMessagesService', () => {
         expect(sendMessageSpy).toHaveBeenCalled();
     });
 
+    it('should not call sendMessage if the message is an empty string', () => {
+        const emptyMessage = '';
+        const sendMessageSpy = spyOn(socketService, 'send').and.callThrough();
+        chatMessagesService.sendMessage(DEFAULT_USERNAME, emptyMessage);
+        expect(sendMessageSpy).toHaveBeenCalled();
+    });
+
     it('should create an observable which we can subscribe to on construction', () => {
         observer = chatMessagesService.messagesObservable.subscribe(emptySubcriberCallbackTest);
         expect(observer).toBeTruthy;
