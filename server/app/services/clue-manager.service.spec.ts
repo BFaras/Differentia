@@ -28,6 +28,12 @@ describe('ClueManagerService tests', () => {
         chronometerService = new ChronometerService();
         serverSocket = new ServerSocketTestHelper(testSocketId) as unknown as io.Socket;
 
+        chronometerService.timeConstants = {
+            initialTime: 30,
+            penaltyTime: 5,
+            savedTime: 7,
+        };
+
         sinon.stub(mouseHandlerService, 'getListOfDifferencesNotFound').returns(differencesNotFound);
         sinon.stub(ClueFinderService.prototype, 'findClueQuandrantFromClueNumber').returns(differenceQuadrantTest);
     });
