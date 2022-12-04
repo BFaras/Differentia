@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { SocketClientService } from '@app/services/socket-client.service';
 
 @Component({
@@ -6,9 +6,9 @@ import { SocketClientService } from '@app/services/socket-client.service';
     templateUrl: './game-selection.component.html',
     styleUrls: ['./game-selection.component.scss'],
 })
-export class GameSelectionComponent {
+export class GameSelectionComponent implements OnInit {
+    readonly nameOfPage: string = 'GameSelection';
     constructor(private socketService: SocketClientService) {}
-    nameOfPage: string = 'GameSelection';
 
     ngOnInit(): void {
         this.socketService.connect();
