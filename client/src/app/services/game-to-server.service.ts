@@ -8,6 +8,7 @@ import { StatusCodes } from 'http-status-codes';
 import { CommunicationService } from './communication.service';
 import { UploadFileService } from './upload-file.service';
 import { RecordTime } from '@app/classes/record-time';
+import { SafeValue } from '@angular/platform-browser';
 @Injectable({
     providedIn: 'root',
 })
@@ -65,7 +66,7 @@ export class GameToServerService {
         return this.originalImagesUploaded;
     }
 
-    setOriginalUrlUploaded(index: any, imageSrc: any) {
+    setOriginalUrlUploaded(index: number | undefined, imageSrc: SafeValue | undefined) {
         this.originalImagesUploaded = {
             image: imageSrc,
             index,
@@ -76,7 +77,7 @@ export class GameToServerService {
         return this.modifiedImageUploaded;
     }
 
-    setModifiedUrlUploaded(index: any, imageSrc: any) {
+    setModifiedUrlUploaded(index: number | undefined, imageSrc: SafeValue | undefined) {
         this.modifiedImageUploaded = {
             image: imageSrc,
             index,

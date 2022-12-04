@@ -5,6 +5,7 @@ import { ImageToImageDifferenceService } from '@app/services/image-to-image-diff
 import { MergeImageCanvasHandlerService } from '@app/services/merge-image-canvas-handler.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { UploadFileService } from '@app/services/upload-file.service';
+import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
 import { DifferencesInformations } from '@common/differences-informations';
 
 @Component({
@@ -14,8 +15,8 @@ import { DifferencesInformations } from '@common/differences-informations';
 })
 export class ImageDifferenceComponent implements OnInit, OnDestroy {
     @Input() offset: number;
-    readonly originalImage: HTMLImageElement = new Image();
-    readonly modifiedImage: HTMLImageElement = new Image();
+    readonly originalImage: HTMLImageElement = new Image(IMAGE_WIDTH, IMAGE_HEIGHT);
+    readonly modifiedImage: HTMLImageElement = new Image(IMAGE_WIDTH, IMAGE_HEIGHT);
     readonly finalDifferencesImage: HTMLImageElement = new Image();
     private numberOfDifferences: number;
     private differencesList: number[][];
@@ -72,8 +73,21 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
     }
 
     private createImagesWithoutCanvas(): void {
-        this.originalImage.src = this.mergeImageCanvasService.getCanvas()[0].toDataURL();
-        this.modifiedImage.src = this.mergeImageCanvasService.getCanvas()[1].toDataURL();
+        const canvasOriginal = this.mergeImageCanvasService.getCanvas()[0];
+        const ctxOriginal = canvasOriginal.getContext('2d')!;
+        ctxOriginal.globalCompositeOperation = "destination-over"
+        ctxOriginal.fillStyle = '#FFF';
+        ctxOriginal.fillRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+
+        this.originalImage.src = canvasOriginal.toDataURL();
+
+        const canvasModified = this.mergeImageCanvasService.getCanvas()[1];
+        const ctxModified = canvasModified.getContext('2d')!;
+        ctxModified.globalCompositeOperation = "destination-over"
+        ctxModified.fillStyle = '#FFF';
+        ctxModified.fillRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+
+        this.modifiedImage.src = canvasModified.toDataURL();
     }
 
     private async loadImages(): Promise<void> {
