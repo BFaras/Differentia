@@ -20,11 +20,11 @@ export class RecordTimesService {
     get collection(): Collection<GameTimes> {
         return this.databaseService.database.collection(process.env.DATABASE_COLLECTION!);
     }
-    // To test
+
     isDatabaseAvailable(): boolean {
         return this.databaseService.database !== undefined;
     }
-    // To test
+
     async addNewGameDefaultTimes(gameName: string): Promise<void> {
         const newGameDefaultTimes: GameTimes = {
             name: gameName,
@@ -38,7 +38,7 @@ export class RecordTimesService {
             throw new Error('Game already exists');
         }
     }
-    // To test
+
     async deleteGameRecordTimes(nameOfWantedGame: string): Promise<void> {
         if (this.isDatabaseAvailable()) {
             return this.collection
@@ -53,7 +53,7 @@ export class RecordTimesService {
                 });
         }
     }
-    // To test
+
     async resetGameRecordTimes(gameName: string): Promise<void> {
         const filterQuery: Filter<GameTimes> = { name: gameName };
         const updateQuery: UpdateFilter<GameTimes> = {
@@ -68,7 +68,7 @@ export class RecordTimesService {
                 });
         }
     }
-    // To test
+
     async resetAllGamesRecordTimes(): Promise<void> {
         const updateQuery: UpdateFilter<GameTimes> = {
             $set: { recordTimes: this.databaseService.defaultRecordTimes },
@@ -82,7 +82,7 @@ export class RecordTimesService {
                 });
         }
     }
-    // To test
+
     async updateGameRecordTimes(gameName: string, newRecordTimes: GameModeTimes): Promise<void> {
         const filterQuery: Filter<GameTimes> = { name: gameName };
         const updateQuery: UpdateFilter<GameTimes> = {
@@ -95,7 +95,7 @@ export class RecordTimesService {
                 throw new Error('Failed to reset this game record times');
             });
     }
-    // To test
+
     async getGameTimes(nameOfWantedGame: string): Promise<GameModeTimes> {
         const filterQuery: Filter<GameTimes> = { name: nameOfWantedGame };
 
@@ -110,7 +110,7 @@ export class RecordTimesService {
                 });
         } else return this.databaseErrorRecordTimes;
     }
-    // To test
+
     async sortGameTimes(gameName: string, isMultiplayer: boolean): Promise<void> {
         if (isMultiplayer) {
             return this.collection
@@ -128,7 +128,7 @@ export class RecordTimesService {
                 });
         }
     }
-    // To test
+
     getPlayerRanking(timeArray: RecordTime[], playerRecordTime: string): number | undefined {
         for (let index = 0; index < timeArray.length; index++) {
             if (playerRecordTime === timeArray[index].time) {
@@ -137,7 +137,7 @@ export class RecordTimesService {
         }
         return;
     }
-    // To test
+    
     private async validateName(gameName: string): Promise<boolean> {
         const filterQuery: Filter<GameTimes> = { name: gameName };
         const game = await this.collection.findOne(filterQuery);
