@@ -94,6 +94,7 @@ export class ToolSettingComponent implements OnInit {
     }
 
     setMode(value: string): void {
+
         if (value === 'write') {
             this.enableErase = false;
             this.enableWrite = true;

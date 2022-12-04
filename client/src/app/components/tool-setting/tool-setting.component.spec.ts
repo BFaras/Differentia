@@ -6,7 +6,7 @@ import { KeyEventHandlerService } from '@app/services/key-event-handler.service'
 import { PencilService } from '@app/services/pencil.service';
 import { IMAGE_HEIGHT, IMAGE_WIDTH, VERY_BIG } from '@common/const';
 import { ToolSettingComponent } from './tool-setting.component';
-
+import { FormsModule } from '@angular/forms';
 describe('ToolSettingComponent', () => {
     let component: ToolSettingComponent;
     let fixture: ComponentFixture<ToolSettingComponent>;
@@ -43,6 +43,7 @@ describe('ToolSettingComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [ToolSettingComponent],
+            imports: [FormsModule],
             providers: [
                 { provide: DrawingHistoryService, useValue: drawingHistoryServiceSpy },
                 { provide: CanvasDataHandlerService, useValue: canvasDataHandlerServiceSpy },
@@ -116,8 +117,28 @@ describe('ToolSettingComponent', () => {
         expect(pencilServiceSpy.setStateOfPencilForRightCanvas).toHaveBeenCalled();
     });
 
+    it('should verify clickEvent set pencil mode in node eraser', () => {
+        const clickEvent = new Event('click');
+        Object.defineProperty(clickEvent, 'currentTarget', { value: 'erase' });
+        component.setPencilMode(clickEvent);
+
+        expect(pencilServiceSpy.setStateOfPencilForRightCanvas).toHaveBeenCalled();
+    });
+
     it('should verify vereify with other canvas', () => {
         component.shareDataWithOtherCanvas();
         expect(canvasDataHandlerServiceSpy.shareDataWithOtherCanvas).toHaveBeenCalled();
+    });
+
+    it('should verify vereify setMode write', () => {
+        component.setMode("write")
+        expect(component['enableErase']).toBeFalsy;
+        expect(component['enableWrite']).toBeTruthy;
+    });
+
+    it('should verify vereify setMode erase', () => {
+        component.setMode("erase")
+        expect(component['enableErase']).toBeTruthy;
+        expect(component['enableWrite']).toBeFalsy;
     });
 });
