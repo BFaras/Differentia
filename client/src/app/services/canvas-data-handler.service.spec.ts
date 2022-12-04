@@ -86,7 +86,7 @@ describe('CanvasDataHandlerService', () => {
     it('should verify if possible share with other canvas for index 0 ', () => {
         service.setContext(contextMock, mockIndexLeftCanvas);
         service.setContext(contextMock, mockIndexRightCanvas);
-        const copyCanvasMock = spyOn(service, 'copyCanvas');
+        const copyCanvasMock = spyOn(service, 'exchangeCanvas');
         service.shareDataWithOtherCanvas();
         expect(copyCanvasMock).toHaveBeenCalled();
     });
@@ -94,7 +94,7 @@ describe('CanvasDataHandlerService', () => {
     it('should verify if possible share with other canvas for index 0 ', () => {
         service.setContext(contextMock, mockIndexLeftCanvas);
         service.setContext(contextMock, mockIndexRightCanvas);
-        const copyCanvasMock = spyOn(service, 'copyCanvas');
+        const copyCanvasMock = spyOn(service, 'exchangeCanvas');
         service.shareDataWithOtherCanvas();
         expect(copyCanvasMock).toHaveBeenCalled();
     });
@@ -102,8 +102,42 @@ describe('CanvasDataHandlerService', () => {
     it('should verify if possible share with other canvas for index 1 ', () => {
         service.setContext(contextMock, mockIndexLeftCanvas);
         service.setContext(contextMock, mockIndexRightCanvas);
-        const copyCanvasMock = spyOn(service, 'copyCanvas');
+        const copyCanvasMock = spyOn(service, 'exchangeCanvas');
         service.shareDataWithOtherCanvas();
         expect(copyCanvasMock).toHaveBeenCalled();
     });
+
+    it('should verify if copy canvas works ', () => {
+        service.setContext(contextMock, mockIndexLeftCanvas);
+        service.setContext(contextMock, mockIndexRightCanvas);
+        service.copyCanvas(0);
+        const copyCanvasMock = spyOn(service, 'exchangeCanvas');
+        service.shareDataWithOtherCanvas();
+        expect(copyCanvasMock).toHaveBeenCalled();
+    });
+
+    it('should exchangeCanvas  ', () => {
+        service.setContext(contextMock, mockIndexLeftCanvas);
+        service.setContext(contextMock, mockIndexRightCanvas);
+        const drawOnFakeCanvasMock = spyOn(service, 'drawOnFakeCanvas');
+        service.shareDataWithOtherCanvas();
+        expect(drawOnFakeCanvasMock).toHaveBeenCalled();
+    });
+
+    it('should exchangeCanvas  ', () => {
+        service.setContext(contextMock, mockIndexLeftCanvas);
+        service.setContext(contextMock, mockIndexRightCanvas);
+        const drawOnFakeCanvasMock = spyOn(service, 'drawOnFakeCanvas');
+        service.shareDataWithOtherCanvas();
+        expect(drawOnFakeCanvasMock).toHaveBeenCalled();
+    });
+
+    it('should exchangeCanvas  ', () => {
+        service.setContext(contextMock, mockIndexLeftCanvas);
+        service.setContext(contextMock, mockIndexRightCanvas);
+        const drawOnFakeCanvasMock = spyOn(CanvasRenderingContext2D.prototype, 'drawImage').and.callFake(() => {});
+        service.drawOnFakeCanvas();
+        expect(drawOnFakeCanvasMock).toHaveBeenCalled();
+    });
+
 });

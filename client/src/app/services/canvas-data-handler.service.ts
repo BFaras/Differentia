@@ -34,22 +34,22 @@ export class CanvasDataHandlerService {
     exchangeCanvas() {
         this.drawOnFakeCanvas();
 
-        this.drawOnOtherCanvas(0);
-        this.drawOnOtherCanvas(1);
+        this.drawOnOtherCanvas(0, this.rightCanvasEchange);
+        this.drawOnOtherCanvas(1, this.leftCanvasEchange);
     }
 
     drawOnFakeCanvas() {
-        this.contextLeft?.drawImage(this.contextList[0].canvas, 0, 0);
-        this.contextRight?.drawImage(this.contextList[1].canvas, 0, 0);
-
+        this.contextLeft!.drawImage(this.contextList[0].canvas, 0, 0);
+        this.contextRight!.drawImage(this.contextList[1].canvas, 0, 0);
     }
 
-    drawOnOtherCanvas(index: number) {
-        this.drawingHistoryService.saveCanvas(this.contextList[index], 0);
+    drawOnOtherCanvas(index: number, canvas: HTMLCanvasElement) {
+        this.drawingHistoryService.saveCanvas(this.contextList[index], index);
         this.contextList[index].clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
-        this.contextList[index].drawImage(this.rightCanvasEchange, 0, 0);
-        this.drawingHistoryService.saveCanvas(this.contextList[index], 0);
-        this.contextRight.clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+        this.contextList[index].drawImage(canvas, 0, 0);
+        this.drawingHistoryService.saveCanvas(this.contextList[index], index);
+        if (index === 1) this.contextLeft.clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+        else if (index === 0) this.contextRight.clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
     }
 
     shareDataWithOtherCanvas() {
