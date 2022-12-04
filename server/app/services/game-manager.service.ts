@@ -231,13 +231,13 @@ export class GameManagerService {
     getSocketGameName(socket: io.Socket): string {
         const gameRoomName = this.findSocketGameRoomName(socket);
         let gameName = '';
-        for (const rooms of this.gamesRooms.entries()) {
-            rooms[1].forEach((value) => {
-                if (value === gameRoomName) {
-                    gameName = rooms[0];
+        this.gamesRooms.forEach((rooms, game) => {
+            rooms.forEach((roomName) => {
+                if (roomName === gameRoomName) {
+                    gameName = game;
                 }
             });
-        }
+        });
         return gameName;
     }
 
