@@ -61,7 +61,7 @@ export class MergeImageCanvasHandlerService {
     }
 
     resetCanvas() {
-        if (this.context != null) {
+        if (this.context !== null) {
             this.context[ORIGINAL_IMAGE_POSITION].clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
             this.context[MODIFIED_IMAGE_POSITION].clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
         }

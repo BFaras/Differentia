@@ -58,4 +58,12 @@ describe('MergeImageCanvasHandlerService', () => {
         imageMock.src = 'imageSrc';
         expect(await service.waitForImageToLoad(imageMock)).not.toBeNull();
     });
+
+    it('should test SetCanvas', () => {
+        service.setLeftContextAndCanvas(contextMock, canvasMock);
+        service.setRightContextAndCanvas(contextMock, canvasMock);
+        const spy = spyOn(CanvasRenderingContext2D.prototype, 'clearRect').and.callFake(() => {});
+        service.resetCanvas();
+        expect(spy).toHaveBeenCalled();
+    });
 });

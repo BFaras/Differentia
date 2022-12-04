@@ -21,6 +21,10 @@ describe('ImageDifferenceComponent', () => {
         image: 'url' as SafeValue,
         index: 1,
     };
+    const mockImageBlanck: ImageToSendToServer = {
+        image: undefined,
+        index: undefined,
+    };
 
     let component: ImageDifferenceComponent;
     let fixture: ComponentFixture<ImageDifferenceComponent>;
@@ -30,16 +34,18 @@ describe('ImageDifferenceComponent', () => {
     let imageToImageDifferenceService: ImageToImageDifferenceService;
     let renderer: Renderer2;
     let getImagesDataSpy: jasmine.Spy;
+    let mergeImageCanvasServiceMock: jasmine.SpyObj<MergeImageCanvasHandlerService>;
 
     beforeEach(async () => {
         socketTestHelper = new SocketTestHelper();
         renderer = new Renderer2TestHelper() as unknown as Renderer2;
 
-        const mergeImageCanvasServiceMock = jasmine.createSpyObj('MergeImageCanvasHandlerService', [
+        mergeImageCanvasServiceMock = jasmine.createSpyObj('MergeImageCanvasHandlerService', [
             'initializeImage',
             'drawImageOnCanvas',
             'obtainUrlForMerged',
             'resetCanvas',
+            'getCanvas',
         ]);
 
         const uploadFileServiceMock = jasmine.createSpyObj('UploadFileService', ['setOriginalMergedCanvasImage', 'setModifiedMergedCanvasImage']);
@@ -57,6 +63,7 @@ describe('ImageDifferenceComponent', () => {
         fixture = TestBed.createComponent(ImageDifferenceComponent);
         gameToServerService = fixture.debugElement.injector.get(GameToServerService);
         imageToImageDifferenceService = fixture.debugElement.injector.get(ImageToImageDifferenceService);
+        
         socketService = fixture.debugElement.injector.get(SocketClientService);
         socketService.socket = socketTestHelper as unknown as Socket;
 
@@ -128,5 +135,13 @@ describe('ImageDifferenceComponent', () => {
         await component.ngOnInit();
         socketTestHelper.peerSideEmit('game creation differences informations', differencesInformationsTest);
         expect(spy).toHaveBeenCalled();
+    });
+
+    it('should test createImageWithoutCAnvas', async () => {
+        const canvas = document.createElement('canvas');
+        mergeImageCanvasServiceMock.getCanvas.and.returnValue([canvas, canvas]);
+        gameToServerService.getOriginalImageUploaded = jasmine.createSpy().and.returnValue(mockImageBlanck)
+        await component.ngOnInit();
+        expect(component['originalImage'].src).not.toBeNull();
     });
 });
