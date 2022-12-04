@@ -1,6 +1,10 @@
 .play-area {
+    position: relative;
     outline: none;
     width: 100%;
+    left:3%;
+    top:5%;
+    
 }
 
 .image-container {
@@ -25,7 +29,7 @@ button {
     font-size: 40px;
     position: relative;
     left: 470px;
-    top: 10px;
+    bottom: 30px;
 }
 #noClick {
     pointer-events: none;
@@ -38,8 +42,9 @@ button {
 
 .button-container {
     padding: 0px 470px 0px 470px;
-    position: relative;
-    left: 167px;
+    position:relative;
+    left: 215px;
+    top:50px;
 }
 
 #mouse-position-display {

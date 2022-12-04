@@ -1,7 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { MSG_ALL_TIME_RATIO, MSG_PENALTY_TIME_RATIO, MSG_SAVED_TIME_RATIO } from '@app/const/client-consts';
@@ -43,7 +45,7 @@ describe('DialogInputComponent', () => {
 
         await TestBed.configureTestingModule({
             declarations: [DialogInputComponent],
-            imports: [MatFormFieldModule, MatInputModule, MatDialogModule, BrowserAnimationsModule],
+            imports: [MatFormFieldModule, MatInputModule, MatDialogModule, BrowserAnimationsModule, MatIconModule, MatTooltipModule],
             providers: [
                 { provide: MatDialogRef, useValue: dialogRef },
                 { provide: MAT_DIALOG_DATA, useValue: gameSettings },

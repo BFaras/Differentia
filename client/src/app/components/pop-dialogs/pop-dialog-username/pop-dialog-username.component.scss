@@ -1,6 +1,44 @@
-.mat-flat-button.mat-warn,
-.mat-raised-button.mat-warn,
-.mat-fab.mat-warn,
-.mat-mini-fab.mat-warn {
-    margin-left: 480px;
+.container {
+    height: 100%;
+    width: 100%;
+    padding: 3px 4px 4px 3px;
+    background-image: url(../../../../assets/bob.jpg);
+}
+
+::ng-deep.mat-form-field-underline {
+    background-color: white !important;
+  } 
+
+  
+.dialog-content {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    border: solid black 1px;
+    border-radius: 5px;
+    color:white;
+
+
+}
+
+.dialog-content > h1 {
+    position: relative;
+    left: 2%;
+}
+.form-radius-container > * {
+    position: relative;
+    left: 5%;
+
+}
+mat-dialog-actions > button{
+    position: relative;
+    left:35%;
+    top:70px;
+    width: 30%;
+    background-color: rgb(214, 169, 143);
+}
+
+.dialog-title > button {
+    position: relative;
+    left:92%;
 }

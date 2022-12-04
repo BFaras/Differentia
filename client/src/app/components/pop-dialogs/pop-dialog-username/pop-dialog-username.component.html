@@ -1,25 +1,20 @@
 <div class="container">
-    <div mat-dialog-title class="dialog-title">
-        <button mat-mini-fab color="warn" aria-label="close dialog" (click)="this.dialogRef.close()">
-            <mat-icon>close</mat-icon>
-        </button>
-    </div>
-    <mat-dialog-content class="dialog-content">
-        <h1>Quel est votre nom?</h1>
+    <div class="dialog-content">
+        <div mat-dialog-title class="dialog-title">
+            <button mat-icon-button aria-label="close dialog" (click)="this.dialogRef.close()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+        <h1>Veuillez entrer votre nom</h1>
         <div class="form-radius-container">
+            <p >**le nom d'utilisateur ne peut pas avoir plus que 8 lettres</p>
             <mat-form-field>
                 <label for="username">Nom d'utilisateur: </label>
-                <input #userName matInput name="username" (change)="inputChanged()" type="text" />
-                <!-- corriger le css de usernameNotvalid -->
-                <ng-container *ngIf="usernameNotValid">
-                    <h3>Votre nom n'est pas valide...</h3>
-                </ng-container>
+                <input maxlength="8" (keydown.space)="$event.preventDefault()" #userName matInput name="username" [(ngModel)] = "username" type="text"/>
             </mat-form-field>
         </div>
         <mat-dialog-actions>
-            <button mat-raised-button [disabled]="disabledButton" (click)="startUpGameService.sendUsername(this.username.nativeElement.value)">
-                Ok
-            </button>
+            <button mat-raised-button [disabled]="!username" (click)="startUpGameService.sendUsername(this.username)" mat-dialog-close>Continuer</button>
         </mat-dialog-actions>
-    </mat-dialog-content>
+    </div>
 </div>

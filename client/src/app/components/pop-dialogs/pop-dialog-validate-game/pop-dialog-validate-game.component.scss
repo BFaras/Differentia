@@ -3,6 +3,8 @@
     height: 100%;
     border: solid grey 1px;
     border-radius: 5px;
+    background-image: url(../../../../assets/bob.jpg);
+    color:white;
 }
 
 .dialog-title {
@@ -28,16 +30,35 @@
 
 mat-radio-group > * {
     font-size: 1em;
-    width: 10vw;
+    width: 5vw;
 }
+
+mat-radio-group {
+    position:relative;
+}
+.button-group{
+    background-color: rgb(214, 169, 143);
+
+}
+p{
+    font-size :17px;
+}
+
 
 .image-difference{
-    position:relative;
-    width:150px;
-    height:150px;
-    border : solid red;
-    left: 240px;
+    position: relative;
+    width: 120px;
+    height: 120px;
+    left: 220px;
+    top: 5px;
 }
 
 
-
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: rgb(214, 169, 143);
+  }
+  
+  
+::ng-deep.mat-radio-button.mat-accent .mat-radio-inner-circle{
+    background-color: rgb(214, 169, 143);
+  }

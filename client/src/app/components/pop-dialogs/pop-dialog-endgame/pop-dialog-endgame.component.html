@@ -1,10 +1,10 @@
 <div class="container">
-    <div mat-dialog-title class="dialog-title">
-        <button mat-mini-fab color="warn" aria-label="close dialog" routerLink="/home" mat-dialog-close>
-            <mat-icon>close</mat-icon>
-        </button>
-    </div>
     <mat-dialog-content class="dialog-content">
+        <div mat-dialog-title class="dialog-title">
+            <button class="close-button" mat-icon-button aria-label="close dialog" routerLink="/home" mat-dialog-close>
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
         <ng-container *ngIf="data.winFlag; else userLost">
             <h1>Bravo!</h1>
         </ng-container>
@@ -14,8 +14,8 @@
         <div class="form-radius-container">
             <p>{{ data.message }}</p>
         </div>
-        <mat-dialog-actions>
-            <button mat-raised-button mat-dialog-close routerLink="/home">Ok</button>
+        <mat-dialog-actions class = "group-buttons">
+            <button class = "return-button" mat-raised-button mat-dialog-close routerLink="/home">Revenir à la selection de jeu</button>
         </mat-dialog-actions>
     </mat-dialog-content>
 </div>

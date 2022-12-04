@@ -44,6 +44,7 @@ h1 {
 li {
     line-height: 3;
     text-align: center;
+    width: 132px;
 }
 
 .button-group {
@@ -63,4 +64,24 @@ button {
     width: auto;
     margin-bottom: 15px;
     justify-content: center;
+}
+
+.title-ranking{
+    position: relative;
+    left:140px;
+    top:20px;
+    font-weight: 500;
+    font-size: large;
+}
+
+.recordTimeSolo{
+    position: relative;
+    top: 40px;
+    right:110px;
+}
+
+.recordTimeVersus{
+    position: relative;
+    top: 40px;
+    right:80px;
 }

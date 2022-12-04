@@ -87,7 +87,15 @@ describe('CanvasDataHandlerService', () => {
         service.setContext(contextMock, mockIndexLeftCanvas);
         service.setContext(contextMock, mockIndexRightCanvas);
         const copyCanvasMock = spyOn(service, 'copyCanvas');
-        service.shareDataWithOtherCanvas(mockIndexLeftCanvas);
+        service.shareDataWithOtherCanvas();
+        expect(copyCanvasMock).toHaveBeenCalled();
+    });
+
+    it('should verify if possible share with other canvas for index 0 ', () => {
+        service.setContext(contextMock, mockIndexLeftCanvas);
+        service.setContext(contextMock, mockIndexRightCanvas);
+        const copyCanvasMock = spyOn(service, 'copyCanvas');
+        service.shareDataWithOtherCanvas();
         expect(copyCanvasMock).toHaveBeenCalled();
     });
 
@@ -95,7 +103,7 @@ describe('CanvasDataHandlerService', () => {
         service.setContext(contextMock, mockIndexLeftCanvas);
         service.setContext(contextMock, mockIndexRightCanvas);
         const copyCanvasMock = spyOn(service, 'copyCanvas');
-        service.shareDataWithOtherCanvas(mockIndexRightCanvas);
+        service.shareDataWithOtherCanvas();
         expect(copyCanvasMock).toHaveBeenCalled();
     });
 });

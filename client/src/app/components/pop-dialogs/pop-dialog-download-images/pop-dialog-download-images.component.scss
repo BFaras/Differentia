@@ -3,6 +3,8 @@
     height: 100%;
     border: solid grey 1px;
     border-radius: 5px;
+    background-image: url(../../../../assets/bob.jpg);
+    color:white;
 }
 
 .dialog-title {
@@ -31,9 +33,6 @@
     color: red;
 }
 
-.mat-flat-button.mat-warn,
-.mat-raised-button.mat-warn,
-.mat-fab.mat-warn,
-.mat-mini-fab.mat-warn {
-    margin-left: 480px;
+.buttonDownload {
+    background-color: rgb(214, 169, 143);
 }

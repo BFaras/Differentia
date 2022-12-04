@@ -60,6 +60,7 @@ export class GameManagerService {
         }
         this.logRoomsWithGames(gameInfo.gameName, gameRoomName);
         await this.sendImagesToClient(gameInfo.gameName, gameInfo.socket);
+        this.sio.to(gameRoomName).emit('Clue Time Penalty', this.getSocketChronometerService(gameInfo.socket).timeConstants.penaltyTime);
     }
 
     async resetGameList() {
@@ -227,6 +228,19 @@ export class GameManagerService {
         this.addGameToHistoryLimitedTimeMode(socket, gameName);
     }
 
+    getSocketGameName(socket: io.Socket): string {
+        const gameRoomName = this.findSocketGameRoomName(socket);
+        let gameName = '';
+        this.gamesRooms.forEach((rooms, game) => {
+            rooms.forEach((roomName) => {
+                if (roomName === gameRoomName) {
+                    gameName = game;
+                }
+            });
+        });
+        return gameName;
+    }
+
     // To test Seb
     private async switchGame(socket: io.Socket, adversarySocket?: io.Socket): Promise<void> {
         const gameToBePlayed = await this.gamesService.generateRandomGame(this.gamesPlayedByRoom.get(this.findSocketGameRoomName(socket))!);
@@ -267,7 +281,7 @@ export class GameManagerService {
         if (mouseHandler.nbDifferencesTotal % 2 !== 0) {
             return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === Math.floor(mouseHandler.nbDifferencesTotal / 2) + 1;
         } else {
-            return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === mouseHandler.nbDifferencesTotal / 2 - 1;
+            return mouseHandler.getNumberOfDifferencesFoundByPlayer(socket.id) === mouseHandler.nbDifferencesTotal / 2;
         }
     }
 

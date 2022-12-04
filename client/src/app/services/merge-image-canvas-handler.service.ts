@@ -16,6 +16,9 @@ export class MergeImageCanvasHandlerService {
         this.imageDownloaded = [new Image(), new Image()];
     }
 
+    getCanvas(): HTMLCanvasElement[] {
+        return this.canvas;
+    }
     resetAllCanvas() {
         this.canvas = [];
         this.context = [];
@@ -24,18 +27,17 @@ export class MergeImageCanvasHandlerService {
     }
 
     setLeftContextAndCanvas(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
-        this.context!.push(context);
+        this.context?.push(context);
         this.canvas.push(canvas);
     }
 
     setRightContextAndCanvas(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
-        this.context!.push(context);
+        this.context?.push(context);
         this.canvas.push(canvas);
     }
 
     async initializeImage(url: string, index: number) {
         this.imageDownloaded[index].src = url;
-        console.log(this.imageDownloaded[index].src);
         await this.waitForImageToLoad(this.imageDownloaded[index]);
     }
 
@@ -53,21 +55,25 @@ export class MergeImageCanvasHandlerService {
         newCanvas.width = oldCanvas.width;
         newCanvas.height = oldCanvas.height;
 
-        context!.drawImage(oldCanvas, 0, 0);
+        context?.drawImage(oldCanvas, 0, 0);
 
         return newCanvas;
     }
 
     resetCanvas() {
-        this.context![ORIGINAL_IMAGE_POSITION].clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
-        this.context![MODIFIED_IMAGE_POSITION].clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+        if (this.context != null) {
+            this.context[ORIGINAL_IMAGE_POSITION].clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+            this.context[MODIFIED_IMAGE_POSITION].clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+        }
     }
 
     async drawImageOnCanvas(index: number) {
         this.formerCanvas[index] = this.cloneCanvas(this.canvas[index]);
-        this.context![index].globalCompositeOperation = 'source-over';
-        this.context![index].drawImage(this.imageDownloaded[index], 0, 0);
-        this.context![index].drawImage(this.formerCanvas[index], 0, 0);
+        if (this.context !== null) {
+            this.context[index].globalCompositeOperation = 'source-over';
+            this.context[index].drawImage(this.imageDownloaded[index], 0, 0);
+            this.context[index].drawImage(this.formerCanvas[index], 0, 0);
+        }
     }
 
     obtainUrlForMerged(index: number) {

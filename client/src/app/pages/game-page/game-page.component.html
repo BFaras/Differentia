@@ -1,5 +1,11 @@
 <div class="container">
-    <app-sidebar [numberOfDifferences]="nbDifferences" [gameName]="gameName" [gameMode]="gameMode"></app-sidebar>
+    <app-sidebar
+        [numberOfDifferences]="nbDifferences"
+        [gameName]="gameName"
+        [gameMode]="gameMode"
+        [clueTimePenalty]="timeCluePenalty"
+        [isMultiplayer]="isMultiplayerGame"
+    ></app-sidebar>
     <section class="play-area-container">
         <app-topbar
             class="sidebar-container"

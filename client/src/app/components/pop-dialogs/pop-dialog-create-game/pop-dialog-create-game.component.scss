@@ -3,6 +3,8 @@
     height: 100%;
     border: solid grey 1px;
     border-radius: 5px;
+    background-image: url(../../../../assets/bob.jpg);
+    color:white;
 }
 
 .dialog-title {
@@ -40,10 +42,17 @@ mat-form-field {
     text-align: center;
 }
 
+.gameForm{
+    position:relative;
+    bottom: 20px;
+}
+
+.createButton{
+    background-color: rgb(214, 169, 143);
+}
 .image-difference{
     position:relative;
     width:50px;
     height:50px;
-    border : solid red;
     left: 240px;
     }

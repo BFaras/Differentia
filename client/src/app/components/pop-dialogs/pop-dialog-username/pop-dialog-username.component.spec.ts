@@ -64,19 +64,6 @@ describe('PopDialogUsernameComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('the button should not be disabled if the input value is not undefined', () => {
-        component.disabledButton = true;
-        component.username.nativeElement.value = 'test';
-        component.inputChanged();
-        expect(component.disabledButton).toBeFalsy();
-    });
-
-    it('the button should be disabled if the input value is undefined', () => {
-        component.disabledButton = true;
-        component.username.nativeElement.value = '';
-        component.inputChanged();
-        expect(component.disabledButton).toBeTrue();
-    });
 
     it('should set the user to not valid', () => {
         socketTestHelper.peerSideEmit('username not valid');
@@ -118,13 +105,6 @@ describe('PopDialogUsernameComponent', () => {
         component['configureUsernamePopUpSocketFeatures']();
         socketTestHelper.peerSideEmit(`open the ${LIMITED_TIME_MODE} pop-dialog`);
         expect(dialog['open']).toHaveBeenCalled();
-    });
-
-    it('should not close dialog when calling closeGameDialog', () => {
-        const gameName = 'car game';
-        component.gameInfo['nameGame'] = 'red sky';
-        component['closeGameDialogAfterDelete'](gameName);
-        expect(dialog['closeAll']).not.toHaveBeenCalled();
     });
 
     it('should close dialog when calling closeGameDialog', () => {

@@ -4,6 +4,7 @@
         <img class="imageGameForm" src="{{ gameForm.gameImage }}" />
 
         <div class="dataGameForm">
+            <div class = "title-ranking">Classement</div>
             <ol class="recordTimeSolo">
                 <h3>Individuel</h3>
                 <li *ngFor="let records of gameForm.recordTimesBoard.recordTimesSolo">{{ records.time }} par {{ records.playerName }}</li>

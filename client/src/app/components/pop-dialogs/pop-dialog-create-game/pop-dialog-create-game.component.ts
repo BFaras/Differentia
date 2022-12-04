@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { GameToServerService } from '@app/services/game-to-server.service';
 @Component({
     selector: 'app-pop-dialog-create-game',
@@ -7,8 +7,6 @@ import { GameToServerService } from '@app/services/game-to-server.service';
 })
 export class PopDialogCreateGameComponent implements OnInit {
     isImageDifferenceAndNumberReady: boolean;
-    imageOfDifferenceSrc: any;
-    @ViewChild('name', { static: true }) nameInput: ElementRef;
     nameOfGame: string;
     numberOfDifference: number;
     constructor(private gameToServerService: GameToServerService) {}
@@ -17,11 +15,12 @@ export class PopDialogCreateGameComponent implements OnInit {
         this.getNumberOfDifference();
     }
 
-    addGame() {
-        this.gameToServerService.addGame(this.nameInput);
+    addGame(): void {
+        this.gameToServerService.addGame(this.nameOfGame);
     }
 
-    getNumberOfDifference() {
+    getNumberOfDifference(): void {
         this.numberOfDifference = this.gameToServerService.getNumberDifference();
     }
+
 }

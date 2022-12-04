@@ -2,20 +2,16 @@
     <div mat-dialog-title class="dialog-title">
     </div>
     <mat-dialog-content class="dialog-content">
-        <h1>Validation</h1>
+        <h1>Veuillez nommer votre jeu</h1>
         <div class="form-radius-container">
-            <!-- <div>Nombre de difference : __NombreDiff__</div> -->
-            <mat-form-field>
-                <label for="nbDiff">Nombre de differences :  {{numberOfDifference}} </label>
-                <input matInput name="nbDiff"/>
-            </mat-form-field>
-            <mat-form-field>
+            <mat-form-field class="gameForm">
                 <label for="name">Nom du Jeu : </label>
-                <input #name matInput name="name" />
+                <input  maxlength="8" (keydown.space)="$event.preventDefault()" #name matInput name="name" [(ngModel)] = "nameOfGame" />
             </mat-form-field>
+            <div>Nombre de differences trouvées :  {{numberOfDifference}} </div>
         </div>
         <mat-dialog-actions>
-            <button mat-raised-button mat-dialog-close (click)="addGame()">Créer</button>
+            <button [disabled] = "!nameOfGame" class = "createButton"mat-raised-button mat-dialog-close (click)="addGame()">Créer un jeu</button>
         </mat-dialog-actions>
     </mat-dialog-content>
 </div>

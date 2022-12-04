@@ -53,8 +53,8 @@ export const ORIGINAL_IMAGE_POSITION = 0;
 export const MODIFIED_IMAGE_POSITION = 1;
 
 //nom image
-export const ORIGINAL_IMAGE_NAME: string = 'Image Original';
-export const MODIFIED_IMAGE_NAME: string = 'Image Modifié ';
+export const ORIGINAL_IMAGE_NAME: string = 'Image originale';
+export const MODIFIED_IMAGE_NAME: string = 'Image modifiée ';
 
 //Arrays constants
 export const EMPTY_ARRAY_LENGTH = 0;

@@ -15,7 +15,7 @@ import SpyObj = jasmine.SpyObj;
 describe('GameToServerService', () => {
     const imageTestValue = { name: 'Hi', image: 'src' };
     let service: GameToServerService;
-    let elmentRef: ElementRef;
+    let elmentRef: string;
     let communicationServiceSpy: SpyObj<CommunicationService>;
     let mockEmitterAddGame: Subject<HttpResponse<any>>;
 
@@ -44,7 +44,7 @@ describe('GameToServerService', () => {
             ],
         });
         service = TestBed.inject(GameToServerService);
-        elmentRef = TestBed.inject(ElementRef);
+        elmentRef = "stest"
 
         spyOn(UploadFileService.prototype, 'getNameOriginalImage').and.returnValue(imageTestValue as unknown as File);
         spyOn(UploadFileService.prototype, 'getNameModifiedImage').and.returnValue(imageTestValue as unknown as File);

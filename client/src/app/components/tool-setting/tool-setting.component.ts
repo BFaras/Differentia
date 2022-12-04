@@ -4,6 +4,8 @@ import { DrawingHistoryService } from '@app/services/drawing-history.service';
 import { KeyEventHandlerService } from '@app/services/key-event-handler.service';
 import { PencilService } from '@app/services/pencil.service';
 import { BIG, BLACK_COLOR, CONTROL_SHIFT_Z_SHORTCUT, CONTROL_Z_SHORTCUT, MEDIUM, SMALL, VERY_BIG, VERY_SMALL, WRITE_MODE } from '@common/const';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { faEraser } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tool-setting',
@@ -11,19 +13,19 @@ import { BIG, BLACK_COLOR, CONTROL_SHIFT_Z_SHORTCUT, CONTROL_Z_SHORTCUT, MEDIUM,
     styleUrls: ['./tool-setting.component.scss'],
 })
 export class ToolSettingComponent implements OnInit {
+    @Input() indexTool: number;
+    @Input() nameTool: string;
     readonly widths: number[] = [VERY_SMALL, SMALL, MEDIUM, BIG, VERY_BIG];
     color: string;
-    @Input() indexTool: number;
+    faEraser: IconDefinition = faEraser;
+    enableWrite: boolean = true;
+    enableErase: boolean = false;
     constructor(
         private pencilService: PencilService,
         private drawingHistoryService: DrawingHistoryService,
         private canvasDataHandle: CanvasDataHandlerService,
         private keyEventHandlerService: KeyEventHandlerService,
     ) {}
-
-    ngOnInit(): void {
-        this.setOriginalSetting();
-    }
 
     @HostListener(CONTROL_Z_SHORTCUT, ['$event'])
     handleKeyboardToCancelDrawnLine() {
@@ -35,8 +37,12 @@ export class ToolSettingComponent implements OnInit {
         this.keyEventHandlerService.cancelDeleteDrawnLineShortCut();
     }
 
+    ngOnInit(): void {
+        this.setOriginalSetting();
+    }
+
     checkIfThereAreSavedDrawnLines() {
-        if (this.drawingHistoryService.getCancelDrawingHistory()[this.indexTool].length != 0) {
+        if (this.drawingHistoryService.getCancelDrawingHistory()[this.indexTool].length !== 0) {
             return false;
         } else {
             return true;
@@ -44,7 +50,7 @@ export class ToolSettingComponent implements OnInit {
     }
 
     checkIfThereAreSavedDeletedDrawnLines() {
-        if (this.drawingHistoryService.getRedoDrawingHistory()[this.indexTool].length != 0) {
+        if (this.drawingHistoryService.getRedoDrawingHistory()[this.indexTool].length !== 0) {
             return false;
         } else {
             return true;
@@ -84,13 +90,26 @@ export class ToolSettingComponent implements OnInit {
     }
 
     shareDataWithOtherCanvas() {
-        this.canvasDataHandle.shareDataWithOtherCanvas(this.indexTool);
+        this.canvasDataHandle.shareDataWithOtherCanvas();
+    }
+
+    setMode(value: string): void {
+        if (value === 'write') {
+            this.enableErase = false;
+            this.enableWrite = true;
+        }
+
+        if (value === 'erase') {
+            this.enableErase = true;
+            this.enableWrite = false;
+        }
     }
 
     setPencilMode(clickEvent: Event) {
         const currentValue = (clickEvent.currentTarget as HTMLInputElement).value;
         const currentId = (clickEvent.currentTarget as HTMLInputElement).id;
 
-        this.pencilService.setStateOfPencilForRightCanvas(currentValue, parseInt(currentId));
+        this.pencilService.setStateOfPencilForRightCanvas(currentValue, parseInt(currentId, 10));
+        this.setMode(currentValue);
     }
 }

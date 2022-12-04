@@ -34,6 +34,7 @@ import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
 import { GameSelectionComponent } from './pages/game-selection/game-selection.component';
 import { PopDialogAbandonVerificationComponent } from './components/pop-dialogs/pop-dialog-abandon-verification/pop-dialog-abandon-verification.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PopDialogWarningComponent } from './components/pop-dialogs/pop-dialog-warning/pop-dialog-warning.component';
 
 /**
@@ -75,7 +76,7 @@ import { PopDialogWarningComponent } from './components/pop-dialogs/pop-dialog-w
         PopDialogAbandonVerificationComponent,
         PopDialogWarningComponent,
     ],
-    imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
+    imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, FontAwesomeModule],
     providers: [],
     bootstrap: [AppComponent],
 })
