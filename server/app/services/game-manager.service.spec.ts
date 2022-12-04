@@ -38,13 +38,14 @@ describe('GameManagerService tests', () => {
     let serverSocket: io.Socket;
     let serverSocket2: io.Socket;
     let getRoomChronometerServiceStub: sinon.SinonStub;
-    const chronometerService: ChronometerService = new ChronometerService();
+    let chronometerService: ChronometerService;
     const gamesService: GamesService = Container.get(GamesService);
     const mouseHandlerService: MouseHandlerService = new MouseHandlerService();
     let mouseHandlerIsValidClickStub: sinon.SinonStub<[mousePosition: Position, plrSocketId: string], GameplayDifferenceInformations>;
     let testGameInfo: GameInfo;
 
     beforeEach(async () => {
+        chronometerService = new ChronometerService();
         serverSocket = new ServerSocketTestHelper(testSocketId1) as unknown as io.Socket;
         serverSocket2 = new ServerSocketTestHelper(testSocketId2) as unknown as io.Socket;
         gameManagerService = new GameManagerService(new ServerIOTestHelper() as unknown as io.Server);
@@ -54,6 +55,13 @@ describe('GameManagerService tests', () => {
             gameName: testGameName,
             gameMode: '',
         };
+
+        chronometerService.timeConstants = {
+            initialTime: 30,
+            penaltyTime: 5,
+            savedTime: 7,
+        };
+
         sinon.stub(GameManagerService.prototype, <any>'getSocketChronometerService').callsFake((socket) => {
             return chronometerService;
         });
@@ -105,6 +113,13 @@ describe('GameManagerService tests', () => {
         testGameInfo.gameMode = CLASSIC_MODE;
         await gameManagerService.beginGame(testGameInfo);
         expect(spy.calledOnce);
+    });
+
+    it('should not call logRoomsWithGames() on begin game in Limited time mode', async () => {
+        const spy = sinon.spy(gameManagerService, <any>'logRoomsWithGames');
+        testGameInfo.gameMode = LIMITED_TIME_MODE;
+        await gameManagerService.beginGame(testGameInfo);
+        expect(spy.notCalled);
     });
 
     it('should call eraseGamesFromHistoryLimitedTimeMode() and endGameWithDependencies() on emitTime() when LM and chrono has hit zero', async () => {
@@ -186,7 +201,18 @@ describe('GameManagerService tests', () => {
         };
         serverSocket.join(testSocketId1 + GAME_ROOM_GENERAL_ID);
         gameManagerService.handleAbandonEmit(serverSocket, abandonInfo);
-        expect(spy);
+        expect(spy.calledOnce);
+    });
+
+    it('should call endGame() on handleAbandonEmit() if limited time mode and not multiplayer game', () => {
+        const spy = sinon.spy(gameManagerService, 'endGame');
+        const abandonInfo: AbandonData = {
+            gameMode: LIMITED_TIME_MODE,
+            isMultiplayerMatch: false,
+        };
+        serverSocket.join(testSocketId1 + GAME_ROOM_GENERAL_ID);
+        gameManagerService.handleAbandonEmit(serverSocket, abandonInfo);
+        expect(spy.calledOnce);
     });
 
     it('should call findSocketGameRoomName() on getSocketMouseHandlerService()', () => {
@@ -318,7 +344,7 @@ describe('GameManagerService tests', () => {
         expect(stub.calledOnce);
     });
 
-    it('switchGame should call 4 methods if it is called with 2 sockets', async () => {
+    it('switchGame should call 3 methods', async () => {
         const generateRandomGameStub = sinon
             .stub(gameManagerService['gamesService'], 'generateRandomGame')
             .callsFake(async (gamesAlreadyPlayed: string[]) => {
@@ -328,25 +354,7 @@ describe('GameManagerService tests', () => {
         const addGameToHistoryLimitedTimeModeStub = sinon.stub(GameManagerService.prototype, 'addGameToHistoryLimitedTimeMode').callsFake(() => {});
         const sendImagesToClientStub = sinon.stub(GameManagerService.prototype, <any>'sendImagesToClient').callsFake(async () => {});
         const serverEmitStub = sinon.stub(gameManagerService['sio'], 'emit');
-        await gameManagerService['switchGame'](serverSocket, serverSocket2);
-        expect(generateRandomGameStub.calledOnce);
-        expect(resetMouseHandlerServiceStub.calledOnce);
-        expect(sendImagesToClientStub.calledOnce);
-        expect(serverEmitStub.calledOnce);
-        expect(addGameToHistoryLimitedTimeModeStub.called);
-    });
-
-    it('switchGame should call 3 methods if it is called with 1 socket', async () => {
-        const generateRandomGameStub = sinon
-            .stub(gameManagerService['gamesService'], 'generateRandomGame')
-            .callsFake(async (gamesAlreadyPlayed: string[]) => {
-                return Promise.resolve(testGame);
-            });
-        const resetMouseHandlerServiceStub = sinon.stub(GameManagerService.prototype, <any>'resetMouseHandlerService').callsFake(() => {});
-        const addGameToHistoryLimitedTimeModeStub = sinon.stub(GameManagerService.prototype, 'addGameToHistoryLimitedTimeMode').callsFake(() => {});
-        const sendImagesToClientStub = sinon.stub(GameManagerService.prototype, <any>'sendImagesToClient').callsFake(async () => {});
-        const serverEmitStub = sinon.stub(gameManagerService['sio'], 'emit');
-        await gameManagerService['switchGame'](serverSocket, serverSocket2);
+        await gameManagerService['switchGame'](serverSocket);
         expect(generateRandomGameStub.calledOnce);
         expect(resetMouseHandlerServiceStub.notCalled);
         expect(sendImagesToClientStub.calledOnce);
@@ -393,5 +401,16 @@ describe('GameManagerService tests', () => {
         const stub = sinon.stub(gamesService, 'resetGameList').resolves(['1', '2']);
         gameManagerService.resetGameList();
         expect(stub.calledOnce);
+    });
+
+    it('should return the right game name on getSocketGameName()', () => {
+        gameManagerService.beginGame(testGameInfo);
+        expect(gameManagerService.getSocketGameName(testGameInfo.socket)).to.equal(testGameInfo.gameName);
+    });
+
+    it('should call generateDifferencesInformations() from mouseHandler on resetMouseHandlerService()', () => {
+        const stub = sinon.stub(mouseHandlerService, 'generateDifferencesInformations').returns(Promise.resolve());
+        gameManagerService['resetMouseHandlerService'](serverSocket, testGameName);
+        expect(stub.called);
     });
 });

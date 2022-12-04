@@ -58,7 +58,9 @@ export class GameManagerService {
             this.getSocketMouseHandlerService(gameInfo.adversarySocket).addPlayerToGame(gameInfo.adversarySocket.id);
             this.clueManagerService.resetSocketClueAmount(gameInfo.adversarySocket);
         }
-        this.logRoomsWithGames(gameInfo.gameName, gameRoomName);
+        if (gameInfo.gameMode === CLASSIC_MODE) {
+            this.logRoomsWithGames(gameInfo.gameName, gameRoomName);
+        }
         await this.sendImagesToClient(gameInfo.gameName, gameInfo.socket);
         this.sio.to(gameRoomName).emit('Clue Time Penalty', this.getSocketChronometerService(gameInfo.socket).timeConstants.penaltyTime);
     }
@@ -121,7 +123,6 @@ export class GameManagerService {
         }
     }
 
-    // Test à modifier?
     handleEndGameEmits(socket: io.Socket, isItMultiplayer: boolean, hasNewRecord: boolean, playerRanking: number) {
         const endGameInfos: EndGameInformations = {
             isMultiplayer: isItMultiplayer,
@@ -192,8 +193,8 @@ export class GameManagerService {
         return this.chronometerServices.get(gameRoomName) as ChronometerService;
     }
 
-    async doWeHaveToSwitchGame(socket: io.Socket, mode: string, adversarySocket?: io.Socket): Promise<void> {
-        if (mode === LIMITED_TIME_MODE) await this.switchGame(socket, adversarySocket);
+    async doWeHaveToSwitchGame(socket: io.Socket, mode: string): Promise<void> {
+        if (mode === LIMITED_TIME_MODE) await this.switchGame(socket);
     }
 
     endGameWithDependencies(socket: io.Socket, hasTheTimerHitZero?: boolean, noMoreGames?: boolean) {
@@ -241,23 +242,18 @@ export class GameManagerService {
         return gameName;
     }
 
-    // To test Seb
-    private async switchGame(socket: io.Socket, adversarySocket?: io.Socket): Promise<void> {
+    private async switchGame(socket: io.Socket): Promise<void> {
         const gameToBePlayed = await this.gamesService.generateRandomGame(this.gamesPlayedByRoom.get(this.findSocketGameRoomName(socket))!);
         this.addGameToHistoryLimitedTimeMode(socket, gameToBePlayed.name);
         this.resetMouseHandlerService(socket, gameToBePlayed.name);
-        if (adversarySocket) {
-            this.addGameToHistoryLimitedTimeMode(adversarySocket, gameToBePlayed.name);
-            this.resetMouseHandlerService(adversarySocket, gameToBePlayed.name);
-        }
         await this.sendImagesToClient(gameToBePlayed.name, socket);
         this.sio.to(this.findSocketGameRoomName(socket)).emit('The game is', gameToBePlayed.name);
     }
 
     private async resetMouseHandlerService(socket: io.Socket, gameName: string) {
-        const adversaryMouseHandlerService = this.getSocketMouseHandlerService(socket);
-        adversaryMouseHandlerService.resetDifferencesData();
-        await adversaryMouseHandlerService.generateDifferencesInformations(gameName);
+        const mouseHandlerService = this.getSocketMouseHandlerService(socket);
+        mouseHandlerService.resetDifferencesData();
+        await mouseHandlerService.generateDifferencesInformations(gameName);
     }
 
     private classicIsGameFinished(socket: io.Socket, isItMultiplayer: boolean): boolean {
@@ -265,7 +261,6 @@ export class GameManagerService {
         else return this.classicIsGameFinishedSolo(socket);
     }
 
-    // To test Seb?
     private async limitedTimeIsGameFinished(socket: io.Socket): Promise<boolean> {
         return this.gamesPlayedByRoom.get(this.findSocketGameRoomName(socket))!.length === (await this.gamesService.getAllGames()).length;
     }
@@ -333,14 +328,7 @@ export class GameManagerService {
 
     deleteRoom(socket: io.Socket): void {
         const gameRoomName = this.findSocketGameRoomName(socket);
-        let gameName = '';
-        for (const rooms of this.gamesRooms.entries()) {
-            rooms[1].forEach((value) => {
-                if (value === gameRoomName) {
-                    gameName = rooms[0];
-                }
-            });
-        }
+        let gameName = this.getSocketGameName(socket);
         const newRoom = this.gamesRooms.get(gameName)?.filter((socketRoom) => {
             return socketRoom !== gameRoomName;
         });

@@ -71,7 +71,7 @@ describe('MouseHandlerService', () => {
     });
 
     it('should return an empty array if difference is already found and return false for isValidDifferenceFound', () => {
-        mouseService['differencesNbFoundByPlayer'].set(testSocketID, [FIRST_ARRAY_POSITION]);
+        mouseService['differencesNbFound'] = [FIRST_ARRAY_POSITION];
         const differencesInfo: GameplayDifferenceInformations = mouseService.isValidClick(position, testSocketID);
         expect(differencesInfo.differencePixelsNumbers).to.be.deep.equals(NO_DIFFERENCE_FOUND_ARRAY);
         expect(differencesInfo.isValidDifference).to.equal(false);

@@ -8,7 +8,7 @@ describe('KeyEventHandlerService', () => {
     let drawingHistoryServiceSpy: jasmine.SpyObj<DrawingHistoryService>;
 
     beforeAll(() => {
-        drawingHistoryServiceSpy = jasmine.createSpyObj('DrawingHandlerService', ['cancelCanvas', 'cancelDeletedCanvas']);
+        drawingHistoryServiceSpy = jasmine.createSpyObj('DrawingHandlerService', ['cancelCanvas', 'cancelDeletedCanvas', 'redoCanvas']);
     });
     beforeEach(() => {
         TestBed.configureTestingModule({
