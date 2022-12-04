@@ -2,7 +2,7 @@
     display: flex;
     height: 100%;
     padding: 0px 24px;
-    background-image: url(../../../../assets/bob.jpg);
+    background:  #12232E;
 }
 
 h1 {
@@ -32,5 +32,14 @@ h1 {
 }
 
 .button-choice {
-    background-color: rgb(214, 169, 143);
+    color: #eefbfe;
+    background-color: #203647;
+    width: auto;
+    margin-bottom: 15px;
+    justify-content: center;
+}
+
+.button-choice:hover {
+    background-color: #007cc7;
+    transition: ease-in 0.25s;
 }

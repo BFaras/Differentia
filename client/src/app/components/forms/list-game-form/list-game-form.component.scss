@@ -1,7 +1,7 @@
 .gameForm {
-    border: solid rgb(201, 201, 201) 4px;
+    border: solid #eefbfe 4px;
     border-radius: 20px;
-    border-style: groove;
+    border-style: double;
     height: 100%;
     width: 100%;
 }
@@ -16,7 +16,7 @@
 }
 
 :host ::ng-deep .mat-progress-spinner circle, .mat-spinner circle{
-    stroke: rgb(214, 169, 143);
+    stroke: #eefbfe;
     
 }
 
@@ -31,7 +31,7 @@
 }
 
 .arrow {
-    border: solid rgb(214, 169, 143);
+    border: solid #023647;
     border-width: 0 3px 3px 0;
     display: inline-block;
     height: 50px;
@@ -56,9 +56,9 @@
 
 .arrow:hover {
     border-width: 0 6px 6px 0;
-    transition: 0.2s;
+    transition: 0.25s ease-in;
+    border-color: #007cc7;
     cursor: pointer;
-    transition: 0, 5s all ease-out;
 }
 
 .message-no-game{
@@ -77,13 +77,14 @@
 }
 
 .mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent{
-    background-color: #c3cbcf
+    background-color: #12232E
 }
 
 .mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent {
-    color: #16486a;
+    color: #eefbfe;
 }
 
-#adminButton{
-    margin: 0px 1730px 780px 0px;
-}
+.mat-mini-fab.mat-accent:hover {
+    background-color: #007cc7;
+    transition: 0,25s ease-in;
+  }

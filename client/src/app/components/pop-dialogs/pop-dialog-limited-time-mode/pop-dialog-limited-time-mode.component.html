@@ -7,8 +7,8 @@
         </div>
         <h1>Voulez-vous jouer en solo ou en multijoueur?</h1>
         <mat-dialog-actions>
-            <button class = "button-choice" mat-raised-button (click)="startUpGameService.soloLimitedTimeGame()" (click)="close()" routerLink="/game">Solo</button>
-            <button class = "button-choice" mat-raised-button (click)="startUpGameService.startUpWaitingLine(this.gameInfo)">Multijoueur</button>
+            <button class = "button-choice" mat-stroked-button (click)="startUpGameService.soloLimitedTimeGame()" (click)="close()" routerLink="/game">Solo</button>
+            <button class = "button-choice" mat-stroked-button (click)="startUpGameService.startUpWaitingLine(this.gameInfo)">Multijoueur</button>
         </mat-dialog-actions>
     </mat-dialog-content>
 </div>

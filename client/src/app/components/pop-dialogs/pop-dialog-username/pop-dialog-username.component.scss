@@ -2,11 +2,11 @@
     height: 100%;
     width: 100%;
     padding: 3px 4px 4px 3px;
-    background-image: url(../../../../assets/bob.jpg);
+    background-color:#12232E;
 }
 
 ::ng-deep.mat-form-field-underline {
-    background-color: white !important;
+    background-color: #eefbfe !important;
 }
 
 .dialog-content {
@@ -14,7 +14,7 @@
     width: 100%;
     border: solid black 1px;
     border-radius: 5px;
-    color: white;
+    color: #eefbfe;
 }
 
 .dialog-content > h1 {
@@ -30,7 +30,13 @@ mat-dialog-actions > button {
     left: 35%;
     top: 70px;
     width: 30%;
-    background-color: rgb(214, 169, 143);
+    background-color: #203647;
+    color: #eefbfe;
+    border-radius: 5px;
+}
+
+mat-dialog-actions > button:hover:enabled {
+    background-color: #007cc7;
 }
 
 .dialog-title > button {
