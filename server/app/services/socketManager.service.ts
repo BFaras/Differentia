@@ -191,6 +191,7 @@ export class SocketManager {
             });
 
             socket.on('launch classic mode multiplayer match', async (gameName: string) => {
+                this.currentGameName = gameName
                 const adversarySocketId = this.waitingLineHandlerService.getIDFirstPlayerWaiting(gameName);
                 this.waitingLineHandlerService.deleteJoiningPlayer(adversarySocketId, gameName);
                 this.waitingLineHandlerService.deleteCreatorOfGame(gameName);
