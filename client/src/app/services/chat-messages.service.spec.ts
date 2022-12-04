@@ -8,7 +8,7 @@ import {
     MESSAGE_DIFFERENCE_FOUND_SOLO,
     MESSAGE_ERROR_DIFFERENCE_MULTI,
     MESSAGE_ERROR_DIFFERENCE_SOLO,
-    NO_DIFFERENCE_FOUND_ARRAY,
+    NO_DIFFERENCE_FOUND_ARRAY
 } from '@common/const';
 import { EndGameInformations } from '@common/end-game-informations';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
@@ -241,11 +241,11 @@ describe('ChatMessagesService', () => {
     });
 
     it('should handle Other player abandonned LM and end the game', (done) => {
-        const spy = spyOn(chatMessagesService, <any>'sendAbandonMessage').and.callFake(() => {});
+        observer = chatMessagesService.messagesObservable.subscribe(putResponseInVariableCallback);
         chatMessagesService['isMultiplayerGame'] = true;
         socketTestHelper.peerSideEmit('Other player abandonned LM');
         setTimeout(() => {
-            expect(spy).toHaveBeenCalled();
+            expect(messageReceivedFromObservable.message.includes(ABANDON_MESSAGE)).toBeTruthy();
             expect(chatMessagesService['isMultiplayerGame']).toBeFalse();
             done();
         }, littleTimeout);
