@@ -45,6 +45,12 @@ describe('EndGameHandlerService', () => {
         expect(matDialogSpy).toBeTruthy();
     });
 
+    it('should show the username', () => {
+        const testUsername = 'testPlayer';
+        socketTestHelper.peerSideEmit('show the username', testUsername);
+        expect(service['localPlayerUsername']).toEqual(testUsername);
+    });
+
     // A verifier
     it('should open end game Dialog ', () => {
         endGameInfos = {
@@ -66,7 +72,7 @@ describe('EndGameHandlerService', () => {
             isMultiplayer: true,
             isAbandon: false,
             isGameWon: true,
-            hasNewRecord: true,
+            hasNewRecord: false,
             playerRanking: NO_AVAILABLE,
         };
         const spy = spyOn(service, <any>'openEndGameDialog');
