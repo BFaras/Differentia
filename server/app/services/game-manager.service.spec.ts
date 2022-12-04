@@ -54,6 +54,13 @@ describe('GameManagerService tests', () => {
             gameName: testGameName,
             gameMode: '',
         };
+
+        chronometerService.timeConstants = {
+            initialTime: 30,
+            penaltyTime: 5,
+            savedTime: 7,
+        };
+
         sinon.stub(GameManagerService.prototype, <any>'getSocketChronometerService').callsFake((socket) => {
             return chronometerService;
         });
