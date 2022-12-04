@@ -2,13 +2,14 @@
     display: flex;
     height: 100%;
     padding: 0px 24px;
-    background-image: url(../../../../assets/bob.jpg);
+    background-color: #12232E;
+    color:White;
 }
 
 h2 {
     position: relative;
     left: 5%;
-    color: white;
+    color: #eefbfe;
 }
 
 .dialog-content {
@@ -20,7 +21,14 @@ h2 {
 }
 
 button {
-    background-color: rgb(214, 169, 143);
+    background-color: #203647;
+}
+
+button:hover {
+
+    background-color: #007cc7;
+    transition: ease-in 0.25s;    
+
 }
 
 .cancel-button {
