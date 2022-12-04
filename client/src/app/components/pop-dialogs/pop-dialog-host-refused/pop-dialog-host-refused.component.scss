@@ -34,10 +34,6 @@ h1 {
     left: 96%;
 }
 
-.button-choice {
-    background-color: rgb(214, 169, 143);
-}
-
 .group-buttons {
     position: relative;
     top: 30%;
@@ -47,5 +43,14 @@ h1 {
 }
 
 .button-close {
-    background-color: rgb(214, 169, 143);
+    background-color: #12232E;
+    color: #eefbfe;
 }
+
+.button-close:hover {
+
+    background-color: #007cc7;
+    transition: ease-in 0.25s;    
+
+}
+

@@ -22,6 +22,7 @@ h2 {
 
 button {
     background-color: #203647;
+    color: #eefbfe;
 }
 
 button:hover {
@@ -35,6 +36,15 @@ button:hover {
     position: relative;
     top: 210px;
     left: 200px;
+    background-color: #203647;
+    color:#eefbfe;
+}
+
+.cancel-button:hover {
+    position: relative;
+    top: 210px;
+    left: 200px;
+    background-color: #007cc7;
 }
 .mat-progress-spinner {
     position: relative;
@@ -44,11 +54,11 @@ button:hover {
 
 :host ::ng-deep .mat-progress-spinner circle,
 .mat-spinner circle {
-    stroke: rgb(214, 169, 143);
+    stroke: #eefbfe;
 }
 .hostQuit {
     position: relative;
-    color: white;
+    color: #eefbfe;
     text-align: center;
     justify-content: center;
     display: flex;
@@ -65,5 +75,5 @@ button:hover {
     text-align: center;
     right: 27px;
     background-color: rgba(0, 0, 0, 0.2);
-    color: white;
+    color: #eefbfe;
 }
