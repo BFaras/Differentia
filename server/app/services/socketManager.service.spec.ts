@@ -50,14 +50,15 @@ describe('SocketManager service tests', () => {
             [899, 951],
         ],
     };
+
+    const differenceDetectorService: DifferenceDetectorService = new DifferenceDetectorService(imagesData);
+    const mouseHandlerService: MouseHandlerService = new MouseHandlerService();
+    const waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
     let service: SocketManager;
     let server: Server;
     let clientSocket: Socket;
     let clientSocketTwo: Socket;
-    const differenceDetectorService: DifferenceDetectorService = new DifferenceDetectorService(imagesData);
-    const mouseHandlerService: MouseHandlerService = new MouseHandlerService();
     let gameManagerServiceBeginGameStub: sinon.SinonStub<[gameInfo: GameInfo], Promise<void>>;
-    const waitingLineHandlerService: WaitingLineHandlerService = new WaitingLineHandlerService();
     let gameManagerServiceEndGameStub: sinon.SinonStub;
 
     const urlString = 'http://localhost:3000';
@@ -71,6 +72,9 @@ describe('SocketManager service tests', () => {
     });
 
     beforeEach(() => {
+        sinon.stub(GamesService.prototype, 'getGame').callsFake(async () => {
+            return Promise.resolve(testGame);
+        });
         sinon.stub(GameManagerService.prototype, <any>'getSocketMouseHandlerService').callsFake(() => {
             return mouseHandlerService;
         });
@@ -566,6 +570,7 @@ describe('SocketManager service tests', () => {
         service['gameManagerService']['chronometerServices'].set(clientSocket.id + 'GameRoom', chronometerServiceTest);
         service['gameManagerService']['mouseHandlerServices'].set(clientSocket.id + 'GameRoom', mouseHandlerService);
         mouseHandlerService.nbDifferencesTotal = 0;
+        sinon.stub(GameManagerService.prototype, 'isGameFinished').returns(Promise.resolve(false));
         const resetDifferencesDataSpy = sinon.spy(MouseHandlerService.prototype, 'resetDifferencesData');
         const resetLimitedTimeWaitingLineSpy = sinon.stub(BestTimesService.prototype, 'compareGameTimeWithDbTimes').callsFake(async () => {
             return Promise.resolve();
@@ -575,6 +580,30 @@ describe('SocketManager service tests', () => {
         setTimeout(() => {
             expect(resetDifferencesDataSpy.calledOnce);
             expect(resetLimitedTimeWaitingLineSpy.calledOnce);
+            expect(handleEndGameEmitsSpy.notCalled);
+            expect(gameManagerServiceEndGameStub.calledOnce);
+            mouseHandlerService['differenceAmountFoundByPlayer'].delete(clientSocket.id);
+            service['gameManagerService']['chronometerServices'].delete(clientSocket.id + 'GameRoom');
+            service['gameManagerService']['mouseHandlerServices'].delete(clientSocket.id + 'GameRoom');
+            done();
+        }, RESPONSE_DELAY);
+    });
+
+    it("should handle 'Check if game is finished' and call compareGameTimeWithDbTimes() is finished", (done) => {
+        const chronometerServiceTest = new ChronometerService();
+        chronometerServiceTest.mode = CLASSIC_MODE;
+        mouseHandlerService.nbDifferencesTotal = 0;
+        mouseHandlerService['differenceAmountFoundByPlayer'].set(clientSocket.id, 0);
+        service['gameManagerService']['chronometerServices'].set(clientSocket.id + 'GameRoom', chronometerServiceTest);
+        service['gameManagerService']['mouseHandlerServices'].set(clientSocket.id + 'GameRoom', mouseHandlerService);
+        mouseHandlerService.nbDifferencesTotal = 0;
+        const compareGameTimeWithDbTimesSpy = sinon.stub(BestTimesService.prototype, 'compareGameTimeWithDbTimes').returns(Promise.resolve());
+        const notifyAllActivePlayersSpy = sinon.stub(BestTimesService.prototype, 'notifyAllActivePlayers').callsFake(() => {});
+        const handleEndGameEmitsSpy = sinon.spy(GameManagerService.prototype, 'handleEndGameEmits');
+        clientSocket.emit('Check if game is finished', false);
+        setTimeout(() => {
+            expect(notifyAllActivePlayersSpy.calledOnce);
+            expect(compareGameTimeWithDbTimesSpy.calledOnce);
             expect(handleEndGameEmitsSpy.notCalled);
             expect(gameManagerServiceEndGameStub.calledOnce);
             mouseHandlerService['differenceAmountFoundByPlayer'].delete(clientSocket.id);

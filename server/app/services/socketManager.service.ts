@@ -81,8 +81,8 @@ export class SocketManager {
                 };
                 this.sio.to(socket.id).emit('The game is', gameName);
                 this.sio.to(socket.id).emit('show the username', username);
-                await this.gameManagerService.beginGame(gameInfo);
                 this.gameManagerService.startLimitedTimeSocketGameHistory(socket, gameName);
+                await this.gameManagerService.beginGame(gameInfo);
             });
 
             socket.on('is there someone waiting', (gameName: string) => {
@@ -216,8 +216,8 @@ export class SocketManager {
                     gameName,
                     gameMode: LIMITED_TIME_MODE,
                 };
-                await this.gameManagerService.startMultiplayerMatch(gameInfo);
                 this.gameManagerService.startLimitedTimeSocketGameHistory(socket, gameName);
+                await this.gameManagerService.startMultiplayerMatch(gameInfo);
             });
 
             socket.on('I refuse this adversary', (gameName: string) => {
