@@ -1,35 +1,74 @@
 h1 {
     font-size: 28px;
+    text-align: center;
 }
+
+h3 {
+    text-align: center;
+}
+
 .inputs {
     font-size: large;
     display: grid;
     grid-row: auto;
     gap: 20px;
 }
+
+#entries {
+    color: white;
+}
+
+#body {
+    background-image: url(../../../assets/bob.jpg);
+    color: white;
+    height: 100%;
+    width: 100%;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-infix {
+    padding: 0.25em 0 0.75em 0;
+    background-color: #a0b4b5;
+}
+
+mat-label {
+    color: white;
+}
+
+mat-hint {
+    color: white;
+}
+
+mat-form-field {
+    color: white;
+}
+
 .mat-flat-button.mat-warn,
 .mat-raised-button.mat-warn,
 .mat-fab.mat-warn,
 .mat-mini-fab.mat-warn {
     margin-left: 480px;
+    margin-top: 7px;
+    // background-color: #2e559540;
 }
 
 #submitButton {
-    margin-top: 35px;
+    margin-top: 15px;
     width: 90px;
-    margin-left: 221px;
+    margin-left: 225px;
     height: 40px;
     font-size: large;
+}
+
+#ratioMsg {
+    margin-top: 30px;
+    color: red;
+    background-color: cornsilk;
 }
 
 .mat-flat-button.mat-accent,
 .mat-raised-button.mat-accent,
 .mat-fab.mat-accent,
 .mat-mini-fab.mat-accent {
-    background-color: #3f51b5;
-}
-
-#ratioMsg {
-    margin-top: 30px;
-    color: red;
+    background-color: rgb(214, 169, 143);
+    color: black;
 }

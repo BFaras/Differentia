@@ -73,3 +73,18 @@ body {
     margin: 0;
     font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
+
+.mat-hint {
+    color: rgb(245 245 245 / 97%);
+}
+
+.mat-form-field-appearance-fill .mat-form-field-flex {
+    background-color: rgb(193 196 201 / 53%);
+}
+
+.mat-flat-button.mat-warn,
+.mat-raised-button.mat-warn,
+.mat-fab.mat-warn,
+.mat-mini-fab.mat-warn {
+    background-color: #75767c24;
+}

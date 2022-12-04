@@ -112,7 +112,6 @@ export const RESET_MSG_GAME_LIST = 'La liste des jeux a été réinitialisé :('
 // Constantes pour réinitialisation des données
 export const RESET_INFO_CONSTANTS = 'Constantes de temps de jeu';
 export const RESET_INFO_RECORDS_TIME = 'Table des meilleurs temps de jeu';
-export const RESET_INFO_GAME_LIST = 'Liste des jeux';
 
 // Constantes pour nouveau records
 export const MESSAGE_RECORD_PART_ONE = ' obtient la place n°';

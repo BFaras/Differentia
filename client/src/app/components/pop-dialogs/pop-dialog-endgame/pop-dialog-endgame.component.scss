@@ -5,30 +5,31 @@
     background-image: url(../../../../assets/bob.jpg);
 }
 
-h1, p{
+h1,
+p {
     position: relative;
-    color:white;
+    color: white;
 }
 
 .dialog-content {
-    position:relative;
-    overflow: hidden;
+    position: relative;
+
     border: solid black 1px;
     border-radius: 5px;
     height: 100%;
-    width:100%;
+    width: 100%;
 }
-.group-buttons{
+.group-buttons {
     position: relative;
     top: 40%;
-    justify-content: center
+    justify-content: center;
 }
 
-.close-button{
-    position:relative;
+.close-button {
+    position: relative;
     left: 96%;
 }
-.return-button{
-    position:relative;
+.return-button {
+    position: relative;
     background-color: rgb(214, 169, 143);
 }

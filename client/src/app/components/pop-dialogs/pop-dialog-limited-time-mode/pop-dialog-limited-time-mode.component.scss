@@ -5,32 +5,30 @@
     background-image: url(../../../../assets/bob.jpg);
 }
 
-h1{
+h1 {
     position: relative;
-    left:2%;
-    color:white;
+    left: 2%;
+    color: white;
 }
 
 .dialog-content {
-    position:relative;
-    overflow: hidden;
+    position: relative;
     border: solid black 1px;
     border-radius: 5px;
     height: 100%;
-    width:100%;
+    width: 100%;
 }
-.mat-dialog-actions{
+.mat-dialog-actions {
     display: flex;
     align-items: center;
     justify-content: space-around;
     position: relative;
     top: 35%;
-
 }
 
 .dialog-title > button {
     position: relative;
-    left:96%;
+    left: 96%;
 }
 
 .button-choice {
