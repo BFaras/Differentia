@@ -58,7 +58,9 @@ export class GameManagerService {
             this.getSocketMouseHandlerService(gameInfo.adversarySocket).addPlayerToGame(gameInfo.adversarySocket.id);
             this.clueManagerService.resetSocketClueAmount(gameInfo.adversarySocket);
         }
-        this.logRoomsWithGames(gameInfo.gameName, gameRoomName);
+        if (gameInfo.gameMode === CLASSIC_MODE) {
+            this.logRoomsWithGames(gameInfo.gameName, gameRoomName);
+        }
         await this.sendImagesToClient(gameInfo.gameName, gameInfo.socket);
         this.sio.to(gameRoomName).emit('Clue Time Penalty', this.getSocketChronometerService(gameInfo.socket).timeConstants.penaltyTime);
     }
@@ -121,7 +123,6 @@ export class GameManagerService {
         }
     }
 
-    // Test à modifier?
     handleEndGameEmits(socket: io.Socket, isItMultiplayer: boolean, hasNewRecord: boolean, playerRanking: number) {
         const endGameInfos: EndGameInformations = {
             isMultiplayer: isItMultiplayer,

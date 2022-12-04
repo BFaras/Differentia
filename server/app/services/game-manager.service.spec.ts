@@ -114,6 +114,13 @@ describe('GameManagerService tests', () => {
         expect(spy.calledOnce);
     });
 
+    it('should not call logRoomsWithGames() on begin game in Limited time mode', async () => {
+        const spy = sinon.spy(gameManagerService, <any>'logRoomsWithGames');
+        testGameInfo.gameMode = LIMITED_TIME_MODE;
+        await gameManagerService.beginGame(testGameInfo);
+        expect(spy.notCalled);
+    });
+
     it('should call eraseGamesFromHistoryLimitedTimeMode() and endGameWithDependencies() on emitTime() when LM and chrono has hit zero', async () => {
         const eraseGamesFromHistoryLimitedTimeModeSpy = sinon.spy(gameManagerService, <any>'eraseGamesFromHistoryLimitedTimeMode');
         const endGameWithDependenciesSpy = sinon.spy(gameManagerService, <any>'endGameWithDependencies');
