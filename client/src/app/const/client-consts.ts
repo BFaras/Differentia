@@ -35,7 +35,7 @@ export const MAXIMUM_NB_DIFFERENCES = 9;
 // Constantes pour drawWord
 export const STEP = 20;
 
-// Constantes concernant les dimension des pop-up
+// Constantes concernant les dimensions des pop-up
 export const STANDARD_POP_UP_HEIGHT = '400px';
 export const STANDARD_POP_UP_WIDTH = '600px';
 export const DISABLE_CLOSE = true;
@@ -57,7 +57,7 @@ export const EMPTY_GAME_NAME = '';
 export const SOMEONE_IS_JOINING = true;
 export const EMPTY_PLAYER_NAME = '';
 
-// Username pop-up constants
+// Option de jouer en multijoueur
 export const MULTI_FLAG = true;
 
 // Constante pour le service de chat
@@ -69,7 +69,7 @@ export const MESSAGE_ERROR_DIFFERENCE_MULTI = 'Erreur par ';
 export const MESSAGE_CLUE = 'Indice utilisé';
 export const TWO_DIGIT_TIME_VALUE = '2-digit';
 
-// End game messages
+// Message pour la fin de partie
 export const CLASSIC_SOLO_END_GAME_MESSAGE = 'Vous avez trouvé toutes les différences!';
 export const CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE = 'Vous avez gagnez contre votre adversaire!';
 export const CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE = 'Votre adversaire a abandonné, donc vous avez gagner!';
@@ -81,22 +81,20 @@ export const RECORD_END_GAME_MESSAGE_PART_ONE = 'Bravo ';
 export const RECORD_END_GAME_MESSAGE_PART_TWO = ', vous avez gagné et obtenu la place numéro ';
 export const RECORD_END_GAME_MESSAGE_PART_THREE = ' au classement!';
 
-// End game flags
+// Decision si victoire ou defaite
 export const WIN_FLAG = true;
 export const LOSING_FLAG = false;
 
-// Timeout constantes
+// Temps choisi avant le mineuteur s arr'te
 export const THREE_SECONDS = 3000;
 
-// Blinking constants
+// Contantes pour le clignotement
 export const BLINK_ID = 'blink';
 export const PAUSED_ID = 'paused';
 
 // Time service constants
 export const BASE_ONE = 10;
 export const EMPTY_SHOWABLE_TIME = '';
-
-// Time service tests constants
 export const LESS_THAN_10 = 5;
 export const MORE_THAN_9 = 10;
 
@@ -133,7 +131,7 @@ export const BLINK_CHEAT_ID = 'blinkCheat';
 export const ADDITION_FACTOR = 1;
 export const SUBSTRACTION_FACTOR = -1;
 
-// Constantes popDialog de la page ADMIN
+// Les constantes des pop-ups
 export const HEIGHT_POP_ADMIN = '640px';
 export const TIME_SETTING_INPUT1 = 'Temps initial';
 export const TIME_SETTING_INPUT2 = 'Temps de pénalité';
@@ -142,7 +140,8 @@ export const TIME_PLACEHOLDER_INPUT1 = 'Temps par défaut: 30s';
 export const TIME_PLACEHOLDER_INPUT2 = 'Temps par défaut: 5s';
 export const TIME_PLACEHOLDER_INPUT3 = 'Temps par défaut: 5s';
 export const INPUT_TYPE = 'secondes';
-// Canvas Information
+
+// Informations sur les toiles comme position et le mode du crayon
 export const ORIGINAL_CANVAS_INDEX = 0;
 export const MODIFIED_CANVAS_INDEX = 1;
 export const DRAW_BACKGROUND_MODE = 'destination-over';

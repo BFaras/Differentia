@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PopUpData } from '@app/interfaces/pop-up-data';
 import { SocketClientService } from '@app/services/socket-client.service';
@@ -9,11 +9,8 @@ import { AbandonData } from '@common/abandon-data';
     templateUrl: './pop-dialog-abandon-verification.component.html',
     styleUrls: ['./pop-dialog-abandon-verification.component.scss'],
 })
-export class PopDialogAbandonVerificationComponent implements OnInit {
+export class PopDialogAbandonVerificationComponent {
     constructor(private socketService: SocketClientService, @Inject(MAT_DIALOG_DATA) public gameInfo: PopUpData) {}
-
-    ngOnInit(): void {}
-
     abandonGame(): void {
         const abandonInfo: AbandonData = {
             gameMode: this.gameInfo.gameMode,

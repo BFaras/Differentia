@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PopDialogUsernameComponent } from '@app/components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
 import {
@@ -19,9 +19,9 @@ import { SocketClientService } from '@app/services/socket-client.service';
     templateUrl: './main-page.component.html',
     styleUrls: ['./main-page.component.scss'],
 })
-export class MainPageComponent {
+export class MainPageComponent implements OnInit {
     readonly title: string = 'Peux-tu trouver les différences ?';
-    readonly buttonName: String[] = ['Mode classique', 'Temps limité', 'Administration'];
+    readonly buttonName: string[] = ['Mode classique', 'Temps limité', 'Administration'];
 
     constructor(private socketService: SocketClientService, private dialog: MatDialog) {}
 
