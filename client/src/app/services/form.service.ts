@@ -10,11 +10,11 @@ import { CommunicationService } from './communication.service';
     providedIn: 'root',
 })
 export class FormService {
+    gamelist: Game[] = [];
+    gameForms: GameFormDescription[] = [];
     private listName: string[] = [];
     private listImage: string[] = [];
     private listTimes: GameModeTimes[] = [];
-    gamelist: Game[] = [];
-    gameForms: GameFormDescription[] = [];
 
     constructor(private communicationService: CommunicationService) {}
 
