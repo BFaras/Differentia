@@ -142,3 +142,7 @@ export const TIME_PLACEHOLDER_INPUT1 = 'Temps par défaut: 30s';
 export const TIME_PLACEHOLDER_INPUT2 = 'Temps par défaut: 5s';
 export const TIME_PLACEHOLDER_INPUT3 = 'Temps par défaut: 5s';
 export const INPUT_TYPE = 'secondes';
+// Canvas Information
+export const ORIGINAL_CANVAS_INDEX = 0;
+export const MODIFIED_CANVAS_INDEX = 1;
+export const DRAW_BACKGROUND_MODE = 'destination-over';

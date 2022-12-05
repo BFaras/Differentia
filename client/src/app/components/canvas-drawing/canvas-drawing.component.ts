@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { MODIFIED_CANVAS_INDEX, ORIGINAL_CANVAS_INDEX } from '@app/const/client-consts';
 import { Coordinate } from '@app/interfaces/coordinate';
 import { CanvasDataHandlerService } from '@app/services/canvas-data-handler.service';
 import { DrawingHandlerService } from '@app/services/drawing-handler.service';
@@ -11,7 +12,7 @@ import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
     styleUrls: ['./canvas-drawing.component.scss'],
 })
 export class CanvasDrawingComponent implements AfterViewInit {
-    @Input('idFromParent') indexOfCanvas: any;
+    @Input() indexOfCanvas: number;
     @ViewChild('canvas') canvasDOM: ElementRef<HTMLCanvasElement>;
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D | null;
@@ -58,17 +59,17 @@ export class CanvasDrawingComponent implements AfterViewInit {
 
         this.drawingHandlerService.startObservingMousePath().subscribe((mouseEvent: [MouseEvent, MouseEvent]) => {
             this.drawingHandlerService.setPencilInformation(this.indexOfCanvas);
-            if (mouseEvent[0].which == 1) {
+            if (mouseEvent[0].which === 1) {
                 const canvasReact = this.canvas.getBoundingClientRect();
 
                 const previousCoordinate: Coordinate = {
-                    x: this.drawingHandlerService.getCoordinateX(mouseEvent[0], canvasReact),
-                    y: this.drawingHandlerService.getCoordinateY(mouseEvent[0], canvasReact),
+                    x: this.drawingHandlerService.getCoordinateX(mouseEvent[ORIGINAL_CANVAS_INDEX], canvasReact),
+                    y: this.drawingHandlerService.getCoordinateY(mouseEvent[ORIGINAL_CANVAS_INDEX], canvasReact),
                 };
 
                 const actualCoordinate: Coordinate = {
-                    x: this.drawingHandlerService.getCoordinateX(mouseEvent[1], canvasReact),
-                    y: this.drawingHandlerService.getCoordinateY(mouseEvent[1], canvasReact),
+                    x: this.drawingHandlerService.getCoordinateX(mouseEvent[MODIFIED_CANVAS_INDEX], canvasReact),
+                    y: this.drawingHandlerService.getCoordinateY(mouseEvent[MODIFIED_CANVAS_INDEX], canvasReact),
                 };
 
                 this.drawingHandlerService.drawOnCanvas(previousCoordinate, actualCoordinate);
@@ -82,9 +83,9 @@ export class CanvasDrawingComponent implements AfterViewInit {
     }
 
     prepareCanvasMerging() {
-        if (this.indexOfCanvas == 0) {
+        if (this.indexOfCanvas === ORIGINAL_CANVAS_INDEX) {
             this.mergeImageCanvasService.setLeftContextAndCanvas(this.context!, this.canvas);
-        } else if (this.indexOfCanvas == 1) {
+        } else if (this.indexOfCanvas === MODIFIED_CANVAS_INDEX) {
             this.mergeImageCanvasService.setRightContextAndCanvas(this.context!, this.canvas);
         }
     }

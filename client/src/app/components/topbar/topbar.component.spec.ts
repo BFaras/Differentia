@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatIconModule } from '@angular/material/icon';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
@@ -21,6 +22,7 @@ describe('TopbarComponent', () => {
 
         await TestBed.configureTestingModule({
             declarations: [TopbarComponent],
+            imports: [MatIconModule],
             providers: [
                 { provide: SocketClientService, useValue: socketService },
                 { provide: TimeService, useValue: timeServiceMock },

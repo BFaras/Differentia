@@ -37,7 +37,6 @@ export class EndGameHandlerService {
         });
     }
 
-    // To test
     private generateRecordMessage(playerRanking: number): string {
         const endGameWithRecordMessage: string =
             RECORD_END_GAME_MESSAGE_PART_ONE +
@@ -49,21 +48,17 @@ export class EndGameHandlerService {
         return endGameWithRecordMessage;
     }
 
-    // To test
     private generateEndGameMessage(endGameInfos: EndGameInformations) {
         if (endGameInfos.hasNewRecord) return this.generateRecordMessage(endGameInfos.playerRanking);
         else if (!endGameInfos.hasNewRecord && !endGameInfos.isMultiplayer) return CLASSIC_SOLO_END_GAME_MESSAGE;
-        else if (!endGameInfos.hasNewRecord && endGameInfos.isMultiplayer) return CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE;
-        else return;
+        else return CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE;
     }
 
     configureSocket() {
-        // To test
         this.socketService.on('show the username', (username: string) => {
             this.localPlayerUsername = username;
         });
 
-        // Test to change
         this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
             let endGameMessage: string;
             let winFlag = WIN_FLAG;

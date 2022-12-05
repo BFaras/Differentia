@@ -2,7 +2,8 @@
     display: flex;
     height: 100%;
     padding: 0px 24px;
-    background-image: url(../../../../assets/bob.jpg);
+    background-color: #12232E;
+    color:White;
 }
 
 h1,
@@ -31,5 +32,11 @@ p {
 }
 .return-button {
     position: relative;
-    background-color: rgb(214, 169, 143);
+    background-color: #203647;
+    color: #eefbfe;
+}
+
+.return-button:hover{
+    background-color: #007cc7;
+    transition: ease-in 0.25s;
 }

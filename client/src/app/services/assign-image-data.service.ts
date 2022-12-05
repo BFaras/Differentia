@@ -6,7 +6,6 @@ import { SafeValue } from '@angular/platform-browser';
 export class AssignImageDataService {
     isImageObtained: boolean;
     urlImage: SafeValue;
-    constructor() {}
 
     getIsImageObtained() {
         return this.isImageObtained;

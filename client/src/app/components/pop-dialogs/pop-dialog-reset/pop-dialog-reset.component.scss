@@ -29,6 +29,13 @@ h1:first-of-type {
     margin-top: 20px;
     font-size: large;
     text-align: center;
+    position:relative;
+    bottom: 69px;
+}
+
+.group-button{
+    position:relative;
+    top:50px;
 }
 
 #validateChoice {
@@ -50,28 +57,48 @@ h1:first-of-type {
 #data {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     text-align: center;
+    position:relative;
+    bottom: 69px;
 }
 
 .mat-flat-button.mat-accent,
 .mat-raised-button.mat-accent,
 .mat-fab.mat-accent,
 .mat-mini-fab.mat-accent {
-    background-color: rgb(214, 169, 143);
-    color: black;
+    background-color: #203647;
+    color: #eefbfe;
+    top: 95px;
 }
 
+.mat-raised-button.mat-accent:hover{
+    
+    background-color: #007cc7;
+    transition: ease-in 0.25s;
+}
+
+
 #body {
-    background-image: url(../../../../assets/bob.jpg);
-    color: white;
+    background-color: #12232E;
+    color:White;
     height: 100%;
     width: 100%;
 }
 
 mat-checkbox {
-    background-color: rgb(237 176 140 / 86%);
     padding-top: 6px;
     padding-left: 10px;
     padding-right: 10px;
-    color: black;
+    color: #eefbfe;
     margin-top: 10px;
 }
+
+.mat-checkbox-checked.mat-accent .mat-checkbox-background {
+    background-color: #eefbfe !important;
+  }
+  
+  ::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background {
+    background-color: #007cc7!important;
+    border: solid #007cc7;
+  }
+  
+  

@@ -34,8 +34,6 @@ export class RecordTimesService {
             await this.collection.insertOne(newGameDefaultTimes).catch((error: Error) => {
                 throw new HttpException('Failed to insert game and default times', StatusCodes.INTERNAL_SERVER_ERROR);
             });
-        } else {
-            throw new Error('Game already exists');
         }
     }
 
@@ -99,7 +97,7 @@ export class RecordTimesService {
     async getGameTimes(nameOfWantedGame: string): Promise<GameModeTimes> {
         const filterQuery: Filter<GameTimes> = { name: nameOfWantedGame };
 
-        if (this.isDatabaseAvailable()) {
+        if (this.isDatabaseAvailable() && !(await this.validateName(nameOfWantedGame))) {
             return this.collection
                 .findOne(filterQuery)
                 .then((gameTimes: WithId<GameTimes>) => {
@@ -108,6 +106,8 @@ export class RecordTimesService {
                 .catch(() => {
                     throw new Error('Failed to get the game times');
                 });
+        } else if (this.isDatabaseAvailable() && (await this.validateName(nameOfWantedGame))) {
+            return await this.addDefaultTimesToGameCreatedOffline(nameOfWantedGame);
         } else return this.databaseErrorRecordTimes;
     }
 
@@ -137,10 +137,15 @@ export class RecordTimesService {
         }
         return;
     }
-    
+
     private async validateName(gameName: string): Promise<boolean> {
         const filterQuery: Filter<GameTimes> = { name: gameName };
         const game = await this.collection.findOne(filterQuery);
         return game?.name !== gameName;
+    }
+
+    private async addDefaultTimesToGameCreatedOffline(gameName: string): Promise<GameModeTimes> {
+        await this.addNewGameDefaultTimes(gameName);
+        return await this.getGameTimes(gameName);
     }
 }

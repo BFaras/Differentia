@@ -1,4 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GameToServerService } from '@app/services/game-to-server.service';
 import { PopDialogCreateGameComponent } from './pop-dialog-create-game.component';
 import SpyObj = jasmine.SpyObj;
@@ -15,6 +20,7 @@ describe('PopDialogCreateGameComponent', () => {
         gameToServerServiceSpy.addGame.and.returnValue();
         await TestBed.configureTestingModule({
             declarations: [PopDialogCreateGameComponent],
+            imports: [MatDialogModule, MatFormFieldModule, MatInputModule, BrowserAnimationsModule, FormsModule],
             providers: [{ provide: GameToServerService, useValue: gameToServerServiceSpy }],
         }).compileComponents();
 

@@ -12,9 +12,8 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./chat-section.component.scss'],
 })
 export class ChatSectionComponent implements OnInit, OnDestroy {
-    @ViewChild('scrollMe') private myScrollContainer: ElementRef;
     @ViewChild('playerMsg') playerMsg: ElementRef;
-
+    @ViewChild('scrollMe') private myScrollContainer: ElementRef;
     isMultiplayerGame: boolean;
     message: string;
     messagesSent: ChatMessage[];

@@ -7,14 +7,18 @@
         </div>
         <h1>Veuillez entrer votre nom</h1>
         <div class="form-radius-container">
-            <p >**le nom d'utilisateur ne peut pas avoir plus que 8 lettres</p>
+            <p>Contrainte : le nom d'utilisateur ne peut pas avoir plus que 8 caractères ou</p>
+            <p>commencer avec un espace</p>
             <mat-form-field>
                 <label for="username">Nom d'utilisateur: </label>
-                <input maxlength="8" (keydown.space)="$event.preventDefault()" #userName matInput name="username" [(ngModel)] = "username" type="text"/>
+                <input maxlength="8" #userName matInput name="username" [(ngModel)]="username" type="text" />
+                <mat-hint align="start">
+                    <mat-error *ngIf="usernameNotValid"> le nom d'utilisateur commence avec un espace </mat-error>
+                </mat-hint>
             </mat-form-field>
         </div>
         <mat-dialog-actions>
-            <button mat-raised-button [disabled]="!username" (click)="startUpGameService.sendUsername(this.username)" mat-dialog-close>Continuer</button>
+            <button mat-raised-button [disabled]="!username" (click)="startUpGameService.sendUsername(this.username)">Continuer</button>
         </mat-dialog-actions>
     </div>
 </div>

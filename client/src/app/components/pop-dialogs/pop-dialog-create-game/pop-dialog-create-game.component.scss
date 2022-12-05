@@ -3,8 +3,8 @@
     height: 100%;
     border: solid grey 1px;
     border-radius: 5px;
-    background-image: url(../../../../assets/bob.jpg);
-    color:white;
+    background-color: #12232E;
+    color:White;
 }
 
 .dialog-title {
@@ -48,11 +48,16 @@ mat-form-field {
 }
 
 .createButton{
-    background-color: rgb(214, 169, 143);
+    background-color: #203647;
+    color: #eefbfe;
+}
+
+.createButton:hover:enabled{
+    background-color: #007cc7;
 }
 .image-difference{
     position:relative;
     width:50px;
     height:50px;
     left: 240px;
-    }
+}

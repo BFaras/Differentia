@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatRadioModule } from '@angular/material/radio';
 import { MergeImageCanvasHandlerService } from '@app/services/merge-image-canvas-handler.service';
 import { PopDialogValidateGameComponent } from './pop-dialog-validate-game.component';
 
@@ -15,7 +16,7 @@ describe('PopDialogValidateGameComponent', () => {
 
         await TestBed.configureTestingModule({
             declarations: [PopDialogValidateGameComponent],
-            imports: [MatDialogModule],
+            imports: [MatDialogModule, MatRadioModule],
             providers: [{ provide: MergeImageCanvasHandlerService, useValue: mergeImageCanvasServiceMock }],
         }).compileComponents();
 

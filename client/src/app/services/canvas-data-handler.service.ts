@@ -45,6 +45,7 @@ export class CanvasDataHandlerService {
 
     drawOnOtherCanvas(index: number, canvas: HTMLCanvasElement) {
         this.drawingHistoryService.saveCanvas(this.contextList[index], index);
+        this.contextList[index].globalCompositeOperation = 'source-over';
         this.contextList[index].clearRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
         this.contextList[index].drawImage(canvas, 0, 0);
         this.drawingHistoryService.saveCanvas(this.contextList[index], index);
@@ -53,7 +54,6 @@ export class CanvasDataHandlerService {
     }
 
     shareDataWithOtherCanvas() {
-        this.canvas = this.contextList[LEFT_CANVAS_INDEX].canvas;
         this.exchangeCanvas();
     }
 

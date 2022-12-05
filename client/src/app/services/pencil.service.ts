@@ -20,7 +20,7 @@ export class PencilService {
     }
 
     obtainPencilColor(index: number): string {
-        if (index == ORIGINAL_IMAGE_POSITION) {
+        if (index === ORIGINAL_IMAGE_POSITION) {
             return this.leftCanvasColor;
         } else {
             return this.rightCanvasColor;
@@ -28,23 +28,23 @@ export class PencilService {
     }
 
     setColor(color: string, index: number): void {
-        if (index == ORIGINAL_IMAGE_POSITION) {
+        if (index === ORIGINAL_IMAGE_POSITION) {
             this.leftCanvasColor = color;
-        } else if (index == MODIFIED_IMAGE_POSITION) {
+        } else if (index === MODIFIED_IMAGE_POSITION) {
             this.rightCanvasColor = color;
         }
     }
 
     setWidth(width: number, index: number): void {
-        if (index == ORIGINAL_IMAGE_POSITION) {
+        if (index === ORIGINAL_IMAGE_POSITION) {
             this.leftCanvasWidth = width;
-        } else if (index == MODIFIED_IMAGE_POSITION) {
+        } else if (index === MODIFIED_IMAGE_POSITION) {
             this.rightCanvasWidth = width;
         }
     }
 
     obtainPencilWidth(index: number): number {
-        if (index == ORIGINAL_IMAGE_POSITION) {
+        if (index === ORIGINAL_IMAGE_POSITION) {
             return this.leftCanvasWidth;
         } else {
             return this.rightCanvasWidth;
@@ -52,9 +52,9 @@ export class PencilService {
     }
 
     assignRightLineCap(indexCanvas: number) {
-        if (this.pencilMode[indexCanvas] == WRITE_MODE) {
+        if (this.pencilMode[indexCanvas] === WRITE_MODE) {
             return ROUND_LINE_CAP;
-        } else if (this.pencilMode[indexCanvas] == ERASE_MODE) {
+        } else if (this.pencilMode[indexCanvas] === ERASE_MODE) {
             return SQUARE_LINE_CAP;
         }
         return;
@@ -65,11 +65,11 @@ export class PencilService {
     }
 
     getStateOfPencil(context: CanvasRenderingContext2D, indexCanvas: number) {
-        if (this.pencilMode[indexCanvas] == ERASE_MODE) {
+        if (this.pencilMode[indexCanvas] === ERASE_MODE) {
             context.globalCompositeOperation = 'destination-out';
         }
 
-        if (this.pencilMode[indexCanvas] == WRITE_MODE) {
+        if (this.pencilMode[indexCanvas] === WRITE_MODE) {
             context.globalCompositeOperation = 'source-over';
         }
     }

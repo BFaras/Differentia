@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
 import { ListImagesRenderedService } from '@app/services/list-images-rendered.service';
 import { HeaderImageComponent } from './header-image.component';
 
@@ -19,6 +21,7 @@ describe('HeaderImageComponent', () => {
         editImagesServiceSpy.sendIdImageToRemove.and.returnValue();
         await TestBed.configureTestingModule({
             declarations: [HeaderImageComponent],
+            imports: [MatGridListModule, MatIconModule],
             providers: [
                 { provide: MatDialog, useClass: MatDialogMock },
                 { provide: ListImagesRenderedService, useValue: editImagesServiceSpy },

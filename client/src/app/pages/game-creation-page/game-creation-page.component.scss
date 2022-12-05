@@ -4,11 +4,14 @@
     min-width: 1920px;
     min-height: 1080px;
     gap: 40px;
-    background: url(../../../assets/bob.jpg)
+    background: linear-gradient(110deg, #12232E 60%, #4dabda 60%);
+    background-color: #12232E;
 }
 
 .container-paint {
     display: flex;
+    position: relative; 
+    top:7%;
     flex-direction: column;
     align-items: center;
     gap: 10px;
@@ -18,6 +21,7 @@
     border-radius: 5px;
     background-color: rgba(0, 0, 0, 0.2);
 }
+
 .container-images-paint {
     display: grid;
     grid-template-columns:  1fr 8fr  1fr ;
@@ -47,14 +51,17 @@
 .mat-mini-fab{
     width: 70px;
     height: 70px;
+    left:3%;
+    top: 25px;
 }
 
 .mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent{
-    background-color: #c3cbcf
+    background-color: #12232E;
+
 }
 
 .mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent {
-    color: #16486a;
+    color: #eefbfe;
 }
 
 .container-images{
@@ -63,5 +70,18 @@
     position: relative;}
 
 .button-process{
-    background-color: #ebcdb9;
+    position: relative;
+    bottom:55%;
+    background-color: #203647;
+    color: #eefbfe;
 }
+
+.button-process:hover{
+    background-color: #007cc7;
+    transition: ease-in 0.25s;
+}
+
+.mat-mini-fab.mat-accent:hover {
+    background-color: #007cc7;
+    transition: 0,25s ease-in;
+  }

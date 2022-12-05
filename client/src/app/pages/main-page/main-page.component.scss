@@ -2,7 +2,8 @@
     min-height: 1080px;
     min-width: 1920px;
     height: auto;
-    background: url(../../../assets/bob.jpg);
+    background: linear-gradient(110deg, #12232E 60%, #4dabda 60%);
+    color: white;
 }
 
 .justified {
@@ -13,15 +14,15 @@
 }
 
 .header-item {
-    font-family: The Father;
-    color: #ebcdb9;
+    font-family: sans-serif;
+    color: #eefbfe;
     font-size: 100px;
 }
 
 .team-name {
     margin-top: 0.25em;
     margin-bottom: 0.25em;
-    color: #ebcdb9;
+    color: #eefbfe;
     font-size: medium;
 }
 
@@ -36,7 +37,7 @@
 }
 
 .footer-item p {
-    color: #ebcdb9;
+    color: #eefbfe;
     font-size: medium;
 }
 
@@ -92,8 +93,15 @@
     border-radius: 15px;
     z-index: 20;
     font-family: sans-serif;
-    background-color: rgb(214, 169, 143);
-    color: black;
+    background-color: #203647;
+    color: #eefbfe;
+}
+
+.button-homepage:hover {
+
+    background-color: #007cc7;
+    transition: ease-in 0.25s;
+
 }
 
 .custom-dialog-container .mat-dialog-container {

@@ -1,5 +1,5 @@
 <div class="container-view">
-    <button mat-mini-fab aria-label routerLink="/admin">
+    <button class = "selection-button" mat-mini-fab aria-label routerLink="/admin">
         <mat-icon>settings</mat-icon>
     </button>
     <div class="container-images-paint">
@@ -13,6 +13,7 @@
     </div>
     <div class="container-buttons">
         <button class = "button-process" id="download"  matTooltip="Téléverser l'image modifié et l'image original"  mat-raised-button (click)="onCreateDownloadPopDialog()">
+            <i class="material-icons">upload_file</i>
             <i class="material-icons">upload_file</i>
         </button>
         <button class = "button-process" id="validate" mat-raised-button (click)="onCreateValidatePopDialog()">Valider</button>

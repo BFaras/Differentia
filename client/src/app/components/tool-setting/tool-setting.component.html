@@ -22,19 +22,19 @@
     </mat-select>
 </mat-form-field>
 <div class ="group-buttons">
-  <button mat-mini-fab [disabled]="checkIfThereAreSavedDrawnLines()" (click) = "cancelActionDrawnLine()">
+  <button   class = "button-effect" mat-mini-fab [disabled]="checkIfThereAreSavedDrawnLines()" (click) = "cancelActionDrawnLine()">
     <mat-icon>undo</mat-icon>
   </button>
-  <button mat-mini-fab [disabled]="checkIfThereAreSavedDeletedDrawnLines()" (click) = "cancelActionDeletedDrawnLine()" >
+  <button  class = "button-effect" mat-mini-fab [disabled]="checkIfThereAreSavedDeletedDrawnLines()" (click) = "cancelActionDeletedDrawnLine()" >
     <mat-icon>redo</mat-icon>
   </button>
 </div>
-<button  mat-raised-button (click) = "clearCanvas()" matTooltip="Supprimer le dessin sur la toile"> 
+<button  class = "button-effect"mat-raised-button (click) = "clearCanvas()" matTooltip="Supprimer le dessin sur la toile"> 
   <i class="material-icons">delete</i>
 </button>
-<button  mat-raised-button matTooltip="Copier le dessin de l'autre toile" (click) = "copyOtherCanvas()">
+<button class = "button-effect" mat-raised-button matTooltip="Copier le dessin de l'autre toile" (click) = "copyOtherCanvas()">
   <i class="material-icons">content_copy</i>
 </button>
-<button  mat-raised-button (click) = "shareDataWithOtherCanvas()" matTooltip="Echanger le dessin pour les 2 toiles">
+<button class = "button-effect" mat-raised-button (click) = "shareDataWithOtherCanvas()" matTooltip="Echanger le dessin pour les 2 toiles">
   <i class="material-icons">swap_horiz</i>
 </button>

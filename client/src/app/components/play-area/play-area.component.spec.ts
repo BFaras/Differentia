@@ -1,6 +1,7 @@
 import { ElementRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { ClueHandlerService } from '@app/services/clue-handler.service';
@@ -72,6 +73,7 @@ describe('PlayAreaComponent', () => {
 
         await TestBed.configureTestingModule({
             declarations: [PlayAreaComponent],
+            imports: [MatProgressSpinnerModule],
             providers: [
                 { provide: SocketClientService, useValue: socketClientService },
                 { provide: DrawService, useValue: drawServiceSpy },
