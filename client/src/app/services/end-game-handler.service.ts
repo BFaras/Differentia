@@ -48,7 +48,6 @@ export class EndGameHandlerService {
         return endGameWithRecordMessage;
     }
 
-    // To test
     private generateEndGameMessage(endGameInfos: EndGameInformations) {
         if (endGameInfos.hasNewRecord) return this.generateRecordMessage(endGameInfos.playerRanking);
         else if (!endGameInfos.hasNewRecord && !endGameInfos.isMultiplayer) return CLASSIC_SOLO_END_GAME_MESSAGE;

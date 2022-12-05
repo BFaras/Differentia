@@ -45,7 +45,7 @@ export class FormService {
     private fillListGameImage(gameImage: string, listImage: string[]) {
         listImage.push(gameImage);
     }
-    // To test
+
     private fillListGameTimes(gameTimes: GameModeTimes, listTimes: GameModeTimes[]) {
         listTimes.push(gameTimes);
     }
