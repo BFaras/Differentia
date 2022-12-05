@@ -28,7 +28,6 @@ export class FormService {
             .catch((error: Error) => console.log(error));
     }
 
-    //  test à finir
     private parseGameList() {
         for (let index = 0; index < this.gamelist?.length; index++) {
             this.fillListGameName(this.gamelist[index].name, this.listName);
