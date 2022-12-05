@@ -7,10 +7,10 @@
         </div>
         <h1>Veuillez entrer votre nom</h1>
         <div class="form-radius-container">
-            <p >**le nom d'utilisateur ne peut pas avoir plus que 8 lettres**</p>
+            <p>**le nom d'utilisateur ne peut pas avoir plus que 8 lettres**</p>
             <mat-form-field>
                 <label for="username">Nom d'utilisateur: </label>
-                <input maxlength="8" (keydown.space)="$event.preventDefault()" #userName matInput name="username" [(ngModel)] = "username" type="text"/>
+                <input maxlength="8" #userName matInput name="username" [(ngModel)] = "username" type="text"/>
             </mat-form-field>
         </div>
         <mat-dialog-actions>

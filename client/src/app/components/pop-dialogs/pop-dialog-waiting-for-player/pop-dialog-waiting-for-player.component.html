@@ -23,7 +23,7 @@
                 <div class = "group-button">
                 <button mat-raised-button mat-dialog-close (click)="startUpGameService.startMatch(gameInfo.nameGame)">Laisser le joueur rejoindre</button>
                 <button mat-raised-button (click)="startUpGameService.declineAdversary(gameInfo.nameGame)">Refuser le joueur</button>
-                </div>r
+                </div>
             </div>
             <ng-template class = "progressBar" #progressBar>
                 <mat-progress-spinner #progressBar [diameter]="70" mode="indeterminate"></mat-progress-spinner>

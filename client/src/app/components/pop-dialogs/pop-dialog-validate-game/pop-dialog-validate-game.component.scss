@@ -37,9 +37,15 @@ mat-radio-group {
     position:relative;
 }
 .button-group{
-    background-color: rgb(214, 169, 143);
+    background-color: #203647;
+    color: #eefbfe;
+}
+
+.button-group:hover:enabled{
+    background-color: #007cc7;
 
 }
+
 p{
     font-size :17px;
 }
@@ -55,10 +61,10 @@ p{
 
 
 ::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
-    border-color: rgb(214, 169, 143);
+    background-color: #007cc7;
   }
   
   
 ::ng-deep.mat-radio-button.mat-accent .mat-radio-inner-circle{
-    background-color: rgb(214, 169, 143);
+    background-color: #007cc7;
   }

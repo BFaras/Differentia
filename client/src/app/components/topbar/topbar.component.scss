@@ -29,17 +29,23 @@
 }
 
 button{
-    background-color: rgb(214, 169, 143);
+    background-color: #203647;
+    color: #eefbfe;
     position: relative;
     bottom: 5px;
+}
+
+button:hover:enabled{
+    background-color: rgb(216, 204, 41);
+    transition: ease-in 0.25s;
 }
 
 .bulb-hint{
     color:rgb(216, 204, 41);
     position:relative;
     left:13px;
-    
 }
+
 .container-hints{
     display: grid;
     grid-template-columns: auto auto auto;

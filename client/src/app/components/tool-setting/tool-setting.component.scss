@@ -5,6 +5,15 @@
     background-color: #203647;
     color: #eefbfe;
 }
+
+
+
+.mat-mini-fab{
+    height: 35px;
+    width: 35px;
+    background-color: #203647;
+    color: #eefbfe;
+}
 mat-label , :host ::ng-deep .mat-select-value {
     color: white;
 }
@@ -38,7 +47,7 @@ button {
     color: #eefbfe;
 }
 
-button:hover{
+.button-effect:hover:enabled{
     background-color: #007cc7;
     transition: ease-in 0.25s;
 }

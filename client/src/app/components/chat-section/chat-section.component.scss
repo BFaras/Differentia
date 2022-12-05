@@ -20,7 +20,14 @@
 button{
     position: relative;
     top: 25px;
-    background-color: rgb(214, 169, 143);
+    background-color: #203647;
+    color: #eefbfe;
+    width: 40%;
+}
+
+button:hover{
+    background-color: #007cc7;
+    transition: ease-in 0.25s;
 }
 
 .chatBox {
