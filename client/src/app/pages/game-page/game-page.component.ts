@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PopDialogEndgameComponent } from '@app/components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
 import {
@@ -35,14 +35,14 @@ import { firstValueFrom } from 'rxjs';
     templateUrl: './game-page.component.html',
     styleUrls: ['./game-page.component.scss'],
 })
-export class GamePageComponent {
+export class GamePageComponent implements OnInit {
     readonly localPlrUsernamePos = LOCAL_PLR_USERNAME_POS;
     nbDifferences: number;
     gameName: string;
     gameMode: string;
     usernames: string[] = [];
-    isMultiplayerGame: boolean;
-    images: HTMLImageElement[];
+    isMultiplayerGame: boolean = false;
+    images: HTMLImageElement[] = [new Image(IMAGE_WIDTH, IMAGE_HEIGHT), new Image(IMAGE_WIDTH, IMAGE_HEIGHT)];
     nbDifferencesFound: number[] = [0, 0];
     timeCluePenalty: number = 0;
 
@@ -52,10 +52,7 @@ export class GamePageComponent {
         private communicationService: CommunicationService,
         private dialog: MatDialog,
         private endGameService: EndGameHandlerService,
-    ) {
-        this.images = [new Image(IMAGE_WIDTH, IMAGE_HEIGHT), new Image(IMAGE_WIDTH, IMAGE_HEIGHT)];
-        this.isMultiplayerGame = false;
-    }
+    ) {}
 
     ngOnInit() {
         this.socketService.connect();

@@ -44,6 +44,7 @@ export class PopDialogUsernameComponent implements OnInit {
     ngOnDestroy(): void {
         this.socketService.off('username valid');
         this.socketService.off(`${CLASSIC_MODE}`);
+        this.socketService.off(`open the ${LIMITED_TIME_MODE} pop-dialog`);
     }
     private startWaitingLine(): void {
         this.startUpGameService.startUpWaitingLine(this.gameInfo);

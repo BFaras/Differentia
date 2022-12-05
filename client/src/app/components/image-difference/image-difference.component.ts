@@ -125,14 +125,6 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
                 linearizedArray.push(doubleArray[i][j]);
             }
         }
-
-        /*
-        for (const num of doubleArray) {
-            for (const number of doubleArray[]) {
-                linearizedArray.push(number);
-            }
-        }
-        */
         return linearizedArray;
     }
 

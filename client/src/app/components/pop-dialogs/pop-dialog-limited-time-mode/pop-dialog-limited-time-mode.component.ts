@@ -14,6 +14,7 @@ import {
     STANDARD_POP_UP_HEIGHT,
     STANDARD_POP_UP_WIDTH,
 } from '@app/const/client-consts';
+import { PopUpData } from '@app/interfaces/pop-up-data';
 
 @Component({
     selector: 'app-pop-dialog-limited-time-mode',
@@ -24,7 +25,7 @@ export class PopDialogLimitedTimeModeComponent implements OnInit {
     constructor(
         private socketService: SocketClientService,
         public startUpGameService: StartUpGameService,
-        @Inject(MAT_DIALOG_DATA) public gameInfo: any,
+        @Inject(MAT_DIALOG_DATA) public gameInfo: PopUpData,
         private dialog: MatDialog,
         public dialogRef: MatDialogRef<PopDialogLimitedTimeModeComponent>,
         public router: Router,
