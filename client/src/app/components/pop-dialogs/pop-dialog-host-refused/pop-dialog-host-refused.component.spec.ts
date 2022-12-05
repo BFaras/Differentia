@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SocketClientService } from '@app/services/socket-client.service';
 
 import { PopDialogHostRefusedComponent } from './pop-dialog-host-refused.component';
@@ -15,6 +15,7 @@ describe('PopDialogHostRefusedComponent', () => {
 
         await TestBed.configureTestingModule({
             declarations: [PopDialogHostRefusedComponent],
+            imports: [MatDialogModule],
             providers: [
                 { provide: MatDialogRef, useValue: {} },
                 { provide: MatDialog, useValue: dialog },

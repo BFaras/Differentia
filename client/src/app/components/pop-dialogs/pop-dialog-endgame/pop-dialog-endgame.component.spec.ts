@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 
 import { PopDialogEndgameComponent } from './pop-dialog-endgame.component';
 
@@ -10,6 +11,7 @@ describe('PopDialogEndgameComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [PopDialogEndgameComponent],
+            imports: [MatDialogModule, MatIconModule],
             providers: [
                 { provide: MatDialogRef, useValue: {} },
                 { provide: MAT_DIALOG_DATA, useValue: {} },

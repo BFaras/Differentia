@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { GameFormDescription } from '@app/classes/game-form-description';
+import { RecordTime } from '@app/classes/record-time';
 import { RecordTimesBoard } from '@app/classes/record-times-board';
 import { Game } from '@common/game';
 import { CommunicationService } from './communication.service';
 import { FormService } from './form.service';
-import { RecordTime } from '@app/classes/record-time';
 
 describe('FormService', () => {
     let service: FormService;

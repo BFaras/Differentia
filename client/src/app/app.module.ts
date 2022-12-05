@@ -10,6 +10,7 @@ import { AppMaterialModule } from '@app/modules/material.module';
 import { AppComponent } from '@app/pages/app/app.component';
 import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CanvasDrawingComponent } from './components/canvas-drawing/canvas-drawing.component';
 import { ChatSectionComponent } from './components/chat-section/chat-section.component';
 import { DialogInputComponent } from './components/dialog-input/dialog-input.component';
@@ -19,6 +20,7 @@ import { HeaderImageComponent } from './components/header-image/header-image.com
 import { ImageDifferenceComponent } from './components/image-difference/image-difference.component';
 import { ImageRenderedComponent } from './components/list-images-rendered/image-rendered/image-rendered.component';
 import { ListImagesRenderedComponent } from './components/list-images-rendered/list-images-rendered.component';
+import { PopDialogAbandonVerificationComponent } from './components/pop-dialogs/pop-dialog-abandon-verification/pop-dialog-abandon-verification.component';
 import { PopDialogCreateGameComponent } from './components/pop-dialogs/pop-dialog-create-game/pop-dialog-create-game.component';
 import { PopDialogDownloadImagesComponent } from './components/pop-dialogs/pop-dialog-download-images/pop-dialog-download-images.component';
 import { PopDialogEndgameComponent } from './components/pop-dialogs/pop-dialog-endgame/pop-dialog-endgame.component';
@@ -28,14 +30,12 @@ import { PopDialogResetComponent } from './components/pop-dialogs/pop-dialog-res
 import { PopDialogUsernameComponent } from './components/pop-dialogs/pop-dialog-username/pop-dialog-username.component';
 import { PopDialogValidateGameComponent } from './components/pop-dialogs/pop-dialog-validate-game/pop-dialog-validate-game.component';
 import { PopDialogWaitingForPlayerComponent } from './components/pop-dialogs/pop-dialog-waiting-for-player/pop-dialog-waiting-for-player.component';
+import { PopDialogWarningComponent } from './components/pop-dialogs/pop-dialog-warning/pop-dialog-warning.component';
 import { ToolSettingComponent } from './components/tool-setting/tool-setting.component';
 import { TopbarComponent } from './components/topbar/topbar.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { GameCreationPageComponent } from './pages/game-creation-page/game-creation-page.component';
 import { GameSelectionComponent } from './pages/game-selection/game-selection.component';
-import { PopDialogAbandonVerificationComponent } from './components/pop-dialogs/pop-dialog-abandon-verification/pop-dialog-abandon-verification.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { PopDialogWarningComponent } from './components/pop-dialogs/pop-dialog-warning/pop-dialog-warning.component';
 
 /**
  * Main module that is used in main.ts.

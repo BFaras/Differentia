@@ -1,5 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormsModule } from '@angular/forms';
+import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { SocketClientService } from '@app/services/socket-client.service';
@@ -40,6 +45,7 @@ describe('PopDialogUsernameComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [PopDialogUsernameComponent],
+            imports: [MatIconModule, MatFormFieldModule, MatDialogModule, MatInputModule, FormsModule, BrowserAnimationsModule],
             providers: [
                 { provide: MatDialogRef, useValue: dialogRef },
                 { provide: StartUpGameService, useValue: startUpGameServiceSpy },
@@ -63,7 +69,6 @@ describe('PopDialogUsernameComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
-
 
     it('should set the user to not valid', () => {
         socketTestHelper.peerSideEmit('username not valid');

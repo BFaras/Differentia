@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterTestingModule } from '@angular/router/testing';
 import { GameToServerService } from '@app/services/game-to-server.service';
 import { ListImagesRenderedService } from '@app/services/list-images-rendered.service';
@@ -49,7 +51,7 @@ describe('GameCreationPageComponent', () => {
         gameToServerServiceSpy.getOriginalImageUploaded.and.returnValue(mockImageToSerever);
         await TestBed.configureTestingModule({
             declarations: [GameCreationPageComponent],
-            imports: [MatDialogModule, RouterTestingModule.withRoutes([])],
+            imports: [MatDialogModule, RouterTestingModule.withRoutes([]), MatProgressSpinnerModule, MatIconModule],
             providers: [
                 { provide: ListImagesRenderedService, useValue: listImagesRenderedSpy },
                 { provide: GameToServerService, useValue: gameToServerServiceSpy },

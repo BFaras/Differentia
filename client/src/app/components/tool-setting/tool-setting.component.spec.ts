@@ -1,12 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { CanvasDataHandlerService } from '@app/services/canvas-data-handler.service';
 import { DrawingHistoryService } from '@app/services/drawing-history.service';
 import { KeyEventHandlerService } from '@app/services/key-event-handler.service';
 import { PencilService } from '@app/services/pencil.service';
 import { IMAGE_HEIGHT, IMAGE_WIDTH, VERY_BIG } from '@common/const';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToolSettingComponent } from './tool-setting.component';
-import { FormsModule } from '@angular/forms';
 describe('ToolSettingComponent', () => {
     let component: ToolSettingComponent;
     let fixture: ComponentFixture<ToolSettingComponent>;
@@ -43,7 +47,7 @@ describe('ToolSettingComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [ToolSettingComponent],
-            imports: [FormsModule],
+            imports: [FormsModule, MatSelectModule, MatIconModule, FontAwesomeModule, BrowserAnimationsModule],
             providers: [
                 { provide: DrawingHistoryService, useValue: drawingHistoryServiceSpy },
                 { provide: CanvasDataHandlerService, useValue: canvasDataHandlerServiceSpy },
@@ -131,14 +135,14 @@ describe('ToolSettingComponent', () => {
     });
 
     it('should verify vereify setMode write', () => {
-        component.setMode("write")
-        expect(component['enableErase']).toBeFalsy;
-        expect(component['enableWrite']).toBeTruthy;
+        component.setMode('write');
+        expect(component['enableErase']).toBeFalsy();
+        expect(component['enableWrite']).toBeTruthy();
     });
 
     it('should verify vereify setMode erase', () => {
-        component.setMode("erase")
-        expect(component['enableErase']).toBeTruthy;
-        expect(component['enableWrite']).toBeFalsy;
+        component.setMode('erase');
+        expect(component['enableErase']).toBeTruthy();
+        expect(component['enableWrite']).toBeFalsy();
     });
 });

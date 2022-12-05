@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GameToServerService } from '@app/services/game-to-server.service';
 @Component({
     selector: 'app-pop-dialog-create-game',
@@ -22,5 +22,4 @@ export class PopDialogCreateGameComponent implements OnInit {
     getNumberOfDifference(): void {
         this.numberOfDifference = this.gameToServerService.getNumberDifference();
     }
-
 }
