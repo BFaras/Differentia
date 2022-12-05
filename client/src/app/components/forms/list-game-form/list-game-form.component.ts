@@ -23,6 +23,7 @@ import { MSG_RESET_ALL_TIME, MSG_RESET_TIME } from '@common/const';
     styleUrls: ['./list-game-form.component.scss'],
 })
 export class ListGameFormComponent implements OnInit {
+    @Input() page: string;
     firstElementIndex: number = FIRST_GAMEFORMS_INDEX;
     lastElementIndex: number = LAST_GAMEFORMS_INDEX;
     currentPageGameFormList: GameFormDescription[];
@@ -32,8 +33,6 @@ export class ListGameFormComponent implements OnInit {
     private messageForUpdate: string = EMPTY_MESSAGE;
     private horizontalPosition: MatSnackBarHorizontalPosition = SNACKBAR_HORIZONTAL_POSITION;
     private verticalPosition: MatSnackBarVerticalPosition = SNACKBAR_VERTICAL_POSITION;
-
-    @Input() page: string;
 
     constructor(
         public formService: FormService,

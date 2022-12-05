@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ImageSize } from '@app/classes/image-size';
+import { POSITION_BITS_DATA } from '@app/const/client-consts';
+import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
 import { ListImagesRenderedService } from './list-images-rendered.service';
 import { UploadFileService } from './upload-file.service';
 @Injectable({
@@ -8,7 +10,7 @@ import { UploadFileService } from './upload-file.service';
 })
 export class VerifyImageService {
     imageToVerify = new Image();
-    imageSizeConstraint: ImageSize = new ImageSize(640, 480);
+    imageSizeConstraint: ImageSize = new ImageSize(IMAGE_WIDTH, IMAGE_HEIGHT);
     bitDepth: number;
     file: File;
     constructor(
@@ -57,7 +59,7 @@ export class VerifyImageService {
 
     getBmp(buffer: any) {
         const datav = new DataView(buffer);
-        this.bitDepth = datav.getUint8(28);
+        this.bitDepth = datav.getUint8(POSITION_BITS_DATA);
     }
 
     verifyImageWidthHeight(width: number, height: number) {

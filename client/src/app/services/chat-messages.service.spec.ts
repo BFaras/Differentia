@@ -92,7 +92,7 @@ describe('ChatMessagesService', () => {
     });
 
     it('should change the multiplayer game to true and set the adversary name on The adversary username is event', (done) => {
-        const testAdversaryName = 'testName1234';
+        const testAdversaryName: string = 'testName1234';
         socketTestHelper.peerSideEmit('The adversary username is', testAdversaryName);
         setTimeout(() => {
             expect(chatMessagesService['isMultiplayerGame']).toBeTruthy();

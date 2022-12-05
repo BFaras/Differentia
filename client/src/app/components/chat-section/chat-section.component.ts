@@ -16,14 +16,12 @@ export class ChatSectionComponent implements OnInit, OnDestroy {
     @ViewChild('scrollMe') private myScrollContainer: ElementRef;
     isMultiplayerGame: boolean;
     message: string;
-    messagesSent: ChatMessage[];
+    messagesSent: ChatMessage[] = [];
     localPlayerUsername: string = DEFAULT_USERNAME;
     readonly gameMessageSenderName = GAME_MESSAGE_SENDER_NAME;
     private chatMessagesSubscription: Subscription;
 
-    constructor(private chatMessagesService: ChatMessagesService, private socketService: SocketClientService) {
-        this.messagesSent = [];
-    }
+    constructor(private chatMessagesService: ChatMessagesService, private socketService: SocketClientService) {}
 
     onFocus() {
         this.chatMessagesService.isWriting = true;

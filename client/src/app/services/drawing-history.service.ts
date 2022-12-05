@@ -5,15 +5,9 @@ import { IMAGE_HEIGHT, IMAGE_WIDTH } from '@common/const';
     providedIn: 'root',
 })
 export class DrawingHistoryService {
-    private cancelDrawingHistory: ImageData[][];
-    private redoDrawingHistory: ImageData[][];
-    private context: CanvasRenderingContext2D[];
-
-    constructor() {
-        this.cancelDrawingHistory = [[], []];
-        this.redoDrawingHistory = [[], []];
-        this.context = [];
-    }
+    private cancelDrawingHistory: ImageData[][] = [[], []];
+    private redoDrawingHistory: ImageData[][] = [[], []];
+    private context: CanvasRenderingContext2D[] = [];
 
     clearHistory() {
         this.cancelDrawingHistory = [[], []];
@@ -45,9 +39,15 @@ export class DrawingHistoryService {
 
     redoCanvas(index: number) {
         if (this.redoDrawingHistory[index].length !== 0) {
+<<<<<<< HEAD
             const DeletedImageDataToPop = this.redoDrawingHistory[index].pop() as ImageData;
             this.context[index].putImageData(DeletedImageDataToPop, 0, 0);
             this.cancelDrawingHistory[index].push(DeletedImageDataToPop);
+=======
+            const deletedImageDataToPop = this.redoDrawingHistory[index].pop() as ImageData;
+            this.context[index].putImageData(deletedImageDataToPop, 0, 0);
+            this.cancelDrawingHistory[index].push(deletedImageDataToPop);
+>>>>>>> aa90a49c2c959869b82df362e94db7b23c1055e2
         }
     }
 }

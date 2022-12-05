@@ -28,13 +28,13 @@ import { SocketClientService } from '@app/services/socket-client.service';
     styleUrls: ['./admin-page.component.scss'],
 })
 export class AdminPageComponent {
+    nameOfPage: string = 'Admin';
     private gameTimeSettings: GameTimeSetting[] = [
         { inputName: TIME_SETTING_INPUT1, defaultTime: DEFAULT_INITIAL_TIME, placeHolder: TIME_PLACEHOLDER_INPUT1, valueUnit: INPUT_TYPE },
         { inputName: TIME_SETTING_INPUT2, defaultTime: DEFAULT_PENALTY_TIME, placeHolder: TIME_PLACEHOLDER_INPUT2, valueUnit: INPUT_TYPE },
         { inputName: TIME_SETTING_INPUT3, defaultTime: DEFAULT_SAVED_TIME, placeHolder: TIME_PLACEHOLDER_INPUT3, valueUnit: INPUT_TYPE },
     ];
     constructor(public dialog: MatDialog, private socketService: SocketClientService) {}
-    nameOfPage: string = 'Admin';
 
     openDialog() {
         this.dialog.open(DialogInputComponent, {
@@ -63,8 +63,8 @@ export class AdminPageComponent {
         this.socketService.on('Delete or reset applied on gameForm', () => {
             this.socketService.send('Reset game list');
         });
-        this.socketService.on('Ready to reset game list', (value: string[]) => {
-            this.socketService.send('Reload game selection page', value);
+        this.socketService.on('Ready to reset game list', (response: string[]) => {
+            this.socketService.send('Reload game selection page', response);
         });
     }
 }

@@ -9,14 +9,10 @@ import { environment } from 'src/environments/environment';
     providedIn: 'root',
 })
 export class CommunicationService {
-    private readonly baseUrl: string = environment.serverUrl;
     numberOfDifferences: number;
+    private readonly baseUrl: string = environment.serverUrl;
 
     constructor(private readonly http: HttpClient) {}
-
-    private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {
-        return () => of(result as T);
-    }
 
     getGames(): Observable<Game[]> {
         return this.http.get<Game[]>(`${this.baseUrl}/games`).pipe(catchError(this.handleError<Game[]>('getGames')));
@@ -34,5 +30,8 @@ export class CommunicationService {
 
     uploadFiles(formData: FormData): Observable<Object> {
         return this.http.post(`${this.baseUrl}/images`, formData).pipe(catchError(this.handleError<Object>('uploadFiles')));
+    }
+    private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {
+        return () => of(result as T);
     }
 }
