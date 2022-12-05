@@ -51,7 +51,6 @@ describe('EndGameHandlerService', () => {
         expect(service['localPlayerUsername']).toEqual(testUsername);
     });
 
-    // A verifier
     it('should open end game Dialog ', () => {
         endGameInfos = {
             isMultiplayer: false,
@@ -66,7 +65,6 @@ describe('EndGameHandlerService', () => {
         expect(spy).toHaveBeenCalled();
     });
 
-    // A verifier
     it('should call end game event when the user win', () => {
         endGameInfos = {
             isMultiplayer: true,
@@ -81,7 +79,6 @@ describe('EndGameHandlerService', () => {
         expect(spy).toHaveBeenCalledWith(CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE, WIN_FLAG);
     });
 
-    // A verifier
     it('should call end game event when the user abandon', () => {
         endGameInfos = {
             isMultiplayer: true,
@@ -96,7 +93,6 @@ describe('EndGameHandlerService', () => {
         expect(spy).toHaveBeenCalledWith(CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE, WIN_FLAG);
     });
 
-    // A verifier
     it('should call end game event when the user lose', () => {
         endGameInfos = {
             isMultiplayer: true,

@@ -70,7 +70,7 @@ export class ChatMessagesService {
                 observer.next(this.generateChatMessageFromGame(MESSAGE_ERROR_DIFFERENCE_SOLO));
             }
         });
-        // To test
+
         this.socketService.on('New record time', (recordTimeInfos: RecordTimeInformations) => {
             this.sendNewRecordMessage(observer, recordTimeInfos);
         });
@@ -132,7 +132,6 @@ export class ChatMessagesService {
         return newRecordChatMessage;
     }
 
-    // To test
     private sendNewRecordMessage(observer: Subscriber<ChatMessage>, recordTimeInfos: RecordTimeInformations) {
         const newRecordChatMessage: string = this.generateRecordMessageType(recordTimeInfos);
         observer.next(this.generateChatMessageFromGame(newRecordChatMessage));

@@ -143,7 +143,6 @@ export class GamePageComponent {
             this.isMultiplayerGame = false;
         });
 
-        //To test
         this.socketService.on('Clue Time Penalty', (penalty: number) => {
             this.timeCluePenalty = penalty;
         });
