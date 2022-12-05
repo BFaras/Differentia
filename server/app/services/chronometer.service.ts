@@ -16,8 +16,6 @@ export class ChronometerService {
     timeConstants: TimeConstants;
     private timeConstantsService: TimeConstantsService = new TimeConstantsService();
 
-    constructor() {}
-
     async setChronometerMode(gameMode: string, socket: io.Socket): Promise<void> {
         if (gameMode === LIMITED_TIME_MODE) {
             await this.limitedTimeMode(socket);

@@ -12,13 +12,8 @@ const IMAGES_PATH = 'assets/images/';
 export class GamesService {
     private gamesFilePath: string = 'games.json';
     private games: Game[];
-    private databaseService: DatabaseService;
-    private recordTimesService: RecordTimesService;
-
-    constructor() {
-        this.databaseService = Container.get(DatabaseService);
-        this.recordTimesService = new RecordTimesService(this.databaseService);
-    }
+    private databaseService: DatabaseService = Container.get(DatabaseService);
+    private recordTimesService: RecordTimesService = new RecordTimesService(this.databaseService);
 
     async getGame(gameName: string): Promise<Game> {
         await this.asyncReadGamesFile();

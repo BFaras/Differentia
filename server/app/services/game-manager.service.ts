@@ -39,11 +39,9 @@ export class GameManagerService {
     private readonly mouseHandlerServices: Map<string, MouseHandlerService> = new Map<string, MouseHandlerService>();
     private readonly gamesPlayedByRoom: Map<string, string[]> = new Map<string, string[]>();
     private gamesService = Container.get(GamesService);
-    private clueManagerService: ClueManagerService;
+    private clueManagerService: ClueManagerService = Container.get(ClueManagerService);
 
-    constructor(private sio: io.Server) {
-        this.clueManagerService = Container.get(ClueManagerService);
-    }
+    constructor(private sio: io.Server) {}
 
     async beginGame(gameInfo: GameInfo) {
         this.setupSocketGameRoom(gameInfo.socket, NO_OTHER_PLAYER_ROOM);
