@@ -7,6 +7,7 @@ import {
     NO_OFFSET,
     PAUSED_ID,
     THREE_SECONDS,
+    WAIT_ONE_SECOND,
 } from '@app/const/client-consts';
 import { CompassInformations } from '@app/interfaces/compass-informations';
 import { ClueInformations } from '@common/clue-informations';
@@ -34,7 +35,7 @@ export class DrawService {
         setTimeout(() => {
             this.setCanvasTransparent(context.canvas);
             context.canvas.id = 'click';
-        }, 1000);
+        }, WAIT_ONE_SECOND);
     }
 
     async showCompassClue(differenceCluePixels: number[], canvasToShowOn: HTMLCanvasElement) {

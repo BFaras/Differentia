@@ -13,11 +13,7 @@ export class PencilService {
     private leftCanvasColor: string;
     private rightCanvasWidth: number;
     private rightCanvasColor: string;
-    private pencilMode: string[];
-
-    constructor() {
-        this.pencilMode = [];
-    }
+    private pencilMode: string[] = [];
 
     obtainPencilColor(index: number): string {
         if (index === ORIGINAL_IMAGE_POSITION) {

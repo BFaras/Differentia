@@ -25,6 +25,27 @@ export class EndGameHandlerService {
     private localPlayerUsername: string;
     constructor(private socketService: SocketClientService, private dialog: MatDialog) {}
 
+    configureSocket() {
+        this.socketService.on('show the username', (username: string) => {
+            this.localPlayerUsername = username;
+        });
+
+        this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
+            let endGameMessage: string;
+            let winFlag = WIN_FLAG;
+
+            if (endGameInfos.isGameWon && !endGameInfos.isAbandon) {
+                endGameMessage = this.generateEndGameMessage(endGameInfos)!;
+            } else if (endGameInfos.isMultiplayer && endGameInfos.isAbandon) {
+                endGameMessage = CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE;
+            } else if (!endGameInfos.isGameWon) {
+                endGameMessage = CLASSIC_MULTIPLAYER_LOST_MESSAGE;
+                winFlag = LOSING_FLAG;
+            }
+            this.openEndGameDialog(endGameMessage!, winFlag);
+        });
+    }
+
     private openEndGameDialog(messageToDisplay: string, winFlag: boolean) {
         this.dialog.open(PopDialogEndgameComponent, {
             height: STANDARD_POP_UP_HEIGHT,
@@ -52,26 +73,5 @@ export class EndGameHandlerService {
         if (endGameInfos.hasNewRecord) return this.generateRecordMessage(endGameInfos.playerRanking);
         else if (!endGameInfos.hasNewRecord && !endGameInfos.isMultiplayer) return CLASSIC_SOLO_END_GAME_MESSAGE;
         else return CLASSIC_MULTIPLAYER_REAL_WIN_MESSAGE;
-    }
-
-    configureSocket() {
-        this.socketService.on('show the username', (username: string) => {
-            this.localPlayerUsername = username;
-        });
-
-        this.socketService.on('End game', (endGameInfos: EndGameInformations) => {
-            let endGameMessage: string;
-            let winFlag = WIN_FLAG;
-
-            if (endGameInfos.isGameWon && !endGameInfos.isAbandon) {
-                endGameMessage = this.generateEndGameMessage(endGameInfos)!;
-            } else if (endGameInfos.isMultiplayer && endGameInfos.isAbandon) {
-                endGameMessage = CLASSIC_MULTIPLAYER_ABANDON_WIN_MESSAGE;
-            } else if (!endGameInfos.isGameWon) {
-                endGameMessage = CLASSIC_MULTIPLAYER_LOST_MESSAGE;
-                winFlag = LOSING_FLAG;
-            }
-            this.openEndGameDialog(endGameMessage!, winFlag);
-        });
     }
 }

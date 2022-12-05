@@ -55,6 +55,7 @@ describe('DrawService', () => {
         const eraseTextSpy = spyOn(service.contextClickOriginalCanvas, 'clearRect').and.callThrough();
         const message = 'text';
         service.drawWord(message, { x: 0, y: 0 }, ctxStub);
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
         tick(1500);
         expect(eraseTextSpy).toHaveBeenCalled();
     }));
@@ -101,8 +102,10 @@ describe('DrawService', () => {
     it('should change the canvas id to paused even if makePixelsBlinkOnCanvas is called two times', () => {
         const pixelsToBlink = [1, 2, 3];
         service.makePixelsBlinkOnCanvas(pixelsToBlink, service.contextClickOriginalCanvas.canvas, service.contextClickOriginalCanvas.canvas);
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
         jasmine.clock().tick(1000);
         service.makePixelsBlinkOnCanvas(pixelsToBlink, service.contextClickOriginalCanvas.canvas, service.contextClickOriginalCanvas.canvas);
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
         jasmine.clock().tick(3000);
         expect(service.contextClickOriginalCanvas.canvas.id).toEqual('paused');
     });
@@ -118,6 +121,7 @@ describe('DrawService', () => {
     });
 
     it('should set the canvas ID to blink then to paused on makePixelsBlinkOnCanvas()', () => {
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
         const testPixelsToBlink: number[] = [2, 5, 6];
         service.makePixelsBlinkOnCanvas(testPixelsToBlink, service.contextClickOriginalCanvas.canvas, service.contextClickOriginalCanvas.canvas);
         expect(service.contextClickOriginalCanvas.canvas.id).toEqual(BLINK_ID);
@@ -126,6 +130,7 @@ describe('DrawService', () => {
     });
 
     it('should calll copyCertainPixelsFromOneImageToACanvas() from ImageGenerator on makePixelsBlinkOnCanvasCheat()', () => {
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
         const testPixelsToBlink: number[] = [2, 5, 6];
         service.makePixelsBlinkOnCanvasCheat(testPixelsToBlink, service.contextClickOriginalCanvas.canvas, service.contextClickOriginalCanvas.canvas);
         expect(imageGeneratorSpy.copyCertainPixelsFromOneImageToACanvas).toHaveBeenCalled();

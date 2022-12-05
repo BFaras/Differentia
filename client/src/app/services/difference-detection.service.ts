@@ -8,10 +8,10 @@ import { SocketClientService } from './socket-client.service';
     providedIn: 'root',
 })
 export class DifferenceDetectionService {
-    constructor(private socketService: SocketClientService, private drawService: DrawService) {}
     private mousePosition: Position = { x: 0, y: 0 };
     private message: string = '';
     private audio: HTMLAudioElement;
+    constructor(private socketService: SocketClientService, private drawService: DrawService) {}
 
     mouseHitDetect(event: MouseEvent) {
         if (event.button === MouseButton.Left) {

@@ -5,7 +5,6 @@ import { ALPHA_OPAQUE, ALPHA_POS, BLACK_RGB, MAX_RGB_VALUE, NB_BIT_PER_PIXEL } f
     providedIn: 'root',
 })
 export class ImageGeneratorService {
-    constructor() {}
 
     generateBlackImageFromPixelsDataArray(differentPixelsArray: number[], canvasToDrawOn: HTMLCanvasElement): ImageData {
         this.setupCanvas(canvasToDrawOn);
