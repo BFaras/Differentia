@@ -34,8 +34,6 @@ export class RecordTimesService {
             await this.collection.insertOne(newGameDefaultTimes).catch((error: Error) => {
                 throw new HttpException('Failed to insert game and default times', StatusCodes.INTERNAL_SERVER_ERROR);
             });
-        } else {
-            throw new Error('Game already exists');
         }
     }
 
@@ -137,7 +135,7 @@ export class RecordTimesService {
         }
         return;
     }
-    
+
     private async validateName(gameName: string): Promise<boolean> {
         const filterQuery: Filter<GameTimes> = { name: gameName };
         const game = await this.collection.findOne(filterQuery);
