@@ -1,9 +1,9 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { RecordTime } from '@app/classes/record-time';
 import { CommunicationService } from '@app/services/communication.service';
 import { Game } from '@common/game';
 import { StatusCodes } from 'http-status-codes';
-import { RecordTime } from '@app/classes/record-time';
 
 describe('CommunicationService', () => {
     let httpMock: HttpTestingController;
@@ -136,7 +136,7 @@ describe('CommunicationService', () => {
         req.flush(validGameToAdd);
     });
 
-    // Je devrais vérifier si sa donne un certain code HTTP mais la réponse est le jeu qui est en paramètre ==> changer logique?
+    // Je devrais vérifier si sa donne un certain code HTTP mais la réponse est le jeu qui est en paramètre ===> changer logique?
     it('should return an undefined response when sending a POST request with an unvalid game (HttpClient called once)', () => {
         // subscribe to the mocked call
         service.addGame(unvalidGameToAdd).subscribe({

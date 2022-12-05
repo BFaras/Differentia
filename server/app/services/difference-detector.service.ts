@@ -47,7 +47,7 @@ export class DifferenceDetectorService {
 
         this.compareImagesPixels(differentPixelsNumbersArray);
 
-        if (this.offset != EMPTY_OFFSET_NB) {
+        if (this.offset !== EMPTY_OFFSET_NB) {
             differentPixelsNumbersArray.forEach((diffPixelNumber) => {
                 this.addPixelDifferenceOffset(diffPixelNumber);
             });
@@ -118,7 +118,7 @@ export class DifferenceDetectorService {
     }
     private countDifferences() {
         this.pixelsDifferencesNbMap.forEach((differenceNb, diffPixelNumber) => {
-            if (differenceNb == DEFAULT_DIFFERENCE_POSITION) {
+            if (differenceNb === DEFAULT_DIFFERENCE_POSITION) {
                 this.visitPixelsInDifference(diffPixelNumber);
                 this.nbOfDifferences++;
             }
@@ -128,7 +128,7 @@ export class DifferenceDetectorService {
     private visitPixelsInDifference(initialVisitedDifferentPixelNb: number) {
         let pixelsToVisit: number[] = [initialVisitedDifferentPixelNb];
 
-        while (pixelsToVisit.length != EMPTY_ARRAY_LENGTH) {
+        while (pixelsToVisit.length !== EMPTY_ARRAY_LENGTH) {
             const pixelPositionToVisit = pixelsToVisit[FIRST_ARRAY_POSITION];
             if (this.isPixelDifferenceInMap(pixelPositionToVisit)) {
                 this.markPixelDifferenceNb(pixelPositionToVisit);
@@ -136,7 +136,7 @@ export class DifferenceDetectorService {
             }
 
             pixelsToVisit = pixelsToVisit.filter((value, i, arr) => {
-                return value != pixelPositionToVisit;
+                return value !== pixelPositionToVisit;
             });
         }
     }
@@ -186,7 +186,7 @@ export class DifferenceDetectorService {
     }
 
     private isPixelVisited(pixelPosition: number): boolean {
-        return this.pixelsDifferencesNbMap.get(pixelPosition) != DEFAULT_DIFFERENCE_POSITION;
+        return this.pixelsDifferencesNbMap.get(pixelPosition) !== DEFAULT_DIFFERENCE_POSITION;
     }
 
     private isPixelDifferenceInMap(pixelPosition: number) {

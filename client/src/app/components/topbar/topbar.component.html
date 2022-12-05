@@ -1,19 +1,19 @@
 <div class="topbar">
-    <span id = 'timer-container'class="menu-element">
+    <span id="timer-container" class="menu-element">
         <mat-icon>timer</mat-icon>
-        <p id = "timer">{{ timeService.showableMinutes }}:{{ timeService.showableSeconds }}</p>
+        <p id="timer">{{ timeService.showableMinutes }}:{{ timeService.showableSeconds }}</p>
     </span>
-    <span class = "hint-button"*ngIf="!isMultiplayer && clueAmountLeft > 0" class="menu-element">
-        <button mat-raised-button  matTooltip="Obtenir un indice" (click)="sendClueEventToServer()">
+    <span class="hint-button" *ngIf="!isMultiplayer && clueAmountLeft > 0" class="menu-element">
+        <button mat-raised-button matTooltip="Obtenir un indice" (click)="sendClueEventToServer()">
             <mat-icon>search</mat-icon>
         </button>
-        <div class = "container-hints">
+        <div class="container-hints">
             <div *ngFor="let item of [].constructor(clueAmountLeft); let i = index">
-                <mat-icon class = "bulb-hint">wb_incandescent</mat-icon>
+                <mat-icon class="bulb-hint">wb_incandescent</mat-icon>
             </div>
-         </div>
+        </div>
     </span>
-    <span class = "hint-button" *ngIf="isMultiplayer || clueAmountLeft <= 0" class="menu-element">
+    <span class="hint-button" *ngIf="isMultiplayer || clueAmountLeft <= 0" class="menu-element">
         <button matTooltip="Obtenir un indice" mat-raised-button disabled>
             <mat-icon>search</mat-icon>
         </button>
@@ -26,10 +26,14 @@
         </ng-container>
         <ng-template #limitedTime>
             <ng-container *ngIf="isMultiplayer; else solo">
-                <div class = "nameUsers">{{ nbrDifferencesFound[0] + nbrDifferencesFound[1] }} différences trouvées par {{ playerNames[0] }} et {{ playerNames[1] }}</div>
+                <div class="nameUsers">
+                    {{ nbrDifferencesFound[0] + nbrDifferencesFound[1] }} différences trouvées par {{ playerNames[0] }} et {{ playerNames[1] }}
+                </div>
             </ng-container>
             <ng-template #solo>
-                <div class = "nameUsers">{{ nbrDifferencesFound[0] + nbrDifferencesFound[1] }} différences trouvées par {{ playerNames[localPlayerUsernamePos] }}</div>
+                <div class="nameUsers">
+                    {{ nbrDifferencesFound[0] + nbrDifferencesFound[1] }} différences trouvées par {{ playerNames[localPlayerUsernamePos] }}
+                </div>
             </ng-template>
         </ng-template>
     </span>

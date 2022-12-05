@@ -1,30 +1,26 @@
 <div class="play-area">
-    <h1 class = "title">Trouvez les différences entre les deux images!</h1>
+    <h1 class="title">Trouvez les différences entre les deux images!</h1>
     <span class="image-container">
         <span class="image">
             <!--Image de gauche-->
-            <mat-progress-spinner  [diameter]="70" *ngIf="reloadState" mode="indeterminate">
-            </mat-progress-spinner>
+            <mat-progress-spinner [diameter]="70" *ngIf="reloadState" mode="indeterminate"> </mat-progress-spinner>
             <canvas id="canvas" #originalCanvas [attr.width]="width" [attr.height]="height"></canvas>
             <canvas #blinkCanvas1 [attr.width]="width" [attr.height]="height"></canvas>
             <canvas id="click" #clickCanvas1 (click)="detectDifference($event)" [attr.width]="width" [attr.height]="height"></canvas>
             <div id="mouse-position-display">
                 <p *ngIf="mousePosition.x !== 0">X : {{ mousePosition.x }}</p>
                 <p *ngIf="mousePosition.y !== 0">Y : {{ mousePosition.y }}</p>
-
             </div>
         </span>
     </span>
     <span class="image-container">
         <span class="image">
             <!--Image de droite-->
-            <mat-progress-spinner [diameter]="70" *ngIf="reloadState" mode="indeterminate">
-            </mat-progress-spinner>
+            <mat-progress-spinner [diameter]="70" *ngIf="reloadState" mode="indeterminate"> </mat-progress-spinner>
             <canvas id="canvas" #modifiedCanvas [attr.width]="width" [attr.height]="height"></canvas>
             <canvas #blinkCanvas2 [attr.width]="width" [attr.height]="height"></canvas>
             <canvas id="click" #clickCanvas2 (click)="detectDifference($event)" [attr.width]="width" [attr.height]="height"></canvas>
             <div id="mouse-position-display">
-
                 <p *ngIf="mousePosition.x !== 0">X : {{ mousePosition.x }}</p>
                 <p *ngIf="mousePosition.y !== 0">Y : {{ mousePosition.y }}</p>
             </div>
@@ -33,6 +29,8 @@
 </div>
 <div>
     <span class="button-container">
-        <button class = "abandon-button" matTooltip="Abandonner la partie en cours " mat-raised-button (click) = "onCreateVerifyAbandonGamePopDialog()">Abandon</button>
+        <button class="abandon-button" matTooltip="Abandonner la partie en cours " mat-raised-button (click)="onCreateVerifyAbandonGamePopDialog()">
+            Abandon
+        </button>
     </span>
 </div>

@@ -13,9 +13,8 @@
             <span> {{ message.senderName }} : {{ message.message }} </span>
         </p>
     </div>
-        <form  class= "send-message" *ngIf ="isMultiplayerGame">
-            <input (focus)="onFocus()" (focusout)="outFocus()" #playerMsg type="text" placeholder="Entrez un message" maxlength="200"
-            />
-            <button mat-raised-button  class="chatSend" (click)="sendMessage()">Send</button>
-        </form>
+    <form class="send-message" *ngIf="isMultiplayerGame">
+        <input (focus)="onFocus()" (focusout)="outFocus()" #playerMsg type="text" placeholder="Entrez un message" maxlength="200" />
+        <button mat-raised-button class="chatSend" (click)="sendMessage()">Send</button>
+    </form>
 </div>

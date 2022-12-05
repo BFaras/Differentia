@@ -4,7 +4,7 @@
         <img class="imageGameForm" src="{{ gameForm.gameImage }}" />
 
         <div class="dataGameForm">
-            <div class = "title-ranking">Classement</div>
+            <div class="title-ranking">Classement</div>
             <ol class="recordTimeSolo">
                 <h3>Individuel</h3>
                 <li *ngFor="let records of gameForm.recordTimesBoard.recordTimesSolo">{{ records.time }} par {{ records.playerName }}</li>
@@ -25,12 +25,7 @@
         </ng-container>
         <ng-container *ngIf="buttonPage === 'GameSelection'">
             <ng-container *ngIf="isPlayerWaiting; else noOneIsWaiting">
-                <button
-                    matTooltip="Rejoindre une partie multijoueur"
-                    mat-raised-button
-                    (click)="setJoinFlag()"
-                    (click)="openDialog(multiplayerFlag)"
-                >
+                <button matTooltip="Rejoindre une partie multijoueur" mat-raised-button (click)="setJoinFlag()" (click)="openDialog(multiplayerFlag)">
                     {{ selectionGameFormsButton[2] }}
                 </button>
             </ng-container>

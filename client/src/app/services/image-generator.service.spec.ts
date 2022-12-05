@@ -26,7 +26,7 @@ describe('DifferenceImageGeneratorService', () => {
 
         TEST_DIFFERENCES_ARRAY.forEach((pixelNb) => {
             for (let i = 0; i < NB_BIT_PER_PIXEL - 1; i++) {
-                if (differenceImageData[pixelNb * NB_BIT_PER_PIXEL + i] != BLACK_RGB) {
+                if (differenceImageData[pixelNb * NB_BIT_PER_PIXEL + i] !== BLACK_RGB) {
                     imageHasDifferencesPixelsAtRightPosition = false;
                 }
             }
@@ -46,7 +46,7 @@ describe('DifferenceImageGeneratorService', () => {
         let imageHasSamePixelsAtCopiedPosition = true;
         TEST_DIFFERENCES_ARRAY.forEach((pixelNb) => {
             for (let i = 0; i < NB_BIT_PER_PIXEL - 1; i++) {
-                if (canvasCopiedData[pixelNb * NB_BIT_PER_PIXEL + i] != canvasDrawnOnData[pixelNb * NB_BIT_PER_PIXEL + i]) {
+                if (canvasCopiedData[pixelNb * NB_BIT_PER_PIXEL + i] !== canvasDrawnOnData[pixelNb * NB_BIT_PER_PIXEL + i]) {
                     imageHasSamePixelsAtCopiedPosition = false;
                 }
             }

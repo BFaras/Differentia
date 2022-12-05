@@ -22,6 +22,6 @@ export class RecordTimesBoard {
     }
 
     private isArrayEmpty(array: RecordTime[]) {
-        return array.length == 0;
+        return array.length === 0;
     }
 }

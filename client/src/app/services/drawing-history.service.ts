@@ -36,7 +36,7 @@ export class DrawingHistoryService {
     }
 
     cancelCanvas(index: number) {
-        if (this.cancelDrawingHistory[index].length != 0) {
+        if (this.cancelDrawingHistory[index].length !== 0) {
             const imageDataToPop = this.cancelDrawingHistory[index].pop() as ImageData;
             this.context[index].putImageData(imageDataToPop, 0, 0);
             this.redoDrawingHistory[index].push(imageDataToPop);
@@ -44,7 +44,7 @@ export class DrawingHistoryService {
     }
 
     redoCanvas(index: number) {
-        if (this.redoDrawingHistory[index].length != 0) {
+        if (this.redoDrawingHistory[index].length !== 0) {
             const DeletedImageDataToPop = this.redoDrawingHistory[index].pop() as ImageData;
             this.context[index].putImageData(DeletedImageDataToPop, 0, 0);
             this.cancelDrawingHistory[index].push(DeletedImageDataToPop);

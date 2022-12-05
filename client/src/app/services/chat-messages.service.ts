@@ -39,7 +39,7 @@ export class ChatMessagesService {
     }
 
     sendMessage(senderName: string, message: string) {
-        if (message.trim() != '') {
+        if (message.trim() !== '') {
             this.socketService.send('playerMessage', this.generateChatMessage(senderName, message));
         }
     }

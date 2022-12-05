@@ -34,7 +34,7 @@ export class VerifyImageService {
     }
 
     verifyRespectAllContraints(dialog: any, file: File) {
-        if (this.verifyImageConstraint() && this.verifyImageFormat(file) && this.getBitDepth() == 24) {
+        if (this.verifyImageConstraint() && this.verifyImageFormat(file) && this.getBitDepth() === 24) {
             const imageToSend = this.sanitizer.bypassSecurityTrustResourceUrl(this.imageToVerify.src as string);
             this.verifyIfSentMultipleOrSingle(imageToSend as string, dialog);
 
@@ -75,10 +75,10 @@ export class VerifyImageService {
             this.uploadFileService.setModifiedImage(this.file);
         } else {
             this.editImagesService.activatedEmitterUrlImageSingle.emit({ index: imageInfo.indexOfImage, url: urlOfImage });
-            if (imageInfo.indexOfImage == 0) {
+            if (imageInfo.indexOfImage === 0) {
                 this.uploadFileService.setOriginalImage(this.file);
             }
-            if (imageInfo.indexOfImage == 1) {
+            if (imageInfo.indexOfImage === 1) {
                 this.uploadFileService.setModifiedImage(this.file);
             }
         }
