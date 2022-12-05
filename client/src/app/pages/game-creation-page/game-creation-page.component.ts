@@ -37,17 +37,17 @@ export class GameCreationPageComponent implements OnInit, OnDestroy {
         });
 
         this.editImageService.getDataImageSingleObservable().subscribe((dataOfImage: { index: number; url: any }) => {
-            if (dataOfImage.index == 0) {
+            if (dataOfImage.index === 0) {
                 this.gameToServerService.setOriginalUrlUploaded(dataOfImage.index, dataOfImage.url);
-            } else if (dataOfImage.index == 1) {
+            } else if (dataOfImage.index === 1) {
                 this.gameToServerService.setModifiedUrlUploaded(dataOfImage.index, dataOfImage.url);
             }
         });
 
         this.editImageService.getIdImageToRemoveObservable().subscribe((indexImage: number | undefined) => {
-            if (this.gameToServerService.getModifiedImageUploaded().index == indexImage) {
+            if (this.gameToServerService.getModifiedImageUploaded().index === indexImage) {
                 this.gameToServerService.setModifiedUrlUploaded(undefined, undefined);
-            } else if (this.gameToServerService.getOriginalImageUploaded().index == indexImage) {
+            } else if (this.gameToServerService.getOriginalImageUploaded().index === indexImage) {
                 this.gameToServerService.setOriginalUrlUploaded(undefined, undefined);
             }
         });

@@ -10,18 +10,16 @@ const RIGHT_CANVAS_INDEX = 1;
 export class CanvasDataHandlerService {
     contextList: CanvasRenderingContext2D[] = [];
     canvas: HTMLCanvasElement;
-    leftCanvasEchange: HTMLCanvasElement;
-    rightCanvasEchange: HTMLCanvasElement;
+    leftCanvasEchange: HTMLCanvasElement = document.createElement('canvas');
+    rightCanvasEchange: HTMLCanvasElement = document.createElement('canvas');
     contextLeft: CanvasRenderingContext2D;
     contextRight: CanvasRenderingContext2D;
     savedCanvas: HTMLCanvasElement;
     constructor(private drawingHistoryService: DrawingHistoryService) {
-        this.leftCanvasEchange = document.createElement('canvas');
         this.leftCanvasEchange.width = IMAGE_WIDTH;
         this.leftCanvasEchange.height = IMAGE_HEIGHT;
         this.contextLeft = this.leftCanvasEchange.getContext('2d')!;
 
-        this.rightCanvasEchange = document.createElement('canvas');
         this.rightCanvasEchange.width = IMAGE_WIDTH;
         this.rightCanvasEchange.height = IMAGE_HEIGHT;
         this.contextRight = this.rightCanvasEchange.getContext('2d')!;

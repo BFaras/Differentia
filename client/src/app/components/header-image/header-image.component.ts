@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ListImagesRenderedService } from '@app/services/list-images-rendered.service';
 import { PopDialogDownloadImagesComponent } from '../pop-dialogs/pop-dialog-download-images/pop-dialog-download-images.component';
@@ -8,12 +8,10 @@ import { PopDialogDownloadImagesComponent } from '../pop-dialogs/pop-dialog-down
     templateUrl: './header-image.component.html',
     styleUrls: ['./header-image.component.scss'],
 })
-export class HeaderImageComponent implements OnInit {
+export class HeaderImageComponent  {
     @Input() indexOfImageToSend: number;
     @Input() nameImage: string;
     constructor(private dialog: MatDialog, private editImagesService: ListImagesRenderedService) {}
-
-    ngOnInit(): void {}
 
     onCreateDownloadPopDialog() {
         this.dialog.open(PopDialogDownloadImagesComponent, {
