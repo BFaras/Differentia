@@ -1,14 +1,14 @@
 import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { SafeValue } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { RecordTime } from '@app/classes/record-time';
 import { MESSAGE_JEU_CREER, MESSAGE_JEU_NON_CREER, MESSAGE_NOMBRE_DIFFERENCE_ERREUR } from '@common/const';
 import { Game } from '@common/game';
 import { ImageToSendToServer } from '@common/imageToSendToServer';
 import { StatusCodes } from 'http-status-codes';
 import { CommunicationService } from './communication.service';
 import { UploadFileService } from './upload-file.service';
-import { RecordTime } from '@app/classes/record-time';
-import { SafeValue } from '@angular/platform-browser';
 @Injectable({
     providedIn: 'root',
 })
@@ -25,7 +25,7 @@ export class GameToServerService {
         this.route.navigate(['/admin']);
     }
     statusCodeTreatment(responseStatusCode: any) {
-        if (responseStatusCode == StatusCodes.BAD_GATEWAY) {
+        if (responseStatusCode === StatusCodes.BAD_GATEWAY) {
             alert(MESSAGE_JEU_NON_CREER);
         } else {
             alert(MESSAGE_JEU_CREER);

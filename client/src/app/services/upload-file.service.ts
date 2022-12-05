@@ -5,12 +5,12 @@ import { CommunicationService } from './communication.service';
     providedIn: 'root',
 })
 export class UploadFileService {
-    private nameOriginalImage: File;
-    private nameModifiedImage: File;
     nameOfGame: string;
     nameOfImageToUploadOriginal: string;
     nameOfImageToUploadModified: string;
     nameOfFile: string;
+    private nameOriginalImage: File;
+    private nameModifiedImage: File;
     constructor(private communicationService: CommunicationService) {}
 
     getNameOriginalImage() {
@@ -34,19 +34,19 @@ export class UploadFileService {
     }
 
     setOriginalMergedCanvasImage(orignalImageMerged: HTMLImageElement) {
-        this.setNameOfFile(this.getNameOriginalImage(),"originalDrawing")
+        this.setNameOfFile(this.getNameOriginalImage(), 'originalDrawing');
         const blobImage = this.dataURItoBlob(orignalImageMerged.src);
         this.setOriginalImage(new File([blobImage], this.nameOfFile));
     }
 
-    setModifiedMergedCanvasImage(modifiedImageMerged: HTMLImageElement) { 
-        this.setNameOfFile(this.getNameModifiedImage(),"modifiedDrawing")
+    setModifiedMergedCanvasImage(modifiedImageMerged: HTMLImageElement) {
+        this.setNameOfFile(this.getNameModifiedImage(), 'modifiedDrawing');
         const blobImage = this.dataURItoBlob(modifiedImageMerged.src);
         this.setModifiedImage(new File([blobImage], this.nameOfFile, { type: 'image/jpeg' }));
     }
 
     setNameOfFile(file: File, nameOfNamelessFile: string) {
-        if (file){
+        if (file) {
             this.nameOfFile = file.name;
         } else {
             this.nameOfFile = nameOfNamelessFile;
@@ -67,7 +67,6 @@ export class UploadFileService {
 
         return new Blob([byteBuffer], { type: mimeString });
     }
-
 
     setNameImageUpload(indexImage: number) {
         if (indexImage === 0) {

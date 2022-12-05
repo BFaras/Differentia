@@ -10,8 +10,6 @@ export class TimeService {
     showableMinutes: string = EMPTY_SHOWABLE_TIME;
     showableSeconds: string = EMPTY_SHOWABLE_TIME;
 
-    constructor() {}
-
     changeTime(newTime: Time) {
         this.time = newTime;
         this.showTime();

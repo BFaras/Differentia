@@ -46,7 +46,7 @@ describe('ImageToImageDifferenceService', () => {
 
         TEST_DIFFERENCES_ARRAY.forEach((pixelNb) => {
             for (let i = 0; i < NB_BIT_PER_PIXEL - 1; i++) {
-                if (differenceImageData[pixelNb * NB_BIT_PER_PIXEL + i] != BLACK_RGB) {
+                if (differenceImageData[pixelNb * NB_BIT_PER_PIXEL + i] !== BLACK_RGB) {
                     imageHasDifferencesPixelsAtRightPosition = false;
                 }
             }

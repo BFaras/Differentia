@@ -5,7 +5,6 @@ import { ALPHA_OPAQUE, ALPHA_POS, BLACK_RGB, MAX_RGB_VALUE, NB_BIT_PER_PIXEL } f
     providedIn: 'root',
 })
 export class ImageGeneratorService {
-    constructor() {}
 
     generateBlackImageFromPixelsDataArray(differentPixelsArray: number[], canvasToDrawOn: HTMLCanvasElement): ImageData {
         this.setupCanvas(canvasToDrawOn);
@@ -61,7 +60,7 @@ export class ImageGeneratorService {
         for (let currentRGBIndex = 0; currentRGBIndex <= ALPHA_POS; currentRGBIndex++) {
             const positionInDataArray = pixelPositionInImage + currentRGBIndex;
 
-            if (!invertColors || currentRGBIndex == ALPHA_POS) {
+            if (!invertColors || currentRGBIndex === ALPHA_POS) {
                 imageDataToDrawOn.data[positionInDataArray] = imageDataToCopy.data[positionInDataArray];
             } else {
                 imageDataToDrawOn.data[positionInDataArray] = MAX_RGB_VALUE - imageDataToCopy.data[positionInDataArray];

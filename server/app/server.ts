@@ -3,8 +3,8 @@ import 'dotenv/config';
 import * as http from 'http';
 import { AddressInfo } from 'net';
 import { Service } from 'typedi';
-import { SocketManager } from './services/socketManager.service';
 import { DatabaseService } from './services/database.service';
+import { SocketManager } from './services/socketManager.service';
 
 @Service()
 export class Server {

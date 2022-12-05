@@ -8,8 +8,8 @@
                 <p>{{ gameName }}</p>
                 <p>{{ gameMode }}</p>
                 <p>{{ numberOfDifferences }} différences à trouver</p>
-                <p *ngIf="!isMultiplayer && gameMode == classicMode">+{{ clueTimePenalty }}s par indice utilisé</p>
-                <p *ngIf="!isMultiplayer && gameMode == limitedTimeMode">-{{ clueTimePenalty }}s par indice utilisé</p>
+                <p *ngIf="!isMultiplayer && gameMode === classicMode">+{{ clueTimePenalty }}s par indice utilisé</p>
+                <p *ngIf="!isMultiplayer && gameMode === limitedTimeMode">-{{ clueTimePenalty }}s par indice utilisé</p>
             </div>
         </li>
         <li>

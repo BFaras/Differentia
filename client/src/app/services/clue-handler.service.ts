@@ -80,7 +80,7 @@ export class ClueHandlerService {
     }
 
     private findQuadrantLimitsFromClueNb(clueNb: number, quadrantNb: number): Positions {
-        if (clueNb == FIRST_CLUE_NB) {
+        if (clueNb === FIRST_CLUE_NB) {
             return this.findQuadrantLimits(FIRST_CLUE_QUANDRANT_NB, quadrantNb);
         } else {
             return this.findQuadrantLimits(SECOND_CLUE_QUANDRANT_NB, quadrantNb);

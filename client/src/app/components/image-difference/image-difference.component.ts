@@ -76,7 +76,7 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
     private createBackgroundForImages(indexCanvas: number): void {
         const canvas = this.mergeImageCanvasService.getCanvas()[indexCanvas];
         const context = canvas.getContext('2d');
-        if (context != null) {
+        if (context !== null) {
             context.globalCompositeOperation = DRAW_BACKGROUND_MODE;
             context.fillStyle = '#FFF';
             context.fillRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
