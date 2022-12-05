@@ -189,4 +189,10 @@ describe('GamePageComponent', () => {
         expect(component.usernames[ADVERSARY_PLR_USERNAME_POS]).toEqual(EMPTY_PLAYER_NAME);
         expect(component.isMultiplayerGame).toEqual(false);
     });
+
+    it('should handle a Clue Time Penalty and change the time penalty', () => {
+        const penalty = 5;
+        socketHelper.peerSideEmit('Clue Time Penalty', penalty);
+        expect(component.timeCluePenalty).toEqual(penalty);
+    });
 });
