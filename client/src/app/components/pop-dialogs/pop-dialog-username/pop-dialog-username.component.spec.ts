@@ -15,7 +15,7 @@ export class SocketClientServiceMock extends SocketClientService {
     }
 }
 
-describe('PopDialogUsernameComponent', () => {
+fdescribe('PopDialogUsernameComponent', () => {
     let component: PopDialogUsernameComponent;
     let fixture: ComponentFixture<PopDialogUsernameComponent>;
     let socketClientServiceMock: SocketClientServiceMock;
