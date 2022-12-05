@@ -63,8 +63,8 @@ export class AdminPageComponent {
         this.socketService.on('Delete or reset applied on gameForm', () => {
             this.socketService.send('Reset game list');
         });
-        this.socketService.on('Ready to reset game list', (value: string[]) => {
-            this.socketService.send('Reload game selection page', value);
+        this.socketService.on('Ready to reset game list', (response: string[]) => {
+            this.socketService.send('Reload game selection page', response);
         });
     }
 }

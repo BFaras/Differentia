@@ -83,13 +83,7 @@ export class DialogInputComponent implements OnInit {
             this.timeRatioValid = true;
         } else {
             this.timeRatioValid = false;
-            if (this.penaltyTimeInput.nativeElement.value > timeRatio) {
-                this.msgTimeRatio = MSG_PENALTY_TIME_RATIO;
-            }
-            if (this.savedTimeInput.nativeElement.value > timeRatio) {
-                this.msgTimeRatio = MSG_SAVED_TIME_RATIO;
-            }
-
+            this.msgTimeRatio = this.penaltyTimeInput.nativeElement.value > timeRatio ? MSG_PENALTY_TIME_RATIO : MSG_SAVED_TIME_RATIO;
             if (this.penaltyTimeInput.nativeElement.value > timeRatio && this.savedTimeInput.nativeElement.value > timeRatio) {
                 this.msgTimeRatio = MSG_ALL_TIME_RATIO;
             }
@@ -117,34 +111,31 @@ export class DialogInputComponent implements OnInit {
     }
 
     private setDefaultValue() {
-        if (this.initialTimeInput.nativeElement.value === EMPTY_TIME) {
-            this.initialTimeInput.nativeElement.value = DEFAULT_INITIAL_TIME;
-        }
-        if (this.penaltyTimeInput.nativeElement.value === EMPTY_TIME) {
-            this.penaltyTimeInput.nativeElement.value = DEFAULT_PENALTY_TIME;
-        }
-        if (this.savedTimeInput.nativeElement.value === EMPTY_TIME) {
-            this.savedTimeInput.nativeElement.value = DEFAULT_SAVED_TIME;
-        }
+        this.setDefaultTime(this.initialTimeInput, DEFAULT_INITIAL_TIME);
+        this.setDefaultTime(this.penaltyTimeInput, DEFAULT_PENALTY_TIME);
+        this.setDefaultTime(this.savedTimeInput, DEFAULT_SAVED_TIME);
     }
 
     private verifyTimeRange(time: ElementRef) {
-        let minimumTime = 0;
-        let maximumTime = 0;
-
         if (time === this.initialTimeInput) {
-            minimumTime = this.minTimeConstants.initialTime;
-            maximumTime = this.maxTimeConstants.initialTime;
+            return this.setMinAndMaxTime(time, this.minTimeConstants.initialTime, this.maxTimeConstants.initialTime);
         }
         if (time === this.penaltyTimeInput) {
-            minimumTime = this.minTimeConstants.penaltyTime;
-            maximumTime = this.maxTimeConstants.penaltyTime;
+            return this.setMinAndMaxTime(time, this.minTimeConstants.penaltyTime, this.maxTimeConstants.penaltyTime);
+        } else {
+            return this.setMinAndMaxTime(time, this.minTimeConstants.savedTime, this.maxTimeConstants.savedTime);
         }
-        if (time === this.savedTimeInput) {
-            minimumTime = this.minTimeConstants.savedTime;
-            maximumTime = this.maxTimeConstants.savedTime;
-        }
+    }
 
+    private setMinAndMaxTime(time: ElementRef, min: number, max: number) {
+        let minimumTime = min;
+        let maximumTime = max;
         return time.nativeElement.value >= minimumTime && time.nativeElement.value <= maximumTime;
+    }
+
+    private setDefaultTime(time: ElementRef, defaultTime: number) {
+        if (time.nativeElement.value === EMPTY_TIME) {
+            time.nativeElement.value = defaultTime;
+        }
     }
 }
