@@ -6,6 +6,7 @@ import { expect } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import { describe } from 'mocha';
 import { MongoClient } from 'mongodb';
+import * as sinon from 'sinon';
 import { RecordTimesService } from './database.games.service';
 import { DatabaseServiceMock } from './database.service.mock';
 chai.use(chaiAsPromised); // this allows us to test for rejection
@@ -45,6 +46,12 @@ describe('RecordTimes service', () => {
     it('should get specific game times with valid name', async () => {
         let times = await recordTimesService.getGameTimes('Test game');
         expect(times).to.deep.equals(testGameRecordTimes.recordTimes);
+    });
+
+    it('getGameTimes should call addDefaultTimesToGameCreatedOffline when the game name is new', async () => {
+        const spy = sinon.spy(RecordTimesService.prototype, <any>'addDefaultTimesToGameCreatedOffline');
+        await recordTimesService.getGameTimes('Test game 2');
+        expect(spy.calledOnce);
     });
 
     it('should add default times to a new game', async () => {
@@ -139,21 +146,10 @@ describe('RecordTimes service', () => {
 
     //Error handling
     describe('Error handling', async () => {
-        // it('should throw an error if we try to get all games on a closed connection', async () => {
-        //     await client.close();
-        //     expect(gamesService.getAllGames()).to.eventually.be.rejectedWith(Error);
-        // });
-
-        // it('should throw an error if we try to add a game on a closed connection', async () => {
-        //     await client.close();
-        //     gamesService['validateGame'] = async () => {
-        //         return true;
-        //     }; // modifier ce stub pour qqlch qui a lair plus sinon
-        //     expect(gamesService.addGame(testGame)).to.eventually.be.rejectedWith(Error);
-        // });
-
         it('should throw an error if we try to get a specific game times on a closed connection', async () => {
-            await client.close();
+            sinon.stub(recordTimesService.collection, 'findOne').callsFake(() => {
+                return Promise.reject();
+            });
             expect(recordTimesService.getGameTimes(testGameRecordTimes.name)).to.eventually.be.rejectedWith(Error);
         });
 
