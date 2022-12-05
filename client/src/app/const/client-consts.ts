@@ -145,3 +145,10 @@ export const INPUT_TYPE = 'secondes';
 export const ORIGINAL_CANVAS_INDEX = 0;
 export const MODIFIED_CANVAS_INDEX = 1;
 export const DRAW_BACKGROUND_MODE = 'destination-over';
+
+// Attente entre trouver differnce et possibilite de trouveer une autre
+export const WAIT_ONE_SECOND = 1000;
+
+// Position type image en bits
+export const POSITION_BITS_DATA = 28;
+

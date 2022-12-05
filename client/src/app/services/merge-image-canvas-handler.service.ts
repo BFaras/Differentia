@@ -5,16 +5,10 @@ import { IMAGE_HEIGHT, IMAGE_WIDTH, MODIFIED_IMAGE_POSITION, ORIGINAL_IMAGE_POSI
     providedIn: 'root',
 })
 export class MergeImageCanvasHandlerService {
-    private canvas: HTMLCanvasElement[];
-    private context: CanvasRenderingContext2D[] | null;
-    private formerCanvas: HTMLCanvasElement[];
-    private imageDownloaded: HTMLImageElement[];
-    constructor() {
-        this.canvas = [];
-        this.formerCanvas = [];
-        this.context = [];
-        this.imageDownloaded = [new Image(), new Image()];
-    }
+    private canvas: HTMLCanvasElement[] = [];
+    private context: CanvasRenderingContext2D[] | null = [];
+    private formerCanvas: HTMLCanvasElement[] = [];
+    private imageDownloaded: HTMLImageElement[] = [new Image(), new Image()];
 
     getCanvas(): HTMLCanvasElement[] {
         return this.canvas;

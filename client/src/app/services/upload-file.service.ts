@@ -5,12 +5,12 @@ import { CommunicationService } from './communication.service';
     providedIn: 'root',
 })
 export class UploadFileService {
-    private nameOriginalImage: File;
-    private nameModifiedImage: File;
     nameOfGame: string;
     nameOfImageToUploadOriginal: string;
     nameOfImageToUploadModified: string;
     nameOfFile: string;
+    private nameOriginalImage: File;
+    private nameModifiedImage: File;
     constructor(private communicationService: CommunicationService) {}
 
     getNameOriginalImage() {

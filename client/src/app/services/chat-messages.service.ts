@@ -24,22 +24,19 @@ import { SocketClientService } from './socket-client.service';
     providedIn: 'root',
 })
 export class ChatMessagesService {
+    isWriting: boolean = false;
     messagesObservable: Observable<ChatMessage>;
     private adversaryUsername: string;
-    private isMultiplayerGame: boolean;
-    private date: Date;
-    isWriting: boolean = false;
-
+    private isMultiplayerGame: boolean = false;
+    private date: Date = new Date();
     constructor(private socketService: SocketClientService) {
-        this.date = new Date();
-        this.isMultiplayerGame = false;
         this.messagesObservable = new Observable((observer: Subscriber<ChatMessage>) => {
             this.configureSocket(observer);
         });
     }
 
     sendMessage(senderName: string, message: string) {
-        if (message.trim() != '') {
+        if (message.trim() !== '') {
             this.socketService.send('playerMessage', this.generateChatMessage(senderName, message));
         }
     }
