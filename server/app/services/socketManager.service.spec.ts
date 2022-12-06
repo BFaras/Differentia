@@ -408,16 +408,6 @@ describe('SocketManager service tests', () => {
         }); // 1 seconde
     });
 
-    // it("should handle 'Check if game is finished' on finished game and call resetDifferencesData", (done) => {
-    //     const spy = sinon.spy(mouseHandlerService, 'resetDifferencesData');
-    //     mouseHandlerService.addPlayerToGame(clientSocket.id);
-    //     clientSocket.emit('Check if game is finished', true);
-    //     setTimeout(() => {
-    //         expect(spy.calledOnce);
-    //         done();
-    //     }, RESPONSE_DELAY * 5); // 1 seconde
-    // });
-
     it("should handle 'kill the game' and call handleAbandonEmit and endGame", (done) => {
         const stubAbandon = sinon.stub(GameManagerService.prototype, <any>'handleAbandonEmit').callsFake(() => {});
         clientSocket.emit('kill the game');

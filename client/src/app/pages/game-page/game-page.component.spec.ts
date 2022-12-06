@@ -1,6 +1,13 @@
 /* eslint-disable */
+import { Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import { RecordTime } from '@app/classes/record-time';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { ALL_GAMES_FINISHED, EMPTY_PLAYER_NAME, LOSING_FLAG, TIMER_HIT_ZERO_MESSAGE, WIN_FLAG } from '@app/const/client-consts';
@@ -8,7 +15,6 @@ import { CommunicationService } from '@app/services/communication.service';
 import { EndGameHandlerService } from '@app/services/end-game-handler.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
     ADVERSARY_PLR_USERNAME_POS,
     CLASSIC_MODE,
@@ -19,19 +25,13 @@ import {
 } from '@common/const';
 import { Game } from '@common/game';
 import { GameplayDifferenceInformations } from '@common/gameplay-difference-informations';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { of } from 'rxjs';
 import { Socket } from 'socket.io-client';
 import { GamePageComponent } from './game-page.component';
 import SpyObj = jasmine.SpyObj;
-import { Component, Input } from '@angular/core';
-import { RouterTestingModule } from '@angular/router/testing';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatIconModule } from '@angular/material/icon';
-import { FormsModule } from '@angular/forms';
-import { MatSelectModule } from '@angular/material/select';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 class SocketClientServiceMock extends SocketClientService {
-    override connect() {};
+    override connect() {}
 }
 
 @Component({ selector: 'app-play-area', template: '' })
@@ -59,7 +59,7 @@ class SidebarComponent {
     @Input() isMultiplayer: boolean;
 }
 
-fdescribe('GamePageComponent', () => {
+describe('GamePageComponent', () => {
     let component: GamePageComponent;
     let fixture: ComponentFixture<GamePageComponent>;
     let socketServiceMock: SocketClientServiceMock;
@@ -89,8 +89,9 @@ fdescribe('GamePageComponent', () => {
         matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 
         await TestBed.configureTestingModule({
-            declarations: [GamePageComponent,PlayAreaComponent,TopbarComponent,SidebarComponent],
-            imports:[  MatDialogModule,
+            declarations: [GamePageComponent, PlayAreaComponent, TopbarComponent, SidebarComponent],
+            imports: [
+                MatDialogModule,
                 RouterTestingModule.withRoutes([]),
                 MatProgressSpinnerModule,
                 MatIconModule,
@@ -98,7 +99,8 @@ fdescribe('GamePageComponent', () => {
                 MatSelectModule,
                 MatIconModule,
                 FontAwesomeModule,
-                BrowserAnimationsModule,],
+                BrowserAnimationsModule,
+            ],
             providers: [
                 { provide: SocketClientService, useValue: socketServiceMock },
                 { provide: TimeService, useValue: timeServiceSpy },

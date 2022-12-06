@@ -34,7 +34,7 @@ export class GamesService {
         const max = gamesToPlay.length - 1;
         return gamesToPlay[Math.round(Math.random() * max)] as Game;
     }
-    // test a finir: ligne ajoutée
+
     async getAllGamesWithImagesData() {
         const games: Game[] = await this.getAllGames();
 
