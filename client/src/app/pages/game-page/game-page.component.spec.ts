@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { RecordTime } from '@app/classes/record-time';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
-import { ChatSectionComponent } from '@app/components/chat-section/chat-section.component';
 import { ALL_GAMES_FINISHED, EMPTY_PLAYER_NAME, LOSING_FLAG, TIMER_HIT_ZERO_MESSAGE, WIN_FLAG } from '@app/const/client-consts';
 import { CommunicationService } from '@app/services/communication.service';
 import { EndGameHandlerService } from '@app/services/end-game-handler.service';
@@ -28,7 +27,7 @@ class SocketClientServiceMock extends SocketClientService {
     override connect() {};
 }
 
-fdescribe('GamePageComponent', () => {
+describe('GamePageComponent', () => {
     let component: GamePageComponent;
     let fixture: ComponentFixture<GamePageComponent>;
     let socketServiceMock: SocketClientServiceMock;

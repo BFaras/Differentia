@@ -19,6 +19,13 @@ export class PopDialogCreateGameComponent implements OnInit {
         this.gameToServerService.addGame(this.nameOfGame);
     }
 
+    verifyNoSpace(): boolean {
+        if (this.nameOfGame.trim() !== '') {
+            return false;
+        }
+        return true;
+    }
+
     getNumberOfDifference(): void {
         this.numberOfDifference = this.gameToServerService.getNumberDifference();
     }

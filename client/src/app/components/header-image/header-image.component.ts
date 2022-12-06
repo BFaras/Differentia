@@ -8,7 +8,7 @@ import { PopDialogDownloadImagesComponent } from '../pop-dialogs/pop-dialog-down
     templateUrl: './header-image.component.html',
     styleUrls: ['./header-image.component.scss'],
 })
-export class HeaderImageComponent  {
+export class HeaderImageComponent {
     @Input() indexOfImageToSend: number;
     @Input() nameImage: string;
     constructor(private dialog: MatDialog, private editImagesService: ListImagesRenderedService) {}

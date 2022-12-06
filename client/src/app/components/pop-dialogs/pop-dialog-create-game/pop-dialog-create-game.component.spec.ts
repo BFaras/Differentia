@@ -44,6 +44,11 @@ describe('PopDialogCreateGameComponent', () => {
         expect(gameToServerServiceSpy.addGame).toHaveBeenCalled();
     });
 
+    it('should verify image trim', () => {
+        component.nameOfGame = 'tedt';
+        expect(component.verifyNoSpace()).toBeFalsy();
+    });
+
     afterEach(() => {
         fixture.destroy();
         TestBed.resetTestingModule();
