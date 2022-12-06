@@ -18,18 +18,15 @@ import { GameManagerService } from './game-manager.service';
 
 @Service()
 export class BestTimesService {
-    playerRanking: number;
-    hasNewRecord: boolean;
-    private databaseService: DatabaseService;
+    playerRanking: number = NO_AVAILABLE;
+    hasNewRecord: boolean = false;
+    private databaseService: DatabaseService = Container.get(DatabaseService);
     private recordTimesService: RecordTimesService;
     private gameManagerService: GameManagerService;
 
     constructor(private sio: io.Server) {
-        this.databaseService = Container.get(DatabaseService);
         this.recordTimesService = new RecordTimesService(this.databaseService);
         this.gameManagerService = new GameManagerService(this.sio);
-        this.playerRanking = NO_AVAILABLE;
-        this.hasNewRecord = false;
     }
 
     notifyAllActivePlayers(playerName: string, gameName: string, isMultiplayer: boolean) {
