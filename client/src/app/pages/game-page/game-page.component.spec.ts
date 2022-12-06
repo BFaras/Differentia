@@ -1,6 +1,6 @@
-
+/* eslint-disable */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { RecordTime } from '@app/classes/record-time';
 import { SocketTestHelper } from '@app/classes/socket-test-helper';
 import { ALL_GAMES_FINISHED, EMPTY_PLAYER_NAME, LOSING_FLAG, TIMER_HIT_ZERO_MESSAGE, WIN_FLAG } from '@app/const/client-consts';
@@ -8,6 +8,7 @@ import { CommunicationService } from '@app/services/communication.service';
 import { EndGameHandlerService } from '@app/services/end-game-handler.service';
 import { SocketClientService } from '@app/services/socket-client.service';
 import { TimeService } from '@app/services/time.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
     ADVERSARY_PLR_USERNAME_POS,
     CLASSIC_MODE,
@@ -22,12 +23,43 @@ import { of } from 'rxjs';
 import { Socket } from 'socket.io-client';
 import { GamePageComponent } from './game-page.component';
 import SpyObj = jasmine.SpyObj;
-
+import { Component, Input } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 class SocketClientServiceMock extends SocketClientService {
     override connect() {};
 }
 
-describe('GamePageComponent', () => {
+@Component({ selector: 'app-play-area', template: '' })
+class PlayAreaComponent {
+    @Input() differentImages: HTMLImageElement[];
+    @Input() localPlayerUsername: string;
+    @Input() isMultiplayer: boolean;
+    @Input() mode: string;
+}
+
+@Component({ selector: 'app-topbar', template: '' })
+class TopbarComponent {
+    @Input() nbrDifferencesFound: number[];
+    @Input() playerNames: string[];
+    @Input() gameMode: string;
+    @Input() isMultiplayer: boolean;
+}
+
+@Component({ selector: 'app-sidebar', template: '' })
+class SidebarComponent {
+    @Input() numberOfDifferences: number;
+    @Input() gameName: string;
+    @Input() gameMode: string;
+    @Input() clueTimePenalty: number;
+    @Input() isMultiplayer: boolean;
+}
+
+fdescribe('GamePageComponent', () => {
     let component: GamePageComponent;
     let fixture: ComponentFixture<GamePageComponent>;
     let socketServiceMock: SocketClientServiceMock;
@@ -57,8 +89,16 @@ describe('GamePageComponent', () => {
         matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 
         await TestBed.configureTestingModule({
-            declarations: [GamePageComponent],
-            imports:[],
+            declarations: [GamePageComponent,PlayAreaComponent,TopbarComponent,SidebarComponent],
+            imports:[  MatDialogModule,
+                RouterTestingModule.withRoutes([]),
+                MatProgressSpinnerModule,
+                MatIconModule,
+                FormsModule,
+                MatSelectModule,
+                MatIconModule,
+                FontAwesomeModule,
+                BrowserAnimationsModule,],
             providers: [
                 { provide: SocketClientService, useValue: socketServiceMock },
                 { provide: TimeService, useValue: timeServiceSpy },
