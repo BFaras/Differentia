@@ -250,7 +250,6 @@ export class SocketManager {
                 this.gameManagerService.handleAbandonEmit(socket, abandonInfo);
             });
 
-            // To test
             socket.on('Check if game is finished', async (isMultiplayer: boolean) => {
                 const mouseHandler: MouseHandlerService = this.gameManagerService.getSocketMouseHandlerService(socket);
                 const mode = this.gameManagerService.getSocketChronometerService(socket).mode;
