@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { SafeValue } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { RecordTime } from '@app/classes/record-time';
+import { MAXIMUM_NB_DIFFERENCES, MINIMUM_NB_DIFFERENCES } from '@app/const/client-consts';
 import { MESSAGE_JEU_CREER, MESSAGE_JEU_NON_CREER, MESSAGE_NOMBRE_DIFFERENCE_ERREUR } from '@common/const';
 import { Game } from '@common/game';
 import { ImageToSendToServer } from '@common/imageToSendToServer';
@@ -28,13 +29,14 @@ export class GameToServerService {
         if (responseStatusCode === StatusCodes.BAD_GATEWAY) {
             alert(MESSAGE_JEU_NON_CREER);
         } else {
+            this.sendBothImagesToServer();
             alert(MESSAGE_JEU_CREER);
             this.goToAdmin();
         }
     }
 
     validateNumberOfDifferences() {
-        return this.numberDifference >= 3 && this.numberDifference <= 9;
+        return this.numberDifference >= MINIMUM_NB_DIFFERENCES && this.numberDifference <= MAXIMUM_NB_DIFFERENCES;
     }
 
     addGame(nameOfGame: string) {
@@ -50,7 +52,6 @@ export class GameToServerService {
         };
 
         if (this.validateNumberOfDifferences()) {
-            this.sendBothImagesToServer();
             this.communicationService.addGame(gameToAdd).subscribe((httpStatus: HttpResponse<any>) => {
                 this.statusCodeTreatment(httpStatus.body);
             });
