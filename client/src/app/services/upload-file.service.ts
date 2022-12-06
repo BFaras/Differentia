@@ -70,9 +70,9 @@ export class UploadFileService {
 
     setNameImageUpload(indexImage: number) {
         if (indexImage === 0) {
-            this.nameOfImageToUploadOriginal = this.nameOfGame + '_' + indexImage + '_' + this.getNameOriginalImage().name;
+            this.nameOfImageToUploadOriginal = this.nameOfGame + '_' + indexImage + '.bmp';
         } else if (indexImage === 1) {
-            this.nameOfImageToUploadModified = this.nameOfGame + '_' + indexImage + '_' + this.getNameModifiedImage().name;
+            this.nameOfImageToUploadModified = this.nameOfGame + '_' + indexImage + '.bmp';
         }
     }
 

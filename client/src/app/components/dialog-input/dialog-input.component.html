@@ -73,11 +73,8 @@
             <ng-container *ngIf="!timeRatioValid">
                 <h3 id="ratioMsg">{{ msgTimeRatio }}</h3>
             </ng-container>
-            <ng-container *ngIf="timeValid[0] && timeValid[1] && timeValid[2] && timeRatioValid">
-                <button id="submitButton" mat-raised-button color="accent" *ngIf="!onlyQuitButton" (click)="submitTimes()">Valider</button>
-            </ng-container>
-            <ng-container *ngIf="onlyQuitButton">
-                <button id="submitButton" mat-raised-button color="accent" disabled="true"></button>
+            <ng-container >
+                <button class = "buttonValidate"[disabled]="onlyQuitButton || !timeValid[0] || !timeValid[1] || !timeValid[2] || !timeRatioValid" id="submitButton" mat-raised-button (click)="submitTimes()">Valider</button>
             </ng-container>
         </div>
     </div>

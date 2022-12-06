@@ -65,10 +65,13 @@ mat-form-field {
     background-color: cornsilk;
 }
 
-.mat-flat-button.mat-accent,
-.mat-raised-button.mat-accent,
-.mat-fab.mat-accent,
-.mat-mini-fab.mat-accent {
-    background-color: rgb(214, 169, 143);
-    color: black;
+.buttonValidate{
+    background-color: #203647;
+    color: #eefbfe;
+}
+
+.buttonValidate:hover:enabled{
+    background-color: #007cc7;
+    transition: ease-in 0.25s;
+
 }

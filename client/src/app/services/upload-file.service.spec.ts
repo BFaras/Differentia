@@ -10,7 +10,7 @@ class MockImage {
 }
 
 describe('UploadFileService', () => {
-    const testFileName = 'filename';
+    const testFileName = '.bmp';
     const testImageSrc1 = 'asa base64 src : src;,src,src';
     const testImageSrc2 = 'src : src;,base64,src,src';
     const testNameOfGame = 'game123New';
@@ -87,7 +87,7 @@ describe('UploadFileService', () => {
         service['nameOfGame'] = testNameOfGame;
 
         service.setNameImageUpload(indexOfImage);
-        expect(service['nameOfImageToUploadOriginal']).toEqual(testNameOfGame + '_' + indexOfImage + '_' + mockFile.name);
+        expect(service['nameOfImageToUploadOriginal']).toEqual(testNameOfGame + '_' + indexOfImage + mockFile.name);
     });
 
     it('should set nameOfImageToUploadModified to right value on setNameImageUpload() when index is 1', () => {
@@ -97,7 +97,7 @@ describe('UploadFileService', () => {
         service['nameOfGame'] = testNameOfGame;
 
         service.setNameImageUpload(indexOfImage);
-        expect(service['nameOfImageToUploadModified']).toEqual(testNameOfGame + '_' + indexOfImage + '_' + mockFile.name);
+        expect(service['nameOfImageToUploadModified']).toEqual(testNameOfGame + '_' + indexOfImage + mockFile.name);
     });
 
     it('should get the name of the original image to upload on index 0 for getNameImageUpload()', () => {
