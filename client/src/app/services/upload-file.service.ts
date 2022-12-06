@@ -79,9 +79,9 @@ export class UploadFileService {
     getNameImageUpload(index: number) {
         if (index === 0) {
             return this.nameOfImageToUploadOriginal;
-        } else if (index === 1) {
+        } else {
             return this.nameOfImageToUploadModified;
-        } else return;
+        }
     }
 
     upload(file: File, indexImage: number) {
