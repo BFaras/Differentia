@@ -16,9 +16,6 @@ export class DatabaseService {
         multiplayerGameTimes: [new RecordTime('02:00', 'Brook'), new RecordTime('02:15', 'Leon'), new RecordTime('02:30', 'Tom')],
     };
 
-    // La ligne 13 de ce fichier n'est pas couverte dans les tests car le process.env
-    // .DATABASE_URL! crée un if/else concernant sa valeur
-    // Le professeur m'a dit en cours que cela ne nous fera pas perdre de points
     async start(url: string = process.env.DATABASE_URL!): Promise<void> {
         try {
             this.client = new MongoClient(url);
@@ -60,7 +57,6 @@ export class DatabaseService {
             },
         ];
 
-        // console.log('THIS ADDS DATA TO THE DATABASE, DO NOT USE OTHERWISE');
         for (const game of gamesTimes) {
             await this.db.collection(process.env.DATABASE_COLLECTION!).insertOne(game);
         }
