@@ -38,7 +38,7 @@ export class RecordTimesService {
     }
 
     async deleteGameRecordTimes(nameOfWantedGame: string): Promise<void> {
-        if (this.isDatabaseAvailable()) {
+        if (this.isDatabaseAvailable() && !(await this.validateName(nameOfWantedGame))) {
             return this.collection
                 .findOneAndDelete({ name: nameOfWantedGame })
                 .then((res: ModifyResult<GameTimes>) => {
@@ -57,7 +57,7 @@ export class RecordTimesService {
         const updateQuery: UpdateFilter<GameTimes> = {
             $set: { recordTimes: this.databaseService.defaultRecordTimes },
         };
-        if (this.isDatabaseAvailable()) {
+        if (this.isDatabaseAvailable() && !(await this.validateName(gameName))) {
             return this.collection
                 .updateOne(filterQuery, updateQuery)
                 .then(() => {})
