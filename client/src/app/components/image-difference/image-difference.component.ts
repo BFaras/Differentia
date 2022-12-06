@@ -45,15 +45,15 @@ export class ImageDifferenceComponent implements OnInit, OnDestroy {
     }
 
     loaded(): boolean {
+        let isLoaded = false;
         if (this.finalDifferencesImage.src !== '' && this.numberOfDifferences !== undefined) {
             this.gameToServerService.setNumberDifference(this.numberOfDifferences);
             this.gameToServerService.setUrlImageOfDifference(this.finalDifferencesImage.src);
             this.gameToServerService.setDifferencesList(this.differencesList);
 
-            return true;
-        } else {
-            return false;
+            isLoaded = true;
         }
+        return isLoaded;
     }
 
     private mergeImageCanvas(urlImage: string, index: number): string {

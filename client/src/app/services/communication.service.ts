@@ -1,4 +1,4 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Game } from '@common/game';
 import { Observable, of } from 'rxjs';
@@ -19,8 +19,9 @@ export class CommunicationService {
     }
 
     addGame(game: Game): Observable<HttpResponse<any>> {
+        const headers = new HttpHeaders().set('Access-Control-Allow-Origin', '*');
         return this.http
-            .post(`${this.baseUrl}/games/newGame`, game, { observe: 'response', responseType: 'text' })
+            .post(`${this.baseUrl}/games/newGame`, game, { observe: 'response', responseType: 'text', headers: headers })
             .pipe(catchError(this.handleError<HttpResponse<any>>('addGame')));
     }
 

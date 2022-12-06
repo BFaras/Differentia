@@ -42,19 +42,11 @@ export class ToolSettingComponent implements OnInit {
     }
 
     checkIfThereAreSavedDrawnLines() {
-        if (this.drawingHistoryService.getCancelDrawingHistory()[this.indexTool].length !== 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(this.drawingHistoryService.getCancelDrawingHistory()[this.indexTool].length !== 0);
     }
 
     checkIfThereAreSavedDeletedDrawnLines() {
-        if (this.drawingHistoryService.getRedoDrawingHistory()[this.indexTool].length !== 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(this.drawingHistoryService.getRedoDrawingHistory()[this.indexTool].length !== 0);
     }
 
     cancelActionDrawnLine() {
