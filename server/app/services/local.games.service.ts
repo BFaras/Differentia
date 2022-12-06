@@ -89,8 +89,9 @@ export class GamesService {
 
     async resetGameList() {
         const nameList: string[] = [];
-        this.games.filter((game: Game) => {
+        this.games.filter(async (game: Game) => {
             this.deleteImages(game.images[0], game.images[1]);
+            await this.recordTimesService.deleteGameRecordTimes(game.name);
             nameList.push(game.name);
         });
         this.games = [];
