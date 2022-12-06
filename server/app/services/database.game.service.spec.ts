@@ -147,20 +147,39 @@ describe('RecordTimes service', () => {
     //Error handling
     describe('Error handling', async () => {
         it('should throw an error if we try to get a specific game times on a closed connection', async () => {
-            sinon.stub(recordTimesService.collection, 'findOne').callsFake(() => {
-                return Promise.reject();
+            sinon.stub(RecordTimesService.prototype, <any>'validateName').callsFake(async() => {
+                return Promise.resolve(false);
             });
+            sinon.stub(RecordTimesService.prototype, 'isDatabaseAvailable').callsFake(() => {
+                return true;
+            });
+            await client.close();
             expect(recordTimesService.getGameTimes(testGameRecordTimes.name)).to.eventually.be.rejectedWith(Error);
+            sinon.restore();
         });
 
         it('should throw an error if we try to delete a game record times on a closed connection', async () => {
+            sinon.stub(RecordTimesService.prototype, <any>'validateName').callsFake(async() => {
+                return Promise.resolve(false);
+            });
+            sinon.stub(RecordTimesService.prototype, 'isDatabaseAvailable').callsFake(() => {
+                return true;
+            });
             await client.close();
             expect(recordTimesService.deleteGameRecordTimes('Test game')).to.eventually.be.rejectedWith(Error);
+            sinon.restore();
         });
 
         it('should throw an error if we try to reset a game record times on a closed connection', async () => {
+            sinon.stub(RecordTimesService.prototype, <any>'validateName').callsFake(async() => {
+                return Promise.resolve(false);
+            });
+            sinon.stub(RecordTimesService.prototype, 'isDatabaseAvailable').callsFake(() => {
+                return true;
+            });
             await client.close();
             expect(recordTimesService.resetGameRecordTimes('Test game')).to.eventually.be.rejectedWith(Error);
+            sinon.restore();
         });
 
         it('should throw an error if we try to reset all the games record times on a closed connection', async () => {
