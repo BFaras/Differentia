@@ -38,7 +38,7 @@ export class RecordTimesService {
     }
 
     async deleteGameRecordTimes(nameOfWantedGame: string): Promise<void> {
-        if (this.isDatabaseAvailable() && !(await this.validateName(nameOfWantedGame))) {
+        if (this.isDatabaseAvailable()) {
             return this.collection
                 .findOneAndDelete({ name: nameOfWantedGame })
                 .then((res: ModifyResult<GameTimes>) => {
