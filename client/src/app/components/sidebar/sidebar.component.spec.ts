@@ -1,5 +1,8 @@
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SidebarComponent } from '@app/components/sidebar/sidebar.component';
+@Component({ selector: 'app-chat-section', template: '' })
+class ChatSectionComponent {}
 
 describe('SidebarComponent', () => {
     let component: SidebarComponent;
@@ -7,7 +10,7 @@ describe('SidebarComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SidebarComponent],
+            declarations: [SidebarComponent, ChatSectionComponent],
         }).compileComponents();
     });
 

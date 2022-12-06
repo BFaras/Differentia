@@ -1,14 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSelectModule } from '@angular/material/select';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ToolSettingComponent } from '@app/components/tool-setting/tool-setting.component';
 import { GameToServerService } from '@app/services/game-to-server.service';
 import { ListImagesRenderedService } from '@app/services/list-images-rendered.service';
 import { ImageToSendToServer } from '@common/imageToSendToServer';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Subject } from 'rxjs';
 import { GameCreationPageComponent } from './game-creation-page.component';
 import SpyObj = jasmine.SpyObj;
+import { Component } from '@angular/core';
+@Component({ selector: 'app-list-images-rendered', template: '' })
+class ListImagesRenderedComponent {}
 
 describe('GameCreationPageComponent', () => {
     let component: GameCreationPageComponent;
@@ -50,8 +58,18 @@ describe('GameCreationPageComponent', () => {
         gameToServerServiceSpy.getModifiedImageUploaded.and.returnValue(mockImageToSerever);
         gameToServerServiceSpy.getOriginalImageUploaded.and.returnValue(mockImageToSerever);
         await TestBed.configureTestingModule({
-            declarations: [GameCreationPageComponent],
-            imports: [MatDialogModule, RouterTestingModule.withRoutes([]), MatProgressSpinnerModule, MatIconModule],
+            declarations: [GameCreationPageComponent, ToolSettingComponent, ListImagesRenderedComponent],
+            imports: [
+                MatDialogModule,
+                RouterTestingModule.withRoutes([]),
+                MatProgressSpinnerModule,
+                MatIconModule,
+                FormsModule,
+                MatSelectModule,
+                MatIconModule,
+                FontAwesomeModule,
+                BrowserAnimationsModule,
+            ],
             providers: [
                 { provide: ListImagesRenderedService, useValue: listImagesRenderedSpy },
                 { provide: GameToServerService, useValue: gameToServerServiceSpy },
