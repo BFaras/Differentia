@@ -20,14 +20,12 @@ import { HashmapConverterService } from './hashmap-converter.service';
 
 @Service()
 export class DifferenceDetectorService {
-    private nbOfDifferences: number;
-    private pixelsDifferencesNbMap: Map<number, number>;
+    private nbOfDifferences: number = DEFAULT_NB_OF_DIFFERENCES;
+    private pixelsDifferencesNbMap: Map<number, number> = new Map<number, number>();
     private offset: number;
 
     constructor(private imageDatasToCompare: ImageDataToCompare) {
         this.offset = imageDatasToCompare.offSet;
-        this.pixelsDifferencesNbMap = new Map<number, number>();
-        this.nbOfDifferences = DEFAULT_NB_OF_DIFFERENCES;
 
         this.generateDifferencesInformation();
         this.countDifferences();

@@ -10,11 +10,7 @@ import { MouseHandlerService } from './mouse-handler.service';
 
 @Service()
 export class ClueManagerService {
-    private clueFinderService: ClueFinderService;
-
-    constructor() {
-        this.clueFinderService = Container.get(ClueFinderService);
-    }
+    private clueFinderService: ClueFinderService = Container.get(ClueFinderService);
 
     resetSocketClueAmount(socket: io.Socket) {
         socket.data.amountOfClues = CLUE_AMOUNT_DEFAULT;

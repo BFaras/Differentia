@@ -18,11 +18,11 @@ import { GameManagerService } from './game-manager.service';
 
 @Service()
 export class BestTimesService {
+    playerRanking: number;
+    hasNewRecord: boolean;
     private databaseService: DatabaseService;
     private recordTimesService: RecordTimesService;
     private gameManagerService: GameManagerService;
-    playerRanking: number;
-    hasNewRecord: boolean;
 
     constructor(private sio: io.Server) {
         this.databaseService = Container.get(DatabaseService);

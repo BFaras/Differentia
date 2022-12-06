@@ -8,8 +8,6 @@ export class TimeConstantsService {
     private timeFilePath: string = 'times.json';
     private timeConstants: TimeConstants;
 
-    constructor() {}
-
     async getTimes(): Promise<TimeConstants> {
         await this.asyncReadTimeFile();
         return this.timeConstants;

@@ -3,7 +3,6 @@ import { Service } from 'typedi';
 
 @Service()
 export class UsernameValidateService {
-    constructor() {}
 
     isUsernameValid(username: string): boolean {
         return !(this.isUsernameTooLong(username) || this.doesUsernameStartWithASpace(username));
