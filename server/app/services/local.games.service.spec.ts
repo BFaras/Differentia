@@ -110,15 +110,6 @@ describe('Games service', () => {
         expect(stub.callsFake);
     });
 
-    // it('should add a new time to a game', async () => {
-    //     const nameOfGame = 'Car game';
-    //     const oldGames = gamesService['games'];
-    //     const stub = sinon.stub(fs.promises, 'writeFile').callsFake(async () => {});
-    //     await gamesService.addTimeToGame(newTime, nameOfGame);
-    //     expect(stub.callsFake);
-    //     expect(gamesService['games']).to.not.equal(oldGames);
-    // });
-
     it('should return all games with images data in the data structure', async () => {
         const FIRST_GAME = 0;
         const LAST_GAME = 1;
