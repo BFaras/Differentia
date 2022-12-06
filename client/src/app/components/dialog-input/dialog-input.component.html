@@ -76,9 +76,6 @@
             <ng-container *ngIf="timeValid[0] && timeValid[1] && timeValid[2] && timeRatioValid">
                 <button id="submitButton" mat-raised-button color="accent" *ngIf="!onlyQuitButton" (click)="submitTimes()">Valider</button>
             </ng-container>
-            <ng-container *ngIf="onlyQuitButton">
-                <button id="submitButton" mat-raised-button color="accent" disabled="true"></button>
-            </ng-container>
         </div>
     </div>
 </div>
